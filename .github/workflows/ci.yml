@@ -40,6 +40,45 @@ jobs:
       - name: Check and test
         # 6882060, 4 cores/16 GB: median N1=479s, N2=265s, N4=271s; N2 worst test=39.13% of budget.
         run: pnpm turbo run check test build --concurrency=2
+      - name: Measure built site
+        # HTPR-9180: docs-rs reports the built size it would deploy. Static assets are
+        # counted from dist/client. The Worker is the JavaScript in dist/server, with
+        # source maps left out, and its gzip figure compresses that graph as one stream.
+        run: |
+          set -euo pipefail
+          echo "| app | static files | static bytes | worker files | worker js files | worker js bytes | worker js gzip bytes |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| --- | --- | --- | --- | --- | --- | --- |" >> "$GITHUB_STEP_SUMMARY"
+          for app in apps/*/; do
+            client="${app}dist/client"; server="${app}dist/server"
+            [ -d "$client" ] || [ -d "$server" ] || continue
+            static_files=0; static_bytes=0; worker_files=0; js_files=0; js_bytes=0; js_gzip=0
+            if [ -d "$client" ]; then
+              static_files=$(find "$client" -type f | wc -l)
+              static_bytes=$(find "$client" -type f -exec cat {} + | wc -c)
+            fi
+            if [ -d "$server" ]; then
+              worker_files=$(find "$server" -type f ! -name '*.map' | wc -l)
+              js_list=$(find "$server" -type f \( -name '*.js' -o -name '*.mjs' \) ! -name '*.map' | sort)
+              if [ -n "$js_list" ]; then
+                js_files=$(printf '%s\n' "$js_list" | wc -l)
+                js_bytes=$(printf '%s\n' "$js_list" | xargs cat | wc -c)
+                js_gzip=$(printf '%s\n' "$js_list" | xargs cat | gzip -9 -c | wc -c)
+              fi
+            fi
+            name=${app#apps/}; name=${name%/}
+            echo "| $name | $static_files | $static_bytes | $worker_files | $js_files | $js_bytes | $js_gzip |" >> "$GITHUB_STEP_SUMMARY"
+            echo "$name: static=$static_files files/$static_bytes bytes; worker(no maps)=$worker_files files; worker js=$js_files files/$js_bytes bytes/$js_gzip gzip bytes"
+            if [ -d "$server" ]; then
+              echo "$name server layout:"
+              find "$server" -type f ! -name '*.map' -printf '%s %P\n' | sort -rn | head -25
+              echo "$name server extensions:"
+              find "$server" -type f ! -name '*.map' -printf '%f\n' | sed 's/.*\.//' | sort | uniq -c | sort -rn
+            fi
+            if [ -d "$client" ]; then
+              echo "$name static extensions:"
+              find "$client" -type f -printf '%f\n' | sed 's/.*\.//' | sort | uniq -c | sort -rn | head -10
+            fi
+          done
       - name: Upload Turbo run summaries
         if: always()
         uses: actions/upload-artifact@v4
