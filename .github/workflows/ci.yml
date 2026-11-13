@@ -40,6 +40,31 @@ jobs:
       - name: Check and test
         # 6882060, 4 cores/16 GB: median N1=479s, N2=265s, N4=271s; N2 worst test=39.13% of budget.
         run: pnpm turbo run check test build --concurrency=2
+      - name: Measure built site
+        # HTPR-9180: docs-rs must report the built size it would deploy. Static
+        # assets are counted from dist/client, the Worker from dist/server, and
+        # the gzip figure is the whole server graph compressed as one stream.
+        run: |
+          set -euo pipefail
+          echo "| app | static files | static bytes | worker files | worker bytes | worker gzip bytes |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| --- | --- | --- | --- | --- | --- |" >> "$GITHUB_STEP_SUMMARY"
+          for app in apps/*/; do
+            client="${app}dist/client"; server="${app}dist/server"
+            [ -d "$client" ] || [ -d "$server" ] || continue
+            static_files=0; static_bytes=0; worker_files=0; worker_bytes=0; worker_gzip=0
+            if [ -d "$client" ]; then
+              static_files=$(find "$client" -type f | wc -l)
+              static_bytes=$(find "$client" -type f -exec cat {} + | wc -c)
+            fi
+            if [ -d "$server" ]; then
+              worker_files=$(find "$server" -type f | wc -l)
+              worker_bytes=$(find "$server" -type f -exec cat {} + | wc -c)
+              worker_gzip=$(find "$server" -type f -exec cat {} + | gzip -9 -c | wc -c)
+            fi
+            name=${app#apps/}; name=${name%/}
+            echo "| $name | $static_files | $static_bytes | $worker_files | $worker_bytes | $worker_gzip |" >> "$GITHUB_STEP_SUMMARY"
+            echo "$name: static=$static_files files/$static_bytes bytes; worker=$worker_files files/$worker_bytes bytes/$worker_gzip gzip bytes"
+          done
       - name: Upload Turbo run summaries
         if: always()
         uses: actions/upload-artifact@v4
