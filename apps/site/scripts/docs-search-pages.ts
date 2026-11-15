@@ -1,7 +1,7 @@
 import { Effect, FileSystem, Option, Path } from "effect";
 import type { PlatformError } from "effect";
 
-import type { DocsPageSource } from "../src/docs-search-index.ts";
+import type { DocsPageSource } from "./docs-search-index.ts";
 
 export const docsContentDirectory = "apps/site/content/docs";
 

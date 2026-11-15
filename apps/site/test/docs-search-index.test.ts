@@ -4,11 +4,11 @@ import { NodeServices } from "@effect/platform-node";
 import { describe, expect, it } from "@effect/vitest";
 import { Effect } from "effect";
 
-import { readDocsSearchPages } from "../scripts/docs-search-pages.js";
 import {
   buildDocsSearchIndex,
   buildDocsSearchPage,
-} from "../src/docs-search-index.js";
+} from "../scripts/docs-search-index.ts";
+import { readDocsSearchPages } from "../scripts/docs-search-pages.js";
 import { searchDocsIndex } from "../src/docs-search.js";
 
 const root = fileURLToPath(new URL("../../../", import.meta.url));

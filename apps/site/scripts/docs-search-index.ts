@@ -1,8 +1,12 @@
 import type {
   DocsSearchIndexData,
   DocsSearchPageData,
-} from "./docs-search-data.ts";
-import { stemWord, tokenizeWords, wordCountOf } from "./docs-search-tokens.ts";
+} from "../src/docs-search-data.ts";
+import {
+  stemWord,
+  tokenizeWords,
+  wordCountOf,
+} from "../src/docs-search-tokens.ts";
 
 export interface DocsPageSource {
   readonly bodyMarkdown: string;

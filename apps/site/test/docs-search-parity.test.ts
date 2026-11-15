@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "@effect/vitest";
 import { Schema } from "effect";
 
-import { buildDocsSearchIndex } from "../src/docs-search-index.js";
+import { buildDocsSearchIndex } from "../scripts/docs-search-index.ts";
 import { searchDocsIndex } from "../src/docs-search.js";
 
 const fixtureText = (name: string): string =>

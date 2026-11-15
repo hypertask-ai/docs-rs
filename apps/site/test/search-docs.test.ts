@@ -2,11 +2,11 @@ import { NodeServices } from "@effect/platform-node";
 import { expect, it } from "@effect/vitest";
 import { Effect, FileSystem, Layer, Schema } from "effect";
 
+import { buildDocsSearchIndex } from "../scripts/docs-search-index.ts";
 import { emitAssets } from "../scripts/emit-assets.ts";
 import { searchDocs } from "../src/capabilities/search-docs.js";
 import { ContentStore } from "../src/content-store.js";
 import { docsSearchIndexPath } from "../src/docs-search-index-path.js";
-import { buildDocsSearchIndex } from "../src/docs-search-index.js";
 import { nodeAssetsForGeneration } from "../src/node-content.js";
 
 const index = buildDocsSearchIndex([
