@@ -71,7 +71,7 @@ it("leaves external addresses and in-page references alone", () => {
 });
 
 it("normalizes the setting to one root-relative path", () => {
-  expect(normalizeSiteBasePath(undefined)).toStrictEqual("");
+  expect(normalizeSiteBasePath()).toStrictEqual("");
   expect(normalizeSiteBasePath(" / ")).toStrictEqual("");
   expect(normalizeSiteBasePath("/ratstack/")).toStrictEqual("/ratstack");
   expect(normalizeSiteBasePath("/docs/ratstack")).toStrictEqual(
@@ -106,14 +106,12 @@ it("keeps the builder untouched when the site mounts at the origin root", () => 
 it("prefixes every internal address the builder writes", () => {
   const atSiteBase = siteBuilder("/ratstack", inertHtml);
 
-  expect(atSiteBase.Href("/lore/example")).toStrictEqual({
-    _tag: "Href",
-    value: "/ratstack/lore/example",
-  });
-  expect(atSiteBase.Src("/og/home.png")).toStrictEqual({
-    _tag: "Src",
-    value: "/ratstack/og/home.png",
-  });
+  expect(atSiteBase.Href("/lore/example").value).toStrictEqual(
+    "/ratstack/lore/example"
+  );
+  expect(atSiteBase.Src("/og/home.png").value).toStrictEqual(
+    "/ratstack/og/home.png"
+  );
   expect(atSiteBase.Attribute("href", "/systems/docs")).toStrictEqual(
     inertHtml.Attribute("href", "/ratstack/systems/docs")
   );
@@ -152,6 +150,7 @@ it("keeps the canonical on the old public address and marks a prefixed page noin
 const make = Effect.gen(function* readerSiteBaseFixture() {
   const home = yield* readerHomeFlags(origin);
   const bodies = yield* readerBodyFlags(origin);
+
   const deep = yield* Option.match(
     Option.fromNullishOr(
       bodies.find((page) => page.page.path === "/AGENTS.md")
@@ -200,10 +199,12 @@ const canonicalHref = (html: string): string | undefined =>
   /<link [^>]*rel="canonical"[^>]*href="(?<href>[^"]*)"/u.exec(html)?.groups
     ?.href;
 
-const internalAddresses = (html: string): ReadonlyArray<string> =>
-  [...html.matchAll(/\s(?:href|src)="(?<value>[^"]*)"/gu)]
-    .map((match) => match.groups?.value ?? "")
-    .filter((value) => value.startsWith("/"));
+const internalAddresses = (html: string): readonly string[] =>
+  [...html.matchAll(/\s(?:href|src)="(?<value>[^"]*)"/gu)].flatMap((match) => {
+    const value = match.groups?.value ?? "";
+
+    return value.startsWith("/") ? [value] : [];
+  });
 
 it.layer(ReaderSiteBaseFixture.layer)((test) => {
   test.effect(
@@ -241,6 +242,7 @@ it.layer(ReaderSiteBaseFixture.layer)((test) => {
             { Flags: ReaderFlags, init, view },
             { flags }
           );
+
           const atOriginRoot = yield* renderToString(
             { Flags: ReaderFlags, init, view: viewAt("") },
             { flags }

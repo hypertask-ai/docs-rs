@@ -25,7 +25,7 @@ const robotsMeta = (basePath: string, robots: "index" | "noindex") => {
 export const readerMetadataHead = (
   metadata: ReaderPageMetadata,
   origin: string,
-  basePath: string = ""
+  basePath = ""
 ): string => {
   const canonical = `${origin}${metadata.canonicalPath}`;
   const image = `${origin}${addSiteBasePath(basePath, metadata.ogImagePath)}`;

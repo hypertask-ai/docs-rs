@@ -174,6 +174,7 @@ export const finalizeReader = Effect.fn("reader.finalize")(
   function* finalizeReader(root: string, clientDirectory: string) {
     const fs = yield* FileSystem.FileSystem;
     const source = yield* fs.readFileString(`${root}/dist/reader-pages.json`);
+
     const siteBasePath = yield* Config.String("SITE_BASE_PATH").pipe(
       Config.withDefault(""),
       Config.map(normalizeSiteBasePath)
@@ -206,6 +207,7 @@ export const finalizeReader = Effect.fn("reader.finalize")(
           /\/$/u,
           ""
         );
+
         const path = `${clientDirectory}${mountedRoute}/index.html`;
 
         if (!(yield* fs.exists(path))) {
@@ -244,6 +246,7 @@ export const finalizeReader = Effect.fn("reader.finalize")(
 
     const headerPath = `${clientDirectory}/_headers`;
     const generation = pages[0]?.page.generation;
+
     const siteRobotsHeader =
       siteBasePath === ""
         ? ""

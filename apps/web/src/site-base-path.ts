@@ -1,6 +1,6 @@
 const rootRelativePath = /^\/(?:[A-Za-z0-9._~-]+\/?)*$/u;
 
-export const normalizeSiteBasePath = (value: string | undefined): string => {
+export const normalizeSiteBasePath = (value?: string): string => {
   const trimmed = (value ?? "").trim();
 
   if (trimmed === "" || trimmed === "/") {
@@ -13,7 +13,7 @@ export const normalizeSiteBasePath = (value: string | undefined): string => {
     );
   }
 
-  return `/${trimmed.replace(/^\/+|\/+$/gu, "")}`;
+  return `/${trimmed.replaceAll(/^\/+|\/+$/gu, "")}`;
 };
 
 export const addSiteBasePath = (basePath: string, path: string): string => {

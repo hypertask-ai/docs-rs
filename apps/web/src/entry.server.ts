@@ -133,38 +133,61 @@ const renderErrorRoute = Effect.fn("reader.renderErrorRoute")(
   }
 );
 
+const refusedReaderPage = (pathname: string) => {
+  if (!isWithinSiteBasePath(pathname)) {
+    return Option.some(
+      new Response(`This address serves the site under ${siteBasePath}`, {
+        status: 404,
+      })
+    );
+  }
+
+  const route = withoutSiteBasePath(pathname);
+
+  return route === "/__rat" || route.startsWith("/__rat/")
+    ? Option.some(new Response("Not found", { status: 404 }))
+    : Option.none<Response>();
+};
+
+const readerRobots = (request: Request, route: string) =>
+  isSiteBasePathSet && route === "/robots.txt"
+    ? Option.some(
+        new Response(
+          request.method === "HEAD" ? null : "User-agent: *\nDisallow: /\n",
+          {
+            headers: { "Content-Type": "text/plain; charset=utf-8" },
+            status: 200,
+          }
+        )
+      )
+    : Option.none<Response>();
+
+const forwardedReaderRequest = (
+  request: Request,
+  route: string,
+  search: string
+) =>
+  isSiteBasePathSet
+    ? new Request(new URL(`${route}${search}`, request.url), request)
+    : request;
+
 export const renderReaderPage = Effect.fn("reader.renderPage")(
   function* renderReaderPage(request: Request) {
     const { pathname, search } = new URL(request.url);
+    const refused = refusedReaderPage(pathname);
 
-    if (!isWithinSiteBasePath(pathname)) {
-      return yield* responded(
-        request,
-        new Response(`This address serves the site under ${siteBasePath}`, {
-          status: 404,
-        })
-      );
+    if (Option.isSome(refused)) {
+      return yield* responded(request, refused.value);
     }
 
     const route = withoutSiteBasePath(pathname);
-
-    if (route === "/__rat" || route.startsWith("/__rat/")) {
-      return yield* responded(
-        request,
-        new Response("Not found", { status: 404 })
-      );
-    }
 
     if (route === "/rpc" || route.startsWith("/rpc/")) {
       const bindings = yield* WebsiteBindings;
 
       return yield* responded(
         request,
-        yield* bindings.forward(
-          isSiteBasePathSet
-            ? new Request(new URL(`${route}${search}`, request.url), request)
-            : request
-        )
+        yield* bindings.forward(forwardedReaderRequest(request, route, search))
       );
     }
 
@@ -182,17 +205,10 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
       );
     }
 
-    if (isSiteBasePathSet && route === "/robots.txt") {
-      return yield* responded(
-        request,
-        new Response(
-          request.method === "HEAD" ? null : "User-agent: *\nDisallow: /\n",
-          {
-            headers: { "Content-Type": "text/plain; charset=utf-8" },
-            status: 200,
-          }
-        )
-      );
+    const robots = readerRobots(request, route);
+
+    if (Option.isSome(robots)) {
+      return yield* responded(request, robots.value);
     }
 
     const routePath = route === "/" ? route : route.replace(/\/$/u, "");

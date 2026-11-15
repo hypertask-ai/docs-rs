@@ -20,7 +20,7 @@ const iconHead = [
 export const withReaderHead = (
   application: Server.RenderedApplication,
   page: ReaderPageFlags,
-  basePath: string = ""
+  basePath = ""
 ) => ({
   ...application,
   readerHead: readerMetadataHead(page.page.metadata, page.origin, basePath),
