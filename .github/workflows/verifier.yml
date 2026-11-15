@@ -320,9 +320,7 @@ jobs:
 
       - name: Verify with Claude when Codex is absent or refused
         id: claude
-        if: >-
-          steps.target.outputs.go == 'yes' && needs.engine.outputs.claude == 'yes' &&
-          (needs.engine.outputs.codex == 'no' || steps.codex.outcome == 'failure')
+        if: steps.target.outputs.go == 'yes' && needs.engine.outputs.claude == 'yes' && (needs.engine.outputs.codex == 'no' || steps.codex.outcome == 'failure')
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           SHA: ${{ steps.target.outputs.sha }}
