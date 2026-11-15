@@ -87,7 +87,15 @@ export interface DocsArticleVideo {
   readonly watchUrl: string;
 }
 
+export interface DocsArticleCard {
+  readonly body: string;
+  readonly bodyTags: readonly string[];
+  readonly icon: boolean;
+  readonly title: string;
+}
+
 export interface DocsArticle {
+  readonly cards: readonly DocsArticleCard[];
   readonly headings: readonly DocsArticleHeading[];
   readonly images: readonly DocsArticleImage[];
   readonly links: readonly DocsArticleLink[];
@@ -97,6 +105,7 @@ export interface DocsArticle {
 }
 
 interface ArticleState {
+  readonly cards: DocsArticleCard[];
   readonly headings: DocsArticleHeading[];
   readonly images: DocsArticleImage[];
   readonly links: DocsArticleLink[];
@@ -121,6 +130,26 @@ const isTabLabel = (element: Element) =>
 
 const isVideo = (element: Element) =>
   element.name === "a" && classesOf(element).includes("docs-video");
+
+const firstByClass = (element: Element, name: string): Element | undefined =>
+  DomUtils.getElementsByClass(name, element.children, true, 1)[0];
+
+const writeCard = (state: ArticleState, element: Element) => {
+  const title = firstByClass(element, "docs-card-title");
+  const body = firstByClass(element, "docs-card-body");
+
+  state.cards.push({
+    body: body === undefined ? "" : textOf([DomUtils.textContent(body)]),
+    bodyTags:
+      body === undefined
+        ? []
+        : body.children.flatMap((child) =>
+            child.type === ElementType.Tag ? [child.name] : []
+          ),
+    icon: firstByClass(element, "docs-card-icon") !== undefined,
+    title: title === undefined ? "" : textOf([DomUtils.textContent(title)]),
+  });
+};
 
 const textOf = (parts: readonly string[]) =>
   normalizeArticleText(parts.join(""));
@@ -225,6 +254,10 @@ const visitElement = (
     return;
   }
 
+  if (classesOf(element).includes("docs-card")) {
+    writeCard(state, element);
+  }
+
   writeImage(state, element);
 
   const level = headingLevels.get(element.name);
@@ -281,6 +314,7 @@ export const docsArticleOf = (html: string, path: string): DocsArticle => {
   }
 
   const state: ArticleState = {
+    cards: [],
     headings: [],
     images: [],
     links: [],
@@ -294,6 +328,7 @@ export const docsArticleOf = (html: string, path: string): DocsArticle => {
   }
 
   return {
+    cards: state.cards,
     headings: state.headings,
     images: state.images,
     links: state.links,

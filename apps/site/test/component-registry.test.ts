@@ -111,6 +111,34 @@ const markdownPages = [
   { routePath: "/llms.txt", text: llmsText("https://ratstack.sh") },
 ];
 
+it.effect(
+  "reads an indented block component body as markdown instead of a code block",
+  () =>
+    Effect.sync(() => {
+      const markdown = renderSvxMarkdown(
+        [
+          "<CardGrid>",
+          '  <Card title="Workspace-ready">',
+          "    Multi-tenant workspaces with optional boards per workspace.",
+          "  </Card>",
+          "</CardGrid>",
+        ].join("\n"),
+        "human"
+      );
+
+      const html = renderMarkdownHtml(markdown, { sourcePath: "cards.svx" });
+
+      expect(html).toContain('<article class="docs-card">');
+      expect(html).toContain(
+        '<span class="docs-card-icon" aria-hidden="true"></span>'
+      );
+      expect(html).toContain(
+        "<p>Multi-tenant workspaces with optional boards per workspace.</p>"
+      );
+      expect(html).not.toContain("<pre>");
+    })
+);
+
 it.effect.each(
   markdownPages.filter((page) => !isDocsPageRoute(page.routePath))
 )("$routePath has exactly one registry pointer under its H1", (page) =>

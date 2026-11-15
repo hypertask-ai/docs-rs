@@ -18,6 +18,9 @@ import {
 import { view } from "../src/features/reader.js";
 
 const DocsPageFixtureSchema = Schema.Struct({
+  cards: Schema.optional(
+    Schema.Array(Schema.Struct({ body: Schema.String, title: Schema.String }))
+  ),
   description: Schema.String,
   headings: Schema.Array(
     Schema.Struct({ level: Schema.Int, text: Schema.String })
@@ -179,6 +182,16 @@ it.layer(DocsParityFixture.layer)((test) => {
           expect(article.videos, fixture.routePath).toEqual(
             fixture.videos ?? []
           );
+          expect(
+            article.cards.map(({ body, title }) => ({ body, title })),
+            fixture.routePath
+          ).toEqual(fixture.cards ?? []);
+
+          for (const card of article.cards) {
+            expect(card.icon, fixture.routePath).toBe(true);
+            expect(card.bodyTags, fixture.routePath).not.toContain("pre");
+          }
+
           expect(article.text, fixture.routePath).toBe(fixture.text);
         }).pipe(Effect.provide(NodeServices.layer))
     );

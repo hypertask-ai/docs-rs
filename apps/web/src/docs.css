@@ -202,19 +202,29 @@ body > .docs-layout {
 
 .docs-main :is(h1, h2) {
   color: #f4f4f7;
-  font-family: "Newsreader", serif;
-  font-weight: 400;
 }
 
 .docs-main h1 {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 42px;
+  font-weight: 600;
+  line-height: 50.4px;
+  margin: 0 0 24px;
+}
+
+.docs-main h1#_top {
+  font-family: "Newsreader", serif;
   font-size: 48px;
+  font-weight: 400;
   letter-spacing: -0.96px;
   line-height: 54px;
   margin: 0 0 24px;
 }
 
 .docs-main h2 {
+  font-family: "Newsreader", serif;
   font-size: 30px;
+  font-weight: 400;
   letter-spacing: -0.3px;
   line-height: 36px;
   margin: 40px 0 12px;
@@ -223,15 +233,17 @@ body > .docs-layout {
 .docs-main h3 {
   color: #f4f4f7;
   font-family: "IBM Plex Sans", sans-serif;
-  font-size: 24px;
-  line-height: 1.2;
+  font-size: 29px;
+  font-weight: 600;
+  line-height: 34.8px;
   margin: 36px 0 12px;
 }
 
 .docs-main h4 {
   color: #f4f4f7;
   font-family: "IBM Plex Sans", sans-serif;
-  font-size: 20px;
+  font-size: 24px;
+  font-weight: 600;
   line-height: 1.2;
   margin: 24px 0 12px;
 }
@@ -242,6 +254,7 @@ body > .docs-layout {
   color: #a1a1aa;
   font-size: 16px;
   line-height: 26px;
+  overflow-wrap: break-word;
 }
 
 .docs-main p {
@@ -374,7 +387,7 @@ body > .docs-layout {
   border-radius: 14px;
   color: #a1a1aa;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 26px;
   margin: 16px 0;
   padding: 14px 16px;
 }
@@ -382,9 +395,16 @@ body > .docs-layout {
 .docs-main .starlight-aside--note .docs-aside-title,
 .docs-main .docs-aside-title {
   color: #d97757;
+  display: inline;
   font-size: 14px;
   font-weight: 500;
-  margin-right: 8px;
+  line-height: 16.8px;
+  margin: 0 8px 0 0;
+}
+
+.docs-main .docs-aside-title + p {
+  display: inline;
+  margin: 0;
 }
 
 .docs-main table {
@@ -398,10 +418,10 @@ body > .docs-layout {
 
 .docs-main th,
 .docs-main td {
-  border: 1px solid #222226;
-  font-size: 14px;
-  line-height: 1.5;
-  padding: 8px 12px;
+  border: 0;
+  font-size: 16px;
+  line-height: 26px;
+  padding: 8px 16px 8px 0;
   text-align: left;
   vertical-align: top;
 }
@@ -411,23 +431,20 @@ body > .docs-layout {
   font-weight: 600;
 }
 
-.docs-main .interface-cards,
-.docs-main .docs-card-grid {
+.docs-main .interface-cards {
   display: grid;
   gap: 16px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.docs-main .interface-card,
-.docs-main .docs-card {
+.docs-main .interface-card {
   background: #111113;
   border: 1px solid #222226;
   border-radius: 14px;
   padding: 20px;
 }
 
-.docs-main .interface-card h3,
-.docs-main .docs-card .docs-card-title {
+.docs-main .interface-card h3 {
   color: #f4f4f7;
   font:
     600 16px/24px "IBM Plex Sans",
@@ -435,17 +452,76 @@ body > .docs-layout {
   margin: 0;
 }
 
-.docs-main .interface-card p,
-.docs-main .docs-card p {
+.docs-main .interface-card p {
   color: #a1a1aa;
   font-size: 14px;
   line-height: 21px;
   margin: 8px 0 16px;
 }
 
-.docs-main .interface-card a,
-.docs-main .docs-card a {
+.docs-main .interface-card a {
   font-size: 14px;
+}
+
+.docs-main .docs-card-grid {
+  display: block;
+}
+
+.docs-main .docs-card {
+  background: #111113;
+  border: 1px solid #222226;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+}
+
+.docs-main .docs-card-title {
+  align-items: center;
+  color: #f4f4f7;
+  display: flex;
+  font:
+    600 24px/28.8px "IBM Plex Sans",
+    sans-serif;
+  gap: 16px;
+  margin: 0;
+}
+
+.docs-main .docs-card-icon {
+  background: #edd1fa;
+  border: 1px solid #bb3df5;
+  border-radius: 4px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  height: 32px;
+  padding: 6.4px;
+  width: 32px;
+}
+
+.docs-main .docs-card:nth-child(4n + 1) .docs-card-icon {
+  background: #fceac5;
+  border-color: #f5bb3d;
+}
+
+.docs-main .docs-card:nth-child(4n + 3) .docs-card-icon {
+  background: #defbd0;
+  border-color: #4fdf0c;
+}
+
+.docs-main .docs-card:nth-child(4n + 4) .docs-card-icon {
+  background: #fad1df;
+  border-color: #f53d7d;
+}
+
+.docs-main .docs-card-body {
+  font-size: 16px;
+}
+
+.docs-main .docs-card-body p {
+  font-size: inherit;
+  line-height: 26px;
+  margin: 0;
 }
 
 .docs-main .home-lead {
@@ -560,7 +636,9 @@ body > .docs-layout {
 }
 
 .docs-search-icon {
-  display: none;
+  display: block;
+  flex-shrink: 0;
+  margin-right: 8px;
 }
 
 @media (min-width: 72rem) {
@@ -569,7 +647,7 @@ body > .docs-layout {
   }
 
   .docs-pane {
-    padding: 48px 64px 96px;
+    padding: 48px 0 96px 64px;
   }
 
   #docs-toc {
@@ -615,13 +693,41 @@ body > .docs-layout {
   }
 
   .docs-main h1 {
+    font-size: 35px;
+    line-height: 42px;
+  }
+
+  .docs-main h1#_top {
     font-size: 40px;
     line-height: 44px;
   }
 
-  .docs-main .interface-cards,
-  .docs-main .docs-card-grid {
+  .docs-main h3 {
+    font-size: 24px;
+    line-height: 28.8px;
+  }
+
+  .docs-main .interface-cards {
     grid-template-columns: 1fr;
+  }
+
+  .docs-main .docs-card-title {
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .docs-main .docs-card-icon {
+    height: 27px;
+    padding: 5.33px;
+    width: 27px;
+  }
+
+  .docs-main .docs-card-body {
+    font-size: 14px;
+  }
+
+  .docs-main .docs-card-body p {
+    line-height: 26px;
   }
 
   .docs-search-label,
