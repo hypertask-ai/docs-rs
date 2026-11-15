@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import { expect, it } from "@effect/vitest";
 import { IntakeTicket } from "@rat-stack/core/intake";
 import { Effect, Layer } from "effect";
-import { HttpRouter } from "effect/http/HttpRouter";
+import * as HttpRouter from "effect/http/HttpRouter";
 
 import { mischiefRoutes } from "../src/app.js";
 import { robotsText } from "../src/content.js";
