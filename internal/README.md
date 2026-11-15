@@ -10,4 +10,5 @@ Ported from the old docs repository, `hypertask-ai/docs`, default branch, on 202
 - `features/task-page-boxes.md`: task page box outline spec
 - `features/cost-forecast.md`: cost forecast worker and billing token
 - `features/flags.md`: flags and feedback
+- `features/docked-chat-toggle.md`: the docked chat toggle on the board change list, kept from an unpublished old draft for HTPR-9194
 - `mcp/agent-team.md`: agent team, board 15 lanes and the Board Maintainer runbook
