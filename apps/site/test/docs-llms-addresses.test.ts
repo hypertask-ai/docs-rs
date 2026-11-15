@@ -1,6 +1,6 @@
 import { expect, it } from "@effect/vitest";
 import { Effect, Layer } from "effect";
-import { HttpRouter } from "effect/http/HttpRouter";
+import * as HttpRouter from "effect/http/HttpRouter";
 
 import { mischiefRoutes } from "../src/app.js";
 import { TestSandbox } from "./test-sandbox.js";
