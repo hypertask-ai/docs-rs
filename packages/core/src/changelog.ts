@@ -183,6 +183,32 @@ export interface LegacyChangelogEntry {
   readonly title: string;
 }
 
+const legacyItems = (block: string) => {
+  const items: string[] = [];
+
+  for (const line of block.split("\n")) {
+    const trimmed = line.trim();
+
+    if (
+      /^[*-] |^<(?:p|li)>|^(?:Added|Fixed|Improved|Changed|Removed|New):/iu.test(
+        trimmed
+      )
+    ) {
+      if (!trimmed.includes("following tickets this run")) {
+        items.push(trimmed.replace(/^[*-] /u, ""));
+      }
+    } else if (/^\s+\S/u.test(line) && !trimmed.startsWith("<")) {
+      const previous = items.pop();
+
+      if (previous !== undefined) {
+        items.push(`${previous} ${trimmed}`);
+      }
+    }
+  }
+
+  return items;
+};
+
 export const parseLegacyChangelog = (
   raw: string,
   source: string,
@@ -208,12 +234,14 @@ export const parseLegacyChangelog = (
     )?.groups;
 
     const month = legacyMonths.get((dateParts?.month ?? "").toLowerCase());
+    const dayOfMonth = dateParts?.day ?? "";
+    const year = dateParts?.year ?? "";
 
     const date =
       month === undefined
         ? Option.none()
         : DateTime.make(
-            `${dateParts?.year}-${month}-${dateParts?.day.padStart(2, "0")}T00:00:00.000Z`
+            `${year}-${month}-${dayOfMonth.padStart(2, "0")}T00:00:00.000Z`
           );
 
     if (Option.isNone(date)) {
@@ -228,27 +256,7 @@ export const parseLegacyChangelog = (
       headings[index + 1]?.index ?? normalized.length
     );
 
-    const items: string[] = [];
-
-    for (const line of block.split("\n")) {
-      const trimmed = line.trim();
-
-      if (
-        /^[*-] |^<(?:p|li)>|^(?:Added|Fixed|Improved|Changed|Removed|New):/iu.test(
-          trimmed
-        )
-      ) {
-        if (!trimmed.includes("following tickets this run")) {
-          items.push(trimmed.replace(/^[*-] /u, ""));
-        }
-      } else if (/^\s+\S/u.test(line) && !trimmed.startsWith("<")) {
-        const previous = items.pop();
-
-        if (previous !== undefined) {
-          items.push(`${previous} ${trimmed}`);
-        }
-      }
-    }
+    const items = legacyItems(block);
 
     return items.map((item) => {
       const text = plainAnnouncement(item);
