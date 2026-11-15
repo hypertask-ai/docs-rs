@@ -11,6 +11,7 @@ const focus = {
 
 export const docsChrome = stylex.create({
   action: {
+    ":hover": { backgroundColor: docs.hairline, borderColor: docs.border },
     alignItems: "center",
     background: docs.surface,
     borderColor: docs.hairline,
@@ -27,7 +28,6 @@ export const docsChrome = stylex.create({
     lineHeight: 1,
     padding: "0.3rem 0.65rem",
     textDecoration: "none",
-    ":hover": { backgroundColor: docs.hairline, borderColor: docs.border },
   },
   actionGhost: { background: "transparent" },
   actions: {
@@ -87,6 +87,13 @@ export const docsChrome = stylex.create({
     height: "72px",
     padding: "16px 32px",
   },
+  kbd: {
+    color: docs.textMuted,
+    fontFamily: docs.fontMono,
+    fontSize: "12px",
+    fontWeight: 400,
+    marginLeft: "auto",
+  },
   kicker: {
     color: docs.accent,
     fontSize: "12px",
@@ -95,13 +102,6 @@ export const docsChrome = stylex.create({
     lineHeight: "16px",
     marginBottom: "12px",
     textTransform: "uppercase",
-  },
-  kbd: {
-    color: docs.textMuted,
-    fontFamily: docs.fontMono,
-    fontSize: "12px",
-    fontWeight: 400,
-    marginLeft: "auto",
   },
   openApp: {
     alignItems: "center",

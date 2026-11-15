@@ -4,21 +4,21 @@ type HelpChatWindow = Window & {
   };
 };
 
-const helpChatWindow = () => {
-  // SAFETY: the help widget adds HypertaskHelp to the page window after it loads.
-  return window as HelpChatWindow;
-};
+// SAFETY: the help widget adds HypertaskHelp to the page window after it loads.
+const helpChatWindow = () => window as HelpChatWindow;
 
 const openHelpChat = () => {
-  if (typeof helpChatWindow().HypertaskHelp?.open === "function") {
-    helpChatWindow().HypertaskHelp?.open?.();
+  const open = helpChatWindow().HypertaskHelp?.open;
+
+  if (open !== undefined) {
+    open();
 
     return true;
   }
 
-  const launcher = document.getElementById("chat-widget-btn");
+  const launcher = document.querySelector("#chat-widget-btn");
 
-  if (launcher !== null && launcher.style.display !== "none") {
+  if (launcher instanceof HTMLElement && launcher.style.display !== "none") {
     launcher.click();
 
     return true;
@@ -28,7 +28,7 @@ const openHelpChat = () => {
 };
 
 const clickedAskHelp = (event: Event) => {
-  const target = event.target;
+  const { target } = event;
 
   return (
     target instanceof Element && target.closest("[data-ask-help]") !== null

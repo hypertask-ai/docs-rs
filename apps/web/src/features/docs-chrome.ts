@@ -5,11 +5,9 @@ import type { Html, HtmlBuilder } from "foldkit/html";
 import glyphUrl from "../assets/glyph-white.png?url";
 import { CopyStatus } from "../client/reader/model.js";
 import { docsChrome } from "./docs-chrome.stylex.js";
-import {
-  docsHeaderTabs,
-  docsSidebarGroups,
-  type DocsSidebarGroup,
-} from "./docs-sidebar.js";
+import { docsHeaderTabs, docsSidebarGroups } from "./docs-sidebar.js";
+import type { DocsSidebarGroup } from "./docs-sidebar.js";
+import { homeRouter, searchRouter } from "./site-route.js";
 
 const className = (...styles: stylex.StyleXStyles[]) =>
   stylex.props(...styles).className ?? "";
@@ -19,20 +17,72 @@ const activeTab = (active: boolean) => (active ? docsChrome.tabActive : false);
 const activeLink = (current: boolean) =>
   current ? docsChrome.sidebarLinkActive : false;
 
+const copyLabel = CopyStatus.match({
+  Copied: () => "Copied",
+  Copying: () => "Copy page",
+  Failed: () => "Copy failed",
+  Idle: () => "Copy page",
+});
+
+const searchIcon = <Message>(h: HtmlBuilder<Message>) =>
+  h.svg(
+    [
+      h.Class("docs-search-icon"),
+      h.Width("16"),
+      h.Height("16"),
+      h.ViewBox("0 0 24 24"),
+      h.Fill("currentColor"),
+      h.AriaHidden(true),
+    ],
+    [
+      h.path([
+        h.D(
+          "M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"
+        ),
+      ]),
+    ]
+  );
+
+const copyIcon = <Message>(h: HtmlBuilder<Message>) =>
+  h.svg(
+    [
+      h.Width("14"),
+      h.Height("14"),
+      h.ViewBox("0 0 24 24"),
+      h.Fill("none"),
+      h.Stroke("currentColor"),
+      h.StrokeWidth("2"),
+      h.StrokeLinecap("round"),
+      h.StrokeLinejoin("round"),
+      h.AriaHidden(true),
+    ],
+    [
+      h.rect([
+        h.X("9"),
+        h.Y("9"),
+        h.Width("13"),
+        h.Height("13"),
+        h.Rx("2"),
+        h.Attribute("ry", "2"),
+      ]),
+      h.path([h.D("M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1")]),
+    ]
+  );
+
 const sidebarGroup = <Message>(
   group: DocsSidebarGroup,
   path: string,
   h: HtmlBuilder<Message>
 ) =>
   h.li(
-    [],
+    [h.Key(group.label)],
     [
       h.div([h.Class(className(docsChrome.groupLabel))], [group.label]),
       h.ul(
         [h.Class(className(docsChrome.groupList))],
         group.items.map((item) =>
           h.li(
-            [],
+            [h.Key(item.path)],
             [
               h.a(
                 [
@@ -68,7 +118,7 @@ export const docsHeader = <Message>(
         [h.Class(`${className(docsChrome.headerMain)} docs-header-main`)],
         [
           h.a(
-            [h.Href("/"), h.Class(className(docsChrome.brand))],
+            [h.Href(homeRouter()), h.Class(className(docsChrome.brand))],
             [
               h.img([
                 h.Src(glyphUrl),
@@ -83,7 +133,7 @@ export const docsHeader = <Message>(
           ),
           h.a(
             [
-              h.Href("/search"),
+              h.Href(searchRouter()),
               h.Class(`${className(docsChrome.search)} docs-search`),
               h.AriaLabel("Search docs"),
               h.Attribute("aria-keyshortcuts", "Control+K"),
@@ -126,6 +176,7 @@ export const docsHeader = <Message>(
         docsHeaderTabs.map((tab) =>
           h.a(
             [
+              h.Key(tab.path),
               h.Href(tab.path),
               h.Class(className(docsChrome.tab, activeTab(tab.isActive(path)))),
               h.Attribute(
@@ -176,7 +227,7 @@ export const docsToc = <Message>(
             [h.Class(className(docsChrome.groupList))],
             anchors.map((anchor) =>
               h.li(
-                [],
+                [h.Key(anchor.id)],
                 [
                   h.a(
                     [
@@ -200,9 +251,7 @@ export const docsActions = <Message>(
   },
   h: HtmlBuilder<Message>
 ): Html => {
-  const copied = CopyStatus.guards.Copied(options.copyStatus);
-  const failed = CopyStatus.guards.Failed(options.copyStatus);
-  const label = copied ? "Copied" : failed ? "Copy failed" : "Copy page";
+  const label = copyLabel(options.copyStatus);
   const prompt = `Read ${options.markdownUrl} and help me with questions about this page.`;
 
   return h.div(
@@ -260,51 +309,6 @@ export const docsActions = <Message>(
     ]
   );
 };
-
-const searchIcon = <Message>(h: HtmlBuilder<Message>) =>
-  h.svg(
-    [
-      h.Class("docs-search-icon"),
-      h.Width("16"),
-      h.Height("16"),
-      h.ViewBox("0 0 24 24"),
-      h.Fill("currentColor"),
-      h.AriaHidden(true),
-    ],
-    [
-      h.path([
-        h.D(
-          "M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"
-        ),
-      ]),
-    ]
-  );
-
-const copyIcon = <Message>(h: HtmlBuilder<Message>) =>
-  h.svg(
-    [
-      h.Width("14"),
-      h.Height("14"),
-      h.ViewBox("0 0 24 24"),
-      h.Fill("none"),
-      h.Stroke("currentColor"),
-      h.StrokeWidth("2"),
-      h.StrokeLinecap("round"),
-      h.StrokeLinejoin("round"),
-      h.AriaHidden(true),
-    ],
-    [
-      h.rect([
-        h.X("9"),
-        h.Y("9"),
-        h.Width("13"),
-        h.Height("13"),
-        h.Rx("2"),
-        h.Attribute("ry", "2"),
-      ]),
-      h.path([h.D("M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1")]),
-    ]
-  );
 
 export const docsFooterNote = <Message>(h: HtmlBuilder<Message>) =>
   h.p(

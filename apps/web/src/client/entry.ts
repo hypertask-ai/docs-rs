@@ -28,6 +28,7 @@ const application = Runtime.makeApplication({
 });
 
 installOverlay();
+
 bindHelpChat();
 
 Runtime.hydrate(application);

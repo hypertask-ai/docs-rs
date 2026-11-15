@@ -62,8 +62,8 @@ export const CopyPageMarkdown = Command.define("CopyPageMarkdown", {
       });
     }).pipe(
       Effect.match({
-        onFailure: () => Message.FailedCopyPage({}),
-        onSuccess: () => Message.SucceededCopyPage({}),
+        onFailure: () => Message.FailedCopyPage(),
+        onSuccess: () => Message.SucceededCopyPage(),
       })
     ),
   messages: [Message.FailedCopyPage, Message.SucceededCopyPage],

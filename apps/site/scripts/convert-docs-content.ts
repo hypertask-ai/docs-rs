@@ -31,9 +31,11 @@ const contentFiles = Effect.fn("docsConversion.contentFiles")(
     FileSystem.FileSystem
   > {
     const fs = yield* FileSystem.FileSystem;
+
     const entries = yield* fs.readDirectory(
       directory === "" ? root : `${root}/${directory}`
     );
+
     const files: string[] = [];
 
     for (const entry of entries.toSorted()) {
@@ -60,8 +62,10 @@ const convert = Command.make(
   Effect.fn(function* runConversion({ out, source }) {
     const fs = yield* FileSystem.FileSystem;
     const path = yield* Path.Path;
+
     const files = yield* contentFiles(source, "");
-    const pages = yield* Effect.forEach(files, (file) =>
+
+    const pages = yield* Effect.forEach((file: string) =>
       fs.readFileString(`${source}/${file}`).pipe(
         Effect.map((text) => {
           const routePath = routePathOf(file);
@@ -70,7 +74,7 @@ const convert = Command.make(
           return { file, page, routePath };
         })
       )
-    );
+    )(files);
 
     const problems = pages.flatMap(({ file, page }) =>
       page.problems.map((problem) => `${file}:${problem}`)
@@ -78,14 +82,14 @@ const convert = Command.make(
 
     yield* fs.makeDirectory(out, { recursive: true });
 
-    yield* Effect.forEach(pages, ({ file, page }) =>
+    yield* Effect.forEach(({ file, page }: (typeof pages)[number]) =>
       Effect.gen(function* writePage() {
         const target = path.join(out, file.replace(/\.mdx?$/u, ".md"));
 
         yield* fs.makeDirectory(path.dirname(target), { recursive: true });
         yield* fs.writeFileString(target, renderConvertedPage(page));
       })
-    );
+    )(pages);
 
     yield* fs.writeFileString(
       path.join(out, "report.json"),

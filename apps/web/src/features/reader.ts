@@ -351,6 +351,7 @@ export const view = (
   h: HtmlBuilder<ReaderMessage>
 ): Document => {
   const group = docsGroupForPath(model.page.path);
+
   const toc = Option.match(model.references, {
     onNone: () => null,
     onSome: (references) => docsToc(references.anchors, h),
