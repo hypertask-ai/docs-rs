@@ -62,6 +62,7 @@ it.effect.prop(
             ).toBe(
               resource.Type.startsWith("Cloudflare.DNS.") ||
                 resource.Type.startsWith("Cloudflare.Email.") ||
+                resource.Type.startsWith("Cloudflare.Pages.") ||
                 resource.Type === "Cloudflare.Zone.Zone" ||
                 stage === "prod"
                 ? "retain"
