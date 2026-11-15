@@ -140,13 +140,13 @@ jobs:
         if: steps.target.outputs.go == 'yes'
         run: pnpm turbo run build --concurrency=2
 
-      - name: Check out the parent commit into its own tree
+      - name: Check out the parent commit with full history, the way ci.yml does
         if: steps.target.outputs.go == 'yes'
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ steps.target.outputs.base }}
           path: parent
-          fetch-depth: 1
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Install dependencies for the parent
@@ -170,12 +170,12 @@ jobs:
           set -euo pipefail
           pnpm exec playwright install --with-deps chromium
           mkdir -p "$RUNNER_TEMP/screens"
-          printf 'SCREENS_DIR=%s\n' "$RUNNER_TEMP/screens" >> "$GITHUB_ENV"
 
       - name: Serve the built sites and each app's own dev server
         if: steps.target.outputs.go == 'yes'
         env:
           BASE_SHA: ${{ steps.target.outputs.base }}
+          SCREENS_DIR: ${{ runner.temp }}/screens
           SHA: ${{ steps.target.outputs.sha }}
         run: |
           set -euo pipefail
@@ -384,6 +384,7 @@ jobs:
         if: steps.target.outputs.go == 'yes'
         env:
           GH_TOKEN: ${{ github.token }}
+          SCREENS_DIR: ${{ runner.temp }}/screens
           SHA: ${{ steps.target.outputs.sha }}
           BASE_SHA: ${{ steps.target.outputs.base }}
           PR: ${{ steps.target.outputs.number }}
@@ -481,6 +482,7 @@ jobs:
         env:
           CODEX_AUTH_JSON: ${{ secrets.CODEX_AUTH_JSON }}
           CODEX_VERIFIER_KEY: ${{ secrets.CODEX_VERIFIER_KEY }}
+          SCREENS_DIR: ${{ runner.temp }}/screens
           SHA: ${{ steps.target.outputs.sha }}
         run: |
           set -euo pipefail
@@ -553,6 +555,7 @@ jobs:
         if: steps.target.outputs.go == 'yes' && needs.engine.outputs.claude == 'yes' && (needs.engine.outputs.codex == 'no' || steps.codex.outcome == 'failure')
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          SCREENS_DIR: ${{ runner.temp }}/screens
           SHA: ${{ steps.target.outputs.sha }}
         run: |
           set -euo pipefail

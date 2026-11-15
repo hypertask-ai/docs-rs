@@ -82,7 +82,7 @@ await test("reads the change from the checkout without the pull request diff end
   }
 });
 
-await test("reads a change with more than three hundred files and caps the prompt copy", () => {
+await test("reads a change above eight hundred files and lists every file", () => {
   const cwd = makeRepository();
 
   try {
@@ -92,7 +92,7 @@ await test("reads a change with more than three hundred files and caps the promp
 
     mkdirSync(path.join(cwd, "pages"), { recursive: true });
 
-    for (let index = 0; index < 320; index += 1) {
+    for (let index = 0; index < 820; index += 1) {
       writeFileSync(
         path.join(cwd, `pages/page-${String(index).padStart(3, "0")}.md`),
         `page ${String(index)}\n`
@@ -103,8 +103,8 @@ await test("reads a change with more than three hundred files and caps the promp
 
     const facts = collectDiff(base, head, path.join(cwd, "out"), cwd, 400);
 
-    assert.equal(facts.files, 320);
-    assert.equal(facts.added, 320);
+    assert.equal(facts.files, 820);
+    assert.equal(facts.added, 820);
     assert.equal(facts.capped, true);
     assert.ok(facts.cappedBytes <= 400);
     assert.ok(facts.cappedBytes < facts.bytes);
@@ -119,8 +119,10 @@ await test("reads a change with more than three hundred files and caps the promp
 
     const files = readFileSync(facts.filesPath, "utf-8");
 
-    assert.match(files, /320 files changed/u);
+    assert.match(files, /820 files changed/u);
     assert.match(files, /prompt copy capped at/u);
+    assert.match(files, /\+1 -0 pages\/page-819\.md/u);
+    assert.doesNotMatch(files, /more files, see the full diff/u);
   } finally {
     rmSync(cwd, { force: true, recursive: true });
   }

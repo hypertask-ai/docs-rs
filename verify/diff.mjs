@@ -14,8 +14,6 @@ const DEFAULT_LIMIT_BYTES = 200_000;
 
 const MAX_BUFFER_BYTES = 67_108_864;
 
-const MAX_FILE_LINES = 800;
-
 const DIFF_FLAGS = [
   "diff",
   "--no-color",
@@ -204,16 +202,12 @@ const capFile = (file, cappedFile, limit) => {
 const fileLines = (rows) => {
   const lines = [];
 
-  for (const row of rows.slice(0, MAX_FILE_LINES)) {
+  for (const row of rows) {
     const added = row.added === null ? "binary" : `+${row.added}`;
 
     const removed = row.removed === null ? "binary" : `-${row.removed}`;
 
     lines.push(`${added} ${removed} ${row.path}`);
-  }
-
-  if (rows.length > MAX_FILE_LINES) {
-    lines.push(`${rows.length - MAX_FILE_LINES} more files, see the full diff`);
   }
 
   return lines;
