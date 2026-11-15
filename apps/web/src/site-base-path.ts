@@ -1,4 +1,4 @@
-const rootRelativePath = /^\/(?:[A-Za-z0-9._~-]+\/?)*$/u;
+const rootRelativePath = /^\/[A-Za-z0-9._~/-]*$/u;
 
 export const normalizeSiteBasePath = (value?: string): string => {
   const trimmed = (value ?? "").trim();
@@ -7,7 +7,7 @@ export const normalizeSiteBasePath = (value?: string): string => {
     return "";
   }
 
-  if (trimmed.startsWith("//") || !rootRelativePath.test(trimmed)) {
+  if (!rootRelativePath.test(trimmed) || trimmed.includes("//")) {
     throw new Error(
       "Site base path must be one root-relative path such as /ratstack. A relative path or a full URL cannot prefix the site's own links. Fix: set SITE_BASE_PATH to /ratstack, or leave it empty to serve the site at the origin root."
     );
