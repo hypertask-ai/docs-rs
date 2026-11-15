@@ -135,7 +135,8 @@
       "cacheControl": "public, max-age=0, must-revalidate",
       "etag": "weak",
       "etagOwner": "code",
-      "vary": "absent"
+      "vary": "absent",
+      "contentTypeOwner": "HTPR-9185"
     },
     {
       "address": "/llms-full.txt",
@@ -145,7 +146,8 @@
       "cacheControl": "public, max-age=0, must-revalidate",
       "etag": "weak",
       "etagOwner": "code",
-      "vary": "absent"
+      "vary": "absent",
+      "contentTypeOwner": "HTPR-9185"
     },
     {
       "address": "/changelog.xml",
