@@ -95,7 +95,7 @@ const readSource = Effect.fn("readChangelogSource")(
             cause
           )
         ),
-      try: () => parseYaml(yaml),
+      try: (): Schema.Json => parseYaml(yaml),
     }).pipe(
       Effect.flatMap((parsed) =>
         Schema.decodeUnknownEffect(ChangelogFrontmatter)(parsed).pipe(
@@ -178,12 +178,11 @@ export const readChangelog = Effect.fn("readChangelog")(function* readChangelog(
 
     sources.push(source);
 
-    for (const text of [
-      source.body.match(/## Details\s*\n(?<details>[\s\S]*?)(?:\n## |$)/u)
-        ?.groups?.details ?? source.body,
-      source.body,
-      source.summary,
-    ]) {
+    const details =
+      /## Details\s*\n(?<details>[\s\S]*?)(?:\n## |$)/u.exec(source.body)
+        ?.groups?.details ?? source.body;
+
+    for (const text of [details, source.body, source.summary]) {
       for (const key of announcementKeys(source.date, text)) {
         known.add(key);
       }
