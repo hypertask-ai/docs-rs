@@ -36,12 +36,12 @@ export const docsHeaderTabs: readonly DocsHeaderTab[] = [
   {
     isActive: (path) => path === "/" || isWithin("/getting-started", path),
     label: "Getting started",
-    path: "/getting-started/introduction",
+    path: "/getting-started/introduction/",
   },
   {
     isActive: (path) => isWithin("/features", path),
     label: "Web App",
-    path: "/features/boards",
+    path: "/features/boards/",
   },
   {
     isActive: (path) =>
@@ -49,17 +49,17 @@ export const docsHeaderTabs: readonly DocsHeaderTab[] = [
       isWithin("/api", path) ||
       isWithin("/connect-an-agent", path),
     label: "MCP for AI agents",
-    path: "/mcp/overview",
+    path: "/mcp/overview/",
   },
   {
     isActive: (path) => isWithin("/cli", path),
     label: "CLI reference",
-    path: "/cli/reference",
+    path: "/cli/reference/",
   },
   {
     isActive: (path) => isWithin("/changelog", path),
     label: "Changelog",
-    path: "/changelog",
+    path: "/changelog/",
   },
 ];
 
