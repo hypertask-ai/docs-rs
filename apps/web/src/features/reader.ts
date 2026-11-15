@@ -24,6 +24,7 @@ import {
   docsMobileToc,
   docsSidebar,
   docsToc,
+  TOP_ANCHOR_ID,
 } from "./docs-chrome.js";
 import { docsChrome } from "./docs-chrome.stylex.js";
 import { docsGroupForPath, docsPageMarkdownPath } from "./docs-sidebar.js";
@@ -415,6 +416,7 @@ export const view = (
                   : [h.div([h.Class(kickerClass)], [group.label])]),
                 h.main(
                   [
+                    h.Id(TOP_ANCHOR_ID),
                     h.DataAttribute("path", model.page.path),
                     h.Class("docs-main"),
                   ],

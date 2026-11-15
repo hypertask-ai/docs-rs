@@ -116,10 +116,12 @@ export const currentAnchorText = (
   Option.match(model.readingAnchorId, {
     onNone: () => model.heading,
     onSome: (id) =>
-      Option.match(
-        Option.flatMap(model.references, (references) =>
-          Array.findFirst(references.anchors, (anchor) => anchor.id === id)
-        ),
-        { onNone: () => model.heading, onSome: (anchor) => anchor.text }
-      ),
+      Option.match(model.references, {
+        onNone: () => model.heading,
+        onSome: (references) =>
+          Option.match(
+            Array.findFirst(references.anchors, (anchor) => anchor.id === id),
+            { onNone: () => model.heading, onSome: (anchor) => anchor.text }
+          ),
+      }),
   });

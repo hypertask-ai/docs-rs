@@ -19,16 +19,18 @@ const motion = Subscription.lift(MotionDemo.subscriptions)<
 const readingThreshold = () =>
   (document.querySelector(".docs-header")?.getBoundingClientRect().height ??
     0) +
-  (document.getElementById("docs-mobile-toc-summary")?.getBoundingClientRect()
+  (document.querySelector("#docs-mobile-toc-summary")?.getBoundingClientRect()
     .height ?? 0) +
   32;
 
 const headingPositions = (): readonly DocsHeadingPosition[] =>
-  Array.from(
-    document.querySelectorAll<HTMLAnchorElement>(".docs-mobile-toc-list a")
-  ).flatMap((link) => {
+  [
+    ...document.querySelectorAll<HTMLAnchorElement>(".docs-mobile-toc-list a"),
+  ].flatMap((link) => {
     const id = decodeURIComponent(link.hash.slice(1));
-    const heading = document.getElementById(id);
+    const heading = document.querySelector<HTMLElement>(
+      `[id="${CSS.escape(id)}"]`
+    );
 
     return heading === null
       ? []

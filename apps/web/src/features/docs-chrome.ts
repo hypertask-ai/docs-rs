@@ -17,6 +17,8 @@ import { homeRouter, searchRouter } from "./site-route.js";
 const className = (...styles: stylex.StyleXStyles[]) =>
   stylex.props(...styles).className ?? "";
 
+export const TOP_ANCHOR_ID = "_top";
+
 const activeTab = (active: boolean) => (active ? docsChrome.tabActive : false);
 
 const activeLink = (current: boolean) =>
@@ -134,6 +136,105 @@ const sidebarGroup = <Message>(
     ]
   );
 
+export const docsHeader = <Message>(
+  path: string,
+  h: HtmlBuilder<Message>
+): Html =>
+  h.header(
+    [h.Class(`${className(docsChrome.header)} docs-header`)],
+    [
+      h.div(
+        [h.Class(`${className(docsChrome.headerMain)} docs-header-main`)],
+        [
+          h.a(
+            [h.Href(homeRouter()), h.Class(className(docsChrome.brand))],
+            [
+              h.img([
+                h.Src("/glyph-white.png"),
+                h.Alt(""),
+                h.Width("22"),
+                h.Height("26"),
+                h.Class(className(docsChrome.glyph)),
+              ]),
+              h.span([h.Class(className(docsChrome.wordmark))], ["Hypertask"]),
+              h.span([h.Class(className(docsChrome.docsLabel))], ["Docs"]),
+            ]
+          ),
+          h.a(
+            [
+              h.Href(searchRouter()),
+              h.Class(`${className(docsChrome.search)} docs-search`),
+              h.AriaLabel("Search docs"),
+              h.Attribute("aria-keyshortcuts", "Control+K"),
+            ],
+            [
+              searchIcon(h),
+              h.span([h.Class("docs-search-label")], ["Search docs"]),
+              h.span(
+                [h.Class(`${className(docsChrome.kbd)} docs-kbd`)],
+                ["Ctrl K"]
+              ),
+            ]
+          ),
+          h.div(
+            [h.Class(`${className(docsChrome.headerLinks)} docs-header-links`)],
+            docsHeaderLinks.map((link) =>
+              h.a(
+                [
+                  h.Href(link.path),
+                  h.Class(
+                    className(
+                      link.openApp ? docsChrome.openApp : docsChrome.textLink
+                    )
+                  ),
+                ],
+                [link.label]
+              )
+            )
+          ),
+        ]
+      ),
+      h.nav(
+        [
+          h.AriaLabel("Documentation sections"),
+          h.Class(`${className(docsChrome.tabs)} docs-section-tabs`),
+        ],
+        docsHeaderTabs.map((tab) =>
+          h.a(
+            [
+              h.Key(tab.path),
+              h.Href(tab.path),
+              h.Class(className(docsChrome.tab, activeTab(tab.isActive(path)))),
+              h.Attribute(
+                "aria-current",
+                tab.isActive(path) ? "page" : "false"
+              ),
+            ],
+            [tab.label]
+          )
+        )
+      ),
+    ]
+  );
+
+export const docsSidebar = <Message>(
+  path: string,
+  h: HtmlBuilder<Message>
+): Html =>
+  h.nav(
+    [
+      h.AriaLabel("Main"),
+      h.Class(className(docsChrome.sidebar)),
+      h.Id("docs-sidebar"),
+    ],
+    [
+      h.ul(
+        [h.Class(className(docsChrome.groupList))],
+        docsSidebarGroups.map((group) => sidebarGroup(group, path, h))
+      ),
+    ]
+  );
+
 export const docsMenuButton = <Message>(
   open: boolean,
   onToggle: () => Message,
@@ -192,13 +293,13 @@ export const docsBreadcrumb = <Message>(
   title: string,
   h: HtmlBuilder<Message>
 ): Html =>
-  h.nav(
-    [h.AriaLabel("Breadcrumb"), h.Class("docs-breadcrumb")],
+  h.div(
+    [h.Class("docs-breadcrumb")],
     [
       docsHeaderTabs.find((tab) => tab.isActive(path))?.label ??
         "Getting started",
       " ",
-      h.span([h.AriaHidden(true)], ["\u203a"]),
+      h.span([h.AriaHidden(true)], ["\u203A"]),
       " ",
       h.span([], [title]),
     ]
@@ -235,87 +336,85 @@ export const docsMobileToc = <Message>(
   },
   h: HtmlBuilder<Message>
 ): Html => {
-  const anchors = Option.match(model.references, {
-    onNone: () => [],
-    onSome: (references) => references.anchors,
-  });
+  const anchors = [
+    { id: TOP_ANCHOR_ID, text: model.heading },
+    ...Option.match(model.references, {
+      onNone: () => [],
+      onSome: (references) => references.anchors,
+    }),
+  ];
+  const currentId = Option.getOrElse(
+    model.readingAnchorId,
+    () => TOP_ANCHOR_ID
+  );
 
   return h.div(
     [h.Class("docs-toc-slot")],
-    anchors.length === 0
-      ? []
-      : [
-          h.nav(
+    [
+      h.nav(
+        [h.AriaLabelledBy("docs-mobile-toc-summary"), h.Class("docs-toc-bar")],
+        [
+          h.details(
             [
-              h.AriaLabelledBy("docs-mobile-toc-summary"),
-              h.Class("docs-toc-bar"),
+              h.Id("docs-mobile-toc"),
+              h.Class("docs-mobile-toc"),
+              h.Open(model.mobileToc.open),
+              h.OnKeyDownPreventDefault((key) =>
+                key === "Escape"
+                  ? Option.some(options.onEscape())
+                  : Option.none()
+              ),
             ],
             [
-              h.details(
+              h.summary(
                 [
-                  h.Id("docs-mobile-toc"),
-                  h.Class("docs-mobile-toc"),
-                  h.Open(model.mobileToc.open),
-                  h.OnKeyDownPreventDefault((key) =>
-                    key === "Escape"
-                      ? Option.some(options.onEscape())
-                      : Option.none()
-                  ),
+                  h.Id("docs-mobile-toc-summary"),
+                  h.Class("docs-mobile-toc-summary"),
+                  h.OnClick(options.onToggle()),
                 ],
                 [
-                  h.summary(
-                    [
-                      h.Id("docs-mobile-toc-summary"),
-                      h.Class("docs-mobile-toc-summary"),
-                      h.OnClick(options.onToggle()),
-                    ],
-                    [
-                      h.span(
-                        [h.Class("docs-mobile-toc-toggle")],
-                        ["On this page", tocCaret(h)]
-                      ),
-                      h.span(
-                        [h.Class("docs-mobile-toc-current")],
-                        [currentAnchorText(model)]
-                      ),
-                    ]
+                  h.span(
+                    [h.Class("docs-mobile-toc-toggle")],
+                    ["On this page", tocCaret(h)]
                   ),
-                  h.div(
-                    [h.Class("docs-mobile-toc-dropdown")],
-                    [
-                      h.ul(
-                        [h.Class("docs-mobile-toc-list")],
-                        anchors.map((anchor) =>
-                          h.li(
-                            [h.Key(anchor.id)],
+                  h.span(
+                    [h.Class("docs-mobile-toc-current")],
+                    [currentAnchorText(model)]
+                  ),
+                ]
+              ),
+              h.div(
+                [h.Class("docs-mobile-toc-dropdown")],
+                [
+                  h.ul(
+                    [h.Class("docs-mobile-toc-list")],
+                    anchors.map((anchor) =>
+                      h.li(
+                        [h.Key(anchor.id)],
+                        [
+                          h.a(
                             [
-                              h.a(
-                                [
-                                  h.Href(`#${anchor.id}`),
-                                  h.Class("docs-mobile-toc-link"),
-                                  h.Attribute(
-                                    "aria-current",
-                                    Option.getOrUndefined(
-                                      model.readingAnchorId
-                                    ) === anchor.id
-                                      ? "true"
-                                      : "false"
-                                  ),
-                                  h.OnClick(options.onSelect()),
-                                ],
-                                [anchor.text]
+                              h.Href(`#${anchor.id}`),
+                              h.Class("docs-mobile-toc-link"),
+                              h.Attribute(
+                                "aria-current",
+                                anchor.id === currentId ? "true" : "false"
                               ),
-                            ]
-                          )
-                        )
-                      ),
-                    ]
+                              h.OnClick(options.onSelect()),
+                            ],
+                            [anchor.text]
+                          ),
+                        ]
+                      )
+                    )
                   ),
                 ]
               ),
             ]
           ),
         ]
+      ),
+    ]
   );
 };
 

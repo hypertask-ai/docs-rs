@@ -91,11 +91,18 @@ it("escape inside the open drawer shuts it and puts focus back on the menu butto
 });
 
 it("the phone contents bar starts shut, opens from its summary, and names the page heading first", () => {
+  const headingRow = within(
+    mobileToc,
+    role("link", { name: "What is Hypertask?" })
+  );
+
   scene(
     { update, view },
     given(docsPage),
     expect(mobileToc).toHaveAttr("open", "false"),
     expect(mobileTocCurrent).toHaveText("What is Hypertask?"),
+    expect(headingRow).toHaveAttr("href", "#_top"),
+    expect(headingRow).toHaveAttr("aria-current", "true"),
     click(mobileTocToggle),
     expect(mobileToc).toHaveAttr("open", "true"),
     Command.expectNone()
@@ -164,7 +171,7 @@ it("the phone breadcrumb names the section and the page", () => {
     given(docsPage),
     expect(selector(".docs-breadcrumb")).toContainText("Getting started"),
     expect(selector(".docs-breadcrumb")).toContainText("What is Hypertask?"),
-    expect(selector(".docs-breadcrumb")).toContainText("\u203a"),
+    expect(selector(".docs-breadcrumb")).toContainText("\u203A"),
     Command.expectNone()
   );
 });

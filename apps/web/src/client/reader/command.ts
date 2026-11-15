@@ -13,7 +13,7 @@ export const MoveFocus = Command.define("MoveFocus", {
   args: { selector: Schema.String },
   execute: ({ selector }) =>
     Dom.focus(selector).pipe(
-      Effect.orElseSucceed(() => undefined),
+      Effect.ignore,
       Effect.as(Message.CompletedMoveFocus())
     ),
   messages: [Message.CompletedMoveFocus],

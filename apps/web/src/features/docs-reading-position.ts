@@ -10,7 +10,7 @@ export const currentHeadingId = (
   threshold: number
 ): Option.Option<string> => {
   const above = headings.filter((heading) => heading.top <= threshold);
-  const last = above[above.length - 1];
+  const last = above.at(-1);
 
   return last === undefined ? Option.none() : Option.some(last.id);
 };
