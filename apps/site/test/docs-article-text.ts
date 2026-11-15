@@ -1,6 +1,7 @@
 import { DomUtils, ElementType, parseDocument } from "htmlparser2";
 
 type DomNode = ReturnType<typeof parseDocument>["children"][number];
+
 type Element = Parameters<typeof DomUtils.getAttributeValue>[0];
 
 const blockTags = new Set([
@@ -133,31 +134,66 @@ const writeBlockBreak = (state: ArticleState) => {
   state.parts.push("\n");
 };
 
-function visit(
+const writeImage = (state: ArticleState, element: Element) => {
+  if (element.name === "img") {
+    state.images.push({
+      alt: element.attribs.alt ?? "",
+      src: element.attribs.src ?? "",
+    });
+  }
+};
+
+const writeHeading = (
+  state: ArticleState,
+  level: number | undefined,
+  heading: readonly string[] | undefined
+) => {
+  if (heading !== undefined && level !== undefined) {
+    state.headings.push({ level, text: textOf(heading) });
+  }
+};
+
+const writeLink = (
+  state: ArticleState,
+  element: Element,
+  link: readonly string[] | undefined
+) => {
+  if (link !== undefined) {
+    state.links.push({ href: element.attribs.href ?? "", text: textOf(link) });
+  }
+};
+
+type Visit = (
   state: ArticleState,
   node: DomNode,
   captures: readonly string[][],
   collect: boolean
-): void {
-  if (node.type === ElementType.Text) {
-    writeText(state, node.data, captures, collect);
+) => void;
 
-    return;
-  }
-
-  if (node.type === ElementType.Tag) {
-    visitElement(state, node, captures, collect);
-  }
-}
-
-function visitElement(
+const writeTabLabel = (
   state: ArticleState,
   element: Element,
   captures: readonly string[][],
-  collect: boolean
-): void {
+  visit: Visit
+) => {
+  const label: string[] = [];
+
+  for (const child of element.children) {
+    visit(state, child, [...captures, label], false);
+  }
+
+  state.tabLabels.push(textOf(label));
+};
+
+const visitElement = (
+  state: ArticleState,
+  element: Element,
+  captures: readonly string[][],
+  collect: boolean,
+  visit: Visit
+) => {
   if (isTabLabel(element)) {
-    writeTabLabel(state, element, captures);
+    writeTabLabel(state, element, captures, visit);
 
     return;
   }
@@ -194,37 +230,19 @@ function visitElement(
     writeBlockBreak(state);
   }
 
-  writeHeading(state, element, level, heading);
+  writeHeading(state, level, heading);
   writeLink(state, element, link);
-}
-
-const writeImage = (state: ArticleState, element: Element) => {
-  if (element.name === "img") {
-    state.images.push({
-      alt: element.attribs.alt ?? "",
-      src: element.attribs.src ?? "",
-    });
-  }
 };
 
-const writeHeading = (
-  state: ArticleState,
-  element: Element,
-  level: number | undefined,
-  heading: readonly string[] | undefined
-) => {
-  if (heading !== undefined && level !== undefined) {
-    state.headings.push({ level, text: textOf(heading) });
-  }
-};
+const visit: Visit = (state, node, captures, collect) => {
+  if (node.type === ElementType.Text) {
+    writeText(state, node.data, captures, collect);
 
-const writeLink = (
-  state: ArticleState,
-  element: Element,
-  link: readonly string[] | undefined
-) => {
-  if (link !== undefined) {
-    state.links.push({ href: element.attribs.href ?? "", text: textOf(link) });
+    return;
+  }
+
+  if (node.type === ElementType.Tag) {
+    visitElement(state, node, captures, collect, visit);
   }
 };
 
@@ -259,17 +277,3 @@ export const docsArticleOf = (html: string, path: string): DocsArticle => {
     text: textOf(state.parts),
   };
 };
-
-function writeTabLabel(
-  state: ArticleState,
-  element: Element,
-  captures: readonly string[][]
-): void {
-  const label: string[] = [];
-
-  for (const child of element.children) {
-    visit(state, child, [...captures, label], false);
-  }
-
-  state.tabLabels.push(textOf(label));
-}

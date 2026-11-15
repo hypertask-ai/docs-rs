@@ -20,7 +20,7 @@ export const readerHomeFlags = Effect.fn("readerHomeFlags")(
     }
 
     if (page.sourcePath.startsWith(`${docsContentDirectory}/`)) {
-      return undefined;
+      return;
     }
 
     const home = yield* Effect.try({
