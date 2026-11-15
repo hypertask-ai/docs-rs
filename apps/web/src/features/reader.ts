@@ -386,15 +386,15 @@ export const view = (
       ],
       [
         docsHeader(model.page.path, h),
-        mobileToc,
-        ...(group === undefined
-          ? []
-          : [docsBreadcrumb(model.page.path, model.heading, h)]),
         docsMenuButton(
           model.mobileNav.open,
           () => Message.ClickedMobileNavToggle(),
           h
         ),
+        mobileToc,
+        ...(group === undefined
+          ? []
+          : [docsBreadcrumb(model.page.path, model.heading, h)]),
         h.div(
           [h.Class("docs-body")],
           [
