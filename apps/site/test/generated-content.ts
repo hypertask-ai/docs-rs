@@ -84,7 +84,7 @@ export const generatedTokenmaxxPage = renderStaticDocument(
 
 export const homeDocumentHtml = documentFor("/");
 
-export const learnModeDocumentHtml = documentFor("/lore/learn-mode");
+export const learnModeDocumentHtml = documentFor("/learn");
 
 export const codeSnippetsDocumentHtml = documentFor("/lore/code-snippets");
 
