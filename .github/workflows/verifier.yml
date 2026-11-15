@@ -57,7 +57,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
       SERVER_URL: ${{ github.server_url }}
       RUN_ID: ${{ github.run_id }}
@@ -65,6 +64,7 @@ jobs:
       - name: Resolve the pull request and its head commit
         id: target
         env:
+          GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr }}
         run: |
           set -euo pipefail
@@ -237,6 +237,7 @@ jobs:
       - name: Write the verifier prompt with the change under review
         if: steps.target.outputs.go == 'yes'
         env:
+          GH_TOKEN: ${{ github.token }}
           SHA: ${{ steps.target.outputs.sha }}
           PR: ${{ steps.target.outputs.number }}
         run: |
@@ -346,6 +347,7 @@ jobs:
         id: verdict
         if: steps.target.outputs.go == 'yes'
         env:
+          GH_TOKEN: ${{ github.token }}
           SHA: ${{ steps.target.outputs.sha }}
           PR: ${{ steps.target.outputs.number }}
           CODEX_OUTCOME: ${{ steps.codex.outcome }}
