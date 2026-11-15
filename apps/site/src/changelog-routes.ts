@@ -1,16 +1,39 @@
-import { toHttpApi } from "@rat-stack/capability/http-api";
-import * as AlchemyHttp from "alchemy/Http";
-import { Layer } from "effect";
-import * as HttpApiBuilder from "effect/http-api/HttpApiBuilder";
+import { Effect, Layer } from "effect";
+import * as HttpRouter from "effect/http/HttpRouter";
+import * as HttpServerResponse from "effect/http/HttpServerResponse";
 
-import { changelogCapabilities } from "./capabilities/changelog.js";
+import {
+  changelogJsonFeed,
+  changelogMarkdownFeed,
+  changelogRssFeed,
+} from "./capabilities/changelog.js";
 
-const changelogApi = toHttpApi(
-  "docs.hypertask.ai-changelog",
-  changelogCapabilities
-);
-
-export const changelogRoutes = HttpApiBuilder.layer(changelogApi.api).pipe(
-  Layer.provide(changelogApi.layer),
-  Layer.provide(AlchemyHttp.Platform)
+export const changelogRoutes = Layer.mergeAll(
+  HttpRouter.add("GET", "/changelog.json", () =>
+    changelogJsonFeed
+      .handler({})
+      .pipe(
+        Effect.map((body) =>
+          HttpServerResponse.text(body, { contentType: "application/json" })
+        )
+      )
+  ),
+  HttpRouter.add("GET", "/changelog.md", () =>
+    changelogMarkdownFeed.handler({}).pipe(
+      Effect.map((body) =>
+        HttpServerResponse.text(body, {
+          contentType: "text/markdown; charset=utf-8",
+        })
+      )
+    )
+  ),
+  HttpRouter.add("GET", "/changelog.xml", () =>
+    changelogRssFeed
+      .handler({})
+      .pipe(
+        Effect.map((body) =>
+          HttpServerResponse.text(body, { contentType: "application/xml" })
+        )
+      )
+  )
 );

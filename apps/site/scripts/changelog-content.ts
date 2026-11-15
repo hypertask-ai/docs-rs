@@ -40,19 +40,15 @@ export class ChangelogFormatError extends Schema.TaggedError<
   override get message() {
     const count = this.violations.length;
 
-    return (
-      [
-        `The changelog content breaks its format in ${count} ${count === 1 ? "place" : "places"}.`,
-        "Readers and outside writers need the same fields and file names.",
-        "Fix: repair every file listed below, then rerun `pnpm --filter @rat-stack/site generate`.",
-      ].join(" ") +
-      "\n" +
-      this.violations
-        .map(
-          ({ file, fix, what, why }) => `${file}: ${what} ${why} Remedy: ${fix}`
-        )
-        .join("\n")
-    );
+    return `${[
+      `The changelog content breaks its format in ${count} ${count === 1 ? "place" : "places"}.`,
+      "Readers and outside writers need the same fields and file names.",
+      "Fix: repair every file listed below, then rerun `pnpm --filter @rat-stack/site generate`.",
+    ].join(" ")}\n${this.violations
+      .map(
+        ({ file, fix, what, why }) => `${file}: ${what} ${why} Remedy: ${fix}`
+      )
+      .join("\n")}`;
   }
 }
 
@@ -68,9 +64,11 @@ const readSource = Effect.fn("readChangelogSource")(
     const fileSystem = yield* FileSystem.FileSystem;
     const path = yield* Path.Path;
     const sourcePath = `${CHANGELOG_DIRECTORY}/${file}`;
+
     const raw = yield* fileSystem
       .readFileString(path.join(root, CHANGELOG_DIRECTORY, file))
       .pipe(Effect.mapError((cause) => buildError("read", sourcePath, cause)));
+
     const leading = scanLeadingFrontmatterFence(raw, sourcePath);
 
     if (leading.yaml === undefined) {
@@ -84,6 +82,7 @@ const readSource = Effect.fn("readChangelogSource")(
     }
 
     const yaml = leading.yaml.value;
+
     const frontmatter = yield* Effect.try({
       catch: (cause) =>
         buildError(
@@ -115,6 +114,7 @@ const readSource = Effect.fn("readChangelogSource")(
         )
       )
     );
+
     const body = leading.body.trim();
 
     return {
@@ -161,13 +161,15 @@ export const readChangelog = Effect.fn("readChangelog")(function* readChangelog(
 ) {
   const fileSystem = yield* FileSystem.FileSystem;
   const path = yield* Path.Path;
+
   const files = (yield* fileSystem
     .readDirectory(path.join(root, CHANGELOG_DIRECTORY))
     .pipe(
       Effect.mapError((cause) => buildError("read", CHANGELOG_DIRECTORY, cause))
     ))
     .filter((file) => /\.mdx?$/u.test(file))
-    .sort();
+    .toSorted();
+
   const sources: ChangelogSource[] = [];
   const known = new Set<string>();
 
@@ -175,9 +177,10 @@ export const readChangelog = Effect.fn("readChangelog")(function* readChangelog(
     const source = yield* readSource(root, file);
 
     sources.push(source);
+
     for (const text of [
-      source.body.match(/## Details\s*\n([\s\S]*?)(?:\n## |$)/u)?.[1] ??
-        source.body,
+      source.body.match(/## Details\s*\n(?<details>[\s\S]*?)(?:\n## |$)/u)
+        ?.groups?.details ?? source.body,
       source.body,
       source.summary,
     ]) {

@@ -10,7 +10,9 @@ import {
 import { Effect, FileSystem, Schema } from "effect";
 
 const repository = new URL("../../../", import.meta.url);
+
 const legacyPath = "src/content/docs/changelog/index.mdx";
+
 const digest = (text: string) =>
   createHash("sha256").update(text).digest("hex");
 
@@ -36,9 +38,11 @@ it.effect("reads both the Update and the dated heading formats", () =>
   Effect.gen(function* readBothLegacyFormats() {
     const update =
       '<Update label="January 1, 2099">\n* Added: Board &amp; search updates (HTPR-9999700)\n</Update>';
+
     const append = yield* read(
       "apps/site/test/fixtures/changelog/changelog-worker-append.mdx"
     );
+
     const entries = parseLegacyChangelog(
       `${update}\n${append}`,
       "fixture",
@@ -61,9 +65,11 @@ it.effect("reads both the Update and the dated heading formats", () =>
 it.effect("reads the real legacy file and keeps every captured address", () =>
   Effect.gen(function* readRealLegacyFile() {
     const raw = yield* read(legacyPath);
+
     const captured = yield* Schema.decodeUnknownEffect(
       Schema.fromJsonString(CapturedFeed)
     )(yield* read("apps/site/test/fixtures/changelog/changelog-json-feed.txt"));
+
     const entries = parseLegacyChangelog(raw, legacyPath, digest);
     const capturedIds = new Set(captured.items.map((item) => item.id));
 

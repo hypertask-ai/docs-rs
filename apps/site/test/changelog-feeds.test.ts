@@ -30,7 +30,7 @@ const readFixture = (name: string) =>
     const fileSystem = yield* FileSystem.FileSystem;
 
     return yield* fileSystem.readFileString(
-      new URL(`./fixtures/changelog/${name}`, import.meta.url).pathname
+      new URL(`fixtures/changelog/${name}`, import.meta.url).pathname
     );
   });
 
@@ -66,12 +66,15 @@ it.effect(
   () =>
     Effect.gen(function* reproduceJsonFeed() {
       const entries = yield* readChangelog(repositoryRoot);
+
       const captured = yield* Schema.decodeUnknownEffect(
         Schema.fromJsonString(JsonFeed)
       )(yield* readFixture("changelog-json-feed.txt"));
+
       const produced = yield* Schema.decodeUnknownEffect(
         Schema.fromJsonString(JsonFeed)
       )(changelogJsonText(entries));
+
       const capturedIds = new Set(captured.items.map((item) => item.id));
       const pinned = produced.items.filter((item) => capturedIds.has(item.id));
 
@@ -87,9 +90,11 @@ it.effect(
   () =>
     Effect.gen(function* reproduceMarkdownFeed() {
       const entries = yield* readChangelog(repositoryRoot);
+
       const captured = markdownBlocks(
         yield* readFixture("changelog-markdown-feed.txt")
       );
+
       const produced = markdownBlocks(changelogMarkdownText(entries));
 
       expect(containsInOrder(produced, captured.slice(0, 20))).toBe(true);

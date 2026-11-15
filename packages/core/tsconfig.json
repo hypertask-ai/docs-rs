@@ -13,7 +13,6 @@
           "effect/Path",
           "effect/crypto/Digest",
           "effect/crypto/SecureRandom",
-          "effect/http-api/HttpApiSchema",
           "effect/http/HttpClient",
           "effect/http/HttpClientResponse",
           "effect/http/HttpServerRequest",

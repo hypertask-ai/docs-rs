@@ -1,6 +1,5 @@
 import { defineContract } from "@rat-stack/capability/contract";
 import { DateTime, Option, Schema } from "effect";
-import * as HttpApiSchema from "effect/http-api/HttpApiSchema";
 
 import { AssetReadError } from "./asset-read-error.js";
 
@@ -50,18 +49,18 @@ const changelogUrl = (id: string) => `${CHANGELOG_ORIGIN}/changelog/${id}/`;
 const changelogDateTime = (date: string) =>
   Option.getOrThrow(DateTime.make(`${date}T00:00:00.000Z`));
 
-const plainAnnouncementEntities: Readonly<Record<string, string>> = {
-  amp: "&",
-  apos: "'",
-  gt: ">",
-  lt: "<",
-  nbsp: " ",
-  quot: '"',
-};
+const plainAnnouncementEntities: ReadonlyMap<string, string> = new Map([
+  ["amp", "&"],
+  ["apos", "'"],
+  ["gt", ">"],
+  ["lt", "<"],
+  ["nbsp", " "],
+  ["quot", '"'],
+]);
 
 const decodeAnnouncementEntities = (text: string) =>
   text.replaceAll(
-    /&(#x[\da-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/giu,
+    /&(?<entity>#x[\da-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/giu,
     (_, entity: string) =>
       entity.startsWith("#")
         ? String.fromCodePoint(
@@ -69,32 +68,33 @@ const decodeAnnouncementEntities = (text: string) =>
               ? Number.parseInt(entity.slice(2), 16)
               : Number(entity.slice(1))
           )
-        : (plainAnnouncementEntities[entity.toLowerCase()] ?? entity)
+        : (plainAnnouncementEntities.get(entity.toLowerCase()) ?? entity)
   );
 
 export const plainAnnouncement = (text: string) =>
   decodeAnnouncementEntities(
     text
-      .replaceAll(/\[([^\]]+)\]\([^)]+\)/gu, "$1")
+      .replaceAll(/\[(?<text>[^\]]+)\]\([^)]+\)/gu, "$<text>")
       .replaceAll(/<\/?(?:p|strong|li|ul|code|kbd|em|a)\b[^>]*>/gu, "")
-      .replaceAll(/\*\*([^*]+)\*\*/gu, "$1")
+      .replaceAll(/\*\*(?<text>[^*]+)\*\*/gu, "$<text>")
       .replaceAll("`", "")
   )
-    .replaceAll(String.fromCodePoint(0x2014), " - ")
+    .replaceAll(String.fromCodePoint(0x20_14), " - ")
     .replaceAll("â\\x80\\x94", " - ")
-    .replaceAll(/\\+(['"])/gu, "$1")
+    .replaceAll(/\\+(?<quote>['"])/gu, "$<quote>")
     .replaceAll(/\s+/gu, " ")
     .trim();
 
 export const announcementKeys = (date: string, text: string) => {
   const day = DateTime.formatIsoDateUtc(changelogDateTime(date));
   const plain = plainAnnouncement(text);
+
   const tickets = [
-    ...plain.matchAll(
-      /HTPR-(\d+)|https:\/\/app\.hypertask\.ai\/detail\/project-15\/(\d+)/giu
-    ),
-  ].map((match) => match[1] ?? match[2] ?? "");
-  const ticketKey = [...new Set(tickets)].sort().join(",");
+    ...plain.matchAll(/HTPR-(?<ticket>\d+)/giu),
+    ...plain.matchAll(/detail\/project-15\/(?<ticket>\d+)/giu),
+  ].map((match) => match.groups?.ticket ?? "");
+
+  const ticketKey = [...new Set(tickets)].toSorted().join(",");
 
   return [
     `${day}|text|${plain.toLowerCase()}`,
@@ -123,9 +123,10 @@ const areaTags = (text: string) => {
     ["Inbox", /inbox|notification|remind/iu],
     ["Settings", /setting|flag/iu],
   ] as const;
-  const tags = areas
-    .filter(([, pattern]) => pattern.test(text))
-    .map(([tag]) => tag);
+
+  const tags = areas.flatMap(([tag, pattern]) =>
+    pattern.test(text) ? [tag] : []
+  );
 
   return tags.length === 0 ? ["Hypertask"] : tags;
 };
@@ -188,21 +189,31 @@ export const parseLegacyChangelog = (
   digest: (text: string) => string
 ): readonly LegacyChangelogEntry[] => {
   const normalized = raw
-    .replaceAll(/<Update\s+label=["']([^"']+)["'][^>]*>/gu, "\n## $1\n")
+    .replaceAll(
+      /<Update\s+label=["'](?<label>[^"']+)["'][^>]*>/gu,
+      "\n## $<label>\n"
+    )
     .replaceAll("</Update>", "\n")
     .replaceAll(/\\+n/gu, "\n");
-  const headings = [...normalized.matchAll(/^## (\w+ \d+, \d{4})\s*$/gmu)];
+
+  const headings = [
+    ...normalized.matchAll(/^## (?<label>\w+ \d+, \d{4})\s*$/gmu),
+  ];
 
   return headings.flatMap((heading, index) => {
-    const label = heading[1] ?? "";
-    const [, monthName = "", dayOfMonth = "", year = ""] =
-      /^(\w+) (\d+), (\d{4})$/u.exec(label) ?? [];
-    const month = legacyMonths.get(monthName.toLowerCase());
+    const label = heading.groups?.label ?? "";
+
+    const dateParts = /^(?<month>\w+) (?<day>\d+), (?<year>\d+)$/u.exec(
+      label
+    )?.groups;
+
+    const month = legacyMonths.get((dateParts?.month ?? "").toLowerCase());
+
     const date =
       month === undefined
         ? Option.none()
         : DateTime.make(
-            `${year}-${month}-${dayOfMonth.padStart(2, "0")}T00:00:00.000Z`
+            `${dateParts?.year}-${month}-${dateParts?.day.padStart(2, "0")}T00:00:00.000Z`
           );
 
     if (Option.isNone(date)) {
@@ -211,10 +222,12 @@ export const parseLegacyChangelog = (
 
     const day = DateTime.formatIsoDateUtc(date.value);
     const start = (heading.index ?? 0) + heading[0].length;
+
     const block = normalized.slice(
       start,
       headings[index + 1]?.index ?? normalized.length
     );
+
     const items: string[] = [];
 
     for (const line of block.split("\n")) {
@@ -239,17 +252,19 @@ export const parseLegacyChangelog = (
 
     return items.map((item) => {
       const text = plainAnnouncement(item);
+
       const urls = [
         ...new Set([
           ...(item.match(
             /https:\/\/app\.hypertask\.ai\/detail\/project-15\/\d+/gu
           ) ?? []),
-          ...[...text.matchAll(/HTPR-(\d+)/giu)].map(
+          ...[...text.matchAll(/HTPR-(?<ticket>\d+)/giu)].map(
             (match) =>
-              `https://app.hypertask.ai/detail/project-15/${match[1] ?? ""}`
+              `https://app.hypertask.ai/detail/project-15/${match.groups?.ticket ?? ""}`
           ),
         ]),
       ];
+
       const description = text
         .replaceAll(/\s*\(?HTPR-\d+\)?/giu, "")
         .replaceAll(
@@ -257,6 +272,7 @@ export const parseLegacyChangelog = (
           ""
         )
         .trim();
+
       const title = shortText(
         description.replace(
           /^(?:Added|Fixed|Improved|Changed|Removed|New):\s*/iu,
@@ -264,11 +280,13 @@ export const parseLegacyChangelog = (
         ),
         90
       );
+
       const sentences = [
         ...new Intl.Segmenter("en", { granularity: "sentence" }).segment(
           description
         ),
       ].slice(0, 2);
+
       const summary = shortText(
         sentences
           .map((sentence) => sentence.segment)
@@ -276,14 +294,18 @@ export const parseLegacyChangelog = (
           .trim(),
         350
       );
+
       const slug = title
         .toLowerCase()
         .replaceAll(/[^a-z0-9]+/gu, "-")
         .replaceAll(/^-|-$/gu, "");
+
       const id = `${day}-${slug}-${digest(text).slice(0, 10)}`;
+
       const links = urls
         .map((url) => `<li><a href="${url}">${url}</a></li>`)
         .join("");
+
       const related = urls.map((url) => `- [${url}](${url})`).join("\n");
 
       return {
@@ -303,13 +325,14 @@ export const parseLegacyChangelog = (
 export const sortChangelog = (
   entries: readonly ChangelogEntryValue[]
 ): readonly ChangelogEntryValue[] =>
-  [...entries].sort(
+  [...entries].toSorted(
     (left, right) =>
       right.date.localeCompare(left.date) || left.id.localeCompare(right.id)
   );
 
 export const changelogJsonText = (entries: readonly ChangelogEntryValue[]) =>
   JSON.stringify(
+    // oxlint-disable-next-line sort-keys -- JSON Feed readers see the same field order the live feed served.
     {
       version: "https://jsonfeed.org/version/1.1",
       title: CHANGELOG_TITLE,
@@ -317,15 +340,18 @@ export const changelogJsonText = (entries: readonly ChangelogEntryValue[]) =>
       home_page_url: `${CHANGELOG_ORIGIN}/changelog/`,
       feed_url: `${CHANGELOG_ORIGIN}/changelog.json`,
       language: "en",
-      items: sortChangelog(entries).map((entry) => ({
-        id: changelogUrl(entry.id),
-        title: entry.title,
-        content_text: entry.body,
-        summary: entry.summary,
-        tags: entry.tags,
-        date_published: DateTime.formatIso(changelogDateTime(entry.date)),
-        url: changelogUrl(entry.id),
-      })),
+      items: sortChangelog(entries).map((entry) =>
+        // oxlint-disable-next-line sort-keys -- JSON Feed readers see the same field order the live feed served.
+        ({
+          id: changelogUrl(entry.id),
+          title: entry.title,
+          content_text: entry.body,
+          summary: entry.summary,
+          tags: entry.tags,
+          date_published: DateTime.formatIso(changelogDateTime(entry.date)),
+          url: changelogUrl(entry.id),
+        })
+      ),
     },
     null,
     2
@@ -341,13 +367,13 @@ const longDate = new Intl.DateTimeFormat("en-US", {
 export const changelogMarkdownText = (
   entries: readonly ChangelogEntryValue[]
 ) =>
-  [
+  `${[
     "# Changelog",
     ...sortChangelog(entries).map(
       (entry) =>
         `## ${entry.title}\n\n${longDate.format(DateTime.toDateUtc(changelogDateTime(entry.date)))} | ${entry.tags.join(", ")}\n\n${entry.summary}\n\n[Read more](${changelogUrl(entry.id)})`
     ),
-  ].join("\n\n") + "\n";
+  ].join("\n\n")}\n`;
 
 const xmlEscapes: ReadonlyMap<string, string> = new Map([
   ['"', "&quot;"],
@@ -430,7 +456,7 @@ const formatViolations = (
 
   if (
     title.length === 0 ||
-    title.length > 90 ||
+    title.length > titleLimit ||
     /[<>]|HTPR-\d+/iu.test(title)
   ) {
     violations.push({
@@ -472,7 +498,7 @@ const formatViolations = (
     });
   }
 
-  if (raw.includes(String.fromCodePoint(0x2014))) {
+  if (raw.includes(String.fromCodePoint(0x20_14))) {
     violations.push({
       file,
       fix: `replace the long dash in \`${file}\` with a hyphen.`,
@@ -488,16 +514,12 @@ export const changelogFormatViolations = (
   sources: readonly ChangelogSource[]
 ): readonly ChangelogFormatViolation[] => sources.flatMap(formatViolations);
 
-const feedSuccess = (contentType: string) =>
-  Schema.String.pipe(HttpApiSchema.asText({ contentType }));
-
 export const changelogJsonFeedContract = defineContract("changelogJsonFeed", {
   annotations: { idempotent: true, readOnly: true },
   description: "The changelog as a JSON Feed 1.1 document",
   failure: AssetReadError,
-  http: { method: "GET", path: "/changelog.json" },
   input: Schema.Struct({}),
-  output: feedSuccess("application/json"),
+  output: Schema.String,
 });
 
 export const changelogMarkdownFeedContract = defineContract(
@@ -506,9 +528,8 @@ export const changelogMarkdownFeedContract = defineContract(
     annotations: { idempotent: true, readOnly: true },
     description: "The changelog as one markdown document",
     failure: AssetReadError,
-    http: { method: "GET", path: "/changelog.md" },
     input: Schema.Struct({}),
-    output: feedSuccess("text/markdown; charset=utf-8"),
+    output: Schema.String,
   }
 );
 
@@ -516,13 +537,6 @@ export const changelogRssFeedContract = defineContract("changelogRssFeed", {
   annotations: { idempotent: true, readOnly: true },
   description: "The changelog as an RSS 2.0 feed",
   failure: AssetReadError,
-  http: { method: "GET", path: "/changelog.xml" },
   input: Schema.Struct({}),
-  output: feedSuccess("application/xml"),
+  output: Schema.String,
 });
-
-export const changelogFeedContracts = [
-  changelogJsonFeedContract,
-  changelogMarkdownFeedContract,
-  changelogRssFeedContract,
-] as const;

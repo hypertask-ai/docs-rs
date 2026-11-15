@@ -73,7 +73,8 @@ it("catches a body no longer than its summary", () => {
 });
 
 it("catches a long dash", () => {
-  const longDash = String.fromCodePoint(0x2014);
+  const longDash = String.fromCodePoint(0x20_14);
+
   const [violation] = violationsFor({
     raw: `${valid.raw}\nSelecting a whole column ${longDash} one step.`,
   });
