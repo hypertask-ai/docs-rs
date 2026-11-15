@@ -12,6 +12,7 @@ const credentialedOperatorUrl = () => {
   const url = new URL("https://operator.example.test");
   url.username = "user";
   url.password = "password";
+
   return url.href;
 };
 
