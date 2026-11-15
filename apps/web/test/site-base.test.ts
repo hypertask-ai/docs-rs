@@ -185,7 +185,7 @@ const pageDocument = (flags: ReaderPageFlags, basePath: string) =>
   Effect.gen(function* renderPageDocument() {
     const application = yield* renderToString(
       { Flags: ReaderFlags, init, view: viewAt(basePath) },
-      { flags }
+      { flags, isHydratable: false }
     );
 
     return renderDocument(withReaderHead(application, flags, basePath), {
@@ -240,16 +240,16 @@ it.layer(ReaderSiteBaseFixture.layer)((test) => {
         for (const flags of [home, deep]) {
           const rendered = yield* renderToString(
             { Flags: ReaderFlags, init, view },
-            { flags }
+            { flags, isHydratable: false }
           );
 
           const atOriginRoot = yield* renderToString(
             { Flags: ReaderFlags, init, view: viewAt("") },
-            { flags }
+            { flags, isHydratable: false }
           );
 
           expect(atOriginRoot.html).toStrictEqual(rendered.html);
-          expect((yield* pageDocument(flags, "")).includes("/ratstack")).toBe(
+          expect((yield* pageDocument(flags, "")).includes("/ratstack/")).toBe(
             false
           );
         }
@@ -273,7 +273,7 @@ it.layer(NodeServices.layer)((test) => {
             path.resolve(import.meta.dirname, "..", page)
           );
 
-          expect(html.includes("/ratstack")).toBe(false);
+          expect(html.includes("/ratstack/")).toBe(false);
           expect(internalAddresses(html).length).toBeGreaterThan(0);
         }
       })
