@@ -13,11 +13,12 @@ export const docsChrome = stylex.create({
   action: {
     ":hover": { backgroundColor: docs.hairline, borderColor: docs.border },
     alignItems: "center",
-    background: docs.surface,
+    backgroundColor: docs.surface,
     borderColor: docs.hairline,
     borderRadius: docs.radiusSmall,
     borderStyle: "solid",
     borderWidth: "1px",
+    boxSizing: "border-box",
     color: docs.textStrong,
     cursor: "pointer",
     display: "inline-flex",
@@ -29,7 +30,7 @@ export const docsChrome = stylex.create({
     padding: "0.3rem 0.65rem",
     textDecoration: "none",
   },
-  actionGhost: { background: "transparent" },
+  actionGhost: { backgroundColor: "transparent" },
   actions: {
     display: "flex",
     flexWrap: "wrap",
@@ -57,10 +58,15 @@ export const docsChrome = stylex.create({
     textAlign: "center",
   },
   glyph: { height: "26px", objectFit: "contain", width: "22px" },
+
+  groupCaret: { flexShrink: 0 },
   groupLabel: {
+    alignItems: "center",
     color: docs.textStrong,
+    display: "flex",
     fontSize: "13px",
     fontWeight: 600,
+    justifyContent: "space-between",
     padding: "22px 12px 6px",
   },
   groupList: { listStyle: "none", margin: 0, padding: 0 },
@@ -81,6 +87,7 @@ export const docsChrome = stylex.create({
     borderBottomColor: docs.hairline,
     borderBottomStyle: "solid",
     borderBottomWidth: "1px",
+    boxSizing: "border-box",
     display: "grid",
     gap: "24px",
     gridTemplateColumns: "1fr 320px 1fr",
@@ -149,7 +156,7 @@ export const docsChrome = stylex.create({
     textDecoration: "none",
   },
   sidebarLinkActive: {
-    background: docs.accentLow,
+    backgroundColor: docs.accentLow,
     color: docs.accent,
     fontWeight: 500,
   },
@@ -171,6 +178,7 @@ export const docsChrome = stylex.create({
     fontWeight: 500,
   },
   tabs: {
+    boxSizing: "border-box",
     borderBottomColor: docs.hairline,
     borderBottomStyle: "solid",
     borderBottomWidth: "1px",

@@ -138,5 +138,10 @@ export const docsGroupForPath = (path: string): DocsSidebarGroup | undefined =>
     group.items.some((item) => item.path === path)
   );
 
-export const docsPageMarkdownPath = (path: string) =>
-  path === "/" ? "/llms-full.txt" : `${path}.md`;
+export const docsPageMarkdownPath = (path: string) => {
+  if (path === "/") {
+    return "/llms-full.txt";
+  }
+
+  return path.endsWith(".md") ? path : `${path}.md`;
+};
