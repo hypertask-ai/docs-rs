@@ -79,14 +79,19 @@ it("DocsPageOrder: a page hidden from the sidebar has no previous or next link",
 });
 
 it("DocsPageOrder: the changelog index sits in the page order but turns its own pagination off", () => {
-  const paginationOf = (path: string) =>
-    Option.match(docsPageAt(path), {
+  expect(
+    Option.match(docsPageAt("/changelog"), {
       onNone: () => null,
       onSome: (page) => page.pagination,
-    });
+    })
+  ).toBe(false);
 
-  expect(paginationOf("/changelog")).toBe(false);
-  expect(paginationOf("/features/reports")).toBe(true);
+  expect(
+    Option.match(docsPageAt("/features/reports"), {
+      onNone: () => null,
+      onSome: (page) => page.pagination,
+    })
+  ).toBe(true);
 });
 
 it("DocsPageOrder: old page addresses carry the trailing slash the live site serves", () => {

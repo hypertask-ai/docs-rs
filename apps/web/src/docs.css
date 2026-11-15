@@ -525,12 +525,11 @@ body > .docs-layout {
 
 @media (min-width: 72rem) {
   .docs-body {
-    grid-template-columns: 280px 784px 264px;
+    grid-template-columns: 280px minmax(0, 784px) 264px;
   }
 
   .docs-pane {
     padding: 48px 64px 96px;
-    width: 784px;
   }
 
   #docs-toc {
