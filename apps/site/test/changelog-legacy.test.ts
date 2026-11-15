@@ -61,7 +61,7 @@ it.effect("reads both the Update and the dated heading formats", () =>
 it.effect("reads the real legacy file and keeps every captured address", () =>
   Effect.gen(function* readRealLegacyFile() {
     const raw = yield* read(legacyPath);
-    const captured = Schema.decodeUnknownSync(
+    const captured = yield* Schema.decodeUnknownEffect(
       Schema.fromJsonString(CapturedFeed)
     )(yield* read("apps/site/test/fixtures/changelog/changelog-json-feed.txt"));
     const entries = parseLegacyChangelog(raw, legacyPath, digest);

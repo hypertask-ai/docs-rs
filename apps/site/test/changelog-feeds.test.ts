@@ -66,10 +66,10 @@ it.effect(
   () =>
     Effect.gen(function* reproduceJsonFeed() {
       const entries = yield* readChangelog(repositoryRoot);
-      const captured = Schema.decodeUnknownSync(
+      const captured = yield* Schema.decodeUnknownEffect(
         Schema.fromJsonString(JsonFeed)
       )(yield* readFixture("changelog-json-feed.txt"));
-      const produced = Schema.decodeUnknownSync(
+      const produced = yield* Schema.decodeUnknownEffect(
         Schema.fromJsonString(JsonFeed)
       )(changelogJsonText(entries));
       const capturedIds = new Set(captured.items.map((item) => item.id));
