@@ -84,6 +84,7 @@ describe("docs search index", () => {
       const pages = yield* readDocsSearchPages(root).pipe(
         Effect.provide(NodeServices.layer)
       );
+
       const index = buildDocsSearchIndex(pages);
 
       expect(index.pageCount).toBe(pages.length);

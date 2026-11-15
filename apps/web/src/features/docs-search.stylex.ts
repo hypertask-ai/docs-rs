@@ -90,6 +90,12 @@ export const docsSearch = stylex.create({
     paddingInline: "0.75rem",
   },
   panel: {
+    "::backdrop": {
+      backdropFilter: "blur(0.25rem)",
+      backgroundColor: "rgba(0, 0, 0, 0.6)",
+      overflow: "hidden",
+      overscrollBehavior: "contain",
+    },
     backgroundColor: docs.surface,
     borderColor: docs.border,
     borderRadius: docs.radiusControl,
@@ -107,12 +113,6 @@ export const docsSearch = stylex.create({
     overscrollBehavior: "contain",
     padding: "1.5rem",
     width: "90%",
-    "::backdrop": {
-      backgroundColor: "rgba(0, 0, 0, 0.6)",
-      backdropFilter: "blur(0.25rem)",
-      overflow: "hidden",
-      overscrollBehavior: "contain",
-    },
   },
   sectionLink: {
     color: docs.textStrong,

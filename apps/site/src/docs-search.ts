@@ -21,9 +21,13 @@ export interface DocsSearchResults {
 }
 
 const metaTitleWeight = 5;
+
 const pageLengthWeight = 0.1;
+
 const termFrequencyWeight = 0.1;
+
 const termSaturationWeight = 2;
+
 const termSimilarityWeight = 9;
 
 const lengthBonus = (differential: number): number =>
@@ -44,9 +48,9 @@ const extensionWordsOf = (
     return extensions;
   }
 
-  const prefix = stems
+  const [prefix] = stems
     .filter((stem) => term.startsWith(stem))
-    .toSorted((left, right) => right.length - left.length)[0];
+    .toSorted((left, right) => right.length - left.length);
 
   return prefix === undefined ? [] : [prefix];
 };
@@ -63,6 +67,7 @@ const termPlanOf = (
   term: string
 ): TermPlan => {
   const extensions = extensionWordsOf(stems, term);
+
   const matching = pages.filter((page) =>
     extensions.some(
       (extension) =>
@@ -114,8 +119,10 @@ const scoreOf = (
       const bonus = lengthBonus(
         Math.abs(extension.length - plan.term.length) + 1
       );
+
       const weightedFrequency = weighted * bonus;
       const saturation = termSaturationWeight;
+
       const bm25 =
         ((saturation + 1) * weightedFrequency) /
         (saturation *
@@ -127,11 +134,13 @@ const scoreOf = (
                   ? 1
                   : index.averagePageLength))) +
           weightedFrequency);
+
       const raw = Math.min(
         weightedFrequency /
           (index.averagePageLength === 0 ? 1 : index.averagePageLength / 5),
         saturation + 1
       );
+
       const frequency =
         (1 - termFrequencyWeight) * raw + termFrequencyWeight * bm25;
 
@@ -202,6 +211,7 @@ export const searchDocsIndex = (
   requestedLimit = 5
 ): DocsSearchResults => {
   const limit = Math.max(1, Math.min(20, Math.trunc(requestedLimit)));
+
   const terms = query
     .toLowerCase()
     .trim()
@@ -216,6 +226,7 @@ export const searchDocsIndex = (
   const stems = [
     ...new Set(index.pages.flatMap((page) => Object.keys(page.terms))),
   ].toSorted();
+
   const plans = terms.map((term) => termPlanOf(index.pages, stems, term));
 
   if (plans.some((plan) => plan.extensions.length === 0)) {
@@ -227,6 +238,7 @@ export const searchDocsIndex = (
       total + inverseDocumentFrequency(index.pageCount, plan.pages.size),
     0
   );
+
   const scored: ScoredPage[] = [];
 
   for (const page of index.pages) {

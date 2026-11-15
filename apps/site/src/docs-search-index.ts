@@ -20,13 +20,15 @@ const headingWeights: ReadonlyMap<number, number> = new Map([
 ]);
 
 const headingPattern = /^(?<hashes>#{1,6})\s+(?<text>.*)$/u;
+
 const fencePattern = /^\s*(?:```|~~~)/u;
+
 const modulePattern = /^(?:import|export)\s/u;
 
 const tidy = (line: string): string =>
   line
     .replaceAll(/!\[[^\]]*\]\([^)]*\)/gu, " ")
-    .replaceAll(/\[([^\]]*)\]\([^)]*\)/gu, "$1")
+    .replaceAll(/\[(?<label>[^\]]*)\]\([^)]*\)/gu, "$<label>")
     .replaceAll(/<[^>]+>/gu, " ")
     .replaceAll(/\{[^}]*\}/gu, " ")
     .replaceAll(/[`*_|>~#]/gu, " ")
@@ -41,7 +43,7 @@ const anchorOf = (title: string): string =>
 
 interface BodySection {
   readonly level: number;
-  readonly lines: readonly string[];
+  readonly lines: string[];
   readonly title: string;
 }
 
@@ -120,6 +122,7 @@ export const buildDocsSearchPage = (
     text: string;
     title: string;
   }[] = [];
+
   const bodyTexts: string[] = [];
 
   for (const section of readSections(source.bodyMarkdown)) {
@@ -165,6 +168,7 @@ export const buildDocsSearchIndex = (
   const pages = sources
     .map((source) => buildDocsSearchPage(source))
     .toSorted((left, right) => left.routePath.localeCompare(right.routePath));
+
   const total = pages.reduce((count, page) => count + page.wordCount, 0);
 
   return {

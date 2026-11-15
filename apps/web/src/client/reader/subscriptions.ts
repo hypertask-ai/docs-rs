@@ -31,13 +31,15 @@ const docsSearchShortcut = Subscription.make<ReaderModel, ReaderMessage>()(
   })
 );
 
+const motion = Subscription.lift(MotionDemo.subscriptions)<
+  ReaderModel,
+  ReaderMessage
+>({
+  read: (model) => model.motion,
+  toParentMessage: (message) => Message.GotMotionMessage({ message }),
+});
+
 export const subscriptions = Subscription.aggregate<
   ReaderModel,
   ReaderMessage
->()(
-  Subscription.lift(MotionDemo.subscriptions)({
-    read: (model) => model.motion,
-    toParentMessage: (message) => Message.GotMotionMessage({ message }),
-  }),
-  docsSearchShortcut
-);
+>()(motion, docsSearchShortcut);

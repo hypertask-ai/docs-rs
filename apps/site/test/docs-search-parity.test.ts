@@ -8,13 +8,11 @@ import { Schema } from "effect";
 import { buildDocsSearchIndex } from "../src/docs-search-index.js";
 import { searchDocsIndex } from "../src/docs-search.js";
 
-const fixture = (name: string): unknown =>
-  JSON.parse(
-    readFileSync(
-      new URL(`fixtures/docs-search/${name}`, import.meta.url),
-      "utf-8"
-    )
-  ) as unknown;
+const fixtureText = (name: string): string =>
+  readFileSync(
+    new URL(`fixtures/docs-search/${name}`, import.meta.url),
+    "utf-8"
+  );
 
 const CorpusPage = Schema.Struct({
   markdown: Schema.String,
@@ -50,11 +48,12 @@ const bodyOf = (markdown: string): string => {
   return match === null ? markdown : markdown.slice(match[0].length);
 };
 
-const corpus = Schema.decodeUnknownSync(Schema.Array(CorpusPage))(
-  fixture("corpus.json")
-);
-const recorded = Schema.decodeUnknownSync(QueryFixture)(
-  fixture("queries.json")
+const corpus = Schema.decodeUnknownSync(
+  Schema.fromJsonString(Schema.Array(CorpusPage))
+)(fixtureText("corpus.json"));
+
+const recorded = Schema.decodeUnknownSync(Schema.fromJsonString(QueryFixture))(
+  fixtureText("queries.json")
 );
 
 const index = buildDocsSearchIndex(

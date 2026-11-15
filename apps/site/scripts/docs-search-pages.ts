@@ -1,4 +1,4 @@
-import { Effect, FileSystem, Path } from "effect";
+import { Effect, FileSystem, Option, Path } from "effect";
 
 import type { DocsPageSource } from "../src/docs-search-index.ts";
 
@@ -23,9 +23,11 @@ export const docsPageSource = (
   source: string
 ): DocsPageSource => {
   const frontmatter = frontmatterPattern.exec(source);
+
   const title =
     titlePattern.exec(frontmatter?.groups?.frontmatter ?? "")?.groups?.title ??
     "";
+
   const bodyMarkdown =
     frontmatter === null ? source : source.slice(frontmatter[0].length);
 
@@ -56,13 +58,15 @@ export const readDocsSearchPages = (
       .filter((file) => file.endsWith(".md"))
       .toSorted();
 
-    return yield* Effect.forEach(
+    const pages = yield* Effect.forEach(
       files,
       (file) =>
         fs.readFileString(path.join(directory, file)).pipe(
           Effect.map((source) => docsPageSource(file, source)),
-          Effect.orElseSucceed(() => undefined)
+          Effect.option
         ),
       { concurrency: "unbounded" }
-    ).pipe(Effect.map((pages) => pages.filter((page) => page !== undefined)));
+    );
+
+    return pages.flatMap((page) => (Option.isSome(page) ? [page.value] : []));
   });

@@ -83,6 +83,7 @@ const foldTube = Update.foldChild({
 
 const selectedResult = (model: ReaderModel) => {
   const matches = docsSearchMatchesOf(model);
+
   const selected = Math.max(
     0,
     Math.min(matches.length - 1, model.docsSearchSelected)
@@ -122,6 +123,19 @@ export const update = (
         model: modifyFields(model, { clipboardAccess: () => access }),
       }),
       CompletedDocsSearchNavigation: () => ({ model }),
+      CompletedWaitBeforeCopyReset: ({ id }) => ({
+        model: CopyStatus.guards.Copied(copyStatusOf(model, id))
+          ? withCopyStatus(model, id, CopyStatus.Idle())
+          : model,
+      }),
+      FailedCopyPage: () => ({
+        model: withCopyStatus(model, pageCopyId, CopyStatus.Failed()),
+      }),
+      FailedCopyReaderText: ({ id }) => ({
+        model: CopyStatus.guards.Copying(copyStatusOf(model, id))
+          ? withCopyStatus(model, id, CopyStatus.Failed())
+          : model,
+      }),
       FailedDocsSearch: ({ query }) => ({
         model:
           query === model.docsSearchQuery.trim()
@@ -130,42 +144,37 @@ export const update = (
               })
             : model,
       }),
-      MovedDocsSearchSelection: ({ offset }) =>
-        DocsSearchState.guards.Loaded(model.docsSearch)
-          ? {
+      GotCafeMessage: ({ message: cafeMessage }) =>
+        foldCafe(model, cafeMessage),
+      GotDocsMessage: ({ message: docsMessage }) =>
+        foldDocs(model, docsMessage),
+      GotMotionMessage: ({ message: motionMessage }) =>
+        foldMotion(model, motionMessage),
+      GotTubeMessage: ({ message: tubeMessage }) =>
+        foldTube(model, tubeMessage),
+      MovedDocsSearchSelection: ({ offset }) => {
+        const total = docsSearchMatchesOf(model).length;
+
+        return total === 0
+          ? { model }
+          : {
               model: modifyFields(model, {
                 docsSearchSelected: (selected) =>
-                  Math.max(
-                    0,
-                    Math.min(
-                      model.docsSearch.result.matches.length - 1,
-                      selected + offset
-                    )
-                  ),
+                  Math.max(0, Math.min(total - 1, selected + offset)),
               }),
-            }
-          : { model },
+            };
+      },
       PressedDocsSearchShortcut: () => ({
         commands: [OpenDocsSearchDialog()],
         model: modifyFields(model, { docsSearchSelected: () => 0 }),
+      }),
+      SelectedDocsSearch: ({ index }) => ({
+        model: modifyFields(model, { docsSearchSelected: () => index }),
       }),
       ShowedMoreDocsSearchResults: () => ({
         model: modifyFields(model, {
           docsSearchShown: (shown) => shown + 5,
         }),
-      }),
-      SelectedDocsSearch: ({ index }) => ({
-        model: modifyFields(model, { docsSearchSelected: () => index }),
-      }),
-      SucceededDocsSearch: ({ query, result }) => ({
-        model:
-          query === model.docsSearchQuery.trim()
-            ? modifyFields(model, {
-                docsSearch: () => DocsSearchState.Loaded({ query, result }),
-                docsSearchSelected: (selected) =>
-                  Math.max(0, Math.min(result.matches.length - 1, selected)),
-              })
-            : model,
       }),
       SubmittedDocsSearch: () => {
         const match = selectedResult(model);
@@ -177,6 +186,27 @@ export const update = (
               model,
             };
       },
+      SucceededCopyPage: () => ({
+        commands: [WaitBeforeCopyReset({ id: pageCopyId })],
+        model: withCopyStatus(model, pageCopyId, CopyStatus.Copied()),
+      }),
+      SucceededCopyReaderText: ({ id }) =>
+        CopyStatus.guards.Copying(copyStatusOf(model, id))
+          ? {
+              commands: [WaitBeforeCopyReset({ id })],
+              model: withCopyStatus(model, id, CopyStatus.Copied()),
+            }
+          : { model },
+      SucceededDocsSearch: ({ query, result }) => ({
+        model:
+          query === model.docsSearchQuery.trim()
+            ? modifyFields(model, {
+                docsSearch: () => DocsSearchState.Loaded({ query, result }),
+                docsSearchSelected: (selected) =>
+                  Math.max(0, Math.min(result.matches.length - 1, selected)),
+              })
+            : model,
+      }),
       UpdatedDocsSearchQuery: ({ value }) => {
         const query = value.trim();
 
@@ -193,37 +223,5 @@ export const update = (
           }),
         };
       },
-      CompletedWaitBeforeCopyReset: ({ id }) => ({
-        model: CopyStatus.guards.Copied(copyStatusOf(model, id))
-          ? withCopyStatus(model, id, CopyStatus.Idle())
-          : model,
-      }),
-      FailedCopyPage: () => ({
-        model: withCopyStatus(model, pageCopyId, CopyStatus.Failed()),
-      }),
-      FailedCopyReaderText: ({ id }) => ({
-        model: CopyStatus.guards.Copying(copyStatusOf(model, id))
-          ? withCopyStatus(model, id, CopyStatus.Failed())
-          : model,
-      }),
-      GotCafeMessage: ({ message: cafeMessage }) =>
-        foldCafe(model, cafeMessage),
-      GotDocsMessage: ({ message: docsMessage }) =>
-        foldDocs(model, docsMessage),
-      GotMotionMessage: ({ message: motionMessage }) =>
-        foldMotion(model, motionMessage),
-      GotTubeMessage: ({ message: tubeMessage }) =>
-        foldTube(model, tubeMessage),
-      SucceededCopyPage: () => ({
-        commands: [WaitBeforeCopyReset({ id: pageCopyId })],
-        model: withCopyStatus(model, pageCopyId, CopyStatus.Copied()),
-      }),
-      SucceededCopyReaderText: ({ id }) =>
-        CopyStatus.guards.Copying(copyStatusOf(model, id))
-          ? {
-              commands: [WaitBeforeCopyReset({ id })],
-              model: withCopyStatus(model, id, CopyStatus.Copied()),
-            }
-          : { model },
     }
   );

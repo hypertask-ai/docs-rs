@@ -27,15 +27,18 @@ const index = buildDocsSearchIndex([
 const makeStore = Effect.fn("makeDocsSearchStore")(function* makeStore() {
   const fs = yield* FileSystem.FileSystem;
   const directory = yield* fs.makeTempDirectoryScoped();
+
   const data = yield* Schema.decodeUnknownEffect(
     Schema.Array(Schema.Struct({ path: Schema.String, value: Schema.Json }))
   )([{ path: docsSearchIndexPath, value: index }]);
+
   const manifest = yield* emitAssets({
     data,
     directory,
     images: [],
     pages: [],
   });
+
   return yield* DocsSearchStore.layerForGeneration(manifest.generation).pipe(
     Layer.provide(nodeAssetsForGeneration(directory, manifest.generation)),
     Layer.build
@@ -45,6 +48,7 @@ const makeStore = Effect.fn("makeDocsSearchStore")(function* makeStore() {
 it.effect("searchDocs returns docs pages for a word in a page title", () =>
   Effect.gen(function* searchDocsPages() {
     const layer = yield* makeStore();
+
     const result = yield* searchDocs
       .handler({ query: "turbopuffer" })
       .pipe(Effect.provide(layer));
@@ -59,9 +63,11 @@ it.effect("searchDocs returns docs pages for a word in a page title", () =>
 it.effect("searchDocs finds body words and returns no matches for noise", () =>
   Effect.gen(function* searchDocsBody() {
     const layer = yield* makeStore();
+
     const body = yield* searchDocs
       .handler({ query: "view" })
       .pipe(Effect.provide(layer));
+
     const noise = yield* searchDocs
       .handler({ query: "zzzznotaword" })
       .pipe(Effect.provide(layer));

@@ -49,6 +49,7 @@ const makeStore = Effect.fn("DocsSearchStore.make")(function* makeStore(
   generation: string
 ) {
   const assets = yield* StaticAssets;
+
   const completed = yield* Ref.make<Option.Option<DocsSearchIndexData>>(
     Option.none()
   );

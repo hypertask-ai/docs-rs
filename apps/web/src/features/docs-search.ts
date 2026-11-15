@@ -1,8 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
-import { Option } from "effect";
 import type { Html, HtmlBuilder } from "foldkit/html";
 
-import { Message } from "../client/reader/message.js";
+import { docsSearchKeyMessage, Message } from "../client/reader/message.js";
 import type { ReaderMessage } from "../client/reader/message.js";
 import {
   DocsSearchState,
@@ -94,24 +93,6 @@ const resultView = (
     ]
   );
 
-const keyMessage = (
-  key: string
-): Option.Option<ReturnType<typeof Message.MovedDocsSearchSelection>> => {
-  if (key === "ArrowDown") {
-    return Option.some(Message.MovedDocsSearchSelection({ offset: 1 }));
-  }
-
-  if (key === "ArrowUp") {
-    return Option.some(Message.MovedDocsSearchSelection({ offset: -1 }));
-  }
-
-  if (key === "Enter") {
-    return Option.some(Message.MovedDocsSearchSelection({ offset: 0 }));
-  }
-
-  return Option.none();
-};
-
 export const docsSearchDialog = (
   model: ReaderModel,
   h: HtmlBuilder<ReaderMessage>
@@ -126,11 +107,7 @@ export const docsSearchDialog = (
       h.AriaLabel("Search docs"),
       h.Attribute("closedby", "any"),
       h.Class(className(docsSearch.panel)),
-      h.OnKeyDownPreventDefault((key) =>
-        key === "Enter"
-          ? Option.some(Message.SubmittedDocsSearch())
-          : keyMessage(key)
-      ),
+      h.OnKeyDownPreventDefault((key) => docsSearchKeyMessage(key)),
     ],
     [
       h.div(
