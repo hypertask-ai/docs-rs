@@ -1601,7 +1601,7 @@ const flagRemovalDate = defineRule({
           !direct &&
           !(
             identity?.name === "defineFlag" &&
-            /^@rat-stack\/(?:core\/flags|flags)$/u.test(identity.module)
+            /^@hypertask-docs\/(?:core\/flags|flags)$/u.test(identity.module)
           )
         ) {
           return;
