@@ -1,7 +1,6 @@
-import { Effect, Option } from "effect";
+import { Effect } from "effect";
 import { DomUtils, parseDocument } from "htmlparser2";
 
-import type { ReaderPageFlags } from "../../web/src/client/reader/model.js";
 import { copyPrompts } from "./component-data.ts";
 import { docsContentDirectory } from "./docs-content.ts";
 import { readerNewsTitle } from "./reader-body-document.ts";
@@ -21,7 +20,7 @@ export const readerHomeFlags = Effect.fn("readerHomeFlags")(
     }
 
     if (page.sourcePath.startsWith(`${docsContentDirectory}/`)) {
-      return Option.none<ReaderPageFlags>();
+      return undefined;
     }
 
     const home = yield* Effect.try({
@@ -101,7 +100,7 @@ export const readerHomeFlags = Effect.fn("readerHomeFlags")(
         ),
     });
 
-    return Option.some({
+    return {
       bibliography: [],
       blocks: home.blocks,
       codeFences,
@@ -128,6 +127,6 @@ export const readerHomeFlags = Effect.fn("readerHomeFlags")(
       },
       snippets: [],
       terms: [],
-    });
+    };
   }
 );

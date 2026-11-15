@@ -29,6 +29,9 @@ const encodeFlags = Effect.forEach((page: ReaderPageFlags) =>
   Schema.encodeEffect(ReaderFlags)(page)
 );
 
+const optionalPage = <A>(page: A | undefined): readonly A[] =>
+  page === undefined ? [] : [page];
+
 const withPreviewRobots = (
   page: ReaderPageFlags,
   preview: boolean
@@ -88,10 +91,7 @@ const readerPages = Effect.gen(function* readerPages() {
     );
   }
 
-  const home = Option.match(yield* readerHomeFlags(origin), {
-    onNone: () => [],
-    onSome: (page) => [page],
-  });
+  const home = yield* readerHomeFlags(origin);
 
   const lore = yield* Effect.flatMap(readerLoreFlags(origin), encodeFlags);
   const prompts = yield* readerPromptFlags(origin);
@@ -108,7 +108,7 @@ const readerPages = Effect.gen(function* readerPages() {
   const tube = yield* readerTubeFlags(origin);
 
   const pages = [
-    ...home,
+    ...optionalPage(home),
     ...lore,
     learn,
     ...prompts,

@@ -344,7 +344,7 @@ const coreComponents = {
     human: componentChildren,
   },
   LinkCard: {
-    agent(input) {
+    agent(input): readonly RootContent[] {
       const { description, href, title } = Schema.decodeUnknownSync(
         Schema.Struct({
           description: Schema.optional(Schema.String),

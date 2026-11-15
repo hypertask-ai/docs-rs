@@ -365,8 +365,10 @@ const docsHeadingIds = (): ((tree: HastNode) => void) => (tree) => {
   visit(tree);
 };
 
-const withoutTemplateHome = <A>(hasDocsHome: boolean, page: A): readonly A[] =>
-  hasDocsHome ? [] : [page];
+const withoutTemplateHome = <A extends { readonly routePath: `/${string}` }>(
+  hasDocsHome: boolean,
+  page: A
+): readonly A[] => (hasDocsHome ? [] : [page]);
 
 const referenceSource = (route: string) =>
   `<LinkedFrom page="${escapeHtml(route)}" />\n\n<UnlinkedMentions page="${escapeHtml(route)}" />`;

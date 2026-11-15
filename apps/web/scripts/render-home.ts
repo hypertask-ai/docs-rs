@@ -1,5 +1,5 @@
 import { NodeRuntime, NodeServices } from "@effect/platform-node";
-import { Console, Effect, FileSystem, Option, Schema } from "effect";
+import { Console, Effect, FileSystem, Schema } from "effect";
 import { renderToString } from "foldkit/experimental/server";
 
 import { readerHomeFlags } from "../../site/scripts/reader-home-flags.ts";
@@ -11,11 +11,11 @@ const program = Effect.gen(function* renderHomePrototype() {
   const fs = yield* FileSystem.FileSystem;
   const input = yield* readerHomeFlags("https://reader-prototype.invalid");
 
-  if (Option.isNone(input)) {
+  if (input === undefined) {
     return yield* Effect.die(new Error("This build serves the docs home."));
   }
 
-  const flags = yield* Schema.decodeUnknownEffect(ReaderFlags)(input.value);
+  const flags = yield* Schema.decodeUnknownEffect(ReaderFlags)(input);
 
   const rendered = yield* renderToString(
     { Flags: ReaderFlags, init, view },
