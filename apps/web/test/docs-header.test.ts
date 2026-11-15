@@ -13,11 +13,7 @@ import type { ReaderPageFlags } from "../src/client/reader/model.js";
 import { view } from "../src/features/reader.js";
 import { readerFlagsFixture } from "./reader-fixture.js";
 
-const logoIndex = 0;
-const searchIndex = 1;
-const helpIndex = 2;
-const openAppIndex = 3;
-const firstTabIndex = 4;
+const headerRow = { help: 2, logo: 0, openApp: 3, search: 1, tabs: 4 };
 
 const tabRows = [
   {
@@ -75,6 +71,7 @@ const docsFlags = (path: string): ReaderPageFlags => ({
 const docsHeader = (path: string) =>
   Effect.gen(function* renderDocsHeader() {
     const flags = docsFlags(path);
+
     const rendered = yield* renderToString(
       { Flags: ReaderFlags, init, view },
       { flags, isHydratable: false }
@@ -92,7 +89,7 @@ it.effect(
     Effect.gen(function* logoRow() {
       const { anchors, images } = yield* docsHeader("/");
 
-      const logo = anchors[logoIndex];
+      const logo = anchors[headerRow.logo];
 
       expect(logo?.attributes.href).toBe("/");
       expect(logo?.parts).toEqual(["Hypertask", "Docs"]);
@@ -115,7 +112,7 @@ it.effect(
     Effect.gen(function* searchRow() {
       const { anchors } = yield* docsHeader("/");
 
-      const search = anchors[searchIndex];
+      const search = anchors[headerRow.search];
 
       expect(search?.attributes.href).toBe("/search");
       expect(search?.attributes["aria-label"]).toBe("Search docs");
@@ -132,7 +129,7 @@ it.effect(
     Effect.gen(function* helpRow() {
       const { anchors } = yield* docsHeader("/");
 
-      const help = anchors[helpIndex];
+      const help = anchors[headerRow.help];
 
       expect(help?.text).toBe("Help");
       expect(help?.attributes.href).toBe("https://help.hypertask.ai/help");
@@ -148,7 +145,7 @@ it.effect(
     Effect.gen(function* openAppRow() {
       const { anchors } = yield* docsHeader("/");
 
-      const openApp = anchors[openAppIndex];
+      const openApp = anchors[headerRow.openApp];
 
       expect(openApp?.text).toBe("Open app");
       expect(openApp?.attributes.href).toBe("https://app.hypertask.ai/login");
@@ -164,7 +161,7 @@ it.effect(
     Effect.gen(function* socialRow() {
       const { anchors } = yield* docsHeader("/");
 
-      expect(anchors).toHaveLength(firstTabIndex + tabRows.length);
+      expect(anchors).toHaveLength(headerRow.tabs + tabRows.length);
       expect(
         anchors.filter((anchor) =>
           socialHosts.some((host) =>
@@ -213,7 +210,8 @@ it.effect(
     Effect.gen(function* activeTabRow() {
       for (const row of activeTabRows) {
         const { anchors } = yield* docsHeader(row.address);
-        const tabs = anchors.slice(firstTabIndex);
+        const tabs = anchors.slice(headerRow.tabs);
+
         const active = tabs
           .filter((tab) => tab.attributes["aria-current"] === "page")
           .map((tab) => tab.text);
