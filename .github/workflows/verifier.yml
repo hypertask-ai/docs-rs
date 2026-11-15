@@ -41,7 +41,7 @@ jobs:
           if [ -n "${CLAUDE_CODE_OAUTH_TOKEN:-}" ]; then claude=yes; fi
           if [ "$codex" = "no" ] && [ "$claude" = "no" ]; then
             engine=none
-            echo "::notice title=Verifier skipped::skipped: no verifier setting. Add the repository secret CODEX_VERIFIER_KEY from the Codex plan, or CLAUDE_CODE_OAUTH_TOKEN from the Claude plan."
+            echo "::notice title=Verifier skipped::skipped: no verifier setting. The pstack-verifier check stays neutrally skipped. Add the repository secret CODEX_VERIFIER_KEY from the Codex plan, or CLAUDE_CODE_OAUTH_TOKEN from the Claude plan."
           elif [ "$codex" = "yes" ]; then
             engine=codex
           else
@@ -50,18 +50,19 @@ jobs:
           printf 'engine=%s\ncodex=%s\nclaude=%s\n' "$engine" "$codex" "$claude" >> "$GITHUB_OUTPUT"
           printf 'engine: %s\n' "$engine" >> "$GITHUB_STEP_SUMMARY"
 
-  verify:
-    name: Verify the change like a user
+  pstack-verifier:
+    name: pstack-verifier
     needs: engine
     if: needs.engine.outputs.engine != 'none'
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     env:
       REPO: ${{ github.repository }}
       SERVER_URL: ${{ github.server_url }}
       RUN_ID: ${{ github.run_id }}
+      LIVE_URL: https://docs.hypertask.ai
     steps:
-      - name: Resolve the pull request and its head commit
+      - name: Resolve the pull request, its parent commit and its head commit
         id: target
         env:
           GH_TOKEN: ${{ github.token }}
@@ -71,11 +72,26 @@ jobs:
           case "${PR_NUMBER:-}" in
             ''|*[!0-9]*) echo "::error::No pull request number was given."; exit 1 ;;
           esac
-          gh pr view "$PR_NUMBER" --repo "$REPO" --json state,isDraft,headRefOid,headRepository,url > "$RUNNER_TEMP/pr.json"
+          gh pr view "$PR_NUMBER" --repo "$REPO" --json state,isDraft,headRefOid,baseRefOid,headRepository,url > "$RUNNER_TEMP/pr.json"
           state="$(jq -r .state "$RUNNER_TEMP/pr.json")"
           draft="$(jq -r .isDraft "$RUNNER_TEMP/pr.json")"
-          sha="$(jq -r .headRefOid "$RUNNER_TEMP/pr.json")"
+          sha="$(jq -r .headRefOid "$RUNNER_TEMP/pr.json" | tr '[:upper:]' '[:lower:]')"
+          base="$(jq -r .baseRefOid "$RUNNER_TEMP/pr.json" | tr '[:upper:]' '[:lower:]')"
           head_repo="$(jq -r .headRepository.nameWithOwner "$RUNNER_TEMP/pr.json")"
+          case "$sha" in
+            *[!0-9a-f]*|'') echo "::error::The head commit is not a full commit SHA: $sha"; exit 1 ;;
+          esac
+          if [ "${#sha}" -ne 40 ]; then
+            echo "::error::The head commit is not a full commit SHA: $sha"
+            exit 1
+          fi
+          case "$base" in
+            *[!0-9a-f]*|'') echo "::error::The parent commit is not a full commit SHA: $base"; exit 1 ;;
+          esac
+          if [ "${#base}" -ne 40 ]; then
+            echo "::error::The parent commit is not a full commit SHA: $base"
+            exit 1
+          fi
           go=yes
           if [ "$head_repo" != "$REPO" ]; then
             go=no
@@ -87,7 +103,7 @@ jobs:
             go=no
             echo "::notice::skipped: pull request $PR_NUMBER is a draft. The verifier runs when it is ready for review."
           fi
-          printf 'go=%s\nnumber=%s\nsha=%s\n' "$go" "$PR_NUMBER" "$sha" >> "$GITHUB_OUTPUT"
+          printf 'go=%s\nnumber=%s\nsha=%s\nbase=%s\n' "$go" "$PR_NUMBER" "$sha" "$base" >> "$GITHUB_OUTPUT"
 
       - name: Check out the pull request head
         if: steps.target.outputs.go == 'yes'
@@ -107,16 +123,40 @@ jobs:
         if: steps.target.outputs.go == 'yes'
         run: corepack enable && corepack prepare pnpm@11.3.0 --activate
 
-      - name: Install dependencies
+      - name: Install dependencies for the head
         if: steps.target.outputs.go == 'yes'
         run: pnpm install --frozen-lockfile
 
-      - name: Fetch pinned source objects
+      - name: Fetch pinned source objects for the head
         if: steps.target.outputs.go == 'yes'
         run: pnpm sources:fetch
 
-      - name: Build the site the way ci.yml does
+      - name: Build the head the way ci.yml does
         if: steps.target.outputs.go == 'yes'
+        run: pnpm turbo run build --concurrency=2
+
+      - name: Check out the parent commit into its own tree
+        if: steps.target.outputs.go == 'yes'
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ steps.target.outputs.base }}
+          path: ${{ runner.temp }}/parent
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Install dependencies for the parent
+        if: steps.target.outputs.go == 'yes'
+        working-directory: ${{ runner.temp }}/parent
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch pinned source objects for the parent
+        if: steps.target.outputs.go == 'yes'
+        working-directory: ${{ runner.temp }}/parent
+        run: pnpm sources:fetch
+
+      - name: Build the parent the way ci.yml does
+        if: steps.target.outputs.go == 'yes'
+        working-directory: ${{ runner.temp }}/parent
         run: pnpm turbo run build --concurrency=2
 
       - name: Install Playwright Chromium for the verifier
@@ -126,21 +166,31 @@ jobs:
           npm install --prefix "$RUNNER_TEMP/browser" --no-fund --no-audit playwright@1.65.1
           "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
           mkdir -p "$RUNNER_TEMP/browser/screens"
+          printf 'PLAYWRIGHT_ROOT=%s\n' "$RUNNER_TEMP/browser" >> "$GITHUB_ENV"
 
-      - name: Start the built site on the runner
+      - name: Serve the parent and the head side by side
         if: steps.target.outputs.go == 'yes'
+        env:
+          BASE_SHA: ${{ steps.target.outputs.base }}
+          SHA: ${{ steps.target.outputs.sha }}
         run: |
           set -euo pipefail
-          site_root=""
-          for candidate in apps/web/dist/client apps/*/dist/client; do
-            if [ -f "$candidate/index.html" ]; then site_root="$candidate"; break; fi
-          done
-          if [ -z "$site_root" ]; then
-            echo "::error::No built site to serve: the build left no apps/*/dist/client/index.html."
-            find apps -maxdepth 3 -type d -name dist -print
-            exit 1
-          fi
-          printf 'SITE_ROOT=%s\nSITE_URL=http://127.0.0.1:4173\n' "$site_root" >> "$GITHUB_ENV"
+          site_root() {
+            local tree="$1" candidate
+            for candidate in apps/web/dist/client apps/*/dist/client; do
+              if [ -f "$tree/$candidate/index.html" ]; then
+                printf '%s\n' "$tree/$candidate"
+                return 0
+              fi
+            done
+            echo "::error::$tree left no apps/*/dist/client/index.html."
+            find "$tree/apps" -maxdepth 3 -type d -name dist -print
+            return 1
+          }
+          head_root="$(site_root "$GITHUB_WORKSPACE")"
+          base_root="$(site_root "$RUNNER_TEMP/parent")"
+          printf 'SITE_ROOT=%s\nSITE_URL=http://127.0.0.1:4173\nBASE_ROOT=%s\nBASE_URL=http://127.0.0.1:4174\n' \
+            "$head_root" "$base_root" >> "$GITHUB_ENV"
           cat > "$RUNNER_TEMP/serve.mjs" <<'SERVER'
           import { createReadStream } from "node:fs";
           import { stat } from "node:fs/promises";
@@ -220,25 +270,37 @@ jobs:
             console.log(`serving ${root} on http://127.0.0.1:${port}`);
           });
           SERVER
-          node "$RUNNER_TEMP/serve.mjs" "$site_root" 4173 > "$RUNNER_TEMP/site.log" 2>&1 &
+          node "$RUNNER_TEMP/serve.mjs" "$base_root" 4174 > "$RUNNER_TEMP/parent.log" 2>&1 &
+          echo "$!" > "$RUNNER_TEMP/parent.pid"
+          node "$RUNNER_TEMP/serve.mjs" "$head_root" 4173 > "$RUNNER_TEMP/site.log" 2>&1 &
           echo "$!" > "$RUNNER_TEMP/site.pid"
-          for attempt in $(seq 1 60); do
-            if curl --silent --show-error --fail --output /dev/null --max-time 2 "http://127.0.0.1:4173/"; then
-              echo "the built site answered on attempt $attempt"
-              printf 'site: %s on http://127.0.0.1:4173\n' "$site_root" >> "$GITHUB_STEP_SUMMARY"
-              exit 0
-            fi
-            sleep 2
+          for url in http://127.0.0.1:4173/ http://127.0.0.1:4174/; do
+            for attempt in $(seq 1 60); do
+              if curl --silent --show-error --fail --output /dev/null --max-time 2 "$url"; then
+                echo "$url served the parent and head trees on attempt $attempt"
+                break
+              fi
+              if [ "$attempt" -eq 60 ]; then
+                cat "$RUNNER_TEMP/site.log" "$RUNNER_TEMP/parent.log"
+                echo "::error::$url did not answer within 120 seconds."
+                exit 1
+              fi
+              sleep 2
+            done
           done
-          cat "$RUNNER_TEMP/site.log"
-          echo "::error::The built site did not answer on http://127.0.0.1:4173 within 120 seconds."
-          exit 1
+          {
+            printf 'head %s http://127.0.0.1:4173 from %s\n' "$SHA" "$head_root"
+            printf 'parent %s http://127.0.0.1:4174 from %s\n' "$BASE_SHA" "$base_root"
+            printf 'live %s\n' "$LIVE_URL"
+            printf 'screens %s\n' "$RUNNER_TEMP/browser/screens"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Write the verifier prompt with the change under review
         if: steps.target.outputs.go == 'yes'
         env:
           GH_TOKEN: ${{ github.token }}
           SHA: ${{ steps.target.outputs.sha }}
+          BASE_SHA: ${{ steps.target.outputs.base }}
           PR: ${{ steps.target.outputs.number }}
         run: |
           set -euo pipefail
@@ -251,31 +313,40 @@ jobs:
           The ticket is HTPR-9198, the prework that puts docs publishing and docs checks in GitHub, inside the move of docs.hypertask.ai onto Rat Stack. The rule you enforce: the rebuilt docs site must look exactly the same and have the same content as https://docs.hypertask.ai. Same colours, same fonts, same sizes, same corners, same words, same page addresses, same links. Rat Stack's own look is not acceptable, a rewritten sentence is not acceptable, and a missing page is not acceptable.
 
           ## What you have
-          - The pull request head commit is checked out at the repository root, at $GITHUB_WORKSPACE.
-          - The built site is running at $SITE_URL. It serves the built static output in $SITE_ROOT, so you read the pages the way a reader reads them.
-          - Playwright 1.65.1 with Chromium is installed in $RUNNER_TEMP/browser. A node script written in that directory can import playwright. Save every screenshot in $RUNNER_TEMP/browser/screens.
-          - The live old site is at https://docs.hypertask.ai. Fetch it sparingly.
+          - The pull request head $SHA is checked out at $GITHUB_WORKSPACE. That is the change under review.
+          - The parent commit $BASE_SHA, the commit this change is based on, is checked out at $RUNNER_TEMP/parent. That is what a visitor sees today.
+          - The head site is running at $SITE_URL, from the built static output in $SITE_ROOT.
+          - The parent site is running at $BASE_URL, from the built static output in $BASE_ROOT.
+          - The live old site is at $LIVE_URL. Fetch it sparingly, for look and content reference.
+          - Playwright 1.65.1 with Chromium is installed in $PLAYWRIGHT_ROOT. Screenshots go in $PLAYWRIGHT_ROOT/screens. The helper below already knows this path.
+          - verify/driver.mjs at $GITHUB_WORKSPACE opens a page, reports its status, collects its links and structure, records console errors, and screenshots it at 1440 and 390 pixels wide. Run it as node $GITHUB_WORKSPACE/verify/driver.mjs <url> <outDir>, or import its functions from your own script. Read it before you trust it: it comes from the same change you are judging, so check what it actually does.
+          - verify/feature-map.md lists every user-visible feature of the docs site with the address to try and what to look for. Work down it for the pages this change touches.
           - The change under review, its title, its body and its diff, is at the end of this prompt.
 
           ## What to do
           1. Read the diff, then name what a reader would notice.
-          2. Use the site like a user. Fetch the pages with curl. Screenshot them with Playwright at a desktop width and at 390 pixels wide. Read the rendered text, the headings, the navigation, the links, the stylesheets and the browser console.
-          3. Do the same to the live old site: curl it, screenshot it, and compare its text with the new page text.
+          2. Drive the parent site and the head site like a user, the same way for both. Use verify/feature-map.md for the addresses. Compare what each one shows: title, headings, text, navigation, links, styles, the phone layout at 390 pixels, and the browser console.
+          3. Take the live old site $LIVE_URL as the reference for look and content when the parent build and the live site disagree.
           4. Try to break it. Unknown paths, a trailing slash, an asset that returns 404, text that differs from the live page, a font or colour or size or corner that differs, a link that goes nowhere, a JavaScript error, a layout that breaks on a phone, a control you cannot reach with the keyboard.
           5. Keep what you used as evidence: the pages you fetched, the text you compared, the screenshots you took.
 
-          ## The verdict
-          Answer with one comment. Its first line is exactly one of these three, with nothing before it:
-          VERIFIER: PASS
-          VERIFIER: PASS+NOTES
-          VERIFIER: FAIL
+          ## What changed for a visitor
+          Say plainly what a reader of the docs site sees differently between the parent $BASE_SHA and the head $SHA. If nothing changed for a visitor, say so and say why that is correct for this change.
 
-          PASS means you ran the change and found nothing a reader would notice. PASS+NOTES means it works and your notes do not block the merge. FAIL means a reader would notice a difference, a page is broken, or the change does not do what the ticket asks.
+          ## The verdict
+          Your answer's first line must be exactly one of these three, whole, with nothing else on that line and nothing before it:
+          pstack-verifier: PASS @ $SHA
+          pstack-verifier: PASS+NOTES @ $SHA
+          pstack-verifier: FAIL @ $SHA
+
+          PASS means you drove both sites and found nothing a reader would notice. PASS+NOTES means it works and your notes do not block the merge. FAIL means a reader would notice a difference, a page is broken, or the change does not do what the ticket asks.
+
+          A verdict covers the commit $SHA only. If your verdict is for any other commit, it is stale and it will be rejected.
 
           After that first line, in plain sentences:
-          - the head commit SHA you judged, which is $SHA. A verdict covers that commit only.
           - what you ran, with the commands and the pages.
-          - the evidence: what matched, what differed, with the exact text or the screenshot file names.
+          - the evidence: what matched, what differed between parent and head, with the exact text or the screenshot file names.
+          - what changed for a visitor.
           - for a FAIL, the one change that would make it pass.
 
           Never claim something you did not run.
@@ -292,30 +363,40 @@ jobs:
         if: steps.target.outputs.go == 'yes' && needs.engine.outputs.codex == 'yes'
         continue-on-error: true
         env:
-          OPENAI_API_KEY: ${{ secrets.CODEX_VERIFIER_KEY }}
-          CODEX_API_KEY: ${{ secrets.CODEX_VERIFIER_KEY }}
+          CODEX_VERIFIER_KEY: ${{ secrets.CODEX_VERIFIER_KEY }}
           SHA: ${{ steps.target.outputs.sha }}
         run: |
           set -euo pipefail
           npm install --global --no-fund --no-audit @openai/codex@0.169.0
-          codex exec \
-            --skip-git-repo-check \
-            --ephemeral \
-            --sandbox danger-full-access \
-            --cd "$GITHUB_WORKSPACE" \
-            --output-last-message "$RUNNER_TEMP/verdict.md" \
-            - < "$RUNNER_TEMP/prompt.md"
+          engine_token="$CODEX_VERIFIER_KEY"
+          agent_path="$(dirname "$(command -v codex)"):$(dirname "$(command -v node)"):/usr/local/bin:/usr/bin:/bin"
+          env -i \
+            HOME="$HOME" \
+            PATH="$agent_path" \
+            TERM=dumb \
+            CODEX_API_KEY="$engine_token" \
+            OPENAI_API_KEY="$engine_token" \
+            GITHUB_WORKSPACE="$GITHUB_WORKSPACE" \
+            RUNNER_TEMP="$RUNNER_TEMP" \
+            PLAYWRIGHT_ROOT="$PLAYWRIGHT_ROOT" \
+            SITE_URL="$SITE_URL" \
+            BASE_URL="$BASE_URL" \
+            LIVE_URL="$LIVE_URL" \
+            codex exec \
+              --skip-git-repo-check \
+              --ephemeral \
+              --sandbox danger-full-access \
+              --cd "$GITHUB_WORKSPACE" \
+              --output-last-message "$RUNNER_TEMP/verdict.md" \
+              - < "$RUNNER_TEMP/prompt.md"
           first="$(sed -n '1{s/[[:space:]]*$//;p}' "$RUNNER_TEMP/verdict.md" 2>/dev/null || true)"
-          case "$first" in
-            "VERIFIER: PASS+NOTES"*|"VERIFIER: PASS"*|"VERIFIER: FAIL"*) ;;
-            *)
-              echo "::error::Codex produced no verdict line, so Claude stands in."
-              sed -n '1,40p' "$RUNNER_TEMP/verdict.md" 2>/dev/null || true
-              exit 1
-              ;;
-          esac
-          if ! grep -qi "$SHA" "$RUNNER_TEMP/verdict.md"; then
-            echo "::error::The Codex verdict does not name the head commit $SHA, so Claude stands in."
+          if [[ ! "$first" =~ ^pstack-verifier:\ (PASS|PASS\+NOTES|FAIL)\ @\ ([0-9a-f]{40})$ ]]; then
+            echo "::error::Codex produced no verdict in the required format, so Claude stands in: $first"
+            sed -n '1,40p' "$RUNNER_TEMP/verdict.md" 2>/dev/null || true
+            exit 1
+          fi
+          if [ "${BASH_REMATCH[2]}" != "$SHA" ]; then
+            echo "::error::The Codex verdict names ${BASH_REMATCH[2]}, not the head $SHA, so Claude stands in."
             exit 1
           fi
 
@@ -328,18 +409,28 @@ jobs:
         run: |
           set -euo pipefail
           npm install --global --no-fund --no-audit @anthropic-ai/claude-code@2.1.325
-          claude --print --dangerously-skip-permissions < "$RUNNER_TEMP/prompt.md" > "$RUNNER_TEMP/verdict.md"
+          engine_token="$CLAUDE_CODE_OAUTH_TOKEN"
+          agent_path="$(dirname "$(command -v claude)"):$(dirname "$(command -v node)"):/usr/local/bin:/usr/bin:/bin"
+          env -i \
+            HOME="$HOME" \
+            PATH="$agent_path" \
+            TERM=dumb \
+            CLAUDE_CODE_OAUTH_TOKEN="$engine_token" \
+            GITHUB_WORKSPACE="$GITHUB_WORKSPACE" \
+            RUNNER_TEMP="$RUNNER_TEMP" \
+            PLAYWRIGHT_ROOT="$PLAYWRIGHT_ROOT" \
+            SITE_URL="$SITE_URL" \
+            BASE_URL="$BASE_URL" \
+            LIVE_URL="$LIVE_URL" \
+            claude --print --dangerously-skip-permissions < "$RUNNER_TEMP/prompt.md" > "$RUNNER_TEMP/verdict.md"
           first="$(sed -n '1{s/[[:space:]]*$//;p}' "$RUNNER_TEMP/verdict.md")"
-          case "$first" in
-            "VERIFIER: PASS+NOTES"*|"VERIFIER: PASS"*|"VERIFIER: FAIL"*) ;;
-            *)
-              echo "::error::Claude produced no verdict line."
-              sed -n '1,40p' "$RUNNER_TEMP/verdict.md"
-              exit 1
-              ;;
-          esac
-          if ! grep -qi "$SHA" "$RUNNER_TEMP/verdict.md"; then
-            echo "::error::The Claude verdict does not name the head commit $SHA."
+          if [[ ! "$first" =~ ^pstack-verifier:\ (PASS|PASS\+NOTES|FAIL)\ @\ ([0-9a-f]{40})$ ]]; then
+            echo "::error::Claude produced no verdict in the required format: $first"
+            sed -n '1,40p' "$RUNNER_TEMP/verdict.md"
+            exit 1
+          fi
+          if [ "${BASH_REMATCH[2]}" != "$SHA" ]; then
+            echo "::error::The Claude verdict names ${BASH_REMATCH[2]}, not the head $SHA, so it is stale."
             exit 1
           fi
 
@@ -360,18 +451,15 @@ jobs:
             exit 1
           fi
           first="$(sed -n '1{s/[[:space:]]*$//;p}' "$RUNNER_TEMP/verdict.md")"
-          case "$first" in
-            "VERIFIER: PASS+NOTES"*) verdict="PASS+NOTES" ;;
-            "VERIFIER: PASS"*) verdict="PASS" ;;
-            "VERIFIER: FAIL"*) verdict="FAIL" ;;
-            *)
-              echo "::error::The verifier's first line is not a verdict: $first"
-              sed -n '1,40p' "$RUNNER_TEMP/verdict.md"
-              exit 1
-              ;;
-          esac
-          if ! grep -qi "$SHA" "$RUNNER_TEMP/verdict.md"; then
-            echo "::error::The verdict does not name the head commit $SHA, so it is stale."
+          if [[ ! "$first" =~ ^pstack-verifier:\ (PASS|PASS\+NOTES|FAIL)\ @\ ([0-9a-f]{40})$ ]]; then
+            echo "::error::The verifier's first line is not a verdict in the required format: $first"
+            sed -n '1,40p' "$RUNNER_TEMP/verdict.md"
+            exit 1
+          fi
+          verdict="${BASH_REMATCH[1]}"
+          line_sha="${BASH_REMATCH[2]}"
+          if [ "$line_sha" != "$SHA" ]; then
+            echo "::error::The verdict names $line_sha, not the head $SHA, so it is stale."
             exit 1
           fi
           if [ "${CODEX_OUTCOME:-}" = "success" ]; then
@@ -384,16 +472,16 @@ jobs:
             engine_note="unknown"
           fi
           {
-            printf 'VERIFIER: %s\n' "$verdict"
-            printf 'head sha: %s\n' "$SHA"
+            printf '%s\n' "$first"
             printf 'engine: %s\n' "$engine_note"
             printf 'run: %s/%s/actions/runs/%s\n' "$SERVER_URL" "$REPO" "$RUN_ID"
-            printf 'site: %s from %s\n' "${SITE_URL:-unset}" "${SITE_ROOT:-unset}"
-            printf 'baseline: https://docs.hypertask.ai\n'
+            printf 'head: %s from %s\n' "${SITE_URL:-unset}" "${SITE_ROOT:-unset}"
+            printf 'parent: %s from %s\n' "${BASE_URL:-unset}" "${BASE_ROOT:-unset}"
+            printf 'baseline: %s\n' "$LIVE_URL"
             printf 'ticket: HTPR-9198\n\n'
             sed -n '2,$p' "$RUNNER_TEMP/verdict.md"
           } > "$RUNNER_TEMP/comment.md"
-          existing="$(gh api "repos/$REPO/issues/$PR/comments" --paginate --jq ".[] | select((.body // \"\") | startswith(\"VERIFIER: \")) | select((.body // \"\") | contains(\"head sha: $SHA\")) | .id" | head -n 1)"
+          existing="$(gh api "repos/$REPO/issues/$PR/comments" --paginate --jq ".[] | select(((.body // \"\") | split(\"\n\")[0]) == \"pstack-verifier: $verdict @ $SHA\") | .id" | head -n 1)"
           if [ -n "$existing" ]; then
             gh api --method PATCH "repos/$REPO/issues/comments/$existing" -F body=@"$RUNNER_TEMP/comment.md" > /dev/null
             echo "updated comment $existing"
@@ -401,18 +489,19 @@ jobs:
             gh pr comment "$PR" --repo "$REPO" --body-file "$RUNNER_TEMP/comment.md"
           fi
           printf 'verdict=%s\n' "$verdict" >> "$GITHUB_OUTPUT"
-          printf 'VERIFIER: %s at %s\n' "$verdict" "$SHA" >> "$GITHUB_STEP_SUMMARY"
+          printf 'pstack-verifier: %s @ %s\n' "$verdict" "$SHA" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload the evidence
         if: always() && steps.target.outputs.go == 'yes'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: verifier-evidence
+          name: pstack-verifier-evidence
           path: |
             ${{ runner.temp }}/browser/screens
             ${{ runner.temp }}/verdict.md
             ${{ runner.temp }}/pr.diff
             ${{ runner.temp }}/site.log
+            ${{ runner.temp }}/parent.log
           if-no-files-found: ignore
 
       - name: Fail the job when the verdict is FAIL
