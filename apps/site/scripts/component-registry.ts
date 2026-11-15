@@ -353,7 +353,7 @@ const coreComponents = {
         })
       )(input.attributes);
 
-      return [
+      const paragraphs: RootContent[] = [
         {
           children: [
             {
@@ -364,15 +364,16 @@ const coreComponents = {
           ],
           type: "paragraph",
         },
-        ...(description === undefined
-          ? []
-          : [
-              {
-                children: [{ type: "text", value: description }],
-                type: "paragraph",
-              },
-            ]),
       ];
+
+      if (description !== undefined) {
+        paragraphs.push({
+          children: [{ type: "text", value: description }],
+          type: "paragraph",
+        });
+      }
+
+      return paragraphs;
     },
     human(input) {
       const { description, href, title } = Schema.decodeUnknownSync(
