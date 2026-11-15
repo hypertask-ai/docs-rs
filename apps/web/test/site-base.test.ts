@@ -206,6 +206,9 @@ const internalAddresses = (html: string): readonly string[] =>
     return value.startsWith("/") ? [value] : [];
   });
 
+const escapesSiteBasePath = (html: string): boolean =>
+  internalAddresses(html).some((address) => address.startsWith("/ratstack/"));
+
 it.layer(ReaderSiteBaseFixture.layer)((test) => {
   test.effect(
     "the home page and a deep page keep every internal address under the site base path",
@@ -249,7 +252,7 @@ it.layer(ReaderSiteBaseFixture.layer)((test) => {
           );
 
           expect(atOriginRoot.html).toStrictEqual(rendered.html);
-          expect((yield* pageDocument(flags, "")).includes("/ratstack/")).toBe(
+          expect(escapesSiteBasePath(yield* pageDocument(flags, ""))).toBe(
             false
           );
         }
@@ -273,7 +276,7 @@ it.layer(NodeServices.layer)((test) => {
             path.resolve(import.meta.dirname, "..", page)
           );
 
-          expect(html.includes("/ratstack/")).toBe(false);
+          expect(escapesSiteBasePath(html)).toBe(false);
           expect(internalAddresses(html).length).toBeGreaterThan(0);
         }
       })
