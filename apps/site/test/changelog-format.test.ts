@@ -63,6 +63,28 @@ it("catches a summary longer than two sentences", () => {
   ).toBeDefined();
 });
 
+const publishedThreeSentenceSummary =
+  "On a Settings page, ask the AI chat for a change in plain words. It answers with one card showing from and to. Press Apply, then Undo if you change your mind.";
+
+it("accepts the three sentence summary the old site already publishes", () => {
+  expect(
+    violationsFor({
+      date: "2026-10-29",
+      file: "src/content/changelog/2026-10-29-ai-chat-changes-your-settings-with-apply-and-undo-htpr-7622.md",
+      summary: publishedThreeSentenceSummary,
+    })
+  ).toEqual([]);
+});
+
+it("still catches that summary under any other entry name", () => {
+  const [violation] = violationsFor({
+    file: "src/content/changelog/2026-11-10-settings-apply.md",
+    summary: publishedThreeSentenceSummary,
+  });
+
+  expect(violation?.what).toContain("summary");
+});
+
 it("catches a body no longer than its summary", () => {
   const [violation] = violationsFor({ body: valid.summary });
 

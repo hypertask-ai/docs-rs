@@ -434,6 +434,15 @@ const summarySentences = new Intl.Segmenter("en", {
   granularity: "sentence",
 });
 
+const summarySentenceLimit = 2;
+
+const summariesPublishedPastSentenceLimit = new Set([
+  "2026-10-29-ai-chat-changes-your-settings-with-apply-and-undo-htpr-7622",
+]);
+
+const entryIdOf = (file: string) =>
+  file.slice(file.lastIndexOf("/") + 1).replace(/\.mdx?$/u, "");
+
 export interface ChangelogFormatViolation {
   readonly file: string;
   readonly fix: string;
@@ -493,7 +502,8 @@ const formatViolations = (
   if (
     summary.length === 0 ||
     summary.length > summaryLimit ||
-    sentenceCount > 2 ||
+    (sentenceCount > summarySentenceLimit &&
+      !summariesPublishedPastSentenceLimit.has(entryIdOf(file))) ||
     /[<\n]/u.test(summary)
   ) {
     violations.push({
