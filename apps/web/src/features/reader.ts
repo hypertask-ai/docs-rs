@@ -13,6 +13,7 @@ import {
   pageCopyId,
 } from "../client/reader/model.js";
 import type { ReaderModel } from "../client/reader/model.js";
+import { docsHead, docsPageTitleFromDocumentTitle } from "../docs-head.js";
 import { view as docsView } from "./app.js";
 import * as CafeView from "./cafe/index.js";
 import {
@@ -360,57 +361,77 @@ export const view = (
   const shellClass = `${stylex.props(readerStyles.shell).className ?? ""} docs-layout`;
   const kickerClass = `${stylex.props(docsChrome.kicker).className ?? ""} docs-kicker`;
 
-  return {
-    body: h.div(
-      [h.Class(shellClass)],
-      [
-        docsHeader(model.page.path, h),
-        h.div(
-          [h.Class("docs-body")],
-          [
-            docsSidebar(model.page.path, h),
-            h.div(
-              [h.Class("docs-pane")],
-              [
-                docsActions(
-                  {
-                    copyStatus: copyStatusOf(model, pageCopyId),
-                    markdownUrl: `${model.origin}${docsPageMarkdownPath(model.page.path)}`,
-                    onCopyPage: () => Message.ClickedCopyPage(),
-                  },
-                  h
-                ),
-                ...(group === undefined
-                  ? []
-                  : [h.div([h.Class(kickerClass)], [group.label])]),
-                h.main(
-                  [
-                    h.DataAttribute("path", model.page.path),
-                    h.Class("docs-main"),
-                  ],
-                  [
-                    agentPointer(model, h),
-                    ...Option.match(model.newsTitle, {
-                      onNone: () => [],
-                      onSome: (title) => [readerNewsCallout(title, h)],
-                    }),
-                    ...breadcrumbView(model, h),
-                    ...bodyView(model, h),
-                    ...bibliographyView(model, h),
-                    ...readerReferences(model, h),
-                  ]
-                ),
-                readerFooter(h, footerLinksPrompts(model.page)),
-                docsFooterNote(h),
-              ]
-            ),
-            ...(toc === null ? [] : [toc]),
-          ]
-        ),
-      ]
-    ),
-    canonical: `${model.origin}${model.page.metadata.canonicalPath}`,
-    ogUrl: `${model.origin}${model.page.metadata.canonicalPath}`,
-    title: model.page.metadata.title,
-  };
+  const head = docsHead({
+    description: model.page.metadata.description,
+    noindex: model.page.metadata.robots === "noindex",
+    origin: model.origin,
+    pageTitle: docsPageTitleFromDocumentTitle(model.page.metadata.title),
+    path: model.page.path,
+    status: model.page.status,
+  });
+
+  const body = h.div(
+    [h.Class(shellClass)],
+    [
+      docsHeader(model.page.path, h),
+      h.div(
+        [h.Class("docs-body")],
+        [
+          docsSidebar(model.page.path, h),
+          h.div(
+            [h.Class("docs-pane")],
+            [
+              docsActions(
+                {
+                  copyStatus: copyStatusOf(model, pageCopyId),
+                  markdownUrl: `${model.origin}${docsPageMarkdownPath(model.page.path)}`,
+                  onCopyPage: () => Message.ClickedCopyPage(),
+                },
+                h
+              ),
+              ...(group === undefined
+                ? []
+                : [h.div([h.Class(kickerClass)], [group.label])]),
+              h.main(
+                [
+                  h.DataAttribute("path", model.page.path),
+                  h.Class("docs-main"),
+                ],
+                [
+                  agentPointer(model, h),
+                  ...Option.match(model.newsTitle, {
+                    onNone: () => [],
+                    onSome: (title) => [readerNewsCallout(title, h)],
+                  }),
+                  ...breadcrumbView(model, h),
+                  ...bodyView(model, h),
+                  ...bibliographyView(model, h),
+                  ...readerReferences(model, h),
+                ]
+              ),
+              readerFooter(h, footerLinksPrompts(model.page)),
+              docsFooterNote(h),
+            ]
+          ),
+          ...(toc === null ? [] : [toc]),
+        ]
+      ),
+    ]
+  );
+
+  return Option.match(head, {
+    onNone: () => ({
+      body,
+      canonical: `${model.origin}${model.page.metadata.canonicalPath}`,
+      ogUrl: `${model.origin}${model.page.metadata.canonicalPath}`,
+      title: model.page.metadata.title,
+    }),
+    onSome: (docs) => ({
+      body,
+      canonical: docs.canonical,
+      lang: docs.lang,
+      ogUrl: docs.ogUrl,
+      title: docs.title,
+    }),
+  });
 };
