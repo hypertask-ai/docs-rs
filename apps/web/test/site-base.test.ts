@@ -151,6 +151,7 @@ const make = Effect.gen(function* readerSiteBaseFixture() {
   const home = yield* readerHomeFlags(origin).pipe(
     Effect.flatMap(Schema.decodeUnknownEffect(ReaderFlags))
   );
+
   const bodies = yield* readerBodyFlags(origin);
 
   const deep = yield* Option.match(
