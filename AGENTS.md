@@ -134,7 +134,7 @@ Run `pnpm fix` only when you intend to rewrite files. Finish with `pnpm turbo ru
 
 Follow [ship](/skills/ship) and `skills/ship/references/project.md` for deployment commands, approval, checks, and recovery.
 
-`.github/workflows/publish-ratstack.yml` publishes `main` to https://docs.hypertask.ai/ratstack. It is the only path that runs `alchemy deploy` for this site, it runs from GitHub and never from a laptop, and it deploys `apps/infra/alchemy.docs-ratstack.ts` at stage `docs-ratstack` with the secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
+`.github/workflows/publish-ratstack.yml` publishes `main` to https://docs.hypertask.ai/ratstack. It is the only path that runs `alchemy deploy` for this site, it runs from GitHub and never from a laptop, and it deploys `apps/infra/alchemy.docs-ratstack.ts` at stage `docs-ratstack` with the secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. Those two secrets live in the GitHub environment `ratstack-publish`, which only the default branch may use, so a run of a branch can never read them.
 
 ## Rules and the step that enforces them
 
@@ -144,6 +144,7 @@ Follow [ship](/skills/ship) and `skills/ship/references/project.md` for deployme
 | The preview under the base path never competes with the live site in search | the `verify` step of `apps/site/scripts/ratstack-publish-check.ts`, which requires `X-Robots-Tag: noindex` and the page robots meta tag on every address it fetches |
 | A publish cannot change the live site, its Pages project, its DNS records or any other Cloudflare resource | the resource allowlist in `apps/infra/alchemy.docs-ratstack.ts`, which dies on any resource outside the docs Worker, its RPC backend, the `hypertask.ai` zone and one route, plus the old-site title check in the `verify` step |
 | Only `main` publishes, two publishes never overlap, and every action is pinned to a full commit sha | the `on`, `concurrency` and `permissions` blocks of `.github/workflows/publish-ratstack.yml` |
+| Only a run of the default branch can read the Cloudflare secrets, and a run without them stops before it builds | `environment: ratstack-publish` on the publish job, the deployment branch rule of that environment, and its first step, which names the missing secret |
 
 ## Release the ratstack package
 

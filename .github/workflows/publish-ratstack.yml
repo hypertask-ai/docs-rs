@@ -15,6 +15,7 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment: ratstack-publish
     timeout-minutes: 45
     env:
       SITE_BASE_PATH: /ratstack
@@ -33,7 +34,7 @@ jobs:
             missing="${missing:+$missing, }CLOUDFLARE_ACCOUNT_ID"
           fi
           if [ -n "$missing" ]; then
-            printf 'Missing repository secret: %s. This job cannot reach Cloudflare without it. Fix: add %s under Settings, Secrets and variables, Actions in this repository.\n' "$missing" "$missing" >&2
+            printf 'Missing environment secret: %s. This job cannot reach Cloudflare without it. Fix: add %s under Settings, Environments, ratstack-publish, Environment secrets in this repository.\n' "$missing" "$missing" >&2
             exit 1
           fi
       - name: Check out repository
