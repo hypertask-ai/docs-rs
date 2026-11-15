@@ -179,7 +179,7 @@ it("the phone breadcrumb names the section and the page", () => {
 it("the current section is the last heading that has passed the reading line", () => {
   const headings = [
     { id: "intro", top: -420 },
-    { id: "boards", top: -80 },
+    { id: "boards", top: 161 },
     { id: "tasks", top: 240 },
   ];
 
