@@ -25,7 +25,7 @@ export const docsRatstackProgram = Effect.gen(function* docsRatstackStack() {
 
   const website = yield* Website;
 
-  yield* Cloudflare.Workers.Route("RatstackDocsRoute", {
+  yield* Cloudflare.Workers.WorkerRoute("RatstackDocsRoute", {
     pattern: route.pattern,
     script: website.workerName,
     zoneId: zone.zoneId,

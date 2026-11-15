@@ -1,9 +1,9 @@
-const docsRatstackResources: Readonly<Record<string, string>> = {
-  HypertaskDocsZone: "Cloudflare.Zone.Zone",
-  RatstackDocsRoute: "Cloudflare.Workers.Route",
-  RpcBackend: "Cloudflare.Worker",
-  Website: "Cloudflare.Worker",
-};
+const allowedResources = [
+  { id: "HypertaskDocsZone", type: "Cloudflare.Zone.Zone" },
+  { id: "RatstackDocsRoute", type: "Cloudflare.Workers.Route" },
+  { id: "RpcBackend", type: "Cloudflare.Worker" },
+  { id: "Website", type: "Cloudflare.Worker" },
+] as const;
 
 export const docsRatstackResourcesAllowed = (
   resources: Readonly<Record<string, { readonly Type: string }>>
@@ -11,7 +11,7 @@ export const docsRatstackResourcesAllowed = (
   const declared = Object.keys(resources);
 
   return (
-    declared.length === Object.keys(docsRatstackResources).length &&
-    declared.every((id) => resources[id]?.Type === docsRatstackResources[id])
+    declared.length === allowedResources.length &&
+    allowedResources.every(({ id, type }) => resources[id]?.Type === type)
   );
 };

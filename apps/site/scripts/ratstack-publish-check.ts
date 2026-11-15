@@ -40,10 +40,10 @@ const robotsMetaOf = (html: string): string =>
 const addressPath = (address: string): string =>
   address.split(/[?#]/u)[0] ?? "";
 
-const sameSiteAddresses = (text: string): ReadonlyArray<string> => {
-  const addresses: Array<string> = [];
+const sameSiteAddresses = (text: string): readonly string[] => {
+  const addresses: string[] = [];
 
-  for (const match of text.matchAll(/="(?<value>\/[^"]*)"/gu)) {
+  for (const match of text.matchAll(/[=]"(?<value>\/[^"]*)"/gu)) {
     for (const candidate of (match.groups?.value ?? "").split(",")) {
       const address = candidate.trim().split(/\s+/u)[0] ?? "";
 
@@ -82,13 +82,13 @@ const builtFiles = Effect.fn("ratstackPublishCheck.builtFiles")(
     root: string,
     directory: string
   ): Effect.fn.Return<
-    ReadonlyArray<string>,
+    readonly string[],
     PlatformError.PlatformError,
     FileSystem.FileSystem
   > {
     const fs = yield* FileSystem.FileSystem;
     const entries = yield* fs.readDirectory(`${root}/${directory}`);
-    const files: Array<string> = [];
+    const files: string[] = [];
 
     for (const entry of entries.toSorted()) {
       const file = `${directory}/${entry}`;
@@ -121,7 +121,7 @@ const auditBuiltSite = Effect.gen(function* auditBuiltSite() {
   const path = yield* Path.Path;
   const root = path.resolve(import.meta.dirname, "../../..");
   const files = yield* builtFiles(root, builtSiteDirectory);
-  const failures: Array<string> = [];
+  const failures: string[] = [];
 
   for (const file of files) {
     const text = yield* fs.readFileString(`${root}/${file}`);
@@ -159,6 +159,7 @@ const get = Effect.fn("ratstackPublishCheck.get")(function* getAddress(
         })
     )
   );
+
   const body = yield* response.text.pipe(
     Effect.mapError(
       () =>
@@ -218,13 +219,13 @@ const expectPage = (
       });
     }
 
-    return undefined;
+    return response;
   });
 
 const prefixedAddresses = (
   basePath: string,
   html: string
-): ReadonlyArray<string> => [
+): readonly string[] => [
   ...new Set(
     [...html.matchAll(/href="(?<href>[^"]*)"/gu)].flatMap((match) => {
       const href = match.groups?.href ?? "";
@@ -267,6 +268,7 @@ const verifyDeployedSite = Effect.fn("ratstackPublishCheck.verify")(
 
     const home = `${docsOrigin}${basePath}/`;
     const homeResponse = yield* get(home);
+
     const builtHome = yield* fs.readFileString(
       path.resolve(
         import.meta.dirname,
@@ -276,6 +278,7 @@ const verifyDeployedSite = Effect.fn("ratstackPublishCheck.verify")(
         "index.html"
       )
     );
+
     const expectedTitle = titleOf(builtHome);
 
     yield* expectPage(home, homeResponse);
