@@ -1,0 +1,399 @@
+# CLI Reference
+
+Complete reference for the Hypertask CLI to manage tasks, projects, comments, and notifications from your terminal.
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+The native Hypertask CLI lets you manage tasks, projects, comments, and notifications from your terminal. The executable is named `hypertask`. The CLI ships as a native Zig binary (htz) and can also be installed via npm.
+
+Connecting an agent token? See [Connect a new agent](/connect-an-agent/).
+
+## Find blockers
+
+```bash
+hypertask blockers --user me
+hypertask blockers --user 123 --project 15 --project 42 --state waiting --json
+hypertask inbox list --waiting-on me
+```
+
+`blockers` lists tasks waiting on the chosen person across accessible boards. Use `me` or a numeric user ID with `--user`. Repeat `--project` to limit the results to specific board IDs, and add `--json` for JSON output. `hypertask inbox list --waiting-on me` is an alias.
+
+Each result includes the marked question, recommendation, task link, board and column, priority, and wait time. Filter with `--state`:
+
+- `waiting`: no human reply or reaction after the question.
+- `answered`: the chosen person replied after the question or reacted to it.
+- `no-question`: the task has no marked Question.
+
+These commands are read-only; they do not clear blockers.
+
+## Install
+
+### Via npm (recommended)
+
+```bash
+npm install -g @hypertask/hypertask_cli@latest
+```
+
+This installs a lightweight npm shim that fetches and runs the official htz binary for your platform, ensuring you always have the latest version.
+
+### Via curl (Linux / macOS)
+
+On Linux or macOS, run:
+
+```bash
+curl -fsSL https://hypertask.ai/install | sh
+hypertask --version
+```
+
+The installer detects x64 or ARM64, downloads the matching binary from the latest [GitHub release](https://github.com/hypertask-ai/cli/releases), and verifies its SHA-256 checksum. It installs to `~/.local/bin` by default. Set `HYPERTASK_INSTALL_DIR` to choose another directory.
+
+### Via PowerShell (Windows x64)
+
+On Windows x64, run in PowerShell:
+
+```powershell
+irm https://hypertask.ai/install.ps1 | iex
+hypertask --version
+```
+
+The installer downloads the native executable from the latest [GitHub release](https://github.com/hypertask-ai/cli/releases), verifies its SHA-256 checksum, installs it to `%LOCALAPPDATA%\Programs\Hypertask` and adds that folder to your user `PATH`. Open a new terminal afterwards to run `hypertask` from anywhere. Set `HYPERTASK_INSTALL_DIR` to choose another directory.
+
+### Fleet auto-install behavior
+
+When you merge a commit into the hypertask-ai/cli repository, the VPS fleet runs an automated install workflow:
+
+- The trusted runner builds the htz binary in ReleaseFast mode.
+- It preserves any existing symlinks under `~/.local/bin`.
+- It only considers the install successful after verifying the installed binary matches the freshly built commit.
+- Previous verifications and log metadata are retained to detect drift or mismatches.
+
+If an install does not succeed, the CI/CD pipeline fails and prevents the commit from being considered merged.
+
+## Inside the Hypertask App
+
+When you choose to install Hypertask from the web app, the in-app installer (CLI install dialog) uses the npm shim to fetch the htz binary for you. This keeps the command identical across all install channels.
+
+## General behaviour
+
+### Unknown flags
+
+The CLI fails out loud for unrecognized flags and options. An unknown flag results in an error message and an exit code of 2 (non-zero), indicating a configuration or usage error.
+
+```bash
+hypertask task get HYFA-70 --zzznotaflag 9
+# unknown option: --zzznotaflag
+# exit code: 2
+```
+
+### Ticket commands
+
+`hypertask ticket` is the same command as `hypertask task`, so `hypertask ticket get HTPR-8265`, `hypertask ticket list --project 15` and `hypertask help ticket get` do exactly what their `task` forms do. Your brief and the board call them tickets, and the CLI answers both words instead of rejecting `ticket` as an unknown command.
+
+### Reading a ticket by number
+
+A bare number is an internal task id, so it can belong to any board. `hypertask task get 8263` names the ticket and board it did read, and when no task has that id it names the two shapes that reach the ticket: the ticket key, or `--project` with the board.
+
+```bash
+hypertask task get 8263
+# no task has id 8263. A bare number is a task id on any board; pass the ticket key, or --project with the board, when it is a ticket number
+
+hypertask task get 8263 --project 15
+hypertask task get HTPR-8263
+```
+
+### Reading a ticket from its app link
+
+A ticket link copied from the address bar works wherever the CLI takes a ticket. The board and the ticket number are read from the link, so a pasted link does what `8263 --project 15` does. A `#comment-<id>` anchor, a query string and later path segments are ignored, and a `--project` that names another board is refused instead of reading the wrong one.
+
+```bash
+hypertask task get https://app.hypertask.ai/detail/project-15/8456
+hypertask comment list https://app.hypertask.ai/detail/project-15/8456 --limit 5
+```
+
+### Comment text from a file
+
+`comment add --file <path>` reads the comment text from a file, and that file holds HTML, the same as `--text`. Add `--markdown` when the file holds Markdown instead.
+
+```bash
+hypertask comment add HTPR-2992 --file comment.html
+```
+
+`--html-file` is not a `comment add` flag; it belongs to `report create` and `report update`. A wrong flag is refused with exit code 2, and the error lists the flags that command does accept.
+
+### Unknown commands
+
+A command that does not exist is answered as a command: `hypertask task lst HYFA-70 --project 15` prints `unknown command: lst`, the commands that do exist, and `did you mean: list`, instead of blaming the flag that followed it.
+
+When the guessed word lives under another command, the answer says where the work is. From v0.2.35, `hypertask task comments HYFA-70` answers `unknown command: comments` and `a ticket's comments are read with: hypertask comment list <ticket>`.
+
+A board's columns are sections, and the answer says so. From v0.2.36, `hypertask board --help` and `hypertask board sections --project 15` both answer `board columns are sections: hypertask section list --project <id>`. The same version accepts `column` and `columns` as names for `section`, so `hypertask columns list --project 15` reads the columns.
+
+```bash
+hypertask columns list --project 15
+# same output as: hypertask section list --project 15
+```
+
+### Agent log
+
+An agent's work notes belong in a ticket's agent log, not in comments for people. `hypertask activity` is the same command as `hypertask comment`, so `activity add` writes that log: the note is saved and nobody is notified.
+
+```bash
+hypertask activity add HTPR-1 --text "Checked the deploy log; the build passed."
+# Saved to the agent log (no comment, nobody notified).
+```
+
+Post a comment for people with `--kind question`, `qa` or `done`. Read the log back with `hypertask task agent-log <ticket>`, and `hypertask activity last <ticket>` answers where the log is read instead of listing the comment commands. From v0.2.38.
+
+### Ticket identifiers
+
+A ticket has a short key, like `HTPR-8537`, and a list prints an internal `id` too.
+The two share one number range, so a bare number is the internal id, and that id can
+sit on any board.
+
+A read names the ticket it landed on:
+
+```bash
+hypertask task get 1172
+# 1172 is task id 1172: HTPR-481 on Hypertask. A bare number is an internal id on any board;
+# pass the ticket number, or --project with the board, when the board matters
+```
+
+A write cannot be undone, so a write that names a bare number writes nothing:
+
+```bash
+hypertask activity add 1172 --text "note"
+# nothing was written: 1172 is task id 1172: HTPR-481 on Hypertask.
+# Pass the ticket number to write to the ticket, or id:1172 to write to that task
+# exit code: 2
+```
+
+Write with the ticket key (`hypertask activity add HTPR-481 --text "note"`), a bare
+ticket number plus `--project <board id>`, or `id:<n>` when you mean the internal id.
+This covers `comment add`, `activity add`, `task update`, `task assign`,
+`task unassign`, `task description restore` and `task inbox move`.
+
+### Error reports
+
+From v0.2.18, when a command fails unexpectedly (a server error, a network problem, a response the CLI cannot read, or an internal error), the CLI sends Hypertask one short report so the failure becomes a bug ticket. The report holds only the command name (like `task create`), the error type, the HTTP status, the CLI version and your operating system. It never includes task content, ids, arguments or your token.
+
+Your own mistakes (an unknown flag, a missing task, no permission) are never reported. Reporting never changes the error message or exit code, and gives up after about 1.5 seconds.
+
+To turn it off, set `HYPERTASK_NO_ERROR_REPORTS=1`, or add `"error_reports": false` to `~/.hypertask/config.json`.
+
+### v0.2.16 CLI Release (2026-10-12)
+
+This release fixes a crash when running AI reviews on large pull requests. The CLI now passes PR text to the review program through standard input instead of a command-line argument, preventing shell argument limits:
+
+- **No crash on large PRs:** AI review commands now work on arbitrarily large pull requests without hitting shell argument limits.
+- **Internal program path consistency:** The review program running on the server matches the code stored in the repository, verified in QA.
+
+To upgrade to v0.2.16:
+
+```bash
+npm install -g @hypertask/hypertask_cli@latest
+hypertask --version
+```
+
+### v0.2.15 CLI Release (2026-10-11)
+
+This release fixes a bug in agent emoji handling for CLI inbox operations. The CLI now correctly distinguishes between agent and human reactions:
+
+- Agent emoji reactions are no longer counted as human reactions in the CLI inbox.
+- Human reactions are no longer dropped when loading or processing inbox data.
+
+Previously, the CLI would treat an agent's emoji as if it came from a person, potentially causing selection or counting errors in inbox actions like bulk archive. This fix ensures accurate reaction tracking for agents monitoring tasks.
+
+To upgrade to v0.2.15:
+
+```bash
+npm install -g @hypertask/hypertask_cli@latest
+hypertask --version
+```
+
+### v0.2.19 CLI Release (2026-10-15)
+
+CLI 0.2.19 improves error reporting when network problems occur during command execution.
+
+- **Read retries and clearer errors:** If the server does not respond while the CLI waits, it now retries once and surfaces the actual error instead of a bare "ReadFailed" message. Use `--help` or the full command list (`hypertask capabilities --json`) to see available updates.
+
+This change applies to all commands that involve waiting for a server response, including task listing, task details, and other read operations.
+
+---
+
+## Task listing with label filters
+
+### hypertask tasks list
+
+List tasks with optional filtering.
+
+```bash
+hypertask tasks list [options]
+```
+
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `--query <text>` | Free-text search. Same flag on every list command. |
+| `--filter <key=value>` | Repeatable structured filter. Keys: `priority`, `section`, `label`, `assignee`, `status`, `updated_since`, `has_pr`. |
+| `--sort <field[:dir]>` | Sort, for example `updatedAt:desc`. |
+| `--fields <a,b>` | Return only these columns, for example `title,url`. |
+| `--labels <label1,label2,...>` | Filter tasks by one or more labels. |
+| `--limit <num>` | Max rows. |
+| `--cursor <token>` | Next page from the previous response. |
+| `--offset <num>` | Start listing from the Nth item (for paginated results). |
+
+**Behaviour:**
+
+- Returns a paginated list of tasks matching the specified filters.
+- Prefer `--query`, `--filter`, `--fields`, and `--limit` so one call stays small.
+- Use `--offset` or `--cursor` to walk large collections.
+
+```bash
+hypertask tasks list --project 15 --filter section=AI Review --filter has_pr=red --fields title,url --limit 20
+hypertask tasks list --labels cli,urgent
+```
+
+<Aside type="note">The `tasks list --labels` flag was previously a no-op. It now correctly filters tasks by the provided labels.</Aside>
+<Aside type="note">The `--filter priority` option now accepts both priority names (`urgent`, `high`, `medium`, `low`, `none`) and numeric values (0–4), matching the web UI and API. `none` matches tasks without an assigned priority.</Aside>
+
+## Task move
+
+### hypertask tasks move
+
+Move a task from one section to another. This works within a board or across boards.
+
+```bash
+hypertask tasks move <ticket> --section <section-name>
+hypertask tasks move <ticket> --to <board-id>
+hypertask tasks move <ticket> --to <board-id> --to-section <section-id>
+```
+
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `--section <section-name>` | Move the task to this section within the same board. |
+| `--to <board-id>` | Move the task to this board. Use `--to-section` to specify the target section in the new board. |
+| `--to-section <section-id>` | Specify the target section in the board given by `--to`. If omitted, the section defaults to "Backlog". |
+| `--assignee <user>` | Change the task's assignee instead of moving it. |
+
+**Behaviour:**
+
+- If the task is archived, the command fails with:
+  > "Archived tasks cannot move sections or change assignees"
+- Use `--to <board-id>` to move a task to a different board, optionally with `--to-section` to specify a target section in the new board.
+- Use `--assignee <user>` to change the task's assignee without moving boards.
+
+```bash
+# Move a task to another board (defaults to Backlog in the target board)
+hypertask tasks move INFRA-123 --to 15
+
+# Move a task to another board and specific section
+hypertask tasks move INFRA-123 --to 15 --to-section 4060
+
+# Move a task to a different section in the same board
+hypertask tasks move PRODUCT-456 --section "In Review"
+
+# Move a task and change its assignee
+hypertask tasks move PRODUCT-456 --assignee @valentin
+```
+
+<Aside type="note">The `comments add --improve` flag now correctly accepts a bare flag without a value and defaults to readability improvement.</Aside>
+
+## Project management errors are informative
+
+<span class="label label--brand">Bug fix</span> Task creation now reports project membership failures with clear guidance instead of showing an internal server error or generic failure when the token lacks access.
+
+Previously, using a non-member token to create a task resulted in a generic "hypertask: the server could not complete the command" exit code 4. After this fix, the same command returns:
+
+```bash
+# Using a token without project 5156 access
+hypertask task create --project 5156 --section Backlog
+# error: you are not a project member. Sign in with a valid account or use a token that has access to project 5156.
+# exit code: 4
+```
+
+This makes CLI errors actionable for debugging out-of-scope work and bot configurations.
+
+---
+
+## Project management
+
+### hypertask project update
+
+Update a project (board) by ID. To rename a board, use the `--title` flag:
+
+```bash
+hypertask project update <id> --title "<new title>"
+```
+
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `--title <title>` | New board title. The title will be trimmed to non-empty and max 200 characters. |
+| `--description <description>` | Optional board description (HTML). |
+
+**Behaviour:**
+
+- Board members with write access can rename the board; non-members are blocked with a clear error.
+- Empty or overly long titles are rejected locally with a helpful message.
+- Only board members are allowed to update the board: an unknown board ID returns "not found", while a non-member receives "Not allowed to rename this board".
+
+```bash
+# Rename a board by ID
+hypertask project update 4060 --title "Agents & Infra"
+
+# Update the description as well
+hypertask project update 4060 --title "Agents & Infra" --description "<p>Infrastructure-related tasks and boards.</p>"
+```
+
+<span class="label label--brand">Behavior change</span> Renaming a board from the app previously did not check board membership; agents and users could rename boards they were not members of. Board updates now require write access to the board. Only board members are allowed to update the board.
+
+---
+
+You can also manage board columns and saved views with:
+- `hypertask view create` — Create a saved view.
+- `hypertask view list` — List saved views for a project.
+- `hypertask view switch <view-id>` — Switch to a saved view.
+
+For more options, run `hypertask project --help`, `hypertask view --help`, or `hypertask tasks --help`.
+
+Help names where a topic's help lives. `hypertask help project`, `hypertask project --help` and `hypertask --help project` all print that command's page, so a help request reaches any command, not only `features`. `hypertask help features` lists live product features, and `hypertask help` with no topic prints the top page, which ends with the list of commands. A topic that is not a command answers with where that help lives instead of `unknown command`.
+
+## Delete a board from the CLI
+
+Only the board owner or a board admin can delete a board. Sign in to the CLI with an account or token that has that permission.
+
+<Aside type="caution">
+
+Deletion removes the board and all its tasks. It cannot be undone through the CLI. Check the board ID before continuing. To keep the board for later, archive it instead.
+
+</Aside>
+
+First, check the board you want to delete:
+
+```bash
+hypertask project show <board-id>
+```
+
+Then delete it with explicit confirmation:
+
+```bash
+hypertask project delete <board-id> --yes
+```
+
+Replace `<board-id>` with the board's numeric ID. Without `--yes`, the CLI refuses to delete it. Ordinary board membership is not enough.
+
+The board must be active. If it is archived, ask its owner to restore it before deleting:
+
+```bash
+hypertask project archive <board-id> --restore
+```
+
+For a reversible alternative, the board owner can archive it:
+
+```bash
+hypertask project archive <board-id>
+```
