@@ -98,11 +98,10 @@ it.layer(ReaderParityFixture.layer)((test) => {
         expect(readerNewsTitle(rendered.html), path).toBe(
           readerNewsTitle(original?.html ?? "")
         );
+
         const headerAnchors = docsHeaderAnchors(rendered.html);
         const headerTabs = docsHeaderTabAnchors(path);
-        const tabHrefs: ReadonlySet<string> = new Set(
-          headerTabs.map((tab) => tab.href)
-        );
+        const tabHrefs = new Set(headerTabs.map((tab) => tab.href));
 
         expect(
           headerAnchors.filter((anchor) => tabHrefs.has(anchor.href)),

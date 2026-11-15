@@ -17,11 +17,6 @@ import {
 import { init } from "../src/client/reader/init.js";
 import { ReaderFlags } from "../src/client/reader/model.js";
 import { view } from "../src/features/reader.js";
-import {
-  docsHeaderAnchors,
-  docsHeaderLinkedPaths,
-  docsHeaderTabAnchors,
-} from "./reader-docs-header.js";
 import { normalizedNodes } from "./reader-node-normalize.js";
 
 const loreShardCount = 8;
@@ -95,11 +90,10 @@ it.layer(ReaderLoreFixture.layer)((test) => {
                 expect(readerNewsTitle(rendered.html), page.page.path).toBe(
                   readerNewsTitle(original?.html ?? "")
                 );
+
                 const headerAnchors = docsHeaderAnchors(rendered.html);
                 const headerTabs = docsHeaderTabAnchors(page.page.path);
-                const tabHrefs: ReadonlySet<string> = new Set(
-                  headerTabs.map((tab) => tab.href)
-                );
+                const tabHrefs = new Set(headerTabs.map((tab) => tab.href));
 
                 expect(
                   headerAnchors.filter((anchor) => tabHrefs.has(anchor.href)),
