@@ -365,7 +365,7 @@ export const view = (
     body: h.div(
       [h.Class(shellClass)],
       [
-        docsHeader(model.page.path, h, Message.OpenedDocsSearch()),
+        docsHeader(model.page.path, h),
         ...(Option.isSome(model.docs) ? [docsSearchDialog(model, h)] : []),
         h.div(
           [h.Class("docs-body")],

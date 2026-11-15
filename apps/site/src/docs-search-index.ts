@@ -29,7 +29,7 @@ const tidy = (line: string): string =>
     .replaceAll(/\[([^\]]*)\]\([^)]*\)/gu, "$1")
     .replaceAll(/<[^>]+>/gu, " ")
     .replaceAll(/\{[^}]*\}/gu, " ")
-    .replaceAll(/[`*_|>~]/gu, " ")
+    .replaceAll(/[`*_|>~#]/gu, " ")
     .replaceAll(/\s+/gu, " ")
     .trim();
 

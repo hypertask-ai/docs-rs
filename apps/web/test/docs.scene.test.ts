@@ -76,6 +76,10 @@ it("the /search page preloads ?q=, searches again on Enter, puts the query in th
       "aria-keyshortcuts",
       "Control+K"
     ),
+    expect(role("button", { name: "Search docs" })).toHaveAttr(
+      "commandfor",
+      "docs-search"
+    ),
     expect(role("heading", { name: "Search the docs" })).toExist(),
     expect(text("Matches appear here.")).toExist(),
     Subscription.emit(arrivedAt("/search?q=cartridge")),

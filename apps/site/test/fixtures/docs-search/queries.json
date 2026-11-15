@@ -3,37 +3,68 @@
  "pageCount": 695,
  "queries": [
   {
-   "query": "asana",
+   "query": "iphone",
    "results": [
     {
-     "routePath": "/getting-started/switching/",
-     "score": 30.61648,
-     "title": "Switching from Trello, Jira, or Asana"
+     "routePath": "/getting-started/apps/",
+     "score": 1.8236725330352783,
+     "title": "Mobile and desktop apps"
     },
     {
-     "routePath": "/features/integrations/",
-     "score": 0.530021,
-     "title": "Integrations"
+     "routePath": "/features/images/",
+     "score": 0.3768284022808075,
+     "title": "Images and Attachments"
+    },
+    {
+     "routePath": "/getting-started/introduction/",
+     "score": 0.36526164412498474,
+     "title": "What is Hypertask?"
     }
    ],
-   "total": 2
+   "total": 3
+  },
+  {
+   "query": "length",
+   "results": [
+    {
+     "routePath": "/changelog/2026-10-03-claude-haiku-5-5-replaces-haiku-4-5-htpr-7010/",
+     "score": 0.4669714570045471,
+     "title": "Claude Haiku 5.5 replaces Haiku 4.5"
+    },
+    {
+     "routePath": "/features/appearance/",
+     "score": 0.3926751911640167,
+     "title": "Appearance & AI Models"
+    },
+    {
+     "routePath": "/getting-started/settings-profile/",
+     "score": 0.3685969114303589,
+     "title": "Profile & Settings"
+    },
+    {
+     "routePath": "/mcp/agent-webhooks/",
+     "score": 0.33200380206108093,
+     "title": "Agent webhooks"
+    }
+   ],
+   "total": 4
   },
   {
    "query": "trello",
    "results": [
     {
      "routePath": "/getting-started/switching/",
-     "score": 28.786407,
+     "score": 28.786407470703125,
      "title": "Switching from Trello, Jira, or Asana"
     },
     {
      "routePath": "/features/integrations/",
-     "score": 0.49834,
+     "score": 0.4983397126197815,
      "title": "Integrations"
     },
     {
      "routePath": "/changelog/",
-     "score": 0.057814,
+     "score": 0.05781404674053192,
      "title": "Changelog"
     }
    ],
@@ -44,568 +75,296 @@
    "results": [
     {
      "routePath": "/getting-started/switching/",
-     "score": 28.919846,
+     "score": 28.919845581054688,
      "title": "Switching from Trello, Jira, or Asana"
     },
     {
      "routePath": "/features/integrations/",
-     "score": 0.49834,
+     "score": 0.4983397126197815,
      "title": "Integrations"
     },
     {
      "routePath": "/api/tools-reference/",
-     "score": 0.039075,
+     "score": 0.03907474875450134,
      "title": "MCP Tools Reference"
     }
    ],
    "total": 3
   },
   {
-   "query": "solutions",
+   "query": "asana",
    "results": [
     {
-     "routePath": "/changelog/2026-09-09-stopped-qa-workers-stay-stopped-4df346/",
-     "score": 0.007866,
-     "title": "Stopped QA workers stay stopped"
+     "routePath": "/getting-started/switching/",
+     "score": 30.616479873657227,
+     "title": "Switching from Trello, Jira, or Asana"
     },
     {
-     "routePath": "/changelog/2026-08-17-choose-models-for-the-destination-board-f11f12/",
-     "score": 0.003937,
-     "title": "Choose models for the destination board"
-    },
-    {
-     "routePath": "/changelog/",
-     "score": 0.000766,
-     "title": "Changelog"
+     "routePath": "/features/integrations/",
+     "score": 0.5300212502479553,
+     "title": "Integrations"
     }
    ],
-   "total": 3
+   "total": 2
   },
   {
-   "query": "room",
+   "query": "talk",
    "results": [
     {
-     "routePath": "/changelog/2026-09-19-run-notes-and-budgets-in-agent-rooms-0f5032/",
-     "score": 28.824024,
-     "title": "Run notes and budgets in agent rooms"
-    },
-    {
-     "routePath": "/features/agent-chat/",
-     "score": 2.70563,
-     "title": "Agent Chat"
-    },
-    {
-     "routePath": "/changelog/",
-     "score": 0.664752,
-     "title": "Changelog"
+     "routePath": "/getting-started/contact-support/",
+     "score": 0.5845756530761719,
+     "title": "Get help"
     }
    ],
-   "total": 3
+   "total": 1
   },
   {
-   "query": "concepts",
+   "query": "central",
    "results": [
     {
-     "routePath": "/getting-started/concepts/",
-     "score": 27.071341,
-     "title": "Core Concepts"
+     "routePath": "/changelog/2026-10-11-human-comments-notify-assigned-agents-htpr-7088/",
+     "score": 0.5062159895896912,
+     "title": "Human comments notify assigned agents"
     },
     {
-     "routePath": "/getting-started/introduction/",
-     "score": 1.729806,
-     "title": "What is Hypertask?"
-    },
-    {
-     "routePath": "/",
-     "score": 0.477778,
-     "title": "Hypertask documentation"
-    },
-    {
-     "routePath": "/getting-started/quickstart/",
-     "score": 0.402361,
-     "title": "Quick Start"
+     "routePath": "/features/agents-dashboard/",
+     "score": 0.4762410521507263,
+     "title": "Agents Dashboard"
     }
    ],
-   "total": 4
-  },
-  {
-   "query": "fonts",
-   "results": [
-    {
-     "routePath": "/features/appearance/",
-     "score": 2.307132,
-     "title": "Appearance & AI Models"
-    },
-    {
-     "routePath": "/changelog/2026-08-04-consistent-ticket-id-typography-d89d28/",
-     "score": 0.859998,
-     "title": "Consistent ticket ID typography"
-    },
-    {
-     "routePath": "/getting-started/settings-profile/",
-     "score": 0.368597,
-     "title": "Profile & Settings"
-    },
-    {
-     "routePath": "/changelog/",
-     "score": 0.109681,
-     "title": "Changelog"
-    }
-   ],
-   "total": 4
+   "total": 2
   },
   {
    "query": "enhancement",
    "results": [
     {
      "routePath": "/features/search-screen/",
-     "score": 2.029693,
+     "score": 2.0296926498413086,
      "title": "Search Screen"
     },
     {
      "routePath": "/features/keyboard-shortcuts/",
-     "score": 0.275068,
+     "score": 0.2750677168369293,
      "title": "Keyboard Shortcuts"
     }
    ],
    "total": 2
   },
   {
-   "query": "inspired",
+   "query": "licenses",
    "results": [
     {
-     "routePath": "/features/superhuman-snippets/",
-     "score": 0.492724,
-     "title": "Superhuman-Style Snippets"
-    },
-    {
-     "routePath": "/features/search-screen/",
-     "score": 0.246517,
-     "title": "Search Screen"
+     "routePath": "/features/billing/",
+     "score": 2.1784303188323975,
+     "title": "Billing & Seat Management"
     }
    ],
-   "total": 2
+   "total": 1
   },
   {
-   "query": "intelligent",
+   "query": "forecasts",
    "results": [
     {
-     "routePath": "/changelog/2026-10-14-mcp-invalid-date-api-fix-htpr-7198/",
-     "score": 0.509954,
-     "title": "MCP invalid date API fix"
-    },
-    {
-     "routePath": "/getting-started/introduction/",
-     "score": 0.365262,
-     "title": "What is Hypertask?"
-    },
-    {
-     "routePath": "/features/tasks/",
-     "score": 0.215648,
-     "title": "Tasks"
+     "routePath": "/features/billing/",
+     "score": 2.531729221343994,
+     "title": "Billing & Seat Management"
     }
    ],
-   "total": 3
+   "total": 1
   },
   {
-   "query": "viewer",
+   "query": "shareable",
    "results": [
     {
-     "routePath": "/changelog/2026-10-10-gated-downloads-for-ticket-viewers-only-htpr-7018/",
-     "score": 28.506191,
-     "title": "Gated downloads for ticket viewers only"
-    },
-    {
-     "routePath": "/changelog/",
-     "score": 0.55802,
-     "title": "Changelog"
-    },
-    {
-     "routePath": "/features/collaboration/",
-     "score": 0.301611,
-     "title": "Collaboration"
+     "routePath": "/features/calendar/",
+     "score": 1.979202389717102,
+     "title": "Calendar"
     }
    ],
-   "total": 3
+   "total": 1
   },
   {
-   "query": "protocol",
+   "query": "heic",
    "results": [
     {
-     "routePath": "/mcp/overview/",
-     "score": 0.992295,
-     "title": "MCP Integration"
-    },
-    {
-     "routePath": "/mcp/agents/",
-     "score": 0.683895,
-     "title": "Creating Agents"
-    },
-    {
-     "routePath": "/getting-started/introduction/",
-     "score": 0.365262,
-     "title": "What is Hypertask?"
+     "routePath": "/features/images/",
+     "score": 3.0584909915924072,
+     "title": "Images and Attachments"
     }
    ],
-   "total": 3
+   "total": 1
   },
   {
-   "query": "velocity",
+   "query": "heif",
    "results": [
     {
-     "routePath": "/features/reports/",
-     "score": 2.360416,
-     "title": "Reports"
-    },
-    {
-     "routePath": "/api/tools-reference/",
-     "score": 0.671787,
-     "title": "MCP Tools Reference"
-    },
-    {
-     "routePath": "/changelog/2026-10-10-chat-history-and-pages-load-for-signed-in-users-without-legacy-cookie-htpr-7073/",
-     "score": 0.497051,
-     "title": "Chat history and pages load for signed-in users without legacy cookie"
+     "routePath": "/features/images/",
+     "score": 2.7853736877441406,
+     "title": "Images and Attachments"
     }
    ],
-   "total": 3
+   "total": 1
   },
   {
-   "query": "cron",
+   "query": "thumbnails",
    "results": [
     {
-     "routePath": "/mcp/scheduling/",
-     "score": 4.279386,
-     "title": "Scheduling Agents"
-    },
-    {
-     "routePath": "/changelog/2026-08-03-keep-guest-boards-when-signing-in-c73924/",
-     "score": 0.511321,
-     "title": "Keep guest boards when signing in"
-    },
-    {
-     "routePath": "/mcp/agent-sdk/",
-     "score": 0.326248,
-     "title": "Agent SDK"
+     "routePath": "/features/images/",
+     "score": 1.8487826585769653,
+     "title": "Images and Attachments"
     }
    ],
-   "total": 3
+   "total": 1
   },
   {
-   "query": "failedlogin",
+   "query": "galleries",
    "results": [
     {
-     "routePath": "/features/ai-feedback-from-bot/",
-     "score": 1.640136,
-     "title": "AI Feedback from a Bot Account"
-    },
-    {
-     "routePath": "/changelog/2026-10-14-ai-feedback-bot-account-htpr-7200/",
-     "score": 1.206289,
-     "title": "AI feedback bot account"
-    },
-    {
-     "routePath": "/changelog/",
-     "score": 0.115148,
-     "title": "Changelog"
+     "routePath": "/features/images/",
+     "score": 1.1148185729980469,
+     "title": "Images and Attachments"
     }
    ],
-   "total": 3
+   "total": 1
+  },
+  {
+   "query": "lightboxes",
+   "results": [
+    {
+     "routePath": "/features/images/",
+     "score": 3.7130141258239746,
+     "title": "Images and Attachments"
+    }
+   ],
+   "total": 1
   },
   {
    "query": "exempt",
    "results": [
     {
      "routePath": "/features/keyboard-shortcuts/",
-     "score": 0.002786,
+     "score": 0.002785669406875968,
      "title": "Keyboard Shortcuts"
     },
     {
      "routePath": "/features/inbox/",
-     "score": 0.000855,
+     "score": 0.0008552894578315318,
      "title": "Inbox & Notifications"
     },
     {
      "routePath": "/mcp/scheduling/",
-     "score": 0.000154,
+     "score": 0.00015418099064845592,
      "title": "Scheduling Agents"
     }
    ],
    "total": 3
   },
   {
-   "query": "adaptive",
-   "results": [
-    {
-     "routePath": "/mcp/agent-sdk/",
-     "score": 1.747337,
-     "title": "Agent SDK"
-    },
-    {
-     "routePath": "/features/table-view/",
-     "score": 1.578932,
-     "title": "Table View"
-    },
-    {
-     "routePath": "/mcp/overview/",
-     "score": 0.525031,
-     "title": "MCP Integration"
-    },
-    {
-     "routePath": "/features/keyboard-shortcuts/",
-     "score": 0.246345,
-     "title": "Keyboard Shortcuts"
-    }
-   ],
-   "total": 4
-  },
-  {
-   "query": "incoming",
-   "results": [
-    {
-     "routePath": "/mcp/agent-sdk/",
-     "score": 0.556167,
-     "title": "Agent SDK"
-    },
-    {
-     "routePath": "/features/tasks/",
-     "score": 0.197232,
-     "title": "Tasks"
-    },
-    {
-     "routePath": "/changelog/2026-10-11-fixed-rocket-digest-agent-announcements-retrieval-htpr-7126/",
-     "score": 0.00036,
-     "title": "Fixed rocket-digest agent announcements retrieval"
-    },
-    {
-     "routePath": "/getting-started/security-and-privacy/",
-     "score": 0.000146,
-     "title": "Security and privacy"
-    },
-    {
-     "routePath": "/changelog/",
-     "score": 0.000071,
-     "title": "Changelog"
-    }
-   ],
-   "total": 5
-  },
-  {
-   "query": "cloudflare",
-   "results": [
-    {
-     "routePath": "/mcp/scheduling/",
-     "score": 2.209156,
-     "title": "Scheduling Agents"
-    },
-    {
-     "routePath": "/mcp/agent-webhooks/",
-     "score": 1.390758,
-     "title": "Agent webhooks"
-    },
-    {
-     "routePath": "/mcp/agent-sdk/",
-     "score": 0.556167,
-     "title": "Agent SDK"
-    },
-    {
-     "routePath": "/changelog/2026-09-03-restore-the-agent-control-poller-s-credentials-3ee06d/",
-     "score": 0.173161,
-     "title": "Restore the agent control poller's credentials"
-    },
-    {
-     "routePath": "/cli/commands/",
-     "score": 0.129295,
-     "title": "CLI Commands"
-    }
-   ],
-   "total": 5
-  },
-  {
-   "query": "glance",
-   "results": [
-    {
-     "routePath": "/features/calendar/",
-     "score": 0.701809,
-     "title": "Calendar"
-    },
-    {
-     "routePath": "/changelog/2026-10-11-agent-authentication-and-ticket-creation-improvements-htpr-7117/",
-     "score": 0.448811,
-     "title": "Agent authentication and ticket creation improvements"
-    },
-    {
-     "routePath": "/features/agents-dashboard/",
-     "score": 0.409534,
-     "title": "Agents Dashboard"
-    },
-    {
-     "routePath": "/features/collaboration/",
-     "score": 0.275853,
-     "title": "Collaboration"
-    },
-    {
-     "routePath": "/features/tasks/",
-     "score": 0.100531,
-     "title": "Tasks"
-    }
-   ],
-   "total": 5
-  },
-  {
    "query": "snooze",
    "results": [
     {
      "routePath": "/features/scheduling/",
-     "score": 1.948832,
+     "score": 1.9488320350646973,
      "title": "Scheduling"
     },
     {
      "routePath": "/features/tasks/",
-     "score": 1.399017,
+     "score": 1.3990172147750854,
      "title": "Tasks"
     },
     {
      "routePath": "/features/agents/",
-     "score": 0.347989,
+     "score": 0.34798869490623474,
      "title": "AI Agents"
     },
     {
      "routePath": "/features/board-settings/",
-     "score": 0.287993,
+     "score": 0.28799283504486084,
      "title": "Board Settings"
     },
     {
      "routePath": "/changelog/2026-08-21-mute-notifications-per-board-fda0ee/",
-     "score": 0.252481,
+     "score": 0.25248050689697266,
      "title": "Mute notifications per board"
     }
    ],
    "total": 5
   },
   {
-   "query": "insert",
+   "query": "expertise",
+   "results": [
+    {
+     "routePath": "/features/skills/",
+     "score": 0.46653103828430176,
+     "title": "Skills"
+    }
+   ],
+   "total": 1
+  },
+  {
+   "query": "soft",
+   "results": [
+    {
+     "routePath": "/changelog/2026-10-14-mcp-tool-keep-alive-for-sse-connections-htpr-7220/",
+     "score": 0.5247533917427063,
+     "title": "MCP tool keep-alive for SSE connections"
+    },
+    {
+     "routePath": "/cli/commands/",
+     "score": 0.2962627410888672,
+     "title": "CLI Commands"
+    }
+   ],
+   "total": 2
+  },
+  {
+   "query": "predefined",
    "results": [
     {
      "routePath": "/features/superhuman-snippets/",
-     "score": 2.00753,
+     "score": 2.0772457122802734,
      "title": "Superhuman-Style Snippets"
-    },
-    {
-     "routePath": "/features/skills/",
-     "score": 1.33987,
-     "title": "Skills"
-    },
-    {
-     "routePath": "/features/collaboration/",
-     "score": 0.928594,
-     "title": "Collaboration"
-    },
-    {
-     "routePath": "/features/keyboard-shortcuts/",
-     "score": 0.824257,
-     "title": "Keyboard Shortcuts"
-    },
-    {
-     "routePath": "/features/search/",
-     "score": 0.632379,
-     "title": "Search"
     }
    ],
-   "total": 5
+   "total": 1
   },
   {
-   "query": "resize",
+   "query": "notion",
    "results": [
     {
-     "routePath": "/changelog/2026-10-15-eliminated-resizeobserver-loop-chatter-from-browser-console-htpr-7256/",
-     "score": 173.19812,
-     "title": "Eliminated ResizeObserver loop chatter from browser console"
-    },
-    {
-     "routePath": "/changelog/2026-10-03-resized-images-keep-their-size-ecffcc/",
-     "score": 23.385675,
-     "title": "Resized images keep their size"
-    },
-    {
      "routePath": "/features/table-view/",
-     "score": 2.819772,
-     "title": "Table View"
-    },
-    {
-     "routePath": "/features/images/",
-     "score": 2.272197,
-     "title": "Images and Attachments"
-    },
-    {
-     "routePath": "/changelog/",
-     "score": 0.792349,
-     "title": "Changelog"
-    }
-   ],
-   "total": 9
-  },
-  {
-   "query": "detection",
-   "results": [
-    {
-     "routePath": "/features/board-settings/",
-     "score": 1.538835,
-     "title": "Board Settings"
-    },
-    {
-     "routePath": "/cli/reference/",
-     "score": 0.441069,
-     "title": "CLI Reference"
-    },
-    {
-     "routePath": "/changelog/2026-10-12-api-created-tasks-appear-in-search-immediately-htpr-7131/",
-     "score": 0.400687,
-     "title": "API-created tasks appear in search immediately"
-    },
-    {
-     "routePath": "/features/billing/",
-     "score": 0.34371,
-     "title": "Billing & Seat Management"
-    },
-    {
-     "routePath": "/features/table-view/",
-     "score": 0.273118,
+     "score": 0.3905198872089386,
      "title": "Table View"
     }
    ],
-   "total": 9
+   "total": 1
   },
   {
-   "query": "cost",
+   "query": "plane",
    "results": [
     {
-     "routePath": "/changelog/2026-08-25-database-cost-improvements-still-in-progress-ad1058/",
-     "score": 21.782618,
-     "title": "Database cost improvements still in progress"
-    },
-    {
-     "routePath": "/features/billing/",
-     "score": 1.76109,
-     "title": "Billing & Seat Management"
-    },
-    {
-     "routePath": "/changelog/2026-10-03-claude-haiku-5-5-replaces-haiku-4-5-htpr-7010/",
-     "score": 1.087506,
-     "title": "Claude Haiku 5.5 replaces Haiku 4.5"
-    },
-    {
-     "routePath": "/changelog/2026-10-12-run-background-ai-jobs-at-half-price-htpr-7098/",
-     "score": 0.541537,
-     "title": "Run background AI jobs at half price"
-    },
-    {
-     "routePath": "/changelog/",
-     "score": 0.491434,
-     "title": "Changelog"
+     "routePath": "/mcp/agent-sdk/",
+     "score": 0.37847790122032166,
+     "title": "Agent SDK"
     }
    ],
-   "total": 12
+   "total": 1
+  },
+  {
+   "query": "wakes",
+   "results": [
+    {
+     "routePath": "/mcp/agent-webhooks/",
+     "score": 0.3707137703895569,
+     "title": "Agent webhooks"
+    },
+    {
+     "routePath": "/mcp/workflows/",
+     "score": 0.35473987460136414,
+     "title": "Agent Workflows"
+    }
+   ],
+   "total": 2
   }
  ]
 }

@@ -13,6 +13,7 @@ import * as Tube from "../tube/index.js";
 import {
   CopyPageMarkdown,
   CopyReaderText,
+  OpenDocsSearchDialog,
   OpenDocsSearchResult,
   QueryDocsSearch,
   WaitBeforeCopyReset,
@@ -97,11 +98,6 @@ export const update = (
   Message.match<Update.Return<ReaderModel, ReaderMessage, DocumentQueries>>(
     message,
     {
-      ClosedDocsSearch: () => ({
-        model: modifyFields(model, {
-          docsSearchOpen: () => false,
-        }),
-      }),
       ClickedCopy: ({ id }) =>
         Option.match(copyablePrompt(model, id), {
           onNone: () => ({ model }),
@@ -149,11 +145,9 @@ export const update = (
               }),
             }
           : { model },
-      OpenedDocsSearch: () => ({
-        model: modifyFields(model, {
-          docsSearchOpen: () => true,
-          docsSearchSelected: () => 0,
-        }),
+      PressedDocsSearchShortcut: () => ({
+        commands: [OpenDocsSearchDialog()],
+        model: modifyFields(model, { docsSearchSelected: () => 0 }),
       }),
       ShowedMoreDocsSearchResults: () => ({
         model: modifyFields(model, {
@@ -180,18 +174,9 @@ export const update = (
           ? { model }
           : {
               commands: [OpenDocsSearchResult({ url: match.routePath })],
-              model: modifyFields(model, { docsSearchOpen: () => false }),
+              model,
             };
       },
-      ToggledDocsSearch: () =>
-        model.docsSearchOpen
-          ? { model: modifyFields(model, { docsSearchOpen: () => false }) }
-          : {
-              model: modifyFields(model, {
-                docsSearchOpen: () => true,
-                docsSearchSelected: () => 0,
-              }),
-            },
       UpdatedDocsSearchQuery: ({ value }) => {
         const query = value.trim();
 

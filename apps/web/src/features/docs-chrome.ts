@@ -4,6 +4,7 @@ import type { Html, HtmlBuilder } from "foldkit/html";
 
 import { CopyStatus } from "../client/reader/model.js";
 import { docsChrome } from "./docs-chrome.stylex.js";
+import { docsSearchDialogId } from "./docs-search.js";
 import {
   docsHeaderLinks,
   docsHeaderTabs,
@@ -134,8 +135,7 @@ const sidebarGroup = <Message>(
 
 export const docsHeader = <Message>(
   path: string,
-  h: HtmlBuilder<Message>,
-  onOpenSearch: Message
+  h: HtmlBuilder<Message>
 ): Html =>
   h.header(
     [h.Class(`${className(docsChrome.header)} docs-header`)],
@@ -162,7 +162,8 @@ export const docsHeader = <Message>(
               h.Class(`${className(docsChrome.search)} docs-search`),
               h.AriaLabel("Search docs"),
               h.Attribute("aria-keyshortcuts", "Control+K"),
-              h.OnClick(onOpenSearch),
+              h.Attribute("command", "show-modal"),
+              h.Attribute("commandfor", docsSearchDialogId),
             ],
             [
               searchIcon(h),

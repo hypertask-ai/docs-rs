@@ -3,12 +3,6 @@ import * as stylex from "@stylexjs/stylex";
 import { docs } from "./docs-tokens.stylex.js";
 
 export const docsSearch = stylex.create({
-  backdrop: {
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
-    inset: 0,
-    position: "fixed",
-    zIndex: 40,
-  },
   close: {
     alignItems: "center",
     alignSelf: "flex-end",
@@ -95,15 +89,6 @@ export const docsSearch = stylex.create({
     paddingBlock: "0.35rem",
     paddingInline: "0.75rem",
   },
-  overlay: {
-    alignItems: "flex-start",
-    display: "flex",
-    inset: 0,
-    justifyContent: "center",
-    overflowY: "auto",
-    position: "fixed",
-    zIndex: 41,
-  },
   panel: {
     backgroundColor: docs.surface,
     borderColor: docs.border,
@@ -114,11 +99,20 @@ export const docsSearch = stylex.create({
     flexDirection: "column",
     gap: "0.9rem",
     marginBlock: "4rem",
+    marginInline: "auto",
     maxHeight: "calc(100% - 8rem)",
     maxWidth: "40rem",
+    minHeight: "15rem",
     overflowY: "auto",
+    overscrollBehavior: "contain",
     padding: "1.5rem",
     width: "90%",
+    "::backdrop": {
+      backgroundColor: "rgba(0, 0, 0, 0.6)",
+      backdropFilter: "blur(0.25rem)",
+      overflow: "hidden",
+      overscrollBehavior: "contain",
+    },
   },
   sectionLink: {
     color: docs.textStrong,

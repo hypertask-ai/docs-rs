@@ -94,9 +94,39 @@ export const QueryDocsSearch = Command.define("QueryDocsSearch", {
   messages: [Message.SucceededDocsSearch, Message.FailedDocsSearch],
 });
 
+const docsSearchDialogId = "docs-search";
+
+const docsSearchDialog = () => {
+  const element = document.querySelector(`#${docsSearchDialogId}`);
+
+  return element instanceof HTMLDialogElement ? element : undefined;
+};
+
+export const OpenDocsSearchDialog = Command.define("OpenDocsSearchDialog", {
+  execute: Effect.sync(() => {
+    const dialog = docsSearchDialog();
+
+    if (dialog !== undefined && !dialog.open) {
+      dialog.showModal();
+    }
+
+    return Message.CompletedDocsSearchNavigation();
+  }),
+  messages: [Message.CompletedDocsSearchNavigation],
+});
+
 export const OpenDocsSearchResult = Command.define("OpenDocsSearchResult", {
   args: { url: Schema.String },
   execute: ({ url }) =>
-    pushUrl(url).pipe(Effect.as(Message.CompletedDocsSearchNavigation())),
+    Effect.sync(() => {
+      const dialog = docsSearchDialog();
+
+      if (dialog !== undefined && dialog.open) {
+        dialog.close();
+      }
+    }).pipe(
+      Effect.andThen(pushUrl(url)),
+      Effect.as(Message.CompletedDocsSearchNavigation())
+    ),
   messages: [Message.CompletedDocsSearchNavigation],
 });

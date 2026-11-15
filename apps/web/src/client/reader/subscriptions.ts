@@ -6,7 +6,7 @@ import { Message } from "./message.js";
 import type { ReaderMessage } from "./message.js";
 import type { ReaderModel } from "./model.js";
 
-const docsSearchKeys = Subscription.make<ReaderModel, ReaderMessage>()(
+const docsSearchShortcut = Subscription.make<ReaderModel, ReaderMessage>()(
   (entry) => ({
     keys: entry(
       { searching: Schema.Boolean },
@@ -17,29 +17,7 @@ const docsSearchKeys = Subscription.make<ReaderModel, ReaderMessage>()(
                 bindings: [
                   {
                     keys: "Mod+K",
-                    mapEvent: () => Message.ToggledDocsSearch(),
-                    whileTyping: "Allow",
-                  },
-                  {
-                    keys: "Escape",
-                    mapEvent: () => Message.ClosedDocsSearch(),
-                    whileTyping: "Allow",
-                  },
-                  {
-                    keys: "ArrowDown",
-                    mapEvent: () =>
-                      Message.MovedDocsSearchSelection({ offset: 1 }),
-                    whileTyping: "Allow",
-                  },
-                  {
-                    keys: "ArrowUp",
-                    mapEvent: () =>
-                      Message.MovedDocsSearchSelection({ offset: -1 }),
-                    whileTyping: "Allow",
-                  },
-                  {
-                    keys: "Enter",
-                    mapEvent: () => Message.SubmittedDocsSearch(),
+                    mapEvent: () => Message.PressedDocsSearchShortcut(),
                     whileTyping: "Allow",
                   },
                 ],
@@ -61,5 +39,5 @@ export const subscriptions = Subscription.aggregate<
     read: (model) => model.motion,
     toParentMessage: (message) => Message.GotMotionMessage({ message }),
   }),
-  docsSearchKeys
+  docsSearchShortcut
 );
