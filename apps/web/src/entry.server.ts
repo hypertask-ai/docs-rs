@@ -126,7 +126,7 @@ const renderErrorRoute = Effect.fn("reader.renderErrorRoute")(
 
     const headers = yield* previewHeaders(request);
 
-    return Rendered(withReaderHead(application, flags), {
+    return Rendered(withReaderHead(application, flags, siteBasePath), {
       headers,
       status: errorPage.value.code,
     });
@@ -245,7 +245,7 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
     }
 
     return Rendered(
-      withReaderHead(application, page),
+      withReaderHead(application, page, siteBasePath),
       prerender
         ? { status: page.page.status }
         : { headers, status: page.page.status }

@@ -1,6 +1,5 @@
 import type { ReaderPageMetadata } from "./page-descriptor.js";
 import { addSiteBasePath } from "./site-base-path.js";
-import { siteBasePath } from "./site-base.js";
 
 export const escapeAttribute = (value: string): string =>
   value
@@ -26,7 +25,7 @@ const robotsMeta = (basePath: string, robots: "index" | "noindex") => {
 export const readerMetadataHead = (
   metadata: ReaderPageMetadata,
   origin: string,
-  basePath: string = siteBasePath
+  basePath: string = ""
 ): string => {
   const canonical = `${origin}${metadata.canonicalPath}`;
   const image = `${origin}${addSiteBasePath(basePath, metadata.ogImagePath)}`;
