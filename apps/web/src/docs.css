@@ -493,6 +493,7 @@ body > .docs-layout {
   border: 1px solid #bb3df5;
   border-radius: 4px;
   box-sizing: border-box;
+  display: block;
   flex-shrink: 0;
   height: 32px;
   padding: 6.4px;

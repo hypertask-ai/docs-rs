@@ -131,8 +131,25 @@ const isTabLabel = (element: Element) =>
 const isVideo = (element: Element) =>
   element.name === "a" && classesOf(element).includes("docs-video");
 
-const firstByClass = (element: Element, name: string): Element | undefined =>
-  DomUtils.getElementsByClass(name, element.children, true, 1)[0];
+const firstByClass = (element: Element, name: string): Element | undefined => {
+  for (const child of element.children) {
+    if (child.type !== ElementType.Tag) {
+      continue;
+    }
+
+    if (classesOf(child).includes(name)) {
+      return child;
+    }
+
+    const nested = firstByClass(child, name);
+
+    if (nested !== undefined) {
+      return nested;
+    }
+  }
+
+  return undefined;
+};
 
 const writeCard = (state: ArticleState, element: Element) => {
   const title = firstByClass(element, "docs-card-title");
