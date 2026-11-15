@@ -10,7 +10,12 @@ import { DetectedClipboardAccess } from "./model.js";
 export const Message = defineMessageUnion({
   ClickedCopy: { id: Schema.String },
   ClickedCopyPage: {},
+  ClickedMobileNavToggle: {},
+  ClickedMobileTocLink: {},
+  ClickedMobileTocToggle: {},
+  ClickedOutsideMobileToc: {},
   CompletedDetectClipboard: { access: DetectedClipboardAccess },
+  CompletedMoveFocus: {},
   CompletedWaitBeforeCopyReset: { id: Schema.String },
   FailedCopyPage: {},
   FailedCopyReaderText: { id: Schema.String },
@@ -18,6 +23,9 @@ export const Message = defineMessageUnion({
   GotDocsMessage: { message: DocsMessage },
   GotMotionMessage: { message: MotionDemoMessage },
   GotTubeMessage: { message: TubeMessage },
+  MeasuredReadingAnchor: { id: Schema.OptionFromOptional(Schema.String) },
+  PressedEscapeInMobileNav: {},
+  PressedEscapeInMobileToc: {},
   SucceededCopyPage: {},
   SucceededCopyReaderText: { id: Schema.String },
 });

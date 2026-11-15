@@ -75,10 +75,17 @@ export const DetectedClipboardAccess = ClipboardAccess.subset([
   "Unavailable",
 ]);
 
+export const MobileNav = Schema.Struct({ open: Schema.Boolean });
+
+export const MobileToc = Schema.Struct({ open: Schema.Boolean });
+
 export const Model = Schema.Struct({
   ...ReaderFlags.fields,
   clipboardAccess: ClipboardAccess,
   copyStatuses: Schema.Record(Schema.String, CopyStatus),
+  mobileNav: MobileNav,
+  mobileToc: MobileToc,
+  readingAnchorId: Schema.OptionFromOptional(Schema.String),
 });
 
 export type ReaderModel = typeof Model.Type;
@@ -87,6 +94,9 @@ export const initialModel = (flags: ReaderPageFlags): ReaderModel => ({
   ...flags,
   clipboardAccess: ClipboardAccess.Unknown(),
   copyStatuses: {},
+  mobileNav: { open: false },
+  mobileToc: { open: false },
+  readingAnchorId: Option.none(),
 });
 
 export const copyStatusOf = (
@@ -99,3 +109,17 @@ export const findCopyPrompt = (
   model: Pick<ReaderModel, "copyPrompts">,
   id: string
 ) => Array.findFirst(model.copyPrompts, (prompt) => prompt.id === id);
+
+export const currentAnchorText = (
+  model: Pick<ReaderModel, "heading" | "readingAnchorId" | "references">
+): string =>
+  Option.match(model.readingAnchorId, {
+    onNone: () => model.heading,
+    onSome: (id) =>
+      Option.match(
+        Option.flatMap(model.references, (references) =>
+          Array.findFirst(references.anchors, (anchor) => anchor.id === id)
+        ),
+        { onNone: () => model.heading, onSome: (anchor) => anchor.text }
+      ),
+  });
