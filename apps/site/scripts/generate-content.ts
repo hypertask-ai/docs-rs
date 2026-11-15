@@ -52,6 +52,7 @@ import {
   contentPagePath,
 } from "../src/content-data.ts";
 import { markdownDiscoveryLinks } from "../src/content-links.ts";
+import { docsPageMarkdown, isDocsRoute } from "../src/docs-export.ts";
 import { tokenmaxxTitle } from "../src/house-ad-copy.ts";
 import {
   addInboundCounts,
@@ -1839,7 +1840,9 @@ const program = Effect.gen(function* generateContent() {
           linkedLoreTerms,
           spec: {
             ...spec,
-            text: appendLoreMarkdown(spec.text, linkedLoreRoutes),
+            text: isDocsRoute(spec.routePath)
+              ? spec.text
+              : appendLoreMarkdown(spec.text, linkedLoreRoutes),
           },
           unlinkedProse,
         };
@@ -3284,11 +3287,22 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
           contentVersion
         );
 
-        const bodyMarkdown = deriveAgentMarkdown(
-          `${spec.text}${pageFooterMarkdown(spec.routePath)}`
-        );
+        const docsPage = isDocsRoute(spec.routePath);
 
-        const text = renderAgentPage(bodyMarkdown, spec.routePath, spec.title);
+        const bodyMarkdown = docsPage
+          ? spec.text
+          : deriveAgentMarkdown(
+              `${spec.text}${pageFooterMarkdown(spec.routePath)}`
+            );
+
+        const text = docsPage
+          ? docsPageMarkdown({
+              body: bodyMarkdown,
+              description: spec.description,
+              routePath: spec.routePath,
+              title: spec.title,
+            })
+          : renderAgentPage(bodyMarkdown, spec.routePath, spec.title);
 
         return {
           ...contentDates(spec.rawText, spec.sourcePath),
