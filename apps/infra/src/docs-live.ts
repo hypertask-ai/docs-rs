@@ -13,6 +13,7 @@ export interface DocsLiveSetting {
 
 export interface DocsLiveResource {
   readonly action: "adopt";
+  readonly declareIn: string;
   readonly declaredInStack: boolean;
   readonly logicalId: string;
   readonly name: string;
@@ -29,35 +30,38 @@ export const docsPagesDomainName = "docs.hypertask.ai";
 
 export const docsMcpWorkerName = "hypertask-docs-mcp";
 
-export const docsMcpWorkersDevAddress =
-  "hypertask-docs-mcp.valentin-603.workers.dev";
+const docsCutoverTicket = "HTPR-9201";
 
 export const docsLiveGithubEnvironment = "scheduled-jobs";
 
 export const docsLiveResources: readonly DocsLiveResource[] = [
   {
     action: "adopt",
-    declaredInStack: true,
+    declareIn: docsCutoverTicket,
+    declaredInStack: false,
     logicalId: "HypertaskDocsZone",
     name: docsZoneName,
     type: "Cloudflare.Zone.Zone",
   },
   {
     action: "adopt",
-    declaredInStack: true,
+    declareIn: docsCutoverTicket,
+    declaredInStack: false,
     logicalId: "HypertaskDocsPages",
     name: docsPagesProjectName,
     type: "Cloudflare.Pages.Project",
   },
   {
     action: "adopt",
-    declaredInStack: true,
+    declareIn: docsCutoverTicket,
+    declaredInStack: false,
     logicalId: "HypertaskDocsPagesDomain",
     name: docsPagesDomainName,
     type: "Cloudflare.Pages.Domain",
   },
   {
     action: "adopt",
+    declareIn: docsCutoverTicket,
     declaredInStack: false,
     logicalId: "HypertaskDocsMcp",
     name: docsMcpWorkerName,

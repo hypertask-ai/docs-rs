@@ -14,12 +14,6 @@ import privateAuth from "../site/src/auth/private-worker.js";
 import Mischief from "../site/src/worker.js";
 import Workshop from "../site/src/workshop-worker.js";
 import { Website } from "../web/src/website.js";
-import {
-  docsPagesBranch,
-  docsPagesDomainName,
-  docsPagesProjectName,
-  docsZoneName,
-} from "./src/docs-live.js";
 import { ratstackState } from "./src/state-store.js";
 
 export default Alchemy.Stack(
@@ -152,32 +146,6 @@ export default Alchemy.Stack(
       }).pipe(
         adopt(true),
         // oxlint-disable-next-line rat-stack-patterns/retain-needs-stage-policy -- Every main Stack stage adopts production DNSSEC; removing it breaks the shared zone's trust chain.
-        retain()
-      );
-
-      yield* Cloudflare.Zone.Zone("HypertaskDocsZone", {
-        name: docsZoneName,
-      }).pipe(
-        adopt(true),
-        // oxlint-disable-next-line rat-stack-patterns/retain-needs-stage-policy -- Every main Stack stage adopts the same production hypertask.ai zone; deleting it destroys shared DNS.
-        retain()
-      );
-
-      yield* Cloudflare.Pages.Project("HypertaskDocsPages", {
-        name: docsPagesProjectName,
-        productionBranch: docsPagesBranch,
-      }).pipe(
-        adopt(true),
-        // oxlint-disable-next-line rat-stack-patterns/retain-needs-stage-policy -- The live docs Pages project serves docs.hypertask.ai until the cutover; deleting it takes the live site down.
-        retain()
-      );
-
-      yield* Cloudflare.Pages.Domain("HypertaskDocsPagesDomain", {
-        name: docsPagesDomainName,
-        projectName: docsPagesProjectName,
-      }).pipe(
-        adopt(true),
-        // oxlint-disable-next-line rat-stack-patterns/retain-needs-stage-policy -- The live docs.hypertask.ai attachment belongs to the production Pages project in every main Stack stage.
         retain()
       );
     }

@@ -31,47 +31,49 @@ const services = Layer.mergeAll(
   )
 );
 
-it.effect(
-  "adopts every live docs resource and attaches no live docs domain",
-  () =>
-    Effect.gen(function* checkDocsPlan() {
-      const compiled = yield* stack;
+it.effect("declares none of the four live docs resources in the Stack", () =>
+  Effect.gen(function* checkDocsPlan() {
+    const compiled = yield* stack;
 
-      for (const live of docsLiveResources) {
-        const resource = compiled.resources[live.logicalId];
+    expect(docsLiveResources.map((live) => live.logicalId)).toEqual([
+      "HypertaskDocsZone",
+      "HypertaskDocsPages",
+      "HypertaskDocsPagesDomain",
+      "HypertaskDocsMcp",
+    ]);
 
-        if (!live.declaredInStack) {
-          expect(resource, live.logicalId).toBeUndefined();
-          continue;
-        }
+    for (const live of docsLiveResources) {
+      expect(live.action, live.logicalId).toBe("adopt");
+      expect(live.declaredInStack, live.logicalId).toBe(false);
+      expect(live.declareIn, live.logicalId).toBe("HTPR-9201");
+      expect(live.name.length, live.logicalId).toBeGreaterThan(0);
+      expect(
+        compiled.resources[live.logicalId],
+        live.logicalId
+      ).toBeUndefined();
+    }
 
-        expect(resource, live.logicalId).toBeDefined();
-        expect(resource?.Adopt, live.logicalId).toBe(true);
-        expect(resource?.RemovalPolicy, live.logicalId).toBe("retain");
-        expect(resource?.Props, live.logicalId).toMatchObject({
-          name: live.name,
-        });
+    expect(compiled.resources.Website?.Props).not.toHaveProperty("domain");
+
+    for (const resource of Object.values(compiled.resources)) {
+      if (resource.Props === undefined) {
+        continue;
       }
 
-      expect(compiled.resources.Website?.Props).not.toHaveProperty("domain");
-
-      for (const resource of Object.values(compiled.resources)) {
-        if (resource.Props === undefined) {
-          continue;
-        }
-
-        expect(resource.Props, resource.FQN).not.toHaveProperty(
-          "domain",
-          "docs.hypertask.ai"
-        );
-      }
-    }).pipe(Effect.provide(services))
+      expect(resource.Props, resource.FQN).not.toHaveProperty(
+        "domain",
+        "docs.hypertask.ai"
+      );
+    }
+  }).pipe(Effect.provide(services))
 );
 
 it.effect("declares every live docs setting name with no value", () =>
   Effect.gen(function* checkSettings() {
     const fs = yield* FileSystem.FileSystem;
     const lines = (yield* fs.readFileString(schemaPath)).split("\n");
+
+    expect(docsLiveSettings.length).toBe(19);
 
     for (const setting of docsLiveSettings) {
       const indexes = lines.flatMap((line, index) =>
