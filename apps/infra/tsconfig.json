@@ -47,6 +47,7 @@
   "include": [
     "alchemy.run.ts",
     "alchemy.preview.ts",
+    "alchemy.docs-ratstack.ts",
     "src/**/*.ts",
     "test/**/*.ts"
   ]

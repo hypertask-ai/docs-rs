@@ -134,13 +134,20 @@ Run `pnpm fix` only when you intend to rewrite files. Finish with `pnpm turbo ru
 
 Follow [ship](/skills/ship) and `skills/ship/references/project.md` for deployment commands, approval, checks, and recovery.
 
+`.github/workflows/publish-ratstack.yml` publishes `main` to https://docs.hypertask.ai/ratstack. It is the only path that runs `alchemy deploy` for this site, it runs from GitHub and never from a laptop, and it deploys `apps/infra/alchemy.docs-ratstack.ts` at stage `docs-ratstack` with the secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
+
+## Rules and the step that enforces them
+
+| Rule | Enforced by |
+| --- | --- |
+| `SITE_BASE_PATH` is the only owner of the site's base path, and every same-site address, asset, stylesheet, script, form target, fetch and redirect stays inside it | `apps/web/test/site-base.test.ts`, plus the `audit` step of `apps/site/scripts/ratstack-publish-check.ts` over the built output in the publish workflow |
+| The preview under the base path never competes with the live site in search | the `verify` step of `apps/site/scripts/ratstack-publish-check.ts`, which requires `X-Robots-Tag: noindex` and the page robots meta tag on every address it fetches |
+| A publish cannot change the live site, its Pages project, its DNS records or any other Cloudflare resource | the resource allowlist in `apps/infra/alchemy.docs-ratstack.ts`, which dies on any resource outside the docs Worker, its RPC backend, the `hypertask.ai` zone and one route, plus the old-site title check in the `verify` step |
+| Only `main` publishes, two publishes never overlap, and every action is pinned to a full commit sha | the `on`, `concurrency` and `permissions` blocks of `.github/workflows/publish-ratstack.yml` |
+
 ## Release the ratstack package
 
-- `.github/workflows/ratstack-publish.yml` publishes `ratstack` to npm with trusted publishing (OIDC). No npm token exists in the repo or its secrets.
-- Bump `apps/cli/npm/ratstack/package.json` and `apps/cli/src/version.ts` together. The e2e test fails when they differ.
-- Merge to `main`, then push the tag `ratstack-v<version>` on that merged commit. The workflow refuses a tag that does not match the version or is not on `main`.
-- The workflow runs the full gate, then `npm publish` from `apps/cli/dist/npm`. npm adds provenance.
-- The npm package settings name this repo, `ratstack-publish.yml`, and the `npm` environment as the trusted publisher. Changing the workflow filename breaks publishing.
+This project never publishes the template's npm CLI. The template's `.github/workflows/ratstack-publish.yml` was deleted in HTPR-9125 for that reason, so there is no tag to push and no npm trusted publisher to configure here.
 
 ## Fence (cheating is uncomfortable)
 

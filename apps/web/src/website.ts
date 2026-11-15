@@ -13,6 +13,7 @@ import {
   traceObservability,
   traceSettings,
 } from "../../site/src/observability.js";
+import { normalizeSiteBasePath } from "./site-base-path.js";
 import { WebsiteContentManifestError } from "./website-content-manifest-error.js";
 
 const contentManifestPath = fileURLToPath(
@@ -47,6 +48,12 @@ export class Website extends Cloudflare.Website.Foldkit<Website>()(
     const stage = yield* Stage;
     const generation = yield* contentGeneration;
     const preview = /^pr-[1-9][0-9]*$/u.test(stage);
+    const siteBasePath = yield* Config.String("SITE_BASE_PATH").pipe(
+      Config.withDefault(""),
+      Config.map(normalizeSiteBasePath),
+      Effect.orDie
+    );
+    const mounted = siteBasePath !== "";
 
     const props = {
       assets: {
@@ -62,7 +69,7 @@ export class Website extends Cloudflare.Website.Foldkit<Website>()(
         ],
       },
       env: {
-        BACKEND: preview ? PreviewRpcBackend : RpcBackend,
+        BACKEND: preview || mounted ? PreviewRpcBackend : RpcBackend,
         CONTENT_GENERATION: generation,
       },
       observability: traceObservability(traces),
