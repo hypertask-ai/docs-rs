@@ -59,6 +59,7 @@ import {
   staticContentVersion,
   staticAssetGeneration,
 } from "./content.js";
+import { docsLlmsFull, docsLlmsText, isDocsRoute } from "./docs-export.js";
 import { ErrorPageRenderer } from "./error-page-renderer.js";
 import { renderErrorPage } from "./error-page.js";
 import type { ErrorPage } from "./error-page.js";
@@ -579,6 +580,14 @@ export const tokenmaxxResponse = Effect.gen(function* tokenmaxxPage() {
   });
 });
 
+const plain = (body: string) =>
+  HttpServerResponse.text(body, {
+    contentType: "text/plain; charset=utf-8",
+  });
+
+const docsEntries = (catalog: ContentCatalog) =>
+  catalog.resources.filter((resource) => isDocsRoute(resource.routePath));
+
 const contentRoutes = () =>
   Layer.unwrap(
     Effect.gen(function* buildContentRoutes() {
@@ -596,22 +605,48 @@ const contentRoutes = () =>
         ),
         HttpRouter.add("GET", "/llms.txt", (request) =>
           store.catalog.pipe(
-            Effect.map((catalog) =>
-              markdown(llmsText(originOf(request), catalog))
-            )
+            Effect.map((catalog) => {
+              const entries = docsEntries(catalog);
+
+              return entries.length === 0
+                ? markdown(llmsText(originOf(request), catalog))
+                : plain(docsLlmsText(originOf(request), entries));
+            })
           )
         ),
         HttpRouter.add("GET", "/llms-full.txt", (request) =>
           store.catalog.pipe(
-            Effect.flatMap((catalog) =>
-              Effect.forEach((resource: (typeof catalog.resources)[number]) =>
-                store.read(resource.id)
-              )(catalog.resources).pipe(
-                Effect.map((resources) =>
-                  markdown(llmsFullText(originOf(request), catalog, resources))
+            Effect.flatMap((catalog) => {
+              const entries = docsEntries(catalog);
+
+              if (entries.length === 0) {
+                return Effect.forEach(
+                  (resource: (typeof catalog.resources)[number]) =>
+                    store.read(resource.id)
+                )(catalog.resources).pipe(
+                  Effect.map((resources) =>
+                    markdown(
+                      llmsFullText(originOf(request), catalog, resources)
+                    )
+                  )
+                );
+              }
+
+              return Effect.forEach((entry: (typeof entries)[number]) =>
+                store.read(entry.id).pipe(
+                  Effect.map((resource) => ({
+                    body: resource.bodyMarkdown,
+                    description: entry.description,
+                    routePath: entry.routePath,
+                    title: entry.title,
+                  }))
                 )
-              )
-            )
+              )(entries).pipe(
+                Effect.map((pages) =>
+                  plain(docsLlmsFull(originOf(request), pages))
+                )
+              );
+            })
           )
         ),
         HttpRouter.add("GET", "/news.xml", (request) =>
