@@ -343,6 +343,7 @@ export const docsMobileToc = <Message>(
       onSome: (references) => references.anchors,
     }),
   ];
+
   const currentId = Option.getOrElse(
     model.readingAnchorId,
     () => TOP_ANCHOR_ID

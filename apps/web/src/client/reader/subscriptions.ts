@@ -28,9 +28,7 @@ const headingPositions = (): readonly DocsHeadingPosition[] =>
     ...document.querySelectorAll<HTMLAnchorElement>(".docs-mobile-toc-list a"),
   ].flatMap((link) => {
     const id = decodeURIComponent(link.hash.slice(1));
-    const heading = document.querySelector<HTMLElement>(
-      `[id="${CSS.escape(id)}"]`
-    );
+    const heading = document.querySelector(`[id="${CSS.escape(id)}"]`);
 
     return heading === null
       ? []
