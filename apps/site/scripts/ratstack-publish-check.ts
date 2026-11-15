@@ -1,6 +1,8 @@
 import { NodeRuntime, NodeServices } from "@effect/platform-node";
 import { Console, Effect, FileSystem, Path, Schema } from "effect";
 import type { PlatformError } from "effect";
+import { FetchHttpClient, HttpClient } from "effect/http";
+import * as Layer from "effect/Layer";
 
 import { normalizeSiteBasePath } from "../../web/src/site-base-path.ts";
 
@@ -146,24 +148,28 @@ const auditBuiltSite = Effect.gen(function* auditBuiltSite() {
   return files.length;
 });
 
-const get = (url: string) =>
-  Effect.tryPromise({
-    catch: (cause) =>
-      new RatstackPublishCheckError({
-        reason: `Could not reach ${url}. Fix: check the address and the network, then run the check again. Cause: ${cause instanceof Error ? cause.message : String(cause)}`,
-      }),
-    try: () =>
-      fetch(url, {
-        headers: { accept: "text/html" },
-        redirect: "follow",
-      }).then((response) =>
-        response.text().then((body) => ({
-          body,
-          headers: response.headers,
-          status: response.status,
-        }))
-      ),
-  });
+const get = Effect.fn("ratstackPublishCheck.get")(function* getAddress(
+  url: string
+) {
+  const response = yield* HttpClient.get(url).pipe(
+    Effect.mapError(
+      (cause) =>
+        new RatstackPublishCheckError({
+          reason: `Could not reach ${url}. Fix: check the address and the network, then run the check again. Cause: ${cause.message}`,
+        })
+    )
+  );
+  const body = yield* response.text.pipe(
+    Effect.mapError(
+      () =>
+        new RatstackPublishCheckError({
+          reason: `${url} answered but its body could not be read. Fix: check the address and the network, then run the check again.`,
+        })
+    )
+  );
+
+  return { body, headers: response.headers, status: response.status };
+});
 
 const recordOldSite = Effect.fn("ratstackPublishCheck.record")(
   function* recordOldSite(file: string) {
@@ -185,12 +191,12 @@ const expectPage = (
   url: string,
   response: {
     readonly body: string;
-    readonly headers: Headers;
+    readonly headers: Readonly<Record<string, string | undefined>>;
     readonly status: number;
   }
 ) =>
   Effect.gen(function* expectPageResponse() {
-    const robots = response.headers.get(noindexHeader) ?? "";
+    const robots = response.headers[noindexHeader] ?? "";
 
     if (response.status !== 200) {
       return yield* new RatstackPublishCheckError({
@@ -330,6 +336,8 @@ const program = Effect.gen(function* ratstackPublishCheck() {
   return yield* new RatstackPublishCheckError({
     reason: `Unknown mode '${mode}'. Fix: pass audit, record <file> or verify <file>.`,
   });
-}).pipe(Effect.provide(NodeServices.layer));
+}).pipe(
+  Effect.provide(Layer.mergeAll(NodeServices.layer, FetchHttpClient.layer))
+);
 
 NodeRuntime.runMain(program);
