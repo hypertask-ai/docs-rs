@@ -196,7 +196,9 @@ it.layer(
                 : { "cache-control": docsCacheControl }),
             }),
             responseHeaders
-          )(Effect.dieMessage("The reader website answers this address")).pipe(
+          )(
+            Effect.die(new Error("The reader website answers this address"))
+          ).pipe(
             Effect.provideService(
               HttpServerRequest.HttpServerRequest,
               HttpServerRequest.fromWeb(
