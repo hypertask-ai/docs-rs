@@ -10,7 +10,7 @@ import {
   ReaderErrorPage,
   readerErrorPath,
 } from "../../site/src/reader-error-page.js";
-import { findPage } from "./client/reader-pages.js";
+import { findPage, pagePaths } from "./client/reader-pages.js";
 import { init } from "./client/reader/init.js";
 import { ReaderFlags } from "./client/reader/model.js";
 import { view } from "./features/reader.js";
@@ -24,8 +24,16 @@ import {
   WebsiteBindings,
   websiteTelemetry,
 } from "./server/website-bindings.js";
+import {
+  isSiteBasePathSet,
+  isWithinSiteBasePath,
+  siteBasePath,
+  siteRobotsTag,
+  withSiteBasePath,
+  withoutSiteBasePath,
+} from "./site-base.js";
 
-export { pagePaths as prerenderPaths } from "./client/reader-pages.js";
+export const prerenderPaths = pagePaths.map(withSiteBasePath);
 
 export { renderDocument } from "./server/reader-document.js";
 
@@ -53,6 +61,10 @@ const previewHeaders = Effect.fn("reader.previewHeaders")(
 
       headers.set("X-Robots-Tag", "noindex");
       headers.set("X-Preview-Commit", commit);
+    }
+
+    if (isSiteBasePathSet) {
+      headers.set("X-Robots-Tag", siteRobotsTag);
     }
 
     return headers;
@@ -123,22 +135,40 @@ const renderErrorRoute = Effect.fn("reader.renderErrorRoute")(
 
 export const renderReaderPage = Effect.fn("reader.renderPage")(
   function* renderReaderPage(request: Request) {
-    const { pathname } = new URL(request.url);
+    const { pathname, search } = new URL(request.url);
 
-    if (pathname === "/__rat" || pathname.startsWith("/__rat/")) {
+    if (!isWithinSiteBasePath(pathname)) {
+      return yield* responded(
+        request,
+        new Response(`This address serves the site under ${siteBasePath}`, {
+          status: 404,
+        })
+      );
+    }
+
+    const route = withoutSiteBasePath(pathname);
+
+    if (route === "/__rat" || route.startsWith("/__rat/")) {
       return yield* responded(
         request,
         new Response("Not found", { status: 404 })
       );
     }
 
-    if (pathname === "/rpc" || pathname.startsWith("/rpc/")) {
+    if (route === "/rpc" || route.startsWith("/rpc/")) {
       const bindings = yield* WebsiteBindings;
 
-      return yield* responded(request, yield* bindings.forward(request));
+      return yield* responded(
+        request,
+        yield* bindings.forward(
+          isSiteBasePathSet
+            ? new Request(new URL(`${route}${search}`, request.url), request)
+            : request
+        )
+      );
     }
 
-    if (pathname === readerErrorPath) {
+    if (route === readerErrorPath) {
       return yield* renderErrorRoute(request);
     }
 
@@ -152,8 +182,21 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
       );
     }
 
-    const route = pathname === "/" ? pathname : pathname.replace(/\/$/u, "");
-    const found = yield* findPage(route);
+    if (isSiteBasePathSet && route === "/robots.txt") {
+      return yield* responded(
+        request,
+        new Response(
+          request.method === "HEAD" ? null : "User-agent: *\nDisallow: /\n",
+          {
+            headers: { "Content-Type": "text/plain; charset=utf-8" },
+            status: 200,
+          }
+        )
+      );
+    }
+
+    const routePath = route === "/" ? route : route.replace(/\/$/u, "");
+    const found = yield* findPage(routePath);
 
     if (Option.isNone(found)) {
       return yield* responded(
@@ -165,7 +208,7 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
     }
 
     const page = found.value;
-    const promptRoute = isWorkerFirstReaderRoute(route);
+    const promptRoute = isWorkerFirstReaderRoute(routePath);
     const prerender = new URL(request.url).origin === readerPrerenderOrigin;
 
     if (

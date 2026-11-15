@@ -12,6 +12,7 @@ import {
   findCopyPrompt,
 } from "../client/reader/model.js";
 import type { ReaderModel } from "../client/reader/model.js";
+import { siteBasePath, siteBuilder } from "../site-base.js";
 import { view as docsView } from "./app.js";
 import * as CafeView from "./cafe/index.js";
 import * as MotionView from "./motion/index.js";
@@ -383,7 +384,7 @@ const bibliographyView = (
     ],
   });
 
-export const view = (
+const readerDocument = (
   model: ReaderModel,
   h: HtmlBuilder<ReaderMessage>
 ): Document => ({
@@ -412,3 +413,10 @@ export const view = (
   ogUrl: `${model.origin}${model.page.metadata.canonicalPath}`,
   title: model.page.metadata.title,
 });
+
+export const viewAt =
+  (basePath: string) =>
+  (model: ReaderModel, h: HtmlBuilder<ReaderMessage>): Document =>
+    readerDocument(model, siteBuilder(basePath, h));
+
+export const view = viewAt(siteBasePath);

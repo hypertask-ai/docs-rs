@@ -8,6 +8,7 @@ import {
 } from "../../../site/src/rat-icons.generated.js";
 import type { ReaderPageFlags } from "../client/reader/model.js";
 import { readerMetadataHead } from "../reader-metadata.js";
+import { siteBasePath } from "../site-base.js";
 
 const ReaderDocumentHead = Schema.Struct({ readerHead: Schema.String });
 
@@ -19,10 +20,11 @@ const iconHead = [
 
 export const withReaderHead = (
   application: Server.RenderedApplication,
-  page: ReaderPageFlags
+  page: ReaderPageFlags,
+  basePath: string = siteBasePath
 ) => ({
   ...application,
-  readerHead: readerMetadataHead(page.page.metadata, page.origin),
+  readerHead: readerMetadataHead(page.page.metadata, page.origin, basePath),
 });
 
 export const renderDocument: Server.DocumentRenderer = (application, assets) =>

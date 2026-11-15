@@ -23,6 +23,10 @@ import {
   readerNoStoreRoutePaths,
 } from "../src/reader-routes.ts";
 import { ReaderErrorTemplate } from "../src/server/reader-error-template.ts";
+import {
+  addSiteBasePath,
+  normalizeSiteBasePath,
+} from "../src/site-base-path.ts";
 import { copyReaderAssets } from "./reader-assets.ts";
 
 const encodeFlags = Effect.forEach((page: ReaderPageFlags) =>
@@ -141,9 +145,13 @@ export const prepareReader = Effect.fn("reader.prepare")(
   Effect.provide(NodeServices.layer)
 );
 
+const siteRobotsTag = (siteBasePath: string) =>
+  siteBasePath === "" ? "noindex" : "noindex, nofollow";
+
 const readerRouteHeaders = (
   pages: readonly ReaderPageFlags[],
-  production: boolean
+  production: boolean,
+  siteBasePath: string
 ) =>
   pages
     .map((page) => {
@@ -158,7 +166,7 @@ const readerRouteHeaders = (
 
       return lines.length === 0
         ? ""
-        : `${page.page.path}\n${lines.join("\n")}\n`;
+        : `${addSiteBasePath(siteBasePath, page.page.path)}\n${lines.join("\n")}\n`;
     })
     .join("");
 
@@ -166,6 +174,10 @@ export const finalizeReader = Effect.fn("reader.finalize")(
   function* finalizeReader(root: string, clientDirectory: string) {
     const fs = yield* FileSystem.FileSystem;
     const source = yield* fs.readFileString(`${root}/dist/reader-pages.json`);
+    const siteBasePath = yield* Config.String("SITE_BASE_PATH").pipe(
+      Config.withDefault(""),
+      Config.map(normalizeSiteBasePath)
+    );
 
     const pages = yield* Schema.decodeEffect(
       Schema.fromJsonString(Schema.Array(ReaderFlags))
@@ -174,7 +186,8 @@ export const finalizeReader = Effect.fn("reader.finalize")(
     yield* copyReaderAssets(
       pages,
       clientDirectory,
-      `${root}/dist/reader-pages.json`
+      `${root}/dist/reader-pages.json`,
+      siteBasePath
     );
 
     yield* Effect.forEach((page: (typeof pages)[number]) =>
@@ -189,10 +202,11 @@ export const finalizeReader = Effect.fn("reader.finalize")(
           });
         }
 
-        const path =
-          route === "/"
-            ? `${clientDirectory}/index.html`
-            : `${clientDirectory}${route}/index.html`;
+        const mountedRoute = addSiteBasePath(siteBasePath, route).replace(
+          /\/$/u,
+          ""
+        );
+        const path = `${clientDirectory}${mountedRoute}/index.html`;
 
         if (!(yield* fs.exists(path))) {
           return yield* new ReaderInputError({
@@ -230,6 +244,10 @@ export const finalizeReader = Effect.fn("reader.finalize")(
 
     const headerPath = `${clientDirectory}/_headers`;
     const generation = pages[0]?.page.generation;
+    const siteRobotsHeader =
+      siteBasePath === ""
+        ? ""
+        : `  X-Robots-Tag: ${siteRobotsTag(siteBasePath)}\n`;
 
     const generationHeader =
       generation === undefined
@@ -253,15 +271,15 @@ export const finalizeReader = Effect.fn("reader.finalize")(
 
       return yield* fs.writeFileString(
         headerPath,
-        `/*\n  X-Robots-Tag: noindex\n  X-Preview-Commit: ${commit.value}\n${generationHeader}${readerRouteHeaders(pages, false)}`
+        `/*\n  X-Robots-Tag: ${siteRobotsTag(siteBasePath)}\n  X-Preview-Commit: ${commit.value}\n${generationHeader}${readerRouteHeaders(pages, false, siteBasePath)}`
       );
     }
 
-    const routeHeaders = readerRouteHeaders(pages, true);
+    const routeHeaders = readerRouteHeaders(pages, true, siteBasePath);
 
     return yield* fs.writeFileString(
       headerPath,
-      `/*\n${generationHeader}${routeHeaders}`
+      `/*\n${siteRobotsHeader}${generationHeader}${routeHeaders}`
     );
   },
   Effect.provide(NodeServices.layer)

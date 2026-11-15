@@ -1,4 +1,6 @@
 import type { ReaderPageMetadata } from "./page-descriptor.js";
+import { addSiteBasePath } from "./site-base-path.js";
+import { siteBasePath } from "./site-base.js";
 
 export const escapeAttribute = (value: string): string =>
   value
@@ -13,12 +15,21 @@ const nameMeta = (name: string, content: string) =>
 const propertyMeta = (name: string, content: string) =>
   `<meta property="${escapeAttribute(name)}" content="${escapeAttribute(content)}">`;
 
+const robotsMeta = (basePath: string, robots: "index" | "noindex") => {
+  if (basePath !== "") {
+    return [nameMeta("robots", "noindex, nofollow")];
+  }
+
+  return robots === "noindex" ? [nameMeta("robots", "noindex")] : [];
+};
+
 export const readerMetadataHead = (
   metadata: ReaderPageMetadata,
-  origin: string
+  origin: string,
+  basePath: string = siteBasePath
 ): string => {
   const canonical = `${origin}${metadata.canonicalPath}`;
-  const image = `${origin}${metadata.ogImagePath}`;
+  const image = `${origin}${addSiteBasePath(basePath, metadata.ogImagePath)}`;
 
   const publisher = {
     "@type": "Organization",
@@ -82,7 +93,7 @@ export const readerMetadataHead = (
 
   return [
     nameMeta("description", metadata.description),
-    ...(metadata.robots === "noindex" ? [nameMeta("robots", "noindex")] : []),
+    ...robotsMeta(basePath, metadata.robots),
     propertyMeta("og:type", "website"),
     propertyMeta("og:title", metadata.title),
     propertyMeta("og:description", metadata.description),
@@ -98,7 +109,7 @@ export const readerMetadataHead = (
     nameMeta("twitter:image", image),
     ...metadata.discoveryLinks.map(
       (link) =>
-        `<link rel="${escapeAttribute(link.rel)}" type="${escapeAttribute(link.type)}" href="${escapeAttribute(link.href)}">`
+        `<link rel="${escapeAttribute(link.rel)}" type="${escapeAttribute(link.type)}" href="${escapeAttribute(addSiteBasePath(basePath, link.href))}">`
     ),
     ...(metadata.jsonLd === "none"
       ? []
