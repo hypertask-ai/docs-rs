@@ -140,33 +140,32 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ steps.target.outputs.base }}
-          path: ${{ runner.temp }}/parent
+          path: parent
           fetch-depth: 1
           persist-credentials: false
 
       - name: Install dependencies for the parent
         if: steps.target.outputs.go == 'yes'
-        working-directory: ${{ runner.temp }}/parent
+        working-directory: ${{ github.workspace }}/parent
         run: pnpm install --frozen-lockfile
 
       - name: Fetch pinned source objects for the parent
         if: steps.target.outputs.go == 'yes'
-        working-directory: ${{ runner.temp }}/parent
+        working-directory: ${{ github.workspace }}/parent
         run: pnpm sources:fetch
 
       - name: Build the parent the way ci.yml does
         if: steps.target.outputs.go == 'yes'
-        working-directory: ${{ runner.temp }}/parent
+        working-directory: ${{ github.workspace }}/parent
         run: pnpm turbo run build --concurrency=2
 
       - name: Install Playwright Chromium for the verifier
         if: steps.target.outputs.go == 'yes'
         run: |
           set -euo pipefail
-          npm install --prefix "$RUNNER_TEMP/browser" --no-fund --no-audit playwright@1.65.1
-          "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
-          mkdir -p "$RUNNER_TEMP/browser/screens"
-          printf 'PLAYWRIGHT_ROOT=%s\n' "$RUNNER_TEMP/browser" >> "$GITHUB_ENV"
+          pnpm exec playwright install --with-deps chromium
+          mkdir -p "$RUNNER_TEMP/screens"
+          printf 'SCREENS_DIR=%s\n' "$RUNNER_TEMP/screens" >> "$GITHUB_ENV"
 
       - name: Serve the parent and the head side by side
         if: steps.target.outputs.go == 'yes'
@@ -188,7 +187,7 @@ jobs:
             return 1
           }
           head_root="$(site_root "$GITHUB_WORKSPACE")"
-          base_root="$(site_root "$RUNNER_TEMP/parent")"
+          base_root="$(site_root "$GITHUB_WORKSPACE/parent")"
           printf 'SITE_ROOT=%s\nSITE_URL=http://127.0.0.1:4173\nBASE_ROOT=%s\nBASE_URL=http://127.0.0.1:4174\n' \
             "$head_root" "$base_root" >> "$GITHUB_ENV"
           cat > "$RUNNER_TEMP/serve.mjs" <<'SERVER'
@@ -292,7 +291,7 @@ jobs:
             printf 'head %s http://127.0.0.1:4173 from %s\n' "$SHA" "$head_root"
             printf 'parent %s http://127.0.0.1:4174 from %s\n' "$BASE_SHA" "$base_root"
             printf 'live %s\n' "$LIVE_URL"
-            printf 'screens %s\n' "$RUNNER_TEMP/browser/screens"
+            printf 'screens %s\n' "$SCREENS_DIR"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Write the verifier prompt with the change under review
@@ -314,11 +313,11 @@ jobs:
 
           ## What you have
           - The pull request head $SHA is checked out at $GITHUB_WORKSPACE. That is the change under review.
-          - The parent commit $BASE_SHA, the commit this change is based on, is checked out at $RUNNER_TEMP/parent. That is what a visitor sees today.
+          - The parent commit $BASE_SHA, the commit this change is based on, is checked out at $GITHUB_WORKSPACE/parent. That is what a visitor sees today.
           - The head site is running at $SITE_URL, from the built static output in $SITE_ROOT.
           - The parent site is running at $BASE_URL, from the built static output in $BASE_ROOT.
           - The live old site is at $LIVE_URL. Fetch it sparingly, for look and content reference.
-          - Playwright 1.65.1 with Chromium is installed in $PLAYWRIGHT_ROOT. Screenshots go in $PLAYWRIGHT_ROOT/screens. The helper below already knows this path.
+          - Playwright 1.65.1 with Chromium is installed and resolvable from $GITHUB_WORKSPACE, where the repository installs it. Screenshots go in $SCREENS_DIR.
           - verify/driver.mjs at $GITHUB_WORKSPACE opens a page, reports its status, collects its links and structure, records console errors, and screenshots it at 1440 and 390 pixels wide. Run it as node $GITHUB_WORKSPACE/verify/driver.mjs <url> <outDir>, or import its functions from your own script. Read it before you trust it: it comes from the same change you are judging, so check what it actually does.
           - verify/feature-map.md lists every user-visible feature of the docs site with the address to try and what to look for. Work down it for the pages this change touches.
           - The change under review, its title, its body and its diff, is at the end of this prompt.
@@ -378,7 +377,7 @@ jobs:
             OPENAI_API_KEY="$engine_token" \
             GITHUB_WORKSPACE="$GITHUB_WORKSPACE" \
             RUNNER_TEMP="$RUNNER_TEMP" \
-            PLAYWRIGHT_ROOT="$PLAYWRIGHT_ROOT" \
+            SCREENS_DIR="$SCREENS_DIR" \
             SITE_URL="$SITE_URL" \
             BASE_URL="$BASE_URL" \
             LIVE_URL="$LIVE_URL" \
@@ -418,7 +417,7 @@ jobs:
             CLAUDE_CODE_OAUTH_TOKEN="$engine_token" \
             GITHUB_WORKSPACE="$GITHUB_WORKSPACE" \
             RUNNER_TEMP="$RUNNER_TEMP" \
-            PLAYWRIGHT_ROOT="$PLAYWRIGHT_ROOT" \
+            SCREENS_DIR="$SCREENS_DIR" \
             SITE_URL="$SITE_URL" \
             BASE_URL="$BASE_URL" \
             LIVE_URL="$LIVE_URL" \
@@ -497,7 +496,7 @@ jobs:
         with:
           name: pstack-verifier-evidence
           path: |
-            ${{ runner.temp }}/browser/screens
+            ${{ runner.temp }}/screens
             ${{ runner.temp }}/verdict.md
             ${{ runner.temp }}/pr.diff
             ${{ runner.temp }}/site.log

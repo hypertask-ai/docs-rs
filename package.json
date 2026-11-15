@@ -62,6 +62,7 @@
     "oxfmt": "0.77.0",
     "oxlint": "1.92.0",
     "oxlint-tsgolint": "7.0.2006",
+    "playwright": "1.65.1",
     "portless": "0.16.0",
     "tsrs": "0.23.0-ts7.1.0-beta",
     "turbo": "2.11.10",

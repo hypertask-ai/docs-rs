@@ -11,8 +11,8 @@ Three addresses answer during a verifier run:
 `verify/driver.mjs` opens a page, reports its status, collects its links and structure, records console errors and screenshots it at 1440 and 390 pixels wide. Give it a path to open it on the head site, or a full URL for the parent and the live site.
 
 ```sh
-node verify/driver.mjs /getting-started/quickstart/ "$RUNNER_TEMP/browser/screens" head-quickstart
-node verify/driver.mjs "$BASE_URL/getting-started/quickstart/" "$RUNNER_TEMP/browser/screens" parent-quickstart
+node verify/driver.mjs /getting-started/quickstart/ "$SCREENS_DIR" head-quickstart
+node verify/driver.mjs "$BASE_URL/getting-started/quickstart/" "$SCREENS_DIR" parent-quickstart
 curl -sS -o /dev/null -w '%{http_code} %{content_type}\n' "$SITE_URL/llms.txt"
 ```
 
