@@ -430,6 +430,10 @@ const titleLimit = 90;
 
 const summaryLimit = 350;
 
+const summarySentences = new Intl.Segmenter("en", {
+  granularity: "sentence",
+});
+
 export interface ChangelogFormatViolation {
   readonly file: string;
   readonly fix: string;
@@ -484,15 +488,18 @@ const formatViolations = (
     });
   }
 
+  const sentenceCount = [...summarySentences.segment(summary)].length;
+
   if (
     summary.length === 0 ||
     summary.length > summaryLimit ||
+    sentenceCount > 2 ||
     /[<\n]/u.test(summary)
   ) {
     violations.push({
       file,
-      fix: `trim \`summary\` in \`${file}\` to plain words under 350 characters.`,
-      what: "The changelog summary is missing, longer than 350 characters, or carries markup or a line break.",
+      fix: `trim \`summary\` in \`${file}\` to one or two plain sentences under 350 characters.`,
+      what: "The changelog summary is missing, longer than 350 characters, more than two sentences, or carries markup or a line break.",
       why: "The feeds show the summary alone, so a broken one reaches every reader.",
     });
   }
