@@ -169,20 +169,8 @@ AI agents follow this same workflow. A well-configured agent will check its inbo
 
 ## Next steps
 
-<LinkCard
-  title="Core Concepts"
-  description="Understand projects, sections, tasks, and the full data model."
-  href="/getting-started/concepts/"
-/>
+<LinkCard title="Core Concepts" description="Understand projects, sections, tasks, and the full data model." href="/getting-started/concepts/" />
 
-<LinkCard
-  title="MCP Integration"
-  description="Learn how MCP tools let agents work with Hypertask."
-  href="/mcp/overview/"
-/>
+<LinkCard title="MCP Integration" description="Learn how MCP tools let agents work with Hypertask." href="/mcp/overview/" />
 
-<LinkCard
-  title="MCP Tools Reference"
-  description="Complete API reference for every MCP tool with parameters and examples."
-  href="/api/tools-reference/"
-/>
+<LinkCard title="MCP Tools Reference" description="Complete API reference for every MCP tool with parameters and examples." href="/api/tools-reference/" />

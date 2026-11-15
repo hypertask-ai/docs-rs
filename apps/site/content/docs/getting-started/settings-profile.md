@@ -139,8 +139,4 @@ For quick navigation within Profile:
 
 ### Related Topics
 
-<LinkCard
-  title="Keyboard Shortcuts"
-  description="Complete list of keyboard shortcuts for navigation and actions across Hypertask."
-  href="/features/keyboard-shortcuts/"
-/>
+<LinkCard title="Keyboard Shortcuts" description="Complete list of keyboard shortcuts for navigation and actions across Hypertask." href="/features/keyboard-shortcuts/" />

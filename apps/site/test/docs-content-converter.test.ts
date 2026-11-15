@@ -87,6 +87,26 @@ description: Start here.
   expect(converted.body).toContain("<LinkCard");
 });
 
+it("puts a multi line component tag on one line so it stays a block", () => {
+  const converted = convertDocsPage(
+    `---
+title: Quickstart
+description: Start here.
+---
+
+<LinkCard
+  title="Core Concepts"
+  href="/getting-started/concepts/"
+/>
+`,
+    "/getting-started/quickstart"
+  );
+
+  expect(converted.body).toBe(
+    '<LinkCard title="Core Concepts" href="/getting-started/concepts/" />'
+  );
+});
+
 it("renders a converted page with frontmatter and keeps route paths", () => {
   const converted = convertDocsPage(page, "/features/boards");
 

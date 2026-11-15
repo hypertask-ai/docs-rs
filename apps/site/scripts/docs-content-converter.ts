@@ -153,6 +153,13 @@ const badges = (body: string) =>
 const htmlAttributes = (body: string) =>
   body.replaceAll(/\bclassName=/gu, "class=");
 
+const singleLineComponents = (body: string) =>
+  body.replaceAll(
+    /<(?<name>[A-Z]\w*)\s*\n(?<attributes>(?:\s+[\w-]+="[^"]*"\s*\n)+)\s*\/>/gu,
+    (_match, name: string, attributes: string) =>
+      `<${name} ${attributes.trim().split(/\s*\n\s*/u).join(" ")} />`
+  );
+
 const mdxComments = (body: string) =>
   body.replaceAll(/\{\/\*[\s\S]*?\*\/\}/gu, "");
 
@@ -196,7 +203,11 @@ export const convertDocsPage = (
       : stringifyYaml({ description: parsed.description, title });
 
   const body = tidy(
-    mdxComments(htmlAttributes(badges(linkButtons(stripModuleScope(rawBody)))))
+    singleLineComponents(
+      mdxComments(
+        htmlAttributes(badges(linkButtons(stripModuleScope(rawBody))))
+      )
+    )
   );
 
   return {
