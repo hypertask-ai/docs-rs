@@ -6,6 +6,7 @@ import { describe, expect, it } from "@effect/vitest";
 import { Schema } from "effect";
 
 import { buildDocsSearchIndex } from "../scripts/docs-search-index.ts";
+import { docsPageSource } from "../scripts/docs-search-pages.ts";
 import { searchDocsIndex } from "../src/docs-search.js";
 
 const fixtureText = (name: string): string =>
@@ -37,17 +38,6 @@ const QueryFixture = Schema.Struct({
   ),
 });
 
-const titleOf = (markdown: string): string =>
-  /^---\r?\n[\s\S]*?\ntitle:\s*(?<title>.*)\r?\n[\s\S]*?\r?\n---/u.exec(
-    markdown
-  )?.groups?.title ?? "";
-
-const bodyOf = (markdown: string): string => {
-  const match = /^---\r?\n[\s\S]*?\r?\n---\r?\n?/u.exec(markdown);
-
-  return match === null ? markdown : markdown.slice(match[0].length);
-};
-
 const corpus = Schema.decodeUnknownSync(
   Schema.fromJsonString(Schema.Array(CorpusPage))
 )(fixtureText("corpus.json"));
@@ -57,11 +47,15 @@ const recorded = Schema.decodeUnknownSync(Schema.fromJsonString(QueryFixture))(
 );
 
 const index = buildDocsSearchIndex(
-  corpus.map((page) => ({
-    bodyMarkdown: bodyOf(page.markdown),
-    routePath: page.routePath,
-    title: titleOf(page.markdown),
-  }))
+  corpus.map((page) => {
+    const source = docsPageSource("page.md", page.markdown);
+
+    return {
+      bodyMarkdown: source.bodyMarkdown,
+      routePath: page.routePath,
+      title: source.title,
+    };
+  })
 );
 
 const oldIndex = {
