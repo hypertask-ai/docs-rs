@@ -41,7 +41,7 @@ const AnswerRow = Schema.Struct({
   status: Schema.Finite,
 });
 
-type AnswerRow = typeof AnswerRow.Type;
+type Answer = typeof AnswerRow.Type;
 
 const Fixture = Schema.Struct({ answers: Schema.Array(AnswerRow) });
 
@@ -50,40 +50,52 @@ interface ForwardedAnswer {
   readonly upstreamContentType: string;
 }
 
-const forwardedAnswers: Readonly<Record<string, ForwardedAnswer>> = {
-  "/": { path: "/", upstreamContentType: "text/html" },
-  "/_astro/page.BIhdncjw.js": {
-    path: "/assets/docs/page.BIhdncjw.js",
-    upstreamContentType: "text/javascript; charset=utf-8",
-  },
-  "/_astro/print.DNXP8c50.css": {
-    path: "/assets/docs/print.DNXP8c50.css",
-    upstreamContentType: "text/css; charset=utf-8",
-  },
-  "/favicon.svg": {
-    path: "/assets/docs/logo.svg",
-    upstreamContentType: "image/svg+xml; charset=utf-8",
-  },
-  "/getting-started/introduction/": {
-    path: "/",
-    upstreamContentType: "text/html",
-  },
-  "/glyph-white.png": {
-    path: "/assets/screenshots/board-view.png",
-    upstreamContentType: "image/png",
-  },
-};
+const forwardedAnswers = new Map<string, ForwardedAnswer>([
+  ["/", { path: "/", upstreamContentType: "text/html" }],
+  [
+    "/_astro/page.BIhdncjw.js",
+    {
+      path: "/assets/docs/page.BIhdncjw.js",
+      upstreamContentType: "text/javascript; charset=utf-8",
+    },
+  ],
+  [
+    "/_astro/print.DNXP8c50.css",
+    {
+      path: "/assets/docs/print.DNXP8c50.css",
+      upstreamContentType: "text/css; charset=utf-8",
+    },
+  ],
+  [
+    "/favicon.svg",
+    {
+      path: "/assets/docs/logo.svg",
+      upstreamContentType: "image/svg+xml; charset=utf-8",
+    },
+  ],
+  [
+    "/getting-started/introduction/",
+    { path: "/", upstreamContentType: "text/html" },
+  ],
+  [
+    "/glyph-white.png",
+    {
+      path: "/assets/screenshots/board-view.png",
+      upstreamContentType: "image/png",
+    },
+  ],
+]);
 
-const workerAnswers: Readonly<Record<string, string>> = {
-  "/changelog.json": "/news.xml",
-  "/changelog.md": "/AGENTS.md",
-  "/changelog.xml": "/news.xml",
-  "/getting-started/introduction.md": "/AGENTS.md",
-  "/index.md": "/AGENTS.md",
-  "/llms-full.txt": "/llms-full.txt",
-  "/llms.txt": "/llms.txt",
-  "/nope-not-a-page": "/nope-not-a-page",
-};
+const workerAnswers = new Map<string, string>([
+  ["/changelog.json", "/news.xml"],
+  ["/changelog.md", "/AGENTS.md"],
+  ["/changelog.xml", "/news.xml"],
+  ["/getting-started/introduction.md", "/AGENTS.md"],
+  ["/index.md", "/AGENTS.md"],
+  ["/llms-full.txt", "/llms-full.txt"],
+  ["/llms.txt", "/llms.txt"],
+  ["/nope-not-a-page", "/nope-not-a-page"],
+]);
 
 const readFixture = Effect.gen(function* readOldSiteAnswers() {
   const fs = yield* FileSystem.FileSystem;
@@ -92,14 +104,13 @@ const readFixture = Effect.gen(function* readOldSiteAnswers() {
   return yield* Schema.decodeEffect(Schema.fromJsonString(Fixture))(source);
 });
 
-const expectAnswer = (
-  answer: AnswerRow,
-  response: {
-    readonly cacheControl: string | null;
-    readonly contentType: string | null;
-    readonly etag: string | null;
-  }
-) => {
+interface AnswerHeaders {
+  readonly cacheControl: string | null;
+  readonly contentType: string | null;
+  readonly etag: string | null;
+}
+
+const expectAnswer = (answer: Answer, response: AnswerHeaders) => {
   expect(response.cacheControl, `${answer.address} cache control`).toBe(
     answer.cacheControl
   );
@@ -166,6 +177,17 @@ const withHandler = <A, E, R>(
     ({ dispose }) => Effect.promise(dispose)
   );
 
+const upstreamHeadersOf = (
+  answer: Answer,
+  target: ForwardedAnswer
+): Readonly<Record<string, string>> =>
+  answer.kind === "html"
+    ? { "content-type": target.upstreamContentType }
+    : {
+        "cache-control": docsCacheControl,
+        "content-type": target.upstreamContentType,
+      };
+
 it.layer(
   Layer.merge(
     NodeServices.layer,
@@ -180,7 +202,7 @@ it.layer(
         const responseHeaders = readerResponseHeaders(yield* ContentStore);
 
         const forwarded = fixture.answers.flatMap((answer) => {
-          const target = forwardedAnswers[answer.address];
+          const target = forwardedAnswers.get(answer.address);
 
           return target === undefined ? [] : [{ answer, target }];
         });
@@ -189,12 +211,7 @@ it.layer(
 
         for (const { answer, target } of forwarded) {
           const response = yield* withReaderWebsite(
-            websiteReturning({
-              "content-type": target.upstreamContentType,
-              ...(answer.kind === "html"
-                ? {}
-                : { "cache-control": docsCacheControl }),
-            }),
+            websiteReturning(upstreamHeadersOf(answer, target)),
             responseHeaders
           )(
             Effect.die(new Error("The reader website answers this address"))
@@ -225,7 +242,7 @@ it.layer(
         const fixture = yield* readFixture;
 
         const worker = fixture.answers.flatMap((answer) => {
-          const path = workerAnswers[answer.address];
+          const path = workerAnswers.get(answer.address);
 
           return path === undefined ? [] : [{ answer, path }];
         });

@@ -77,8 +77,9 @@ const compare = async (answer: Answer, oldBase: string, newBase: string) => {
   return { answer, failures };
 };
 
-const newBase = process.argv[2];
-const oldBase = process.argv[3] ?? "https://docs.hypertask.ai";
+const [, , newBase, oldBaseArgument] = process.argv;
+
+const oldBase = oldBaseArgument ?? "https://docs.hypertask.ai";
 
 if (newBase === undefined) {
   process.stderr.write(
