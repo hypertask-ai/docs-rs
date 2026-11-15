@@ -64,6 +64,7 @@ import {
   cafeDirectoryMarkdown,
   cafeNewsMarkdown,
 } from "./cafe-pages.ts";
+import { readChangelog } from "./changelog-content.ts";
 import { collectBuildFences } from "./code-inputs.ts";
 import { codeComponent } from "./code-pipeline.ts";
 import type { ComponentRegistry } from "./component-registry.ts";
@@ -3763,6 +3764,8 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
     root,
   });
 
+  const changelogEntries = yield* readChangelog(root);
+
   const learnCards = yield* buildLearningDeck(
     loreTexts,
     skillTexts,
@@ -3829,6 +3832,10 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
       value: resources.map(
         ({ bodyMarkdown: _bodyMarkdown, ...resource }) => resource
       ),
+    },
+    {
+      path: "/_content/changelog.json",
+      value: { entries: changelogEntries, version: 1 },
     },
     { path: "/_content/graph.json", value: loreGraphSnapshotJson },
     { path: "/_content/prompts.json", value: promptTexts },
