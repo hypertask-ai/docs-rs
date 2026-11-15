@@ -1,10 +1,12 @@
-import { Effect, FileSystem, Schema } from "effect";
+import { Effect, FileSystem, Path, Schema } from "effect";
 
 import type { SourceSpec } from "./content-specs.ts";
 import { ReaderInputError } from "./reader-input-error.ts";
 import { frontmatterData } from "./svx-ast.ts";
 
 export const docsContentDirectory = "apps/site/content/docs";
+
+const repositoryRoot = new URL("../../../", import.meta.url).pathname;
 
 const DocsFrontmatter = Schema.Struct({
   description: Schema.String,
@@ -55,15 +57,17 @@ const markdownFiles = (
 ): Effect.Effect<
   readonly string[],
   ReaderInputError,
-  FileSystem.FileSystem
+  FileSystem.FileSystem | Path.Path
 > =>
   Effect.gen(function* listDocsPages() {
     const fs = yield* FileSystem.FileSystem;
+    const path = yield* Path.Path;
 
     const entries = yield* fs
-      .readDirectory(`${docsContentDirectory}/${relativeDirectory}`, {
-        recursive: true,
-      })
+      .readDirectory(
+        path.join(repositoryRoot, docsContentDirectory, relativeDirectory),
+        { recursive: true }
+      )
       .pipe(
         Effect.mapError(
           (cause) =>
@@ -86,16 +90,17 @@ const markdownFiles = (
 export const readDocsPageSpecs: Effect.Effect<
   readonly SourceSpec[],
   ReaderInputError,
-  FileSystem.FileSystem
+  FileSystem.FileSystem | Path.Path
 > = Effect.gen(function* docsPageSpecs() {
   const fs = yield* FileSystem.FileSystem;
+  const path = yield* Path.Path;
   const files = yield* markdownFiles("");
 
   return yield* Effect.forEach(
     files,
     (file) =>
       fs
-        .readFileString(`${docsContentDirectory}/${file}`)
+        .readFileString(path.join(repositoryRoot, docsContentDirectory, file))
         .pipe(
           Effect.mapError(
             (cause) =>
