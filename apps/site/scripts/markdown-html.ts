@@ -62,6 +62,7 @@ export type CodeHighlighter = (
 export interface MarkdownHtmlOptions {
   readonly highlight?: CodeHighlighter;
   readonly rehypePlugins?: PluggableList;
+  readonly smartypants?: boolean;
   readonly sourcePath: string;
 }
 
@@ -748,11 +749,13 @@ export const markdownHast = (
 ): HastRoot => {
   const root = parseContentMarkdown(source, options.sourcePath);
 
-  visitContentNodes(root, (node) => {
-    if (node.type === "text") {
-      node.value = smartypants(node.value);
-    }
-  });
+  if (options.smartypants !== false) {
+    visitContentNodes(root, (node) => {
+      if (node.type === "text") {
+        node.value = smartypants(node.value);
+      }
+    });
+  }
 
   const tree: HastRoot = {
     children: convertNode(

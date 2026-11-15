@@ -107,13 +107,12 @@ const assertProductionPayloads = (pages: readonly ReaderPageFlags[]) => {
     }
   }
 
-  const home = pages.find((page) => page.page.path === "/");
+  const learn = pages.find((page) => page.page.path === "/learn");
   expect(
-    home?.copyPrompts.find((prompt) => prompt.id === "mcp")?.text
-  ).toContain("https://ratstack.sh/mcp");
+    learn?.copyPrompts.some((prompt) => prompt.id === "learn")
+  ).toBe(true);
   expect(
-    home?.codeFences.find((fence) => fence.value.includes("claude mcp add"))
-      ?.value
+    learn?.copyPrompts.find((prompt) => prompt.id === "learn")?.text
   ).toContain("https://ratstack.sh/mcp");
 };
 

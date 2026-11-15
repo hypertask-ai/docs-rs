@@ -74,7 +74,10 @@ const readerPages = Effect.gen(function* readerPages() {
     );
   }
 
-  const home = yield* readerHomeFlags(origin);
+  const home = Option.match(yield* readerHomeFlags(origin), {
+    onNone: () => [],
+    onSome: (page) => [page],
+  });
   const lore = yield* Effect.flatMap(readerLoreFlags(origin), encodeFlags);
   const prompts = yield* readerPromptFlags(origin);
   const learn = yield* readerLearnFlags(origin);
@@ -90,7 +93,7 @@ const readerPages = Effect.gen(function* readerPages() {
   const tube = yield* readerTubeFlags(origin);
 
   const pages = [
-    home,
+    ...home,
     ...lore,
     learn,
     ...prompts,

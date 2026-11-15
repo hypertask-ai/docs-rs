@@ -67,6 +67,26 @@ it("converts Starlight components and drops module scope", () => {
   ]);
 });
 
+it("keeps LinkCard and turns JSX class attributes into HTML ones", () => {
+  const converted = convertDocsPage(
+    `---
+title: Quickstart
+description: Start here.
+---
+
+<div className="grid">
+<LinkCard title="Core Concepts" description="Read the data model." href="/getting-started/concepts/" />
+</div>
+`,
+    "/getting-started/quickstart"
+  );
+
+  expect(converted.problems).toEqual([]);
+  expect(converted.body).toContain('<div class="grid">');
+  expect(converted.body).not.toContain("className");
+  expect(converted.body).toContain("<LinkCard");
+});
+
 it("renders a converted page with frontmatter and keeps route paths", () => {
   const converted = convertDocsPage(page, "/features/boards");
 

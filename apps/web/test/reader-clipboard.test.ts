@@ -2,7 +2,7 @@ import { NodeServices } from "@effect/platform-node";
 import { expect, it } from "@effect/vitest";
 import { Arbitrary, Context, Effect, Layer, Schema } from "effect";
 
-import { readerHomeFlags } from "../../site/scripts/reader-home-flags.ts";
+import { readerLearnFlags } from "../../site/scripts/reader-learn-flags.ts";
 import { init } from "../src/client/reader/init.js";
 import { Message } from "../src/client/reader/message.js";
 import {
@@ -21,13 +21,13 @@ class ClipboardPage extends Context.Service<
     this,
     Effect.gen(function* prepareClipboardPage() {
       const flags = yield* Effect.flatMap(
-        readerHomeFlags("https://ratstack.sh"),
+        readerLearnFlags("https://ratstack.sh"),
         Schema.decodeUnknownEffect(ReaderFlags)
       );
 
       if (flags.copyPrompts.length === 0) {
         return yield* Effect.die(
-          new Error("Prepared home has no copy prompts")
+          new Error("Prepared learn page has no copy prompts")
         );
       }
 

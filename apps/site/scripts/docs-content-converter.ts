@@ -12,6 +12,7 @@ export const docsComponentNames: ReadonlySet<string> = new Set([
   "CopyPrompt",
   "Diagram",
   "HumanOnly",
+  "LinkCard",
   "Sources",
   "Steps",
   "TabItem",
@@ -149,6 +150,9 @@ const badges = (body: string) =>
     (_match, text: string) => text
   );
 
+const htmlAttributes = (body: string) =>
+  body.replaceAll(/\bclassName=/gu, "class=");
+
 const mdxComments = (body: string) =>
   body.replaceAll(/\{\/\*[\s\S]*?\*\/\}/gu, "");
 
@@ -192,7 +196,7 @@ export const convertDocsPage = (
       : stringifyYaml({ description: parsed.description, title });
 
   const body = tidy(
-    mdxComments(badges(linkButtons(stripModuleScope(rawBody))))
+    mdxComments(htmlAttributes(badges(linkButtons(stripModuleScope(rawBody)))))
   );
 
   return {

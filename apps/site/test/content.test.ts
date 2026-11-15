@@ -44,7 +44,9 @@ import {
   allStarsRoutes,
   appleTouchIconPngBase64,
   faviconIcoBase64,
+  codeSnippetsDocumentHtml,
   homeDocumentHtml,
+  learnRatStackDocumentHtml,
   homeMarkdownTemplate,
   interestConfirmDocumentHtml,
   interestResultDocumentHtml,
@@ -946,17 +948,19 @@ it.layer(contentServices)("generated content", (test) => {
       expect(fence?.documentHtml).toContain(
         '<a href="/VISION.md">Purpose and boundaries of rat-stack (VISION.md)</a>'
       );
-      expect(homeDocumentHtml).toContain('href="/lore/');
+      expect(codeSnippetsDocumentHtml).toContain('href="/lore/');
     })
   );
 
   test.effect("uses Shiki for code and leaves text diagrams uncoloured", () =>
     Effect.sync(() => {
-      expect(homeDocumentHtml).toContain('class="shiki catppuccin-latte"');
-      expect(homeDocumentHtml).toMatch(
+      expect(learnRatStackDocumentHtml).toContain(
+        'class="shiki catppuccin-latte"'
+      );
+      expect(codeSnippetsDocumentHtml).toMatch(
         /<figure role="img"[^>]*>\s*<pre><code>/u
       );
-      expect(homeDocumentHtml).not.toMatch(
+      expect(codeSnippetsDocumentHtml).not.toMatch(
         /<figure role="img"[^>]*>\s*<pre[^>]*style=/u
       );
     })
@@ -1009,7 +1013,7 @@ it.layer(contentServices)("generated content", (test) => {
 
   test.effect("keeps the line breaks in a text diagram", () =>
     Effect.sync(() => {
-      const figures = homeDocumentHtml.match(
+      const figures = codeSnippetsDocumentHtml.match(
         /<figure role="img"[\s\S]*?<\/figure>/gu
       );
 

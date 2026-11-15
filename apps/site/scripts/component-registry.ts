@@ -221,7 +221,9 @@ const coreComponents = {
 
       return [
         html('<div class="docs-card">'),
-        ...(title === undefined ? [] : [html(`<h3>${escapeHtml(title)}</h3>`)]),
+        ...(title === undefined
+          ? []
+          : [html(`<p class="docs-card-title">${escapeHtml(title)}</p>`)]),
         ...componentChildren(input),
         html("</div>"),
       ];
@@ -340,6 +342,62 @@ const coreComponents = {
   HumanOnly: {
     agent: () => [],
     human: componentChildren,
+  },
+  LinkCard: {
+    agent(input) {
+      const { description, href, title } = Schema.decodeUnknownSync(
+        Schema.Struct({
+          description: Schema.optional(Schema.String),
+          href: Schema.String,
+          title: Schema.String,
+        })
+      )(input.attributes);
+
+      return [
+        {
+          children: [
+            {
+              children: [{ type: "text", value: title }],
+              type: "link",
+              url: href,
+            },
+          ],
+          type: "paragraph",
+        },
+        ...(description === undefined
+          ? []
+          : [
+              {
+                children: [{ type: "text", value: description }],
+                type: "paragraph",
+              },
+            ]),
+      ];
+    },
+    human(input) {
+      const { description, href, title } = Schema.decodeUnknownSync(
+        Schema.Struct({
+          description: Schema.optional(Schema.String),
+          href: Schema.String,
+          title: Schema.String,
+        })
+      )(input.attributes);
+
+      return [
+        html('<div class="docs-link-card">'),
+        html(
+          `<p class="docs-link-card-title"><a href="${escapeHtml(href)}">${escapeHtml(title)}</a></p>`
+        ),
+        ...(description === undefined
+          ? []
+          : [
+              html(
+                `<p class="docs-link-card-description">${escapeHtml(description)}</p>`
+              ),
+            ]),
+        html("</div>"),
+      ];
+    },
   },
   Sources: {
     agent(_input, context) {

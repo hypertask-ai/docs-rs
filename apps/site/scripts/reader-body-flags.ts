@@ -7,8 +7,13 @@ import {
   isReaderBodyRoutePath,
   readerBodyRoutePaths,
 } from "../../web/src/reader-routes.js";
+import { isDocsPageRoute } from "../src/docs-page-routes.ts";
 import { copyPrompts } from "./component-data.ts";
-import { compileReaderBody, readerNewsTitle } from "./reader-body-document.ts";
+import {
+  compileReaderBody,
+  readerNewsTitle,
+  readerTocAnchors,
+} from "./reader-body-document.ts";
 import { ReaderInputError } from "./reader-input-error.ts";
 import { prepareReaderSiteInputs } from "./reader-site-inputs.ts";
 
@@ -77,6 +82,15 @@ export const readerBodyFlags = Effect.fn("readerBodyFlags")(
             sourcePath: page.sourcePath,
             status: page.status,
           },
+          ...(isDocsPageRoute(page.path)
+            ? {
+                references: {
+                  anchors: readerTocAnchors(page.html),
+                  backlinks: [],
+                  inboundCounts: {},
+                },
+              }
+            : {}),
           snippets: [],
           terms: [],
         });

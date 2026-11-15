@@ -427,7 +427,7 @@ body > .docs-layout {
 }
 
 .docs-main .interface-card h3,
-.docs-main .docs-card h3 {
+.docs-main .docs-card .docs-card-title {
   color: #f4f4f7;
   font:
     600 16px/24px "IBM Plex Sans",
@@ -446,6 +446,41 @@ body > .docs-layout {
 .docs-main .interface-card a,
 .docs-main .docs-card a {
   font-size: 14px;
+}
+
+.docs-main .home-lead {
+  font-size: 19px;
+  line-height: 30px;
+}
+
+.docs-main .ask-help + p {
+  margin-top: 24px;
+}
+
+.docs-main .docs-link-card {
+  background: #111113;
+  border: 1px solid #222226;
+  border-radius: 14px;
+  margin: 16px 0;
+  padding: 16px 20px;
+}
+
+.docs-main .docs-link-card-title {
+  margin: 0;
+}
+
+.docs-main .docs-link-card-title a {
+  color: #f4f4f7;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.docs-main .docs-link-card-description {
+  color: #a1a1aa;
+  font-size: 14px;
+  line-height: 21px;
+  margin: 8px 0 0;
 }
 
 .docs-main .docs-steps {

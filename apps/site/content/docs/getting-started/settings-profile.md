@@ -1,0 +1,146 @@
+---
+description: Manage your identity, appearance, and preferences in Hypertask.
+title: Profile & Settings
+---
+
+Your Profile page in Hypertask is split into three dedicated sections: **General**, **Appearance**, and **Task page**. Each has its own navigation point and can be accessed directly from anywhere in the app via `Ctrl+K`.
+
+---
+
+## General
+
+The **General** tab contains your identity settings:
+
+- **Avatar** — Upload or change your profile picture.
+- **Display name** — The name shown to others in tasks, comments, and activity feeds.
+- **Email** — Your primary email address; used for notifications and logins.
+- **Bio** (optional) — A short description shown in your profile card.
+
+Use these fields to manage how you appear across the platform.
+
+## Session settings
+
+Hypertask uses Better Auth server-side authentication with configurable login session duration:
+
+- **Session length** — Choose between 7 days and 30 days when signing in. This controls how long your session stays active before requiring re-authentication.
+- **Persistent sign-in links** — Access a persistent sign-in link that doesn't expire until used.
+- **Clean sign-out** — All flows support immediate session invalidation and cookie clearing.
+
+## Privacy & cookies
+
+Hypertask respects your right to control how your data is collected. By default, tracking is disabled until you make an explicit choice:
+
+- **No tracking until consent** — Tracking cookies and IP lookups are not stored or performed until you select an option.
+- **Consent banner** — Every visitor sees a cookie banner on login, signup, and when you open a signed-in board.
+- **Shared consent choice** — Your tracking preferences on hypertask.ai are shared across all Hypertask products and tracked behavior follows your choice.
+
+This ensures your data is not collected without your knowledge or agreement.
+
+---
+
+## Appearance
+
+The **Appearance** tab controls the visual look of your interface:
+
+- **Theme** — Choose between Light, Dark, or System theme (automatically follows your OS preference).
+- **Font size** — Adjust text size across the app for better readability.
+- **Reduced motion** — Reduce animations for a calmer environment.
+
+## Task page
+
+The **Task page** tab configures behavior specific to how tasks display:
+
+- **Show task scroll** (on/off) — When enabled, Hypertask automatically scrolls to the full task description and details when opening a task.
+- **Subtask depth** — Control how many levels of subtasks are visible by default.
+- **Expand inline details** — Show fields like due date, assignee, and labels inline on the task card.
+
+These settings apply to the task detail view and the task editor across all boards.
+
+## AI settings
+
+The **AI Settings** tab in the Task page section allows you to configure how the AI assistant behaves across your tasks and comments:
+
+- **Custom instructions** — Provide board-level instructions that the AI follows when helping with tasks on that board. Enter your instructions directly into the text box, which fills the page to give you maximum writing space and easy visibility of full context.
+
+These instructions are applied automatically when the AI drafts responses, edits descriptions, or proposes next steps in chat or comments.
+
+## Ask the AI to change a setting
+
+On any Settings page you can ask the AI chat, in plain words, for a change on that page:
+
+- Say what you want: "switch me to the dark theme", "turn off email notifications for comments", or "make Anna an admin on this board".
+- The reply carries one **Setting change** card showing the setting, its current value and the new value. Nothing changes until you press **Apply**; press **Cancel** and nothing happens.
+- Once a change lands, the card offers **Undo**, which puts the previous value back.
+- The card also shows **Open setting**, so you can go to the control yourself.
+
+The AI uses your own rights, exactly as if you clicked. A board member cannot change what only the board owner may change, and access and people changes always go through the same card. If a change is not something it can make, it tells you where the setting lives and opens that page.
+
+## User profile caching
+
+On authenticated startup, Hypertask reuses a fresh account-scoped user profile cached at the app shell layer. The cached profile remains valid for about 5 minutes, reducing repeated `/api/users/getById` refetches and improving cold start performance. The cache is automatically invalidated and refreshed as needed.
+
+## Preferences via signed login
+
+Preferences now load and save correctly with a signed login alone, without requiring the older profile cookie. As long as your session is signed in, the Preferences page can read and write settings such as Play GIFs, text size, and theme, and changes persist across reloads.
+
+```bash
+# Signed in with your session only
+# Navigate to Settings → Task page
+# Toggle Play GIFs or adjust a setting
+# The change is saved immediately and survives navigation
+```
+
+This simplifies session handling so a single authentication flow serves all content and settings across the app.
+
+## Management keys
+
+Management keys let API, CLI, MCP, and AI chat clients manage agents and credentials. Create them under **Settings → Connect → Management keys**, next to MCP, CLI, and REST API.
+
+<Steps>
+
+1. Open [app.hypertask.ai](https://app.hypertask.ai) and sign in.
+2. Open **Settings**, then **Connect**, then **Management keys**.
+3. Enter a name, choose a scope, and choose an expiry.
+4. Choose **Create key**. Copy the key immediately. It is shown once.
+
+</Steps>
+
+**Scope** is **Management**, **Usage**, or **Full access**. Full access stays on the whole account. Usage reads team AI usage and spend. Management manages agents and keys.
+
+**Expiry** is **Never**, **30 days**, **90 days**, or **365 days**. A new management key starts on **Never**. The list shows **Expires** and a date, or **Never**.
+
+When team-scoped keys are available, Management and Usage can be limited to one team. Full access cannot. A team key stops working if you lose access to that team.
+
+REST API keys are on the same **Connect** screen, under **Developer access**. They use the same four expiry choices, and a new REST API key starts on **90 days**.
+
+If a client is refused after a key's date, see [MCP troubleshooting](/mcp/troubleshooting/).
+
+## Common Actions
+
+### Change your avatar or name
+
+1. Open your Profile page in the app.
+2. Switch to the **General** tab.
+3. Upload a new image or edit your name under the Avatar or Display name fields.
+4. Click **Save** to apply changes.
+
+See [Keyboard Shortcuts](/features/keyboard-shortcuts/) for cmd-k access to Profile and General.
+
+## Keyboard Shortcuts
+
+For quick navigation within Profile:
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+K` then type "Profile" | Open the full Profile page |
+| `Ctrl+K` then type "General" | Jump to General tab |
+| `Ctrl+K` then type "Appearance" | Jump to Appearance tab |
+| `Ctrl+K` then type "Task" | Jump to Task page tab |
+
+### Related Topics
+
+<LinkCard
+  title="Keyboard Shortcuts"
+  description="Complete list of keyboard shortcuts for navigation and actions across Hypertask."
+  href="/features/keyboard-shortcuts/"
+/>

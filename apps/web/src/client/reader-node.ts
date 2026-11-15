@@ -62,6 +62,7 @@ export const ReaderAttributeName = Schema.Literals([
   "aria-hidden",
   "class",
   "colspan",
+  "data-ask-help",
   "data-label",
   "data-line",
   "data-tier",
