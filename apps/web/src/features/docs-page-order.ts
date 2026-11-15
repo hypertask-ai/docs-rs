@@ -39,12 +39,7 @@ export const docsPageAt = (path: string): Option.Option<DocsPageOrderEntry> => {
   );
 };
 
-export const docsPrevNext = (
-  path: string
-): {
-  readonly next: Option.Option<DocsPageOrderEntry>;
-  readonly previous: Option.Option<DocsPageOrderEntry>;
-} => {
+export const docsPrevNext = (path: string) => {
   const normalized = docsNormalizedPath(path);
   const index = docsPages.findIndex((page) => page.path === normalized);
 

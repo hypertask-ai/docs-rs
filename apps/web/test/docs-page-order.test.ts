@@ -14,8 +14,14 @@ const labels = (path: string) => {
   const { next, previous } = docsPrevNext(path);
 
   return {
-    next: Option.map(next, (page) => page.label),
-    previous: Option.map(previous, (page) => page.label),
+    next: Option.match(next, {
+      onNone: () => null,
+      onSome: (page) => page.label,
+    }),
+    previous: Option.match(previous, {
+      onNone: () => null,
+      onSome: (page) => page.label,
+    }),
   };
 };
 
@@ -29,56 +35,58 @@ it("DocsPageOrder: the page order is the sidebar order and holds every sidebar p
 
 it("DocsPageOrder: previous and next follow the sidebar order across section groups", () => {
   expect(labels("/")).toEqual({
-    next: Option.some("What is Hypertask?"),
-    previous: Option.none(),
+    next: "What is Hypertask?",
+    previous: null,
   });
 
   expect(labels("/getting-started/introduction")).toEqual({
-    next: Option.some("Quickstart"),
-    previous: Option.some("Overview"),
+    next: "Quickstart",
+    previous: "Overview",
   });
 
   expect(labels("/getting-started/contact-support")).toEqual({
-    next: Option.some("AI features"),
-    previous: Option.some("Mobile and desktop apps"),
+    next: "AI features",
+    previous: "Mobile and desktop apps",
   });
 
   expect(labels("/features/images")).toEqual({
-    next: Option.some("CLI reference"),
-    previous: Option.some("Agent Chat"),
+    next: "CLI reference",
+    previous: "Agent Chat",
   });
 
   expect(labels("/connect-an-agent")).toEqual({
-    next: Option.some("Changelog"),
-    previous: Option.some("MCP tools reference"),
+    next: "Changelog",
+    previous: "MCP tools reference",
   });
 
   expect(labels("/changelog")).toEqual({
-    next: Option.none(),
-    previous: Option.some("Connect a new agent"),
+    next: null,
+    previous: "Connect a new agent",
   });
 });
 
 it("DocsPageOrder: the last page has no next link and the first page has no previous link", () => {
-  expect(labels("/changelog").next).toEqual(Option.none());
-  expect(labels("/").previous).toEqual(Option.none());
+  expect(labels("/changelog").next).toBeNull();
+  expect(labels("/").previous).toBeNull();
 });
 
 it("DocsPageOrder: a page hidden from the sidebar has no previous or next link", () => {
   expect(docsPageAt("/features/reports")).toEqual(Option.none());
   expect(labels("/features/reports")).toEqual({
-    next: Option.none(),
-    previous: Option.none(),
+    next: null,
+    previous: null,
   });
 });
 
 it("DocsPageOrder: the changelog index sits in the page order but turns its own pagination off", () => {
-  expect(
-    Option.map(docsPageAt("/changelog"), (page) => page.pagination)
-  ).toEqual(Option.some(false));
-  expect(
-    Option.map(docsPageAt("/features/reports"), (page) => page.pagination)
-  ).toEqual(Option.some(true));
+  const paginationOf = (path: string) =>
+    Option.match(docsPageAt(path), {
+      onNone: () => null,
+      onSome: (page) => page.pagination,
+    });
+
+  expect(paginationOf("/changelog")).toBe(false);
+  expect(paginationOf("/features/reports")).toBe(true);
 });
 
 it("DocsPageOrder: old page addresses carry the trailing slash the live site serves", () => {

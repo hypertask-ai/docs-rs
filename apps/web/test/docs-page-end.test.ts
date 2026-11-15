@@ -18,7 +18,7 @@ import { docsNormalizedPath } from "../src/features/docs-page-order.js";
 import { view } from "../src/features/reader.js";
 import { readerFlagsFixture } from "./reader-fixture.js";
 
-const DocsEndFixture = Schema.Struct({
+const DocsEndFixtureSchema = Schema.Struct({
   contents: Schema.Array(
     Schema.Struct({ href: Schema.String, text: Schema.String })
   ),
@@ -37,7 +37,7 @@ const DocsEndFixture = Schema.Struct({
   url: Schema.String,
 });
 
-type DocsEndFixture = typeof DocsEndFixture.Type;
+type DocsEndFixture = typeof DocsEndFixtureSchema.Type;
 
 const fixtureDirectory = new URL("fixtures/docs-page-end/", import.meta.url);
 
@@ -45,7 +45,7 @@ const fixtures: readonly DocsEndFixture[] = readdirSync(fixtureDirectory)
   .filter((file) => file.endsWith(".json"))
   .toSorted()
   .map((file) =>
-    Schema.decodeUnknownSync(Schema.fromJsonString(DocsEndFixture))(
+    Schema.decodeUnknownSync(Schema.fromJsonString(DocsEndFixtureSchema))(
       readFileSync(new URL(file, fixtureDirectory), "utf-8")
     )
   );
