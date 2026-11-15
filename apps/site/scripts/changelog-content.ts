@@ -95,7 +95,11 @@ const readSource = Effect.fn("readChangelogSource")(
             cause
           )
         ),
-      try: (): Schema.Json => parseYaml(yaml),
+      try: () => {
+        const parsed: unknown = parseYaml(yaml);
+
+        return parsed;
+      },
     }).pipe(
       Effect.flatMap((parsed) =>
         Schema.decodeUnknownEffect(ChangelogFrontmatter)(parsed).pipe(
