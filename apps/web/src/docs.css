@@ -457,6 +457,18 @@ body > .docs-layout {
   margin-top: 24px;
 }
 
+.docs-main .docs-video {
+  background: #111113;
+  border: 1px solid #222226;
+  border-radius: 14px;
+  color: #f4f4f7;
+  display: block;
+  font-weight: 600;
+  margin: 16px 0;
+  padding: 16px 20px;
+  text-decoration: none;
+}
+
 .docs-main .docs-link-card {
   background: #111113;
   border: 1px solid #222226;

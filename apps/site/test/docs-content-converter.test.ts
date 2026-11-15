@@ -107,6 +107,26 @@ description: Start here.
   );
 });
 
+it("keeps module-scope words inside a code fence", () => {
+  const converted = convertDocsPage(
+    `---
+title: Connect a new agent
+description: Start here.
+---
+
+\`\`\`bash
+export HT_TOKEN="<agent token>"
+hypertask context
+\`\`\`
+`,
+    "/connect-an-agent"
+  );
+
+  expect(converted.problems).toEqual([]);
+  expect(converted.body).toContain('export HT_TOKEN="<agent token>"');
+  expect(converted.body).toContain("hypertask context");
+});
+
 it("renders a converted page with frontmatter and keeps route paths", () => {
   const converted = convertDocsPage(page, "/features/boards");
 

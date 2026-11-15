@@ -61,6 +61,7 @@ export type CodeHighlighter = (
 
 export interface MarkdownHtmlOptions {
   readonly highlight?: CodeHighlighter;
+  readonly rawHtmlParagraphs?: boolean;
   readonly rehypePlugins?: PluggableList;
   readonly smartypants?: boolean;
   readonly sourcePath: string;
@@ -174,6 +175,7 @@ interface Converter {
   readonly children: (parent: Parents) => HastChild[];
   readonly definitions: ReadonlyMap<string, Definition>;
   readonly highlight: CodeHighlighter | undefined;
+  readonly rawHtmlParagraphs: boolean;
   readonly source: string;
   readonly sourcePath: string;
 }
@@ -528,7 +530,7 @@ const convertBlock = (
     case "paragraph": {
       const source = paragraphSource(node, converter);
 
-      return htmlBlockStart.test(source)
+      return converter.rawHtmlParagraphs && htmlBlockStart.test(source)
         ? [raw(source, node.position)]
         : [element("p", [], converter.children(node), node.position)];
     }
@@ -736,6 +738,7 @@ const createConverter = (
     children: (parent) => convertChildren(parent, converter),
     definitions: definitionsOf(root),
     highlight: options.highlight,
+    rawHtmlParagraphs: options.rawHtmlParagraphs !== false,
     source,
     sourcePath: options.sourcePath,
   };

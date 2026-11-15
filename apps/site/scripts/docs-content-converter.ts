@@ -132,11 +132,27 @@ const decodeFrontmatter = (source: string): typeof DocsFrontmatter.Type => {
   );
 };
 
-const stripModuleScope = (body: string) =>
-  body
-    .split("\n")
-    .filter((line) => !/^(?:import|export)\s/u.test(line))
-    .join("\n");
+const stripModuleScope = (body: string) => {
+  const lines: string[] = [];
+  let inFence = false;
+
+  for (const line of body.split("\n")) {
+    if (/^\s*(?:```|~~~)/u.test(line)) {
+      inFence = !inFence;
+      lines.push(line);
+
+      continue;
+    }
+
+    if (!inFence && /^(?:import|export)\s/u.test(line)) {
+      continue;
+    }
+
+    lines.push(line);
+  }
+
+  return lines.join("\n");
+};
 
 const linkButtons = (body: string) =>
   body.replaceAll(

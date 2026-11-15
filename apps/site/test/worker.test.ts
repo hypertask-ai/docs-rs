@@ -491,7 +491,7 @@ it.effect(
         expect(html).toContain(
           "<title>Hypertask documentation | Hypertask Docs</title>"
         );
-        expect(html).toContain("<h1>Hypertask documentation</h1>");
+        expect(html).toContain('<h1 id="_top">Hypertask documentation</h1>');
         expect(html.match(/🐀/gu)).toHaveLength(1);
         expect(html.match(/<h1\b/gu)).toHaveLength(1);
         expect(html).toContain("<strong>🐀 Rat Stack</strong>");

@@ -43,7 +43,13 @@ Your logged-in state persists across sessions; hiding or closing the browser doe
 ## Sign-in security improvements (hypertask.ai login)
 
 - The sign-in email endpoint no longer returns verification codes or magic-link tokens to callers. This prevents callers from using the response to reset or take over an email account without direct access to the inbox.
+
+  <a class="docs-video" href="https://www.youtube.com/watch?v=J7GYxffM7FE">Hypertask Live Demo</a>
+
 - Legacy API routes requiring only a non-authenticated session are now protected with signed login checks. Logged-out requests are now refused on all legacy routes, and the system uses verified `ht_session` cookies for all route access.
+
+  <a class="docs-video" href="https://www.youtube.com/watch?v=T4JnbqyPovw">Hypertask Quickstart</a>
+
 - A valid sign-out invalidates login cookies in the browser and refreshes Better Auth sessions on the server, preventing copied or reused cookies from granting continued access after a user signs out.
 
 Your credentials and login processes otherwise remain unchanged; simply use your email and password or the password reset flow as usual. If you receive password reset emails or confirmations, verify they were sent by `hypertask.ai`; invalid or forwarded reset links are not sent by Hypertask.

@@ -47,7 +47,7 @@ hypertask capabilities --json
 `hypertask capabilities --json` lists every command the CLI supports. It does not authenticate. To act as the agent, pass the token:
 
 ```bash
-
+export HT_TOKEN="<agent token>"
 hypertask context
 ```
 

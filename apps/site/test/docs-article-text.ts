@@ -82,12 +82,18 @@ export interface DocsArticleImage {
   readonly src: string;
 }
 
+export interface DocsArticleVideo {
+  readonly title: string;
+  readonly watchUrl: string;
+}
+
 export interface DocsArticle {
   readonly headings: readonly DocsArticleHeading[];
   readonly images: readonly DocsArticleImage[];
   readonly links: readonly DocsArticleLink[];
   readonly tabLabels: readonly string[];
   readonly text: string;
+  readonly videos: readonly DocsArticleVideo[];
 }
 
 interface ArticleState {
@@ -96,6 +102,7 @@ interface ArticleState {
   readonly links: DocsArticleLink[];
   readonly parts: string[];
   readonly tabLabels: string[];
+  readonly videos: DocsArticleVideo[];
 }
 
 export const normalizeArticleText = (value: string) =>
@@ -111,6 +118,9 @@ const isSkipped = (element: Element) =>
 const isTabLabel = (element: Element) =>
   classesOf(element).includes("docs-tab-label") ||
   element.attribs.role === "tab";
+
+const isVideo = (element: Element) =>
+  element.name === "a" && classesOf(element).includes("docs-video");
 
 const textOf = (parts: readonly string[]) =>
   normalizeArticleText(parts.join(""));
@@ -141,6 +151,13 @@ const writeImage = (state: ArticleState, element: Element) => {
       src: element.attribs.src ?? "",
     });
   }
+};
+
+const writeVideo = (state: ArticleState, element: Element) => {
+  state.videos.push({
+    title: textOf([DomUtils.textContent(element)]),
+    watchUrl: element.attribs.href ?? "",
+  });
 };
 
 const writeHeading = (
@@ -194,6 +211,12 @@ const visitElement = (
 ) => {
   if (isTabLabel(element)) {
     writeTabLabel(state, element, captures, visit);
+
+    return;
+  }
+
+  if (isVideo(element)) {
+    writeVideo(state, element);
 
     return;
   }
@@ -263,6 +286,7 @@ export const docsArticleOf = (html: string, path: string): DocsArticle => {
     links: [],
     parts: [],
     tabLabels: [],
+    videos: [],
   };
 
   for (const child of main.children) {
@@ -275,5 +299,6 @@ export const docsArticleOf = (html: string, path: string): DocsArticle => {
     links: state.links,
     tabLabels: state.tabLabels,
     text: textOf(state.parts),
+    videos: state.videos,
   };
 };

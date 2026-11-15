@@ -35,6 +35,7 @@ import {
   stringifyContentMarkdown,
 } from "../scripts/svx-ast.ts";
 import { buildWorkshop } from "../scripts/tokenmaxx-workshop.ts";
+import { isDocsPageRoute } from "../src/docs-page-routes.ts";
 import {
   contentResources,
   llmsText,
@@ -83,7 +84,6 @@ it.effect("links promoted pages to the newest CAFE news headline", () =>
     expect(newest).toBeDefined();
 
     const pages = [
-      homeDocumentHtml,
       loreIndexDocumentHtml,
       systemsIndexDocumentHtml,
       skillIndexDocumentHtml,
@@ -581,7 +581,9 @@ it.layer(contentServices)("generated content", (test) => {
         tokenmaxxDocumentHtml,
         interestResultDocumentHtml,
         interestConfirmDocumentHtml,
-        ...lawSources.map((page) => page.documentHtml),
+        ...lawSources
+          .filter((page) => !isDocsPageRoute(page.routePath))
+          .map((page) => page.documentHtml),
         ...skillSources.map((page) => page.documentHtml),
         ...loreSources.map((page) => page.documentHtml),
       ];

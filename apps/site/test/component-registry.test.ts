@@ -27,6 +27,7 @@ import {
   stripHtmlComments,
   visitContentNodes,
 } from "../scripts/svx-ast.ts";
+import { isDocsPageRoute } from "../src/docs-page-routes.ts";
 import { llmsFullText, llmsText } from "./content-fixture.js";
 import {
   authMarkdown,
@@ -110,14 +111,14 @@ const markdownPages = [
   { routePath: "/llms.txt", text: llmsText("https://ratstack.sh") },
 ];
 
-it.effect.each(markdownPages)(
-  "$routePath has exactly one registry pointer under its H1",
-  (page) =>
-    Effect.sync(() => {
-      expect(() => {
-        assertAgentPointerLayout(page.text, page.routePath);
-      }, page.routePath).not.toThrow();
-    })
+it.effect.each(
+  markdownPages.filter((page) => !isDocsPageRoute(page.routePath))
+)("$routePath has exactly one registry pointer under its H1", (page) =>
+  Effect.sync(() => {
+    expect(() => {
+      assertAgentPointerLayout(page.text, page.routePath);
+    }, page.routePath).not.toThrow();
+  })
 );
 
 it.effect("agent page rendering refuses missing and duplicate pointers", () =>

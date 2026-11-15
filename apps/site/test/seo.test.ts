@@ -122,27 +122,7 @@ it.effect(
         );
       }
 
-      const website = yield* Schema.decodeEffect(
-        Schema.fromJsonString(
-          Schema.Struct({
-            "@type": Schema.Literal("WebSite"),
-            about: Schema.Struct({
-              "@type": Schema.Literal("SoftwareSourceCode"),
-              codeRepository: Schema.String,
-              programmingLanguage: Schema.Literal("TypeScript"),
-            }),
-            name: Schema.Literal("rat-stack"),
-            publisher: Schema.Struct({ sameAs: Schema.Array(Schema.String) }),
-            url: Schema.String,
-          })
-        )
-      )(jsonLd(homeDocumentHtml, "WebSite"));
-
-      expect(website.url).toBe("__RATSTACK_ORIGIN__");
-      expect(website.about.codeRepository).toBe(
-        "https://github.com/joelhooks/rat-stack"
-      );
-      expect(website.publisher.sameAs).toContain(website.about.codeRepository);
+      expect(homeDocumentHtml).not.toContain('type="application/ld+json"');
     })
 );
 

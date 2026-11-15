@@ -19,7 +19,6 @@ import { view } from "../src/features/reader.js";
 
 const DocsPageFixtureSchema = Schema.Struct({
   description: Schema.String,
-  duplicateTitleOnLive: Schema.optional(Schema.Boolean),
   headings: Schema.Array(
     Schema.Struct({ level: Schema.Int, text: Schema.String })
   ),
@@ -33,6 +32,11 @@ const DocsPageFixtureSchema = Schema.Struct({
   tabLabels: Schema.Array(Schema.String),
   text: Schema.String,
   titleTag: Schema.String,
+  videos: Schema.optional(
+    Schema.Array(
+      Schema.Struct({ title: Schema.String, watchUrl: Schema.String })
+    )
+  ),
 });
 
 type DocsPageFixture = typeof DocsPageFixtureSchema.Type;
@@ -171,6 +175,9 @@ it.layer(DocsParityFixture.layer)((test) => {
           expect(article.images, fixture.routePath).toEqual(fixture.images);
           expect(article.tabLabels, fixture.routePath).toEqual(
             fixture.tabLabels
+          );
+          expect(article.videos, fixture.routePath).toEqual(
+            fixture.videos ?? []
           );
           expect(article.text, fixture.routePath).toBe(fixture.text);
         }).pipe(Effect.provide(NodeServices.layer))

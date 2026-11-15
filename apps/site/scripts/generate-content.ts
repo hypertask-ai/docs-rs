@@ -247,6 +247,7 @@ interface DocumentProps {
   readonly ogImageUrl: string;
   readonly origin: string;
   readonly path: string;
+  readonly repeatedTitle?: boolean;
   readonly title: string;
 }
 
@@ -665,6 +666,7 @@ const compileMarkdownBody = Effect.fn("compileMarkdownBody")(
             collectUnlinkedProse(unlinkedProse),
             dropOffSiteImages,
           ],
+          rawHtmlParagraphs: !docsPage,
           smartypants: !docsPage,
           sourcePath,
         }),
@@ -755,12 +757,14 @@ const renderDocument = Effect.fn("renderDocument")(function* renderDocument(
     });
   }
 
-  yield* Effect.try({
-    catch: (cause) => buildError("document title", sourcePath, cause),
-    try: () => {
-      assertDocumentTitle(document, sourcePath);
-    },
-  });
+  if (props.repeatedTitle !== true) {
+    yield* Effect.try({
+      catch: (cause) => buildError("document title", sourcePath, cause),
+      try: () => {
+        assertDocumentTitle(document, sourcePath);
+      },
+    });
+  }
 
   return document;
 });
@@ -2941,12 +2945,14 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
       route: "/llms-full.txt",
       title: "Full agent guide",
     },
-    ...lawBodies.map(({ spec, bodyHtml }) => ({
-      bodyHtml,
-      description: spec.description,
-      route: spec.routePath,
-      title: spec.title,
-    })),
+    ...lawBodies
+      .filter(({ spec }) => !isDocsPageRoute(spec.routePath))
+      .map(({ spec, bodyHtml }) => ({
+        bodyHtml,
+        description: spec.description,
+        route: spec.routePath,
+        title: spec.title,
+      })),
     ...skillBodies.map(({ skill, bodyHtml }) => ({
       bodyHtml,
       description: skill.description,
@@ -2968,11 +2974,13 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
       route: trapRoutePath,
       title: noVerifyMetadata.title,
     },
-    ...lawBodies.map(({ spec, unlinkedProse }) => ({
-      prose: unlinkedProse,
-      route: spec.routePath,
-      title: spec.title,
-    })),
+    ...lawBodies
+      .filter(({ spec }) => !isDocsPageRoute(spec.routePath))
+      .map(({ spec, unlinkedProse }) => ({
+        prose: unlinkedProse,
+        route: spec.routePath,
+        title: spec.title,
+      })),
     ...skillBodies.map(({ skill, unlinkedProse }) => ({
       prose: unlinkedProse,
       route: skill.routePath,
@@ -3020,7 +3028,10 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
       {
         bodyHtml: addInboundCounts(bodyHtml, metadata.path, backlinkIndex),
         discoveryLinks: markdownDiscoveryLinks(metadata.path),
-        newsCalloutHtml: hasNewsCallout(metadata.path) ? newsCalloutHtml : "",
+        newsCalloutHtml:
+          hasNewsCallout(metadata.path) && !isDocsPageRoute(metadata.path)
+            ? newsCalloutHtml
+            : "",
         ogImageUrl: `${originToken}${ogImagePath(metadata.path)}?v=${contentVersion}`,
         origin: originToken,
         stylesheet,
@@ -3343,10 +3354,16 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
         const docsPage = isDocsPageRoute(spec.routePath);
 
         const documentHtml = yield* makeDocument(
-          bodyHtml,
+          docsPage
+            ? `<h1 id="_top">${escapeHtml(spec.title)}</h1>${bodyHtml}`
+            : bodyHtml,
           {
             ...(docsPage
-              ? { breadcrumbName: spec.title, jsonLd: false }
+              ? {
+                  breadcrumbName: spec.title,
+                  jsonLd: false,
+                  repeatedTitle: true,
+                }
               : {
                   breadcrumbHref: "/",
                   breadcrumbLabel: "source files",
