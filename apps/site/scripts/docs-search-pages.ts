@@ -1,4 +1,5 @@
 import { Effect, FileSystem, Option, Path } from "effect";
+import type { PlatformError } from "effect";
 
 import type { DocsPageSource } from "../src/docs-search-index.ts";
 
@@ -42,7 +43,7 @@ export const readDocsSearchPages = (
   root: string
 ): Effect.Effect<
   readonly DocsPageSource[],
-  never,
+  PlatformError.PlatformError,
   FileSystem.FileSystem | Path.Path
 > =>
   Effect.gen(function* readPages() {

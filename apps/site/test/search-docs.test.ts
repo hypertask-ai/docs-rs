@@ -4,11 +4,9 @@ import { Effect, FileSystem, Layer, Schema } from "effect";
 
 import { emitAssets } from "../scripts/emit-assets.ts";
 import { searchDocs } from "../src/capabilities/search-docs.js";
+import { ContentStore } from "../src/content-store.js";
+import { docsSearchIndexPath } from "../src/docs-search-index-path.js";
 import { buildDocsSearchIndex } from "../src/docs-search-index.js";
-import {
-  DocsSearchStore,
-  docsSearchIndexPath,
-} from "../src/docs-search-store.js";
 import { nodeAssetsForGeneration } from "../src/node-content.js";
 
 const index = buildDocsSearchIndex([
@@ -24,7 +22,7 @@ const index = buildDocsSearchIndex([
   },
 ]);
 
-const makeStore = Effect.fn("makeDocsSearchStore")(function* makeStore() {
+const makeStore = Effect.fn("makeContentStore")(function* makeStore() {
   const fs = yield* FileSystem.FileSystem;
   const directory = yield* fs.makeTempDirectoryScoped();
 
@@ -39,7 +37,7 @@ const makeStore = Effect.fn("makeDocsSearchStore")(function* makeStore() {
     pages: [],
   });
 
-  return yield* DocsSearchStore.layerForGeneration(manifest.generation).pipe(
+  return yield* ContentStore.layerForGeneration(manifest.generation).pipe(
     Layer.provide(nodeAssetsForGeneration(directory, manifest.generation)),
     Layer.build
   );

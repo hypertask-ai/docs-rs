@@ -13,6 +13,10 @@ import {
   SearchResource,
   contentPagePath,
 } from "./content-data.js";
+import { DocsSearchIndex } from "./docs-search-data.js";
+import type { DocsSearchIndexData } from "./docs-search-data.js";
+import { docsSearchIndexPath } from "./docs-search-index-path.js";
+import { searchDocsIndex } from "./docs-search.js";
 import { searchContent } from "./search-content.js";
 import { AssetReadError } from "./static-assets-error.js";
 import { StaticAssets } from "./static-assets.js";
@@ -27,6 +31,10 @@ interface ContentStoreService {
     query: string,
     limit?: number
   ) => Effect.Effect<ReturnType<typeof searchContent>, AssetReadError>;
+  readonly searchDocs: (
+    query: string,
+    limit?: number
+  ) => Effect.Effect<ReturnType<typeof searchDocsIndex>, AssetReadError>;
   readonly read: (
     id: string
   ) => Effect.Effect<
@@ -126,6 +134,10 @@ const makeStore = Effect.fn("ContentStore.make")(function* makeStore(
     )
   );
 
+  const docsIndex = yield* cacheCompletedData(
+    readData(assets, docsSearchIndexPath, DocsSearchIndex, generation)
+  );
+
   const graph = yield* cacheCompletedData(
     readData(assets, "/_content/graph.json", GraphSnapshot, generation).pipe(
       Effect.flatMap((snapshot) =>
@@ -183,6 +195,12 @@ const makeStore = Effect.fn("ContentStore.make")(function* makeStore(
     search: (query, limit) =>
       index.pipe(
         Effect.map((resources) => searchContent(resources, query, limit))
+      ),
+    searchDocs: (query, limit) =>
+      docsIndex.pipe(
+        Effect.map((data: DocsSearchIndexData) =>
+          searchDocsIndex(data, query, limit)
+        )
       ),
     tokenmaxx,
   } satisfies ContentStoreService;
