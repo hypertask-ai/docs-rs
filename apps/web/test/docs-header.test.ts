@@ -63,7 +63,7 @@ const docsFlags = (path: string): ReaderPageFlags => ({
   ...readerFlagsFixture,
   page: {
     ...readerFlagsFixture.page,
-    canonicalPath: path,
+    metadata: { ...readerFlagsFixture.page.metadata, canonicalPath: path },
     path,
   },
 });
