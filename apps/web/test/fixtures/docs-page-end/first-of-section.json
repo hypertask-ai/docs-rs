@@ -1,0 +1,63 @@
+{
+  "kind": "first-of-section",
+  "path": "/getting-started/introduction/",
+  "title": "What is Hypertask?",
+  "contents": [
+    {
+      "href": "#_top",
+      "text": "Overview"
+    },
+    {
+      "href": "#setup-options",
+      "text": "Setup options"
+    },
+    {
+      "href": "#core-concepts",
+      "text": "Core concepts"
+    },
+    {
+      "href": "#getting-started",
+      "text": "Getting started"
+    },
+    {
+      "href": "#keyboard-shortcuts",
+      "text": "Keyboard shortcuts"
+    },
+    {
+      "href": "#live-shortcuts",
+      "text": "Live shortcuts"
+    },
+    {
+      "href": "#keyboard-hints-in-the-ui",
+      "text": "Keyboard hints in the UI"
+    },
+    {
+      "href": "#onboarding",
+      "text": "Onboarding"
+    },
+    {
+      "href": "#security-auth-and-permissions",
+      "text": "Security, auth, and permissions"
+    },
+    {
+      "href": "#frequently-asked-questions",
+      "text": "Frequently asked questions"
+    }
+  ],
+  "pagination": [
+    {
+      "href": "/",
+      "label": "Overview",
+      "rel": "prev",
+      "text": "Previous"
+    },
+    {
+      "href": "/getting-started/quickstart/",
+      "label": "Quickstart",
+      "rel": "next",
+      "text": "Next"
+    }
+  ],
+  "footerText": "© 2026 Hypertask Lab Ltd.",
+  "url": "https://docs.hypertask.ai/getting-started/introduction/"
+}

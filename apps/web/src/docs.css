@@ -200,6 +200,13 @@ body > .docs-layout {
   width: 200px;
 }
 
+#docs-toc a[aria-current="true"] {
+  border-left-color: #d97757;
+  border-left-width: 2px;
+  color: #f4f4f7;
+  padding-left: 11px;
+}
+
 .docs-main :is(h1, h2) {
   color: #f4f4f7;
   font-family: "Newsreader", serif;

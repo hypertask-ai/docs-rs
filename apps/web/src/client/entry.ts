@@ -3,6 +3,7 @@ import { Runtime } from "foldkit";
 import { installOverlay } from "#devtools-overlay";
 
 import { view } from "../features/reader.js";
+import { bindDocsContents } from "./docs-toc.js";
 import { DocumentQueries } from "./docs/queries.js";
 import { bindHelpChat } from "./help-chat.js";
 import { browserInit } from "./reader/init.js";
@@ -30,5 +31,7 @@ const application = Runtime.makeApplication({
 installOverlay();
 
 bindHelpChat();
+
+bindDocsContents();
 
 Runtime.hydrate(application);

@@ -4,6 +4,7 @@ import type { Html, HtmlBuilder } from "foldkit/html";
 
 import { CopyStatus } from "../client/reader/model.js";
 import { docsChrome } from "./docs-chrome.stylex.js";
+import { DOCS_TOP_ANCHOR_ID } from "./docs-contents.js";
 import {
   docsHeaderLinks,
   docsHeaderTabs,
@@ -234,36 +235,52 @@ export const docsSidebar = <Message>(
 export const docsToc = <Message>(
   anchors: readonly { readonly id: string; readonly text: string }[],
   h: HtmlBuilder<Message>
-): Html | null =>
-  anchors.length === 0
-    ? null
-    : h.nav(
+): Html =>
+  h.nav(
+    [
+      h.AriaLabelledBy("docs-toc-heading"),
+      h.Class(className(docsChrome.toc)),
+      h.Id("docs-toc"),
+    ],
+    [
+      h.h2(
+        [h.Id("docs-toc-heading"), h.Class(className(docsChrome.tocHeading))],
+        ["On this page"]
+      ),
+      h.ul(
+        [h.Class(className(docsChrome.groupList))],
         [
-          h.AriaLabel("On this page"),
-          h.Class(className(docsChrome.toc)),
-          h.Id("docs-toc"),
-        ],
-        [
-          h.p([h.Class(className(docsChrome.tocHeading))], ["On this page"]),
-          h.ul(
-            [h.Class(className(docsChrome.groupList))],
-            anchors.map((anchor) =>
-              h.li(
-                [h.Key(anchor.id)],
+          h.li(
+            [h.Key(DOCS_TOP_ANCHOR_ID)],
+            [
+              h.a(
                 [
-                  h.a(
-                    [
-                      h.Href(`#${anchor.id}`),
-                      h.Class(className(docsChrome.tocLink)),
-                    ],
-                    [anchor.text]
-                  ),
-                ]
-              )
+                  h.Href(`#${DOCS_TOP_ANCHOR_ID}`),
+                  h.Class(className(docsChrome.tocLink)),
+                  h.Attribute("aria-current", "true"),
+                ],
+                ["Overview"]
+              ),
+            ]
+          ),
+          ...anchors.map((anchor) =>
+            h.li(
+              [h.Key(anchor.id)],
+              [
+                h.a(
+                  [
+                    h.Href(`#${anchor.id}`),
+                    h.Class(className(docsChrome.tocLink)),
+                  ],
+                  [anchor.text]
+                ),
+              ]
             )
           ),
         ]
-      );
+      ),
+    ]
+  );
 
 export const docsActions = <Message>(
   options: {
