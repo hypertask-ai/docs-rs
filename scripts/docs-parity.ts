@@ -82,12 +82,11 @@ const newBase = values["new-base"] ?? "";
 
 const outDir = values.out ?? DEFAULT_OUT;
 
-const pageLimit = Number.parseInt(
-  values["page-limit"] ?? DEFAULT_PAGE_LIMIT,
-  10
+const pageLimit = Math.trunc(
+  Number(values["page-limit"] ?? DEFAULT_PAGE_LIMIT)
 );
 
-const threshold = Number.parseFloat(values.threshold ?? DEFAULT_THRESHOLD);
+const threshold = Number(values.threshold ?? DEFAULT_THRESHOLD);
 
 const baselineMode = newBase.length === 0;
 
@@ -105,7 +104,7 @@ const fetchText = async (url: string): Promise<string | null> => {
 };
 
 const locsIn = (sitemapText: string): string[] =>
-  Array.from(sitemapText.matchAll(LOC_PATTERN))
+  [...sitemapText.matchAll(LOC_PATTERN)]
     .map((match) => match.groups?.loc ?? "")
     .filter((loc) => loc.length > 0);
 
@@ -153,10 +152,10 @@ const visibleText = async (page: Page): Promise<string> => {
 
   const raw =
     mainCount > 0
-      ? await main.innerText()
-      : await page.locator("body").innerText();
+      ? await main.textContent()
+      : await page.locator("body").textContent();
 
-  return raw.replaceAll(/\s+/gu, " ").trim();
+  return (raw ?? "").replaceAll(/\s+/gu, " ").trim();
 };
 
 // @effect-diagnostics-next-line asyncFunction:off -- Playwright is Promise based and this Node CLI drives it outside an Effect runtime.
@@ -275,8 +274,10 @@ const runJob = async (
   const { height, name, width } = job.viewport;
   const pageName = fileNameFor(job.pagePath);
   const oldUrl = new URL(job.pagePath, oldBase).href;
+
   const newUrl =
     newBase.length > 0 ? new URL(job.pagePath, newBase).href : null;
+
   const page = await browserContext.newPage();
 
   await page.setViewportSize({ height, width });
@@ -402,12 +403,15 @@ const titleCell = (rows: readonly JobResult[]): string => {
 
 const pageRow = (pagePath: string, rows: readonly JobResult[]): string => {
   const reasons = rows.flatMap((row) => violationsIn(row, baselineMode));
+
   const statuses = rows
     .map((row) => `${row.viewport} ${formatStatus(row)}`)
     .join(", ");
+
   const pixels = rows
     .map((row) => `${row.viewport} ${formatPercent(row.percent)}`)
     .join(", ");
+
   const verdict = reasons.length === 0 ? "pass" : reasons.join("; ");
   const target = new URL(pagePath, oldBase).href;
 
