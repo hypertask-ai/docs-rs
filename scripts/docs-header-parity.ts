@@ -2,7 +2,10 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
-import { Schema } from "effect";
+import { NodeRuntime, NodeServices } from "@effect/platform-node";
+import { Console, Effect, Schema } from "effect";
+import { FetchHttpClient, HttpClient } from "effect/http";
+import * as Layer from "effect/Layer";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -23,7 +26,7 @@ const safetyHeaders = [
   "x-content-type-options",
 ] as const;
 
-const fixture = Schema.decodeUnknownSync(Schema.fromJsonString(Fixture))(
+const fixture = Schema.decodeSync(Schema.fromJsonString(Fixture))(
   readFileSync(
     path.join(
       root,
@@ -33,75 +36,98 @@ const fixture = Schema.decodeUnknownSync(Schema.fromJsonString(Fixture))(
   )
 );
 
-const headerOf = (response: Response, name: string) =>
-  response.headers.get(name)?.trim() ?? "(absent)";
+class HeaderParityError extends Schema.TaggedError<
+  HeaderParityError,
+  { readonly brand: unique symbol }
+>()("HeaderParityError", { reason: Schema.String }) {}
 
-const compare = async (answer: Answer, oldBase: string, newBase: string) => {
-  const [oldResponse, newResponse] = await Promise.all([
-    fetch(new URL(answer.address, oldBase)),
-    fetch(new URL(answer.address, newBase)),
-  ]);
+const headerOf = (
+  headers: Readonly<Record<string, string | undefined>>,
+  name: string
+) => headers[name]?.trim() ?? "(absent)";
 
-  const failures: string[] = [];
+const compare = (answer: Answer, oldBase: string, newBase: string) =>
+  Effect.gen(function* compareAnswer() {
+    const [oldResponse, newResponse] = yield* Effect.all([
+      HttpClient.get(new URL(answer.address, oldBase)),
+      HttpClient.get(new URL(answer.address, newBase)),
+    ]);
 
-  if (oldResponse.status !== newResponse.status) {
-    failures.push(`status ${newResponse.status} not ${oldResponse.status}`);
-  }
+    const failures: string[] = [];
 
-  for (const name of ["cache-control", "content-type"] as const) {
-    if (name === "content-type" && answer.contentTypeOwner !== undefined) {
-      continue;
+    if (oldResponse.status !== newResponse.status) {
+      failures.push(`status ${newResponse.status} not ${oldResponse.status}`);
     }
 
-    const oldValue = headerOf(oldResponse, name);
-    const newValue = headerOf(newResponse, name);
+    for (const name of ["cache-control", "content-type"] as const) {
+      if (name === "content-type" && answer.contentTypeOwner !== undefined) {
+        continue;
+      }
 
-    if (oldValue !== newValue) {
-      failures.push(`${name} ${newValue} not ${oldValue}`);
+      const oldValue = headerOf(oldResponse.headers, name);
+      const newValue = headerOf(newResponse.headers, name);
+
+      if (oldValue !== newValue) {
+        failures.push(`${name} ${newValue} not ${oldValue}`);
+      }
     }
+
+    for (const name of safetyHeaders) {
+      const oldValue = headerOf(oldResponse.headers, name);
+      const newValue = headerOf(newResponse.headers, name);
+
+      if (oldValue !== "(absent)" && newValue !== oldValue) {
+        failures.push(`${name} ${newValue} not ${oldValue}`);
+      }
+    }
+
+    return { answer, failures };
+  });
+
+const program = Effect.gen(function* compareLiveSites() {
+  const newBase = process.argv[2];
+  const oldBase = process.argv[3] ?? "https://docs.hypertask.ai";
+
+  if (newBase === undefined) {
+    return yield* new HeaderParityError({
+      reason: "usage: node scripts/docs-header-parity.ts <new-base> [old-base]",
+    });
   }
 
-  for (const name of safetyHeaders) {
-    const oldValue = headerOf(oldResponse, name);
-    const newValue = headerOf(newResponse, name);
+  yield* Console.log(`old ${oldBase}`);
+  yield* Console.log(`new ${newBase}`);
 
-    if (oldValue !== "(absent)" && newValue !== oldValue) {
-      failures.push(`${name} ${newValue} not ${oldValue}`);
-    }
-  }
-
-  return { answer, failures };
-};
-
-const newBase = process.argv[2];
-const oldBase = process.argv[3] ?? "https://docs.hypertask.ai";
-
-if (newBase === undefined) {
-  console.error(
-    "usage: node scripts/docs-header-parity.ts <new-base> [old-base]"
-  );
-  process.exitCode = 1;
-} else {
-  console.log(`old ${oldBase}`);
-  console.log(`new ${newBase}`);
-
-  const results = await Promise.all(
-    fixture.answers.map((answer) => compare(answer, oldBase, newBase))
+  const results = yield* Effect.forEach(
+    fixture.answers,
+    (answer) => compare(answer, oldBase, newBase),
+    { concurrency: "unbounded" }
   );
 
   const failed = results.filter(({ failures }) => failures.length > 0);
 
-  for (const { answer, failures } of results) {
-    console.log(`${failures.length === 0 ? "PASS" : "FAIL"} ${answer.address}`);
+  yield* Effect.forEach(results, ({ answer, failures }) =>
+    Effect.gen(function* printAnswer() {
+      yield* Console.log(
+        `${failures.length === 0 ? "PASS" : "FAIL"} ${answer.address}`
+      );
 
-    for (const failure of failures) {
-      console.log(`  ${failure}`);
-    }
-  }
+      yield* Effect.forEach(failures, (failure) => Console.log(`  ${failure}`));
+    })
+  );
 
-  console.log(
+  yield* Console.log(
     `${results.length - failed.length} of ${results.length} addresses match`
   );
 
-  process.exitCode = failed.length === 0 ? 0 : 1;
-}
+  if (failed.length > 0) {
+    return yield* new HeaderParityError({
+      reason: `${failed.length} of ${results.length} addresses differ`,
+    });
+  }
+
+  return results.length;
+}).pipe(
+  Effect.provide(Layer.mergeAll(NodeServices.layer, FetchHttpClient.layer))
+);
+
+NodeRuntime.runMain(program);
