@@ -20,7 +20,7 @@ People use the docs to get started with Hypertask, learn a feature, look up an M
 - The reader is Foldkit screens with StyleX styles, served by a Worker instead of Astro on Pages.
 - Pages and changelog entries live in `.brain`, so the site has one content source and one converter.
 - Search becomes a docs index behind a contract, and the MCP surface is built from the same contracts.
-- The strict Rat Stack gate runs on every push: types, lint, format, tests and build. No rule is loosened to make a change pass.
+- The strict Rat Stack gate runs on every push: types, lint, format, tests and build. The fence stays as it ships and no rule is loosened to make a change pass.
 
 ## How the move runs
 
