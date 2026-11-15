@@ -1,16 +1,14 @@
 import { Schema } from "effect";
 import * as Server from "foldkit/experimental/server";
 
-import faviconUrl from "../assets/favicon.svg?url";
-import glyphUrl from "../assets/glyph-white.png?url";
 import type { ReaderPageFlags } from "../client/reader/model.js";
 import { readerMetadataHead } from "../reader-metadata.js";
 
 const ReaderDocumentHead = Schema.Struct({ readerHead: Schema.String });
 
 const iconHead = [
-  `<link rel="icon" type="image/svg+xml" href="${faviconUrl}">`,
-  `<link rel="icon" type="image/png" href="${glyphUrl}">`,
+  '<link rel="icon" type="image/svg+xml" href="/favicon.svg">',
+  '<link rel="icon" type="image/png" href="/glyph-white.png">',
 ].join("\n");
 
 const companyHead = [

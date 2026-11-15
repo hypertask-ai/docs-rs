@@ -2,7 +2,6 @@ import { Button } from "@foldkit/ui";
 import * as stylex from "@stylexjs/stylex";
 import type { Html, HtmlBuilder } from "foldkit/html";
 
-import glyphUrl from "../assets/glyph-white.png?url";
 import { CopyStatus } from "../client/reader/model.js";
 import { docsChrome } from "./docs-chrome.stylex.js";
 import { docsHeaderTabs, docsSidebarGroups } from "./docs-sidebar.js";
@@ -121,7 +120,7 @@ export const docsHeader = <Message>(
             [h.Href(homeRouter()), h.Class(className(docsChrome.brand))],
             [
               h.img([
-                h.Src(glyphUrl),
+                h.Src("/glyph-white.png"),
                 h.Alt(""),
                 h.Width("22"),
                 h.Height("26"),
