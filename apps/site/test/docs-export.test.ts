@@ -146,10 +146,22 @@ describe("docs llms files", () => {
     );
   });
 
-  it("serves the same llms-full.txt skeleton as today", () => {
+  it("serves the same llms-full.txt bytes as today", () => {
     expect(docsLlmsFull(origin, parseLlmsFull(fixture("llms-full.txt")))).toBe(
       fixture("llms-full.txt")
     );
+  });
+
+  it("lists the same llms-full.txt pages as today", () => {
+    const live = parseLlmsFull(fixture("llms-full.txt"));
+    const pages = parseLlmsFull(docsLlmsFull(origin, live));
+    const routes = pages.map((page) => page.routePath);
+
+    expect(routes).toEqual(live.map((page) => page.routePath));
+    expect(routes.length).toBe(55);
+    expect(new Set(routes).size).toBe(routes.length);
+    expect(routes[0]).toBe("/connect-an-agent");
+    expect(pages[0]?.title).toBe("Connect a new agent");
   });
 
   it("lists every page once across the five sections", () => {
