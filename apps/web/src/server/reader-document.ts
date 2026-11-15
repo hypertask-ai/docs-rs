@@ -1,20 +1,21 @@
 import { Schema } from "effect";
 import * as Server from "foldkit/experimental/server";
 
-import {
-  appleTouchIconPngBase64,
-  faviconIcoBase64,
-  ratSvg,
-} from "../../../site/src/rat-icons.generated.js";
+import faviconUrl from "../assets/favicon.svg?url";
+import glyphUrl from "../assets/glyph-white.png?url";
 import type { ReaderPageFlags } from "../client/reader/model.js";
 import { readerMetadataHead } from "../reader-metadata.js";
 
 const ReaderDocumentHead = Schema.Struct({ readerHead: Schema.String });
 
 const iconHead = [
-  `<link rel="icon" sizes="48x48" href="data:image/x-icon;base64,${faviconIcoBase64}">`,
-  `<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${encodeURIComponent(ratSvg)}">`,
-  `<link rel="apple-touch-icon" href="data:image/png;base64,${appleTouchIconPngBase64}">`,
+  `<link rel="icon" type="image/svg+xml" href="${faviconUrl}">`,
+  `<link rel="icon" type="image/png" href="${glyphUrl}">`,
+].join("\n");
+
+const companyHead = [
+  `<script src="https://cdn.usefathom.com/script.js" data-site="SSBYTYUQ" defer></script>`,
+  `<script src="https://help.hypertask.ai/widget/widget.js" data-mode="floating" defer></script>`,
 ].join("\n");
 
 export const withReaderHead = (
@@ -27,5 +28,5 @@ export const withReaderHead = (
 
 export const renderDocument: Server.DocumentRenderer = (application, assets) =>
   Server.renderDocument(application, assets, {
-    head: `${iconHead}\n${Schema.decodeUnknownSync(ReaderDocumentHead)(application).readerHead}`,
+    head: `${iconHead}\n${companyHead}\n${Schema.decodeUnknownSync(ReaderDocumentHead)(application).readerHead}`,
   });

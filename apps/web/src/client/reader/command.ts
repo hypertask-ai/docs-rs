@@ -36,6 +36,39 @@ export const CopyReaderText = Command.define("CopyReaderText", {
   messages: [Message.FailedCopyReaderText, Message.SucceededCopyReaderText],
 });
 
+export const CopyPageMarkdown = Command.define("CopyPageMarkdown", {
+  args: { url: Schema.String },
+  execute: ({ url }) =>
+    Effect.gen(function* copyPage() {
+      const response = yield* Effect.tryPromise({
+        catch: (cause) => new ClipboardFailure({ cause }),
+        try: () => fetch(url),
+      });
+
+      if (!response.ok) {
+        return yield* new ClipboardFailure({
+          cause: `Copy page markdown returned HTTP ${response.status}`,
+        });
+      }
+
+      const text = yield* Effect.tryPromise({
+        catch: (cause) => new ClipboardFailure({ cause }),
+        try: () => response.text(),
+      });
+
+      return yield* Effect.tryPromise({
+        catch: (cause) => new ClipboardFailure({ cause }),
+        try: () => navigator.clipboard.writeText(text),
+      });
+    }).pipe(
+      Effect.match({
+        onFailure: () => Message.FailedCopyPage({}),
+        onSuccess: () => Message.SucceededCopyPage({}),
+      })
+    ),
+  messages: [Message.FailedCopyPage, Message.SucceededCopyPage],
+});
+
 export const WaitBeforeCopyReset = Command.define("WaitBeforeCopyReset", {
   args: { id: Schema.String },
   execute: ({ id }) =>

@@ -53,7 +53,7 @@ const routeOf = (client: string, file: string) => {
 
 it("only /tube widens the reader policy, by YouTube's image host and the nocookie player", () => {
   expect(tubeContentSecurityPolicy).toBe(
-    "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; script-src 'self' https://static.cloudflareinsights.com; connect-src 'self' https://cloudflareinsights.com; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; frame-src https://www.youtube-nocookie.com"
+    "default-src 'none'; style-src 'self' 'unsafe-inline' https://help.hypertask.ai; img-src 'self' data: https://cdn.usefathom.com https://help.hypertask.ai https://i.ytimg.com; script-src 'self' https://static.cloudflareinsights.com https://cdn.usefathom.com https://help.hypertask.ai; connect-src 'self' https://cloudflareinsights.com https://cdn.usefathom.com https://help.hypertask.ai; font-src 'self' https://help.hypertask.ai; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; frame-src https://help.hypertask.ai https://www.youtube-nocookie.com"
   );
 
   expect(directivesOf(tubeContentSecurityPolicy)).toEqual(
@@ -63,7 +63,13 @@ it("only /tube widens the reader policy, by YouTube's image host and the nocooki
         "img-src",
         [...(directives.get("img-src") ?? []), "https://i.ytimg.com"],
       ],
-      ["frame-src", ["https://www.youtube-nocookie.com"]],
+      [
+        "frame-src",
+        [
+          ...(directives.get("frame-src") ?? []),
+          "https://www.youtube-nocookie.com",
+        ],
+      ],
     ])
   );
 
