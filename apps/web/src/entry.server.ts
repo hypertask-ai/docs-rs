@@ -10,9 +10,16 @@ import {
   ReaderErrorPage,
   readerErrorPath,
 } from "../../site/src/reader-error-page.js";
-import { findPage } from "./client/reader-pages.js";
+import { findPage, pagePaths } from "./client/reader-pages.js";
 import { init } from "./client/reader/init.js";
 import { ReaderFlags } from "./client/reader/model.js";
+import {
+  docsNotFoundPage,
+  docsSitemapIndexPath,
+  docsSitemapIndexXml,
+  docsSitemapPath,
+  docsSitemapXml,
+} from "./docs-addresses.js";
 import { view } from "./features/reader.js";
 import { isWorkerFirstReaderRoute } from "./reader-routes.js";
 import { readerPrerenderOrigin } from "./server/prerender-origin.js";
@@ -152,16 +159,37 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
       );
     }
 
+    const origin = new URL(request.url).origin;
+
+    if (pathname === docsSitemapIndexPath || pathname === docsSitemapPath) {
+      const body =
+        pathname === docsSitemapIndexPath
+          ? docsSitemapIndexXml(origin)
+          : docsSitemapXml(origin, pagePaths);
+
+      return yield* responded(
+        request,
+        new Response(body, {
+          headers: { "content-type": "application/xml; charset=utf-8" },
+        })
+      );
+    }
+
     const route = pathname === "/" ? pathname : pathname.replace(/\/$/u, "");
     const found = yield* findPage(route);
 
     if (Option.isNone(found)) {
-      return yield* responded(
-        request,
-        new Response("This route is outside the reader preview slice", {
-          status: 404,
-        })
+      const notFound = docsNotFoundPage(pathname);
+      const flags = readerErrorFlags(errorTemplate, notFound);
+      const application = yield* renderToString(
+        { Flags: ReaderFlags, init, view },
+        { flags }
       );
+
+      return Rendered(withReaderHead(application, flags), {
+        headers: yield* previewHeaders(request),
+        status: notFound.code,
+      });
     }
 
     const page = found.value;
