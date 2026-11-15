@@ -56,6 +56,7 @@ const placeholderProblems = (line: string, number: number): readonly string[] =>
     }
 
     const head = /^[A-Za-z_$][\w$]*/u.exec(body)?.[0];
+
     const looksLikeCode =
       head !== undefined &&
       !knownTag(head) &&
@@ -188,7 +189,7 @@ export const convertDocsPage = (
   const frontmatter =
     parsed.description === undefined
       ? stringifyYaml({ title })
-      : stringifyYaml({ title, description: parsed.description });
+      : stringifyYaml({ description: parsed.description, title });
 
   const body = tidy(
     mdxComments(badges(linkButtons(stripModuleScope(rawBody))))

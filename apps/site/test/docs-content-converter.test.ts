@@ -54,7 +54,7 @@ it("converts Starlight components and drops module scope", () => {
   const converted = convertDocsPage(page, "/getting-started/quickstart");
 
   expect(converted.frontmatter).toBe(
-    "title: Quickstart\ndescription: Start here.\n"
+    "description: Start here.\ntitle: Quickstart\n"
   );
   expect(converted.body).not.toContain("import {");
   expect(converted.body).toContain(
