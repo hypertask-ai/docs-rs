@@ -46,7 +46,7 @@ const commit = (cwd, message) => {
   return git(cwd, ["rev-parse", "HEAD"]).trim();
 };
 
-test("reads the change from the checkout without the pull request diff endpoint", () => {
+await test("reads the change from the checkout without the pull request diff endpoint", () => {
   const cwd = makeRepository();
 
   try {
@@ -82,7 +82,7 @@ test("reads the change from the checkout without the pull request diff endpoint"
   }
 });
 
-test("reads a change with more than three hundred files and caps the prompt copy", () => {
+await test("reads a change with more than three hundred files and caps the prompt copy", () => {
   const cwd = makeRepository();
 
   try {

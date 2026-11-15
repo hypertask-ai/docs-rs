@@ -48,7 +48,7 @@ const git = (cwd, args) => {
 
   if (result.status !== 0) {
     throw new Error(
-      `git ${args.join(" ")} exited ${String(result.status)}: ${String(result.stderr).trim()}`
+      `git ${args.join(" ")} exited ${String(result.status)}: ${result.stderr.trim()}`
     );
   }
 
