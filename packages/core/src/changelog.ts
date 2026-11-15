@@ -1,5 +1,5 @@
 import { defineContract } from "@rat-stack/capability/contract";
-import { Schema } from "effect";
+import { DateTime, Option, Schema } from "effect";
 import * as HttpApiSchema from "effect/http-api/HttpApiSchema";
 
 import { AssetReadError } from "./asset-read-error.js";
@@ -47,7 +47,8 @@ export const ChangelogFrontmatter = Schema.Struct({
 
 const changelogUrl = (id: string) => `${CHANGELOG_ORIGIN}/changelog/${id}/`;
 
-const changelogDate = (date: string) => new Date(`${date}T00:00:00.000Z`);
+const changelogDateTime = (date: string) =>
+  Option.getOrThrow(DateTime.make(`${date}T00:00:00.000Z`));
 
 const plainAnnouncementEntities: Readonly<Record<string, string>> = {
   amp: "&",
@@ -86,7 +87,7 @@ export const plainAnnouncement = (text: string) =>
     .trim();
 
 export const announcementKeys = (date: string, text: string) => {
-  const day = changelogDate(date).toISOString().slice(0, 10);
+  const day = DateTime.formatIsoDateUtc(changelogDateTime(date));
   const plain = plainAnnouncement(text);
   const tickets = [
     ...plain.matchAll(
@@ -143,6 +144,33 @@ const escapeHtml = (text: string) =>
     (character) => htmlEscapes.get(character) ?? character
   );
 
+const legacyMonths: ReadonlyMap<string, string> = new Map([
+  ["jan", "01"],
+  ["january", "01"],
+  ["feb", "02"],
+  ["february", "02"],
+  ["mar", "03"],
+  ["march", "03"],
+  ["apr", "04"],
+  ["april", "04"],
+  ["may", "05"],
+  ["jun", "06"],
+  ["june", "06"],
+  ["jul", "07"],
+  ["july", "07"],
+  ["aug", "08"],
+  ["august", "08"],
+  ["sep", "09"],
+  ["sept", "09"],
+  ["september", "09"],
+  ["oct", "10"],
+  ["october", "10"],
+  ["nov", "11"],
+  ["november", "11"],
+  ["dec", "12"],
+  ["december", "12"],
+]);
+
 export interface LegacyChangelogEntry {
   readonly body: string;
   readonly date: string;
@@ -167,13 +195,21 @@ export const parseLegacyChangelog = (
 
   return headings.flatMap((heading, index) => {
     const label = heading[1] ?? "";
-    const date = new Date(`${label} UTC`);
+    const [, monthName = "", dayOfMonth = "", year = ""] =
+      /^(\w+) (\d+), (\d{4})$/u.exec(label) ?? [];
+    const month = legacyMonths.get(monthName.toLowerCase());
+    const date =
+      month === undefined
+        ? Option.none()
+        : DateTime.make(
+            `${year}-${month}-${dayOfMonth.padStart(2, "0")}T00:00:00.000Z`
+          );
 
-    if (Number.isNaN(date.getTime())) {
+    if (Option.isNone(date)) {
       throw new Error(`Invalid date in ${source}: ${label}`);
     }
 
-    const day = date.toISOString().slice(0, 10);
+    const day = DateTime.formatIsoDateUtc(date.value);
     const start = (heading.index ?? 0) + heading[0].length;
     const block = normalized.slice(
       start,
@@ -287,7 +323,7 @@ export const changelogJsonText = (entries: readonly ChangelogEntryValue[]) =>
         content_text: entry.body,
         summary: entry.summary,
         tags: entry.tags,
-        date_published: changelogDate(entry.date).toISOString(),
+        date_published: DateTime.formatIso(changelogDateTime(entry.date)),
         url: changelogUrl(entry.id),
       })),
     },
@@ -309,7 +345,7 @@ export const changelogMarkdownText = (
     "# Changelog",
     ...sortChangelog(entries).map(
       (entry) =>
-        `## ${entry.title}\n\n${longDate.format(changelogDate(entry.date))} | ${entry.tags.join(", ")}\n\n${entry.summary}\n\n[Read more](${changelogUrl(entry.id)})`
+        `## ${entry.title}\n\n${longDate.format(DateTime.toDateUtc(changelogDateTime(entry.date)))} | ${entry.tags.join(", ")}\n\n${entry.summary}\n\n[Read more](${changelogUrl(entry.id)})`
     ),
   ].join("\n\n") + "\n";
 
@@ -336,7 +372,7 @@ const rssItem = (entry: ChangelogEntryValue) => {
     `<link>${xmlText(link)}</link>`,
     `<guid isPermaLink="true">${xmlText(link)}</guid>`,
     `<description>${xmlText(entry.summary)}</description>`,
-    `<pubDate>${changelogDate(entry.date).toUTCString()}</pubDate>`,
+    `<pubDate>${DateTime.toDateUtc(changelogDateTime(entry.date)).toUTCString()}</pubDate>`,
     ...entry.tags.map((tag) => `<category>${xmlText(tag)}</category>`),
     "</item>",
   ].join("");
