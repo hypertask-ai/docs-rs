@@ -53,6 +53,7 @@ import {
 } from "../src/content-data.ts";
 import { markdownDiscoveryLinks } from "../src/content-links.ts";
 import { docsPageMarkdown, isDocsRoute } from "../src/docs-export.ts";
+import { buildDocsSearchIndex } from "../src/docs-search-index.ts";
 import { tokenmaxxTitle } from "../src/house-ad-copy.ts";
 import {
   addInboundCounts,
@@ -126,6 +127,7 @@ import { lawSpecs } from "./content-specs.ts";
 import type { SourceSpec } from "./content-specs.ts";
 import { dailyLogMarkdown, historyArgs } from "./daily-log.ts";
 import { referenceBodies, writeDocFences } from "./doc-fences.ts";
+import { readDocsSearchPages } from "./docs-search-pages.ts";
 import { renderCopyPrompt, renderDocumentShell } from "./document-html.ts";
 import { emitAssets } from "./emit-assets.ts";
 import { openGitSnapshot } from "./git-snapshot.ts";
@@ -3784,7 +3786,14 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
     yield* collectLearnSnippets(root)
   );
 
+  const docsSearchPages = yield* readDocsSearchPages(root);
+  const docsSearchIndex = buildDocsSearchIndex(docsSearchPages);
+
   const contentData = [
+    {
+      path: "/_content/docs-search.json",
+      value: docsSearchIndex,
+    },
     {
       path: "/_content/learn.json",
       value: { cards: learnCards, version: 1 },

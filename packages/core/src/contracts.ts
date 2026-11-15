@@ -406,6 +406,36 @@ export const searchContract = defineContract("search", {
   output: SearchOutput,
 });
 
+export const DocsSearchSection = Schema.Struct({
+  anchor: Schema.String,
+  excerpt: Schema.String,
+  title: Schema.String,
+});
+
+export const DocsSearchMatch = Schema.Struct({
+  excerpt: Schema.String,
+  routePath: Schema.String,
+  sections: Schema.Array(DocsSearchSection),
+  title: Schema.String,
+});
+
+export const DocsSearchOutput = Schema.Struct({
+  matches: Schema.Array(DocsSearchMatch),
+  total: Schema.Finite,
+});
+
+export const searchDocsContract = defineContract("searchDocs", {
+  annotations: { idempotent: true, readOnly: true },
+  description:
+    "Search the Hypertask docs pages. Returns each page title, the section headings that changed the score and an excerpt around the first match.",
+  failure: AssetReadError,
+  input: Schema.Struct({
+    limit: Schema.optional(Schema.Finite),
+    query: Schema.String,
+  }),
+  output: DocsSearchOutput,
+});
+
 export const readContract = defineContract("read", {
   annotations: { idempotent: true, readOnly: true },
   description:

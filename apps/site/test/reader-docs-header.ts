@@ -4,7 +4,7 @@ import {
   docsHeaderLinks,
   docsHeaderTabs,
 } from "../../web/src/features/docs-sidebar.js";
-import { homeRouter, searchRouter } from "../../web/src/features/site-route.js";
+import { homeRouter } from "../../web/src/features/site-route.js";
 
 export interface DocsHeaderAnchor {
   readonly active: boolean;
@@ -44,8 +44,9 @@ export const docsHeaderTabAnchors = (
     text: tab.label,
   }));
 
+export const docsSearchControlLabel = "Search docs";
+
 export const docsHeaderLinkedPaths: readonly string[] = [
   homeRouter(),
-  searchRouter(),
   ...docsHeaderLinks.map((link) => link.path),
 ];

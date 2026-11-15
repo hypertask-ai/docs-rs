@@ -72,7 +72,10 @@ it("the /search page preloads ?q=, searches again on Enter, puts the query in th
   scene(
     { update: readerUpdate, view: readerView },
     given(searchPage),
-    expect(role("link", { name: "Search docs" })).toHaveAttr("href", "/search"),
+    expect(role("button", { name: "Search docs" })).toHaveAttr(
+      "aria-keyshortcuts",
+      "Control+K"
+    ),
     expect(role("heading", { name: "Search the docs" })).toExist(),
     expect(text("Matches appear here.")).toExist(),
     Subscription.emit(arrivedAt("/search?q=cartridge")),

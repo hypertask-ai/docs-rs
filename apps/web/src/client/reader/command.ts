@@ -1,6 +1,8 @@
 import { Effect, Schema } from "effect";
 import { Command } from "foldkit";
+import { pushUrl } from "foldkit/navigation";
 
+import { DocumentQueries } from "../docs/queries.js";
 import { Message } from "./message.js";
 import { ClipboardAccess } from "./model.js";
 
@@ -77,4 +79,24 @@ export const WaitBeforeCopyReset = Command.define("WaitBeforeCopyReset", {
       Effect.as(Message.CompletedWaitBeforeCopyReset({ id }))
     ),
   messages: [Message.CompletedWaitBeforeCopyReset],
+});
+
+export const QueryDocsSearch = Command.define("QueryDocsSearch", {
+  args: { query: Schema.String },
+  execute: ({ query }) =>
+    Effect.sleep("200 millis").pipe(
+      Effect.andThen(
+        DocumentQueries.use((queries) => queries.docsSearch(query))
+      ),
+      Effect.map((result) => Message.SucceededDocsSearch({ query, result })),
+      Effect.orElseSucceed(() => Message.FailedDocsSearch({ query }))
+    ),
+  messages: [Message.SucceededDocsSearch, Message.FailedDocsSearch],
+});
+
+export const OpenDocsSearchResult = Command.define("OpenDocsSearchResult", {
+  args: { url: Schema.String },
+  execute: ({ url }) =>
+    pushUrl(url).pipe(Effect.as(Message.CompletedDocsSearchNavigation())),
+  messages: [Message.CompletedDocsSearchNavigation],
 });

@@ -13,6 +13,8 @@ import * as Tube from "../tube/index.js";
 import {
   CopyPageMarkdown,
   CopyReaderText,
+  OpenDocsSearchResult,
+  QueryDocsSearch,
   WaitBeforeCopyReset,
 } from "./command.js";
 import { Message } from "./message.js";
@@ -21,6 +23,8 @@ import {
   ClipboardAccess,
   copyStatusOf,
   CopyStatus,
+  DocsSearchState,
+  docsSearchMatchesOf,
   findCopyPrompt,
   pageCopyId,
 } from "./model.js";
@@ -76,6 +80,16 @@ const foldTube = Update.foldChild({
     modifyFields(model, { tube: () => Option.some(tube) }),
 });
 
+const selectedResult = (model: ReaderModel) => {
+  const matches = docsSearchMatchesOf(model);
+  const selected = Math.max(
+    0,
+    Math.min(matches.length - 1, model.docsSearchSelected)
+  );
+
+  return matches[selected];
+};
+
 export const update = (
   model: ReaderModel,
   message: ReaderMessage
@@ -83,6 +97,11 @@ export const update = (
   Message.match<Update.Return<ReaderModel, ReaderMessage, DocumentQueries>>(
     message,
     {
+      ClosedDocsSearch: () => ({
+        model: modifyFields(model, {
+          docsSearchOpen: () => false,
+        }),
+      }),
       ClickedCopy: ({ id }) =>
         Option.match(copyablePrompt(model, id), {
           onNone: () => ({ model }),
@@ -106,6 +125,89 @@ export const update = (
       CompletedDetectClipboard: ({ access }) => ({
         model: modifyFields(model, { clipboardAccess: () => access }),
       }),
+      CompletedDocsSearchNavigation: () => ({ model }),
+      FailedDocsSearch: ({ query }) => ({
+        model:
+          query === model.docsSearchQuery.trim()
+            ? modifyFields(model, {
+                docsSearch: () => DocsSearchState.Failed({ query }),
+              })
+            : model,
+      }),
+      MovedDocsSearchSelection: ({ offset }) =>
+        DocsSearchState.guards.Loaded(model.docsSearch)
+          ? {
+              model: modifyFields(model, {
+                docsSearchSelected: (selected) =>
+                  Math.max(
+                    0,
+                    Math.min(
+                      model.docsSearch.result.matches.length - 1,
+                      selected + offset
+                    )
+                  ),
+              }),
+            }
+          : { model },
+      OpenedDocsSearch: () => ({
+        model: modifyFields(model, {
+          docsSearchOpen: () => true,
+          docsSearchSelected: () => 0,
+        }),
+      }),
+      ShowedMoreDocsSearchResults: () => ({
+        model: modifyFields(model, {
+          docsSearchShown: (shown) => shown + 5,
+        }),
+      }),
+      SelectedDocsSearch: ({ index }) => ({
+        model: modifyFields(model, { docsSearchSelected: () => index }),
+      }),
+      SucceededDocsSearch: ({ query, result }) => ({
+        model:
+          query === model.docsSearchQuery.trim()
+            ? modifyFields(model, {
+                docsSearch: () => DocsSearchState.Loaded({ query, result }),
+                docsSearchSelected: (selected) =>
+                  Math.max(0, Math.min(result.matches.length - 1, selected)),
+              })
+            : model,
+      }),
+      SubmittedDocsSearch: () => {
+        const match = selectedResult(model);
+
+        return match === undefined
+          ? { model }
+          : {
+              commands: [OpenDocsSearchResult({ url: match.routePath })],
+              model: modifyFields(model, { docsSearchOpen: () => false }),
+            };
+      },
+      ToggledDocsSearch: () =>
+        model.docsSearchOpen
+          ? { model: modifyFields(model, { docsSearchOpen: () => false }) }
+          : {
+              model: modifyFields(model, {
+                docsSearchOpen: () => true,
+                docsSearchSelected: () => 0,
+              }),
+            },
+      UpdatedDocsSearchQuery: ({ value }) => {
+        const query = value.trim();
+
+        return {
+          commands: query === "" ? [] : [QueryDocsSearch({ query })],
+          model: modifyFields(model, {
+            docsSearch: () =>
+              query === ""
+                ? DocsSearchState.Idle()
+                : DocsSearchState.Loading({ query }),
+            docsSearchQuery: () => value,
+            docsSearchSelected: () => 0,
+            docsSearchShown: () => 5,
+          }),
+        };
+      },
       CompletedWaitBeforeCopyReset: ({ id }) => ({
         model: CopyStatus.guards.Copied(copyStatusOf(model, id))
           ? withCopyStatus(model, id, CopyStatus.Idle())

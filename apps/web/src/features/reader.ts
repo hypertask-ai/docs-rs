@@ -23,6 +23,7 @@ import {
   docsToc,
 } from "./docs-chrome.js";
 import { docsChrome } from "./docs-chrome.stylex.js";
+import { docsSearchDialog } from "./docs-search.js";
 import { docsGroupForPath, docsPageMarkdownPath } from "./docs-sidebar.js";
 import * as MotionView from "./motion/index.js";
 import { readerFooter, readerNewsCallout } from "./reader-chrome.js";
@@ -364,7 +365,8 @@ export const view = (
     body: h.div(
       [h.Class(shellClass)],
       [
-        docsHeader(model.page.path, h),
+        docsHeader(model.page.path, h, Message.OpenedDocsSearch()),
+        ...(Option.isSome(model.docs) ? [docsSearchDialog(model, h)] : []),
         h.div(
           [h.Class("docs-body")],
           [

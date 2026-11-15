@@ -10,7 +10,7 @@ import {
   docsSidebarGroups,
 } from "./docs-sidebar.js";
 import type { DocsSidebarGroup } from "./docs-sidebar.js";
-import { homeRouter, searchRouter } from "./site-route.js";
+import { homeRouter } from "./site-route.js";
 
 const className = (...styles: stylex.StyleXStyles[]) =>
   stylex.props(...styles).className ?? "";
@@ -134,7 +134,8 @@ const sidebarGroup = <Message>(
 
 export const docsHeader = <Message>(
   path: string,
-  h: HtmlBuilder<Message>
+  h: HtmlBuilder<Message>,
+  onOpenSearch: Message
 ): Html =>
   h.header(
     [h.Class(`${className(docsChrome.header)} docs-header`)],
@@ -156,12 +157,12 @@ export const docsHeader = <Message>(
               h.span([h.Class(className(docsChrome.docsLabel))], ["Docs"]),
             ]
           ),
-          h.a(
+          h.button(
             [
-              h.Href(searchRouter()),
               h.Class(`${className(docsChrome.search)} docs-search`),
               h.AriaLabel("Search docs"),
               h.Attribute("aria-keyshortcuts", "Control+K"),
+              h.OnClick(onOpenSearch),
             ],
             [
               searchIcon(h),
