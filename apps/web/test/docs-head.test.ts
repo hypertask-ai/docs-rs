@@ -135,7 +135,7 @@ const builtHead = (head: DocsHead): string =>
   ].join("\n");
 
 interface PageInput {
-  readonly description: string | undefined;
+  readonly description?: string | undefined;
   readonly pageTitle: string;
   readonly path: string;
   readonly status: number;
