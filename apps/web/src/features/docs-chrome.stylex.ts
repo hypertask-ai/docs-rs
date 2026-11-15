@@ -178,10 +178,10 @@ export const docsChrome = stylex.create({
     fontWeight: 500,
   },
   tabs: {
-    boxSizing: "border-box",
     borderBottomColor: docs.hairline,
     borderBottomStyle: "solid",
     borderBottomWidth: "1px",
+    boxSizing: "border-box",
     display: "flex",
     gap: "28px",
     height: "48px",
