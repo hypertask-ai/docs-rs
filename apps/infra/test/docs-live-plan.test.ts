@@ -73,11 +73,14 @@ it.effect("declares every live docs setting name with no value", () =>
       const indexes = lines.flatMap((line, index) =>
         line.startsWith(`${setting.name}=`) ? [index] : []
       );
+
       const index = indexes.at(0);
 
       expect(indexes.length, setting.name).toBe(1);
 
-      if (index === undefined) continue;
+      if (index === undefined) {
+        continue;
+      }
 
       expect(lines[index], setting.name).toBe(`${setting.name}=`);
 

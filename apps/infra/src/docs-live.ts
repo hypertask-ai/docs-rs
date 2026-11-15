@@ -20,12 +20,18 @@ export interface DocsLiveResource {
 }
 
 export const docsZoneName = "hypertask.ai";
+
 export const docsPagesProjectName = "hypertask-docs";
+
 export const docsPagesBranch = "main";
+
 export const docsPagesDomainName = "docs.hypertask.ai";
+
 export const docsMcpWorkerName = "hypertask-docs-mcp";
+
 export const docsMcpWorkersDevAddress =
   "hypertask-docs-mcp.valentin-603.workers.dev";
+
 export const docsLiveGithubEnvironment = "scheduled-jobs";
 
 export const docsLiveResources: readonly DocsLiveResource[] = [
