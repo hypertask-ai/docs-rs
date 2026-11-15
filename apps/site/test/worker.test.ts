@@ -1428,6 +1428,7 @@ it.effect("serves agent indexes, cards, sitemap, and robots policy", () =>
         "/api/read",
         "/api/readPerson",
         "/api/search",
+        "/api/searchDocs",
         "/api/searchPeople",
       ]);
     })
@@ -1926,6 +1927,7 @@ it.effect(
           "read",
           "readPerson",
           "search",
+          "searchDocs",
           "searchPeople",
         ]);
 

@@ -129,7 +129,7 @@ export const docsSearchDialog = (
             [
               docsSearchIcon(h, className(docsSearch.fieldIcon), 18),
               h.input([
-                h.Class(className(docsSearch.field)),
+                h.Class(`${className(docsSearch.field)} docs-search-field`),
                 h.Type("search"),
                 h.Value(model.docsSearchQuery),
                 h.Placeholder("Search docs"),

@@ -30,10 +30,10 @@ describe("docs search index", () => {
   it("weights the page title above headings and body words", () => {
     const built = buildDocsSearchPage(page);
 
-    expect(built.terms.turbopuffer).toBe(7 + 7 + 1 + 1);
+    expect(built.terms.turbopuf).toBe(7 + 7 + 1 + 1);
     expect(built.terms.upsert).toBe(7 + 7);
     expect(built.terms.filter).toBe(6);
-    expect(built.titleTerms).toEqual(["turbopuffer", "upsert"]);
+    expect(built.titleTerms).toEqual(["turbopuf", "upsert"]);
   });
 
   it("keeps one section per heading for sub results", () => {
@@ -56,7 +56,7 @@ describe("docs search index", () => {
 
     expect(built.wordCount).toBe(6);
     expect(built.terms["ai-native"]).toBeUndefined();
-    expect(built.terms.ai).toBeGreaterThan(0);
+    expect(built.terms.ainative).toBeGreaterThan(0);
     expect(built.terms.native).toBeGreaterThan(0);
   });
 

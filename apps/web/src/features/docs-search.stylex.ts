@@ -4,7 +4,8 @@ import { docs } from "./docs-tokens.stylex.js";
 
 export const docsSearch = stylex.create({
   cancel: {
-    background: "none",
+    appearance: "none",
+    backgroundColor: "transparent",
     borderStyle: "none",
     color: docs.text,
     cursor: "pointer",
@@ -17,7 +18,8 @@ export const docsSearch = stylex.create({
     top: "3px",
   },
   close: {
-    background: "none",
+    appearance: "none",
+    backgroundColor: "transparent",
     borderStyle: "none",
     color: docs.accent,
     cursor: "pointer",
@@ -104,6 +106,7 @@ export const docsSearch = stylex.create({
     paddingBlock: "20px",
   },
   more: {
+    appearance: "none",
     backgroundColor: docs.bg,
     borderColor: docs.hairline,
     borderRadius: "0.5rem",

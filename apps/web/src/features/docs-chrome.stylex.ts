@@ -71,7 +71,7 @@ export const docsChrome = stylex.create({
   },
   groupList: { listStyle: "none", margin: 0, padding: 0 },
   header: {
-    background: docs.bg,
+    backgroundColor: docs.bg,
     position: "sticky",
     top: 0,
     zIndex: 10,
@@ -116,7 +116,7 @@ export const docsChrome = stylex.create({
   },
   openApp: {
     alignItems: "center",
-    background: docs.surface,
+    backgroundColor: docs.surface,
     borderColor: docs.border,
     borderRadius: docs.radiusControl,
     borderStyle: "solid",
@@ -130,7 +130,8 @@ export const docsChrome = stylex.create({
   search: {
     ":hover": { borderColor: docs.text, color: docs.textStrong },
     alignItems: "center",
-    background: docs.surface,
+    appearance: "none",
+    backgroundColor: docs.surface,
     borderColor: docs.border,
     borderRadius: docs.radiusControl,
     borderStyle: "solid",
@@ -139,7 +140,7 @@ export const docsChrome = stylex.create({
     color: docs.textMuted,
     cursor: "pointer",
     display: "flex",
-    fontFamily: "inherit",
+    fontFamily: docs.fontSans,
     fontSize: docs.fontSizeSmall,
     gap: "0.5rem",
     height: "40px",
