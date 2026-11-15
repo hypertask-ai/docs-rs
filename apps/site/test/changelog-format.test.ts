@@ -69,6 +69,7 @@ const publishedThreeSentenceSummary =
 it("accepts the three sentence summary the old site already publishes", () => {
   expect(
     violationsFor({
+      body: "On any Settings page, the AI chat now knows which settings are on that page. Ask for a change in plain words, such as switching to the dark theme, and it answers with one card that shows the setting, the current value and the new value. Nothing changes until you press Apply.",
       date: "2026-10-29",
       file: "src/content/changelog/2026-10-29-ai-chat-changes-your-settings-with-apply-and-undo-htpr-7622.md",
       summary: publishedThreeSentenceSummary,
