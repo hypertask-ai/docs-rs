@@ -516,6 +516,7 @@ body > .docs-layout {
 
 .docs-main .docs-card-body {
   font-size: 16px;
+  min-inline-size: 0;
 }
 
 .docs-main .docs-card-body p {
@@ -714,6 +715,10 @@ body > .docs-layout {
   .docs-main .docs-card-title {
     font-size: 20px;
     line-height: 24px;
+  }
+
+  .docs-main .docs-card {
+    gap: 8px;
   }
 
   .docs-main .docs-card-icon {
