@@ -1,0 +1,138 @@
+# Bring Your Own Key (BYOK)
+
+Add and manage your own API keys and providers directly in Hypertask.
+
+import { Aside, Card, CardGrid } from '@astrojs/starlight/components';
+
+BYOK lets you bring your own API keys and providers directly into Hypertask. Add keys from providers like Vercel, add custom endpoints, and manage provider keys across your workspace.
+
+## Add a Provider Key
+
+Add a key from any supported provider directly in your workspace:
+
+1. Open the **Board** menu (···K or click the board icon)
+2. Select **Board settings** or go to **Settings > Keys & providers**
+3. Click **Add provider** and choose from the available options, or paste a provider URL for custom endpoints
+
+## Supported Providers
+
+Hypertask supports the following provider types:
+
+- **Vercel** — Gateway keys for deployments and integrations
+- **GitHub** — Token-based authentication for repository access
+- **Custom endpoints** — Self-hosted or third-party services via HTTPS
+
+<Aside type="note">
+Provider access is tied to your project-level permissions. Only owners and admins can add or remove keys for a project.
+</Aside>
+
+## Provider interchangeability
+
+Agents can use interchangeable provider implementations for AI operations. The current overriding provider must be defined per-run by specifying an absolute provider URL. This may be a built-in (e.g., https://claude.com or https://codex.com) or a custom endpoint. Valid URLs are validated on input and persisted where applicable.
+
+After providing a URL and verifying it, the provider becomes active for that run. Agent workflows using MCP tools or external schedulers can reference this provider URL to guarantee consistent model selection and access control across runs—no manual command-line environment variable overwrite is required when a provider URL is configured.
+
+## GDPR-safe mode
+
+Enable GDPR-safe mode to remove all China-hosted providers from your configuration across the platform. This toggle removes providers from settings and selectors and rejects BYOK keys that list China-hosted endpoints. The setting applies globally to your team workspace and persists across devices.
+
+### How GDPR-safe mode works
+
+When you enable GDPR-safe mode:
+
+- **China-hosted providers are rejected:** Keys and custom endpoints pointing to providers hosted in China (e.g., Alibaba Cloud regions, Tencent Cloud regions) are removed from your saved configuration and cannot be used.
+- **Settings and selectors are cleaned:** China-hosted entries are removed from settings, preference selectors, and validation flows.
+- **BYOK validation:** By adding a new key with a China-hosted endpoint, the validation endpoint rejects it and surfaces a clear error.
+- **System-wide impact:** Features like Gateway fallback and backend latency optimization climb back to non-China endpoints when available.
+
+### Enabling GDPR-safe mode
+
+To enable, go to **Settings > Privacy** and toggle **GDPR-safe mode** on. The change takes effect immediately and persists for your team.
+
+<Aside type="tip">
+GDPR-safe mode does not affect regions outside of China. It specifically targets providers and endpoints hosted within mainland China.
+</Aside>
+
+## Managing Your Keys
+
+After adding a key, each provider row displays:
+
+| Control | Description |
+|---------|-------------|
+| **Test button** | Verify the key works with the provider before saving |
+| **Edit** | Update key details or change provider configuration |
+| **Remove** | Delete the key (requires confirmation) |
+
+### Test Provider Keys
+
+Use the **Test button** next to any provider key to verify connectivity and authentication:
+
+1. Click **Test** on the provider row
+2. The system sends a quick validation request to confirm access
+3. View the result—**success** confirms the key works, **error** shows configuration issues
+
+Re-test after changing keys, switching domains, or updating provider credentials.
+
+## Vercel Gateway Keys
+
+Add Vercel gateway keys for deployments, edge functions, and related services:
+
+1. Select **Vercel** from the provider list in Settings
+2. Paste your Vercel **Personal Access Token** or specific project token
+3. Click **Test** to verify the key's scopes
+4. Save to add the key to your provider configuration
+
+Vercel keys function similar to other provider keys—they're used for API access and integration with Vercel-powered features.
+
+## Custom Endpoints
+
+Bring key-based providers or self-hosted services into Hypertask by adding a custom endpoint:
+
+1. Choose **Custom endpoint** as the provider type
+2. Enter the endpoint URL (HTTPS only)
+3. Provide any required headers, API keys, or bearer tokens
+4. Click **Test** to confirm the endpoint is accessible
+5. Save the configuration for reuse across your projects
+
+Custom endpoints are stored securely and tied to your account and project access levels.
+
+## Ephemeral per-turn provider home
+
+During agent agent runs that connect to a provider home, each turn creates an ephemeral directory for that turn. The provider home is scoped to the current turn and doesn't persist across turns. Before each turn starts:
+
+- Every path in the provider home is scanned
+- Paths matching the resumable allowlist are preserved (these are expected, safe files such as state resumed from a previous turn)
+- All other paths are deleted immediately (including any provider-created cache files that may have been written to the home)
+
+By wiping the provider home outside the allowlist at run start, Hypertask ensures that stale cache files and provider-specific junk do not accumulate. Provider favorites that need to be preserved for resume already belong to the resumable allowlist; other files are cleared out to keep the environment clean.
+
+This behavior aligns with how you'd set up a provider home manually on your system: prepare the directory for a specific run and clean up loose files afterwards, without keeping things around across unrelated work.
+
+<Aside type="tip">
+If you see unexpected cache files being cleaned up, check the resumable allowlist—anything else in the provider home that is not explicitly expected for resume will be removed at each run start.
+</Aside>
+
+## Key Security and Access
+
+BYOK keys in Hypertask are managed with these principles:
+
+- **Server-side storage** — Keys are stored on Hypertask infrastructure and never exposed to third-party providers beyond what's needed for authentication
+- **Per-project scoping** — Providers and keys are tied to specific projects, limiting cross-project key sharing
+- **Access controls** — Only owners and admins can view, add, or remove provider keys
+- **No cross-board leakage** — Keys from one project/board are not visible or accessible from another
+
+<Aside type="caution">
+Never share keys between projects. If a team needs access to a provider key, have an admin add it directly rather than copying the token across accounts.
+</Aside>
+
+## Using Provider Keys
+
+Once configured, provider keys are used automatically:
+
+- **AI agents** — Available when making provider-specific API calls
+- **Workflows** — Integrated into agent runs that require provider authentication
+- **CLI tools** — References provider keys from your account when making authenticated requests
+
+You don't need to manually invoke provider keys. They're selected automatically based on your current context and permissions.
+
+<p>Stakeholders — please review and reply with corrections or missing context.</p>
