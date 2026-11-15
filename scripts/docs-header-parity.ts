@@ -77,13 +77,13 @@ const compare = async (answer: Answer, oldBase: string, newBase: string) => {
   return { answer, failures };
 };
 
-const [, , newBase, oldBaseArgument] = process.argv;
+const [runtime, script, newBase, oldBaseArgument] = process.argv;
 
 const oldBase = oldBaseArgument ?? "https://docs.hypertask.ai";
 
 if (newBase === undefined) {
   process.stderr.write(
-    "usage: node scripts/docs-header-parity.ts <new-base> [old-base]\n"
+    `usage: ${runtime ?? "node"} ${script ?? "scripts/docs-header-parity.ts"} <new-base> [old-base]\n`
   );
   process.exitCode = 1;
 } else {
