@@ -16,8 +16,8 @@ const origin = "https://docs.hypertask.ai";
 
 const fixture = (path: string): string =>
   readFileSync(
-    new URL(`./fixtures/docs-export/${path}`, import.meta.url),
-    "utf8"
+    new URL(`fixtures/docs-export/${path}`, import.meta.url),
+    "utf-8"
   );
 
 const pageFixtures = [
@@ -38,7 +38,7 @@ const splitOnce = (
 ): readonly [string, string] => {
   const index = text.indexOf(separator);
 
-  if (index < 0) {
+  if (index === -1) {
     return [text, ""];
   }
 
@@ -70,18 +70,21 @@ const parseLlmsText = (text: string): readonly DocsExportEntry[] => {
       continue;
     }
 
-    const match = /^- \[([^\]]+)\]\(([^)]+)\)(?:: (.*))?$/u.exec(line);
+    const match =
+      /^- \[(?<title>[^\]]+)\]\((?<url>[^)]+)\)(?:: (?<description>.*))?$/u.exec(
+        line
+      );
 
     if (!listed || match === null) {
       continue;
     }
 
-    const [, title = "", url = "", description = ""] = match;
+    const { groups } = match;
 
     entries.push({
-      description,
-      routePath: routeOf(url),
-      title,
+      description: groups?.description ?? "",
+      routePath: routeOf(groups?.url ?? ""),
+      title: groups?.title ?? "",
     });
   }
 

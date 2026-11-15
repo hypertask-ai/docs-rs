@@ -26,8 +26,8 @@ const connectAgentSummary =
 
 const oneLine = (text: string): string =>
   text
-    .replace(/\s+/gu, " ")
-    .replace(/ ?\u2014 ?/gu, ", ")
+    .replaceAll(/\s+/gu, " ")
+    .replaceAll(/ ?\u2014 ?/gu, ", ")
     .trim();
 
 const pageUrl = (origin: string, routePath: string): string =>
@@ -96,6 +96,7 @@ export const docsLlmsFull = (
   const listed = pages
     .filter((page) => listedInLlms(page.routePath))
     .toSorted((left, right) => left.routePath.localeCompare(right.routePath));
+
   const ordered = [
     ...listed.filter((page) => page.routePath === "/connect-an-agent"),
     ...listed.filter((page) => page.routePath !== "/connect-an-agent"),
