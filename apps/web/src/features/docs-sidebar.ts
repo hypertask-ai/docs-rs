@@ -14,6 +14,21 @@ export interface DocsHeaderTab {
   readonly path: string;
 }
 
+export interface DocsHeaderLink {
+  readonly label: string;
+  readonly openApp: boolean;
+  readonly path: string;
+}
+
+export const docsHeaderLinks: readonly DocsHeaderLink[] = [
+  { label: "Help", openApp: false, path: "https://help.hypertask.ai/help" },
+  {
+    label: "Open app",
+    openApp: true,
+    path: "https://app.hypertask.ai/login",
+  },
+];
+
 const isWithin = (section: string, path: string) =>
   path === section || path.startsWith(`${section}/`);
 

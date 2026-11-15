@@ -9,9 +9,19 @@ import {
 } from "../../site/scripts/reader-body-document.ts";
 import { readerLoreFlagsFrom } from "../../site/scripts/reader-lore-flags.ts";
 import { prepareReaderSiteInputs } from "../../site/scripts/reader-site-inputs.ts";
+import {
+  docsHeaderAnchors,
+  docsHeaderLinkedPaths,
+  docsHeaderTabAnchors,
+} from "../../site/test/reader-docs-header.ts";
 import { init } from "../src/client/reader/init.js";
 import { ReaderFlags } from "../src/client/reader/model.js";
 import { view } from "../src/features/reader.js";
+import {
+  docsHeaderAnchors,
+  docsHeaderLinkedPaths,
+  docsHeaderTabAnchors,
+} from "./reader-docs-header.js";
 import { normalizedNodes } from "./reader-node-normalize.js";
 
 const loreShardCount = 8;
@@ -85,9 +95,20 @@ it.layer(ReaderLoreFixture.layer)((test) => {
                 expect(readerNewsTitle(rendered.html), page.page.path).toBe(
                   readerNewsTitle(original?.html ?? "")
                 );
-                expect(rendered.html).toMatch(
-                  /<a [^>]*href="\/news"[^>]*>news<\/a>/u
+                const headerAnchors = docsHeaderAnchors(rendered.html);
+                const headerTabs = docsHeaderTabAnchors(page.page.path);
+                const tabHrefs: ReadonlySet<string> = new Set(
+                  headerTabs.map((tab) => tab.href)
                 );
+
+                expect(
+                  headerAnchors.filter((anchor) => tabHrefs.has(anchor.href)),
+                  page.page.path
+                ).toEqual(headerTabs);
+                expect(
+                  headerAnchors.map((anchor) => anchor.href),
+                  page.page.path
+                ).toEqual(expect.arrayContaining([...docsHeaderLinkedPaths]));
                 expect(after.heading, page.page.path).toBe(before.heading);
                 expect(after.breadcrumb, page.page.path).toEqual(
                   before.breadcrumb

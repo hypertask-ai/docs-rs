@@ -4,7 +4,11 @@ import type { Html, HtmlBuilder } from "foldkit/html";
 
 import { CopyStatus } from "../client/reader/model.js";
 import { docsChrome } from "./docs-chrome.stylex.js";
-import { docsHeaderTabs, docsSidebarGroups } from "./docs-sidebar.js";
+import {
+  docsHeaderLinks,
+  docsHeaderTabs,
+  docsSidebarGroups,
+} from "./docs-sidebar.js";
 import type { DocsSidebarGroup } from "./docs-sidebar.js";
 import { homeRouter, searchRouter } from "./site-route.js";
 
@@ -170,22 +174,19 @@ export const docsHeader = <Message>(
           ),
           h.div(
             [h.Class(`${className(docsChrome.headerLinks)} docs-header-links`)],
-            [
+            docsHeaderLinks.map((link) =>
               h.a(
                 [
-                  h.Href("https://help.hypertask.ai/help"),
-                  h.Class(className(docsChrome.textLink)),
+                  h.Href(link.path),
+                  h.Class(
+                    className(
+                      link.openApp ? docsChrome.openApp : docsChrome.textLink
+                    )
+                  ),
                 ],
-                ["Help"]
-              ),
-              h.a(
-                [
-                  h.Href("https://app.hypertask.ai/login"),
-                  h.Class(className(docsChrome.openApp)),
-                ],
-                ["Open app"]
-              ),
-            ]
+                [link.label]
+              )
+            )
           ),
         ]
       ),
