@@ -1,4 +1,3 @@
-import { Schema, Stream } from "effect";
 import { Dom, Subscription } from "foldkit";
 
 import * as MotionDemo from "../motion/index.js";
@@ -7,26 +6,17 @@ import type { ReaderMessage } from "./message.js";
 import type { ReaderModel } from "./model.js";
 
 const docsSearchShortcut = Subscription.make<ReaderModel, ReaderMessage>()(
-  (entry) => ({
-    keys: entry(
-      { searching: Schema.Boolean },
-      {
-        dependenciesToStream: ({ searching }) =>
-          searching
-            ? Dom.streamFromKeyBindings<ReaderMessage>({
-                bindings: [
-                  {
-                    keys: "Mod+K",
-                    mapEvent: () => Message.PressedDocsSearchShortcut(),
-                    whileTyping: "Allow",
-                  },
-                ],
-              })
-            : Stream.empty,
-        modelToDependencies: (model) => ({
-          searching: model.docs !== undefined,
-        }),
-      }
+  () => ({
+    docsSearchShortcut: Subscription.persistentEntry(
+      Dom.streamFromKeyBindings<ReaderMessage>({
+        bindings: [
+          {
+            keys: "Mod+K",
+            mapEvent: () => Message.PressedDocsSearchShortcut(),
+            whileTyping: "Allow",
+          },
+        ],
+      })
     ),
   })
 );

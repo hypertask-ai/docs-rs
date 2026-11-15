@@ -9,6 +9,7 @@ import {
   docsSearchTotalOf,
 } from "../client/reader/model.js";
 import type { ReaderModel } from "../client/reader/model.js";
+import { docsSearchIcon } from "./docs-search-icon.js";
 import { docsSearch } from "./docs-search.stylex.js";
 
 export const docsSearchDialogId = "docs-search";
@@ -38,7 +39,8 @@ const resultView = (
   model: ReaderModel,
   h: HtmlBuilder<ReaderMessage>,
   match: ReturnType<typeof docsSearchMatchesOf>[number],
-  index: number
+  index: number,
+  last: boolean
 ): Html =>
   h.li(
     [
@@ -46,7 +48,8 @@ const resultView = (
       h.Class(
         className(
           docsSearch.item,
-          index === model.docsSearchSelected && docsSearch.itemSelected
+          last ? docsSearch.itemLast : false,
+          index === model.docsSearchSelected ? docsSearch.itemSelected : false
         )
       ),
     ],
@@ -79,7 +82,7 @@ const resultView = (
                           h.Href(`${match.routePath}#${section.anchor}`),
                           h.Class(className(docsSearch.sectionLink)),
                         ],
-                        [section.title]
+                        ["⤷ ", section.title]
                       ),
                       h.p(
                         [h.Class(className(docsSearch.excerpt))],
@@ -106,69 +109,89 @@ export const docsSearchDialog = (
       h.Id(docsSearchDialogId),
       h.AriaLabel("Search docs"),
       h.Attribute("closedby", "any"),
-      h.Class(className(docsSearch.panel)),
+      h.Class(`${className(docsSearch.panel)} docs-search-panel`),
       h.OnKeyDownPreventDefault((key) => docsSearchKeyMessage(key)),
     ],
     [
       h.div(
-        [h.Class(className(docsSearch.closeWrap))],
+        [h.Class(className(docsSearch.panelFrame))],
         [
           h.button(
             [
-              h.Class(className(docsSearch.close)),
-              h.AriaLabel("Close search"),
+              h.Class(`${className(docsSearch.close)} docs-search-close`),
               h.Attribute("command", "close"),
               h.Attribute("commandfor", docsSearchDialogId),
             ],
-            ["✕"]
+            ["Cancel"]
           ),
+          h.div(
+            [h.Class(className(docsSearch.fieldRow))],
+            [
+              docsSearchIcon(h, className(docsSearch.fieldIcon), 18),
+              h.input([
+                h.Class(className(docsSearch.field)),
+                h.Type("search"),
+                h.Value(model.docsSearchQuery),
+                h.Placeholder("Search docs"),
+                h.AriaLabel("Search this site"),
+                h.Autofocus(true),
+                h.OnInput((value) => Message.UpdatedDocsSearchQuery({ value })),
+              ]),
+              h.button(
+                [
+                  h.Class(className(docsSearch.cancel)),
+                  h.OnClick(Message.UpdatedDocsSearchQuery({ value: "" })),
+                ],
+                ["Cancel"]
+              ),
+            ]
+          ),
+          h.p(
+            [
+              h.Class(className(docsSearch.message)),
+              h.Role("status"),
+              h.AriaLive("polite"),
+            ],
+            [summaryText(model)]
+          ),
+          ...(shown.length === 0
+            ? [
+                h.p(
+                  [h.Class(className(docsSearch.empty))],
+                  [
+                    DocsSearchState.guards.Loaded(model.docsSearch)
+                      ? "Try a shorter word or another term."
+                      : "Results will appear as you type.",
+                  ]
+                ),
+              ]
+            : [
+                h.ol(
+                  [h.Class(className(docsSearch.list))],
+                  shown.map((match, index) =>
+                    resultView(
+                      model,
+                      h,
+                      match,
+                      index,
+                      index === shown.length - 1
+                    )
+                  )
+                ),
+              ]),
+          ...(total > shown.length
+            ? [
+                h.button(
+                  [
+                    h.Class(className(docsSearch.more)),
+                    h.OnClick(Message.ShowedMoreDocsSearchResults()),
+                  ],
+                  ["Load more results"]
+                ),
+              ]
+            : []),
         ]
       ),
-      h.input([
-        h.Class(className(docsSearch.field)),
-        h.Type("search"),
-        h.Value(model.docsSearchQuery),
-        h.Placeholder("Search docs"),
-        h.AriaLabel("Search this site"),
-        h.Autofocus(true),
-        h.OnInput((value) => Message.UpdatedDocsSearchQuery({ value })),
-      ]),
-      h.p(
-        [
-          h.Class(className(docsSearch.message)),
-          h.Role("status"),
-          h.AriaLive("polite"),
-        ],
-        [summaryText(model)]
-      ),
-      ...(shown.length === 0
-        ? [
-            h.p(
-              [h.Class(className(docsSearch.empty))],
-              [
-                DocsSearchState.guards.Loaded(model.docsSearch)
-                  ? "Try a shorter word or another term."
-                  : "Results will appear as you type.",
-              ]
-            ),
-          ]
-        : [
-            h.ol(
-              [h.Class(className(docsSearch.list))],
-              shown.map((match, index) => resultView(model, h, match, index))
-            ),
-          ]),
-      ...(total > shown.length
-        ? [
-            h.button(
-              [
-                h.Class(className(docsSearch.more)),
-                h.OnClick(Message.ShowedMoreDocsSearchResults()),
-              ],
-              ["Load more results"]
-            ),
-          ]
-        : []),
     ]
   );
 };

@@ -4,6 +4,7 @@ import type { Html, HtmlBuilder } from "foldkit/html";
 
 import { CopyStatus } from "../client/reader/model.js";
 import { docsChrome } from "./docs-chrome.stylex.js";
+import { docsSearchIcon } from "./docs-search-icon.js";
 import { docsSearchDialogId } from "./docs-search.js";
 import {
   docsHeaderLinks,
@@ -29,23 +30,7 @@ const copyLabel = CopyStatus.match({
 });
 
 const searchIcon = <Message>(h: HtmlBuilder<Message>) =>
-  h.svg(
-    [
-      h.Class("docs-search-icon"),
-      h.Width("16"),
-      h.Height("16"),
-      h.ViewBox("0 0 24 24"),
-      h.Fill("currentColor"),
-      h.AriaHidden(true),
-    ],
-    [
-      h.path([
-        h.D(
-          "M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"
-        ),
-      ]),
-    ]
-  );
+  docsSearchIcon(h, "docs-search-icon", 16);
 
 const copyIcon = <Message>(h: HtmlBuilder<Message>) =>
   h.svg(
@@ -167,10 +152,16 @@ export const docsHeader = <Message>(
             ],
             [
               searchIcon(h),
-              h.span([h.Class("docs-search-label")], ["Search docs"]),
               h.span(
+                [h.Class("docs-search-label"), h.AriaHidden(true)],
+                ["Search docs"]
+              ),
+              h.kbd(
                 [h.Class(`${className(docsChrome.kbd)} docs-kbd`)],
-                ["Ctrl K"]
+                [
+                  h.kbd([h.Class(className(docsChrome.kbdKey))], ["Ctrl"]),
+                  h.kbd([h.Class(className(docsChrome.kbdKey))], ["K"]),
+                ]
               ),
             ]
           ),

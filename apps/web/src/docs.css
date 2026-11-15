@@ -507,12 +507,15 @@ body > .docs-layout {
   text-align: center;
 }
 
-.docs-search-label,
-.docs-kbd {
+.docs-search-label {
   display: inline;
 }
 
-.docs-search-icon {
+.docs-kbd {
+  display: flex;
+}
+
+.docs-search-close {
   display: none;
 }
 
@@ -548,7 +551,7 @@ body > .docs-layout {
     background: transparent;
     border: 0;
     height: 40px;
-    padding: 8px;
+    padding: 10px;
     width: 40px;
   }
 
@@ -583,7 +586,17 @@ body > .docs-layout {
     display: none;
   }
 
-  .docs-search-icon {
+  .docs-search-panel {
+    border-radius: 0;
+    height: 100%;
+    margin: 0;
+    max-height: 100%;
+    max-width: 100%;
+    padding: 1rem;
+    width: 100%;
+  }
+
+  .docs-search-close {
     display: block;
   }
 }

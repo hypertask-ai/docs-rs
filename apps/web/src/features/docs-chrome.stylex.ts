@@ -95,12 +95,16 @@ export const docsChrome = stylex.create({
     padding: "16px 32px",
   },
   kbd: {
+    alignItems: "center",
     color: docs.textMuted,
+    display: "flex",
     fontFamily: docs.fontMono,
     fontSize: "12px",
     fontWeight: 400,
+    gap: "0.25em",
     marginLeft: "auto",
   },
+  kbdKey: { fontFamily: "inherit" },
   kicker: {
     color: docs.accent,
     fontSize: "12px",
@@ -124,6 +128,7 @@ export const docsChrome = stylex.create({
     textDecoration: "none",
   },
   search: {
+    ":hover": { borderColor: docs.text, color: docs.textStrong },
     alignItems: "center",
     background: docs.surface,
     borderColor: docs.border,
@@ -136,6 +141,7 @@ export const docsChrome = stylex.create({
     display: "flex",
     fontFamily: "inherit",
     fontSize: docs.fontSizeSmall,
+    gap: "0.5rem",
     height: "40px",
     padding: "0 12px",
     textAlign: "left",

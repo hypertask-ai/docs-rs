@@ -366,7 +366,7 @@ export const view = (
       [h.Class(shellClass)],
       [
         docsHeader(model.page.path, h),
-        ...(Option.isSome(model.docs) ? [docsSearchDialog(model, h)] : []),
+        docsSearchDialog(model, h),
         h.div(
           [h.Class("docs-body")],
           [
