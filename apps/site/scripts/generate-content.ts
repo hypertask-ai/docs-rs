@@ -3298,6 +3298,7 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
           ? docsPageMarkdown({
               body: bodyMarkdown,
               description: spec.description,
+              routePath: spec.routePath,
               title: spec.title,
             })
           : renderAgentPage(bodyMarkdown, spec.routePath, spec.title);
