@@ -1,0 +1,72 @@
+name: Parity
+
+on:
+  workflow_dispatch:
+    inputs:
+      new_base:
+        description: Base URL of the rebuilt site. Leave empty to capture the baseline only.
+        required: false
+        default: ""
+      old_base:
+        description: Base URL of the current site.
+        required: false
+        default: https://docs.hypertask.ai
+      page_limit:
+        description: Capture only the first N sitemap pages. 0 captures every page.
+        required: false
+        default: "0"
+      threshold:
+        description: Maximum pixel difference per page, in percent.
+        required: false
+        default: "0.1"
+  pull_request:
+    paths:
+      - .github/workflows/parity.yml
+      - scripts/docs-parity.ts
+
+permissions:
+  contents: read
+
+concurrency:
+  group: parity-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Use Node.js 24.18.0
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.18.0
+      - name: Enable corepack pnpm
+        run: corepack enable && corepack prepare pnpm@11.3.0 --activate
+      - name: Install dependencies
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+        run: pnpm install --frozen-lockfile
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Capture and compare pages
+        env:
+          OLD_BASE: ${{ github.event.inputs.old_base || 'https://docs.hypertask.ai' }}
+          NEW_BASE: ${{ github.event.inputs.new_base || (github.event_name == 'pull_request' && 'https://docs.hypertask.ai' || '') }}
+          PAGE_LIMIT: ${{ github.event.inputs.page_limit || (github.event_name == 'pull_request' && '24' || '5') }}
+          THRESHOLD: ${{ github.event.inputs.threshold || '0.1' }}
+        run: |
+          node scripts/docs-parity.ts \
+            --old-base "$OLD_BASE" \
+            --new-base "$NEW_BASE" \
+            --threshold "$THRESHOLD" \
+            --page-limit "$PAGE_LIMIT" \
+            --out parity-out
+      - name: Upload parity report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: parity-${{ github.run_id }}
+          path: parity-out
+          if-no-files-found: warn
