@@ -2130,7 +2130,7 @@ it.effect(
         expect(news).toContain("## How this list is sorted");
         expect(directory).toContain("# CAFE directory");
 
-        for (const route of ["/news", "/directory", "/llms.txt"]) {
+        for (const route of ["/news", "/directory"]) {
           const agentView = yield* responseText(
             handler,
             new Request(`http://localhost${route}`, {
@@ -2150,7 +2150,7 @@ it.effect(
 );
 
 it.effect(
-  "serves every all-stars profile as Markdown, in llms.txt and in the feed from the people capabilities",
+  "serves every all-stars profile as Markdown and in the feed from the people capabilities",
   () =>
     withHandler((handler) =>
       Effect.gen(function* testAllStarsSurfaces() {
@@ -2158,11 +2158,6 @@ it.effect(
           yield* readJson(
             yield* postJson(handler, "/api/listPeople", { limit: 100 })
           )
-        );
-
-        const llms = yield* responseText(
-          handler,
-          new Request("http://localhost/llms.txt")
         );
 
         const feed = yield* responseText(
@@ -2183,7 +2178,6 @@ it.effect(
             "sam-goodwin",
           ])
         );
-        expect(llms).toContain("/all-stars)");
         expect(index).toContain("# CAFE all stars");
         expect(index).toContain("To be removed from this page");
 
@@ -2223,7 +2217,6 @@ it.effect(
 
           expect(avatar.status).toBe(200);
           expect(avatar.headers.get("content-type")).toMatch(/^image\//u);
-          expect(llms).toContain(`${person.route})`);
           expect(index).toContain(`(${person.route})`);
           expect(feed).toContain(`${person.route}"/>`);
         }
