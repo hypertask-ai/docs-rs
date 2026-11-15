@@ -1,6 +1,5 @@
 ---
-description: Common issues and solutions for signing in, resetting passwords, and
-  resolving authentication errors in Hypertask.
+description: Common issues and solutions for signing in, resetting passwords, and resolving authentication errors in Hypertask.
 title: Troubleshooting Login
 ---
 

@@ -157,7 +157,10 @@ const singleLineComponents = (body: string) =>
   body.replaceAll(
     /<(?<name>[A-Z]\w*)\s*\n(?<attributes>(?:\s+[\w-]+="[^"]*"\s*\n)+)\s*\/>/gu,
     (_match, name: string, attributes: string) =>
-      `<${name} ${attributes.trim().split(/\s*\n\s*/u).join(" ")} />`
+      `<${name} ${attributes
+        .trim()
+        .split(/\s*\n\s*/u)
+        .join(" ")} />`
   );
 
 const mdxComments = (body: string) =>

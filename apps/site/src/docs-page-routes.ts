@@ -58,5 +58,4 @@ export const docsPageRoutes: readonly string[] = [
   "/mcp/workflows",
 ];
 
-export const isDocsPageRoute = (path: string) =>
-  docsPageRoutes.includes(path);
+export const isDocsPageRoute = (path: string) => docsPageRoutes.includes(path);

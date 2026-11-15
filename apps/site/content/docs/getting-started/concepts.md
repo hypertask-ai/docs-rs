@@ -27,11 +27,11 @@ Sections are the columns on a project board. They represent stages in your workf
 
 **Default sections** when you create a project:
 
-| Section | Typical use |
-|---------|-------------|
-| Todo | Work that's defined and ready to start |
-| Doing | Actively in progress |
-| Done | Completed and verified |
+| Section | Typical use                            |
+| ------- | -------------------------------------- |
+| Todo    | Work that's defined and ready to start |
+| Doing   | Actively in progress                   |
+| Done    | Completed and verified                 |
 
 You can add, rename, reorder, or remove sections at any time. Common additions include **Review**, **Build**, **Backlog**, or **Blocked**.
 
@@ -53,7 +53,7 @@ Tasks are the core unit of work. Every task belongs to exactly one section withi
 ### Properties
 
 | Property | Description |
-|----------|-------------|
+| --- | --- |
 | **Title** | Short, actionable summary of the work |
 | **Description** | Rich HTML content with full context, acceptance criteria, and links |
 | **Ticket number** | Auto-generated sequential ID scoped to the project (e.g., `PROJ-123`) |
@@ -75,11 +75,11 @@ Any task can have subtasks — smaller units of work nested under a parent. Subt
 
 Tasks can be linked to each other with typed relationships:
 
-| Relation | Meaning |
-|----------|---------|
-| `RelatedTo` | General association between two tasks |
+| Relation    | Meaning                                                |
+| ----------- | ------------------------------------------------------ |
+| `RelatedTo` | General association between two tasks                  |
 | `BlockedBy` | This task cannot proceed until the linked task is done |
-| `BlockedTo` | This task is blocking another task from proceeding |
+| `BlockedTo` | This task is blocking another task from proceeding     |
 
 Relations are bidirectional — creating a `BlockedBy` link on Task A to Task B automatically creates a `BlockedTo` link from Task B to Task A.
 
@@ -159,13 +159,13 @@ The inbox is a unified notification center for each user. It surfaces work that 
 
 You receive inbox notifications when:
 
-| Event | Notification |
-|-------|-------------|
-| **Assigned to a task** | Task appears in your inbox |
-| **Comment on your task** | New comment notification |
-| **@mentioned in a comment** | Mention notification |
-| **Task due date approaching** | Due date reminder |
-| **Task overdue** | Overdue warning |
+| Event                         | Notification               |
+| ----------------------------- | -------------------------- |
+| **Assigned to a task**        | Task appears in your inbox |
+| **Comment on your task**      | New comment notification   |
+| **@mentioned in a comment**   | Mention notification       |
+| **Task due date approaching** | Due date reminder          |
+| **Task overdue**              | Overdue warning            |
 
 Inbox items can be **archived** once handled. Use `hypertask_inbox` (`action: "list"`) to check notifications and `hypertask_inbox` (`action: "archive"`) to clear them via MCP.
 

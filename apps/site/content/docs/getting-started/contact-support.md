@@ -1,6 +1,5 @@
 ---
-description: How to contact support. Start with the AI help chat, which can hand off
-  to the team in the same chat.
+description: How to contact support. Start with the AI help chat, which can hand off to the team in the same chat.
 title: Get help
 ---
 

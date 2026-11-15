@@ -65,6 +65,14 @@ export const readerBodyFlags = Effect.fn("readerBodyFlags")(
 
         const used = new Set(copyPromptIds(body.nodes));
 
+        const references = isDocsPageRoute(page.path)
+          ? {
+              anchors: readerTocAnchors(page.html),
+              backlinks: [],
+              inboundCounts: {},
+            }
+          : undefined;
+
         return yield* Schema.decodeUnknownEffect(ReaderFlags)({
           bibliography: [],
           blocks: [],
@@ -82,15 +90,7 @@ export const readerBodyFlags = Effect.fn("readerBodyFlags")(
             sourcePath: page.sourcePath,
             status: page.status,
           },
-          ...(isDocsPageRoute(page.path)
-            ? {
-                references: {
-                  anchors: readerTocAnchors(page.html),
-                  backlinks: [],
-                  inboundCounts: {},
-                },
-              }
-            : {}),
+          references,
           snippets: [],
           terms: [],
         });

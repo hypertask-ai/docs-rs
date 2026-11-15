@@ -108,9 +108,7 @@ const assertProductionPayloads = (pages: readonly ReaderPageFlags[]) => {
   }
 
   const learn = pages.find((page) => page.page.path === "/learn");
-  expect(
-    learn?.copyPrompts.some((prompt) => prompt.id === "learn")
-  ).toBe(true);
+  expect(learn?.copyPrompts.some((prompt) => prompt.id === "learn")).toBe(true);
   expect(
     learn?.copyPrompts.find((prompt) => prompt.id === "learn")?.text
   ).toContain("https://ratstack.sh/mcp");

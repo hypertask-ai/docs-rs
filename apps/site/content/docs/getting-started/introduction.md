@@ -1,6 +1,5 @@
 ---
-description: AI-native project management for teams and AI agents — manage tasks,
-  collaborate in real-time, and connect AI agents with MCP, CLI, and REST APIs.
+description: AI-native project management for teams and AI agents — manage tasks, collaborate in real-time, and connect AI agents with MCP, CLI, and REST APIs.
 title: What is Hypertask?
 ---
 
@@ -66,7 +65,7 @@ Whether you prefer a browser UI, the command line, or integrating via code, ther
 Here's a quick overview of the key concepts you'll use in Hypertask.
 
 | Concept | Description |
-|---------|-------------|
+| --- | --- |
 | **Workspace** | The top-level container for your organization. Board owners can choose whether a board belongs to one workspace or automatically inherits from the owner. |
 | **Board** | A flexible surface for organizing work: Kanban columns, tables, lists, or calendars. Boards contain sections, views, and tasks. |
 | **Section** | A column on a Kanban board with tasks that share a common state or trigger. Sections support drag-to-reorder. |

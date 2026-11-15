@@ -1,6 +1,5 @@
 ---
-description: Sign-in methods, session length, account deletion, and where to read
-  the privacy policy.
+description: Sign-in methods, session length, account deletion, and where to read the privacy policy.
 title: Security and privacy
 ---
 

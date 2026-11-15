@@ -1,6 +1,5 @@
 ---
-description: Switching from Trello, Jira, Asana, or Linear. Hypertask has no task
-  import. Create tasks with an agent over MCP or the CLI.
+description: Switching from Trello, Jira, Asana, or Linear. Hypertask has no task import. Create tasks with an agent over MCP or the CLI.
 title: Switching from Trello, Jira, or Asana
 ---
 

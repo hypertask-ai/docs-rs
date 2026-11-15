@@ -15,12 +15,12 @@ title: Quick Start
 
 4. **Set up sections.** Every new project starts with default sections. A typical workflow uses:
 
-   | Section | Purpose |
-   |---------|---------|
-   | Todo | Work that's ready to be picked up |
-   | Doing | Actively in progress |
-   | Review | Completed, awaiting review |
-   | Done | Shipped and verified |
+   | Section | Purpose                           |
+   | ------- | --------------------------------- |
+   | Todo    | Work that's ready to be picked up |
+   | Doing   | Actively in progress              |
+   | Review  | Completed, awaiting review        |
+   | Done    | Shipped and verified              |
 
    You can rename, reorder, add, or remove sections at any time from the project settings.
 

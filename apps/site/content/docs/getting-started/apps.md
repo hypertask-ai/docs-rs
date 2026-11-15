@@ -1,6 +1,5 @@
 ---
-description: How to use Hypertask on Android and iPhone, and what to use on Windows
-  and Mac.
+description: How to use Hypertask on Android and iPhone, and what to use on Windows and Mac.
 title: Mobile and desktop apps
 ---
 

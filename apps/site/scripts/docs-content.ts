@@ -30,6 +30,7 @@ const specOf = (
   Effect.gen(function* readDocsPage() {
     const sourcePath = `${docsContentDirectory}/${relativePath}`;
     const routePath = docsRoutePath(relativePath);
+
     const frontmatter = yield* Schema.decodeUnknownEffect(DocsFrontmatter)(
       frontmatterData(source, sourcePath)
     ).pipe(

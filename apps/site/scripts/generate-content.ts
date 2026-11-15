@@ -365,6 +365,9 @@ const docsHeadingIds = (): ((tree: HastNode) => void) => (tree) => {
   visit(tree);
 };
 
+const withoutTemplateHome = <A>(hasDocsHome: boolean, page: A): readonly A[] =>
+  hasDocsHome ? [] : [page];
+
 const referenceSource = (route: string) =>
   `<LinkedFrom page="${escapeHtml(route)}" />\n\n<UnlinkedMentions page="${escapeHtml(route)}" />`;
 
@@ -1296,6 +1299,7 @@ const program = Effect.gen(function* generateContent() {
   ].join("\n");
 
   const docsSpecs = yield* readDocsPageSpecs;
+  const hasDocsHome = docsSpecs.some((spec) => spec.routePath === "/");
 
   const lawTexts: readonly PublicSpec[] = yield* Effect.forEach(
     [...lawSpecs, ...docsSpecs],
@@ -3257,15 +3261,11 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
       routePath: page.routePath,
       title: page.title,
     })),
-    ...(docsSpecs.some((spec) => spec.routePath === "/")
-      ? []
-      : [
-          {
-            description: tagline,
-            routePath: "/",
-            title: "ratstack.sh",
-          },
-        ]),
+    ...withoutTemplateHome(hasDocsHome, {
+      description: tagline,
+      routePath: "/",
+      title: "ratstack.sh",
+    }),
     {
       description: noVerifyMetadata.description,
       routePath: trapRoutePath,
@@ -3998,15 +3998,11 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
         routePath: "/search",
         text: searchPageText,
       },
-      ...(docsSpecs.some((spec) => spec.routePath === "/")
-        ? []
-        : [
-            {
-              documentHtml: homeDocumentHtml,
-              routePath: "/",
-              text: `${homeMarkdownTemplate}${pageFooterMarkdown("/")}`,
-            },
-          ]),
+      ...withoutTemplateHome(hasDocsHome, {
+        documentHtml: homeDocumentHtml,
+        routePath: "/",
+        text: `${homeMarkdownTemplate}${pageFooterMarkdown("/")}`,
+      }),
       {
         documentHtml: loreIndexDocumentHtml,
         routePath: "/lore",

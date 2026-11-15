@@ -130,12 +130,12 @@ See [Keyboard Shortcuts](/features/keyboard-shortcuts/) for cmd-k access to Prof
 
 For quick navigation within Profile:
 
-| Shortcut | Action |
-|----------|--------|
-| `Ctrl+K` then type "Profile" | Open the full Profile page |
-| `Ctrl+K` then type "General" | Jump to General tab |
-| `Ctrl+K` then type "Appearance" | Jump to Appearance tab |
-| `Ctrl+K` then type "Task" | Jump to Task page tab |
+| Shortcut                        | Action                     |
+| ------------------------------- | -------------------------- |
+| `Ctrl+K` then type "Profile"    | Open the full Profile page |
+| `Ctrl+K` then type "General"    | Jump to General tab        |
+| `Ctrl+K` then type "Appearance" | Jump to Appearance tab     |
+| `Ctrl+K` then type "Task"       | Jump to Task page tab      |
 
 ### Related Topics
 

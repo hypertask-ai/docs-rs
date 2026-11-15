@@ -17,7 +17,7 @@ import {
 } from "../src/features/docs-sidebar.js";
 import { view } from "../src/features/reader.js";
 
-const DocsPageFixture = Schema.Struct({
+const DocsPageFixtureSchema = Schema.Struct({
   description: Schema.String,
   duplicateTitleOnLive: Schema.optional(Schema.Boolean),
   headings: Schema.Array(
@@ -35,17 +35,17 @@ const DocsPageFixture = Schema.Struct({
   titleTag: Schema.String,
 });
 
-type DocsPageFixture = typeof DocsPageFixture.Type;
+type DocsPageFixture = typeof DocsPageFixtureSchema.Type;
 
-const fixtureDirectory = new URL("./fixtures/docs/", import.meta.url);
+const fixtureDirectory = new URL("fixtures/docs/", import.meta.url);
 
 const fixtures: readonly DocsPageFixture[] = readdirSync(fixtureDirectory)
   .filter((file) => file.endsWith(".json"))
   .toSorted()
   .map((file) =>
-    Schema.decodeUnknownSync(
-      Schema.fromJsonString(DocsPageFixture)
-    )(readFileSync(new URL(file, fixtureDirectory), "utf-8"))
+    Schema.decodeUnknownSync(Schema.fromJsonString(DocsPageFixtureSchema))(
+      readFileSync(new URL(file, fixtureDirectory), "utf-8")
+    )
   );
 
 const make = Effect.gen(function* docsParityFixture() {

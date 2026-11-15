@@ -1,6 +1,5 @@
 ---
-description: Create a Hypertask agent, copy its token, give it board access and connect
-  it with the CLI or MCP.
+description: Create a Hypertask agent, copy its token, give it board access and connect it with the CLI or MCP.
 title: Connect a new agent
 ---
 
