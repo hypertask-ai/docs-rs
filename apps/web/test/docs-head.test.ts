@@ -163,8 +163,8 @@ for (const page of pages) {
       docsPageTitleFromDocumentTitle(`${page.pageTitle} | Hypertask Docs`)
     ).toBe(page.pageTitle);
     expect(head.lang).toBe(page.lang);
-    expect(tableTags(headTags(builtHead(head))).toSorted()).toStrictEqual(
-      tableTags(headTags(recorded)).toSorted()
+    expect([...tableTags(headTags(builtHead(head)))].toSorted()).toStrictEqual(
+      [...tableTags(headTags(recorded))].toSorted()
     );
   });
 }
