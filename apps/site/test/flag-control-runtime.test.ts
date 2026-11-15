@@ -8,8 +8,8 @@ import {
   FlagScopeMismatch,
   FlagTarget,
   flagPartition,
-} from "@rat-stack/core/flag-control";
-import { FlagStorageError, UnknownFlag } from "@rat-stack/core/flags";
+} from "@hypertask-docs/core/flag-control";
+import { FlagStorageError, UnknownFlag } from "@hypertask-docs/core/flags";
 import { Effect, Match, Option, Schema } from "effect";
 import * as Arbitrary from "effect/Arbitrary";
 

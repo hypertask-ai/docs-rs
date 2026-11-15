@@ -1,5 +1,5 @@
-import { defineContract, implement } from "@rat-stack/capability";
-import { PersonIdSchema } from "@rat-stack/database";
+import { defineContract, implement } from "@hypertask-docs/capability";
+import { PersonIdSchema } from "@hypertask-docs/database";
 import { Effect, Layer, Schema } from "effect";
 
 import { Auth } from "./auth.js";

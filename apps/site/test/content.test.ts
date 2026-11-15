@@ -1,7 +1,10 @@
 import { NodeCrypto, NodeServices } from "@effect/platform-node";
 import { expect, it } from "@effect/vitest";
-import { parseCodeRequest, sourceLines } from "@rat-stack/code-snippets";
-import { CafeNewsItem, sortCafeNewsNewest } from "@rat-stack/core/contracts";
+import { parseCodeRequest, sourceLines } from "@hypertask-docs/code-snippets";
+import {
+  CafeNewsItem,
+  sortCafeNewsNewest,
+} from "@hypertask-docs/core/contracts";
 import { Effect, FileSystem, Layer, Path, Schema, Stream } from "effect";
 import { ChildProcess, ChildProcessSpawner } from "effect/process";
 import { DomUtils, parseDocument } from "htmlparser2";
@@ -944,7 +947,7 @@ it.layer(contentServices)("generated content", (test) => {
 
       expect(fence?.documentHtml).toContain('id="linked-from"');
       expect(fence?.documentHtml).toContain(
-        '<a href="/VISION.md">Purpose and boundaries of rat-stack (VISION.md)</a>'
+        '<a href="/VISION.md">Purpose and boundaries of the docs project (VISION.md)</a>'
       );
       expect(homeDocumentHtml).toContain('href="/lore/');
     })

@@ -1,5 +1,5 @@
-import { watchActor } from "@rat-stack/capability/actor-watch";
-import type { Verdict } from "@rat-stack/check-harness";
+import { watchActor } from "@hypertask-docs/capability/actor-watch";
+import type { Verdict } from "@hypertask-docs/check-harness";
 import {
   createEffectActor,
   createEffectLogic,

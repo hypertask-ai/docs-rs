@@ -1,4 +1,4 @@
-import type { SearchOutput } from "@rat-stack/core/contracts";
+import type { SearchOutput } from "@hypertask-docs/core/contracts";
 import { Option } from "effect";
 
 import {

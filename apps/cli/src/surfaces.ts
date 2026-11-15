@@ -2,18 +2,18 @@
 import { createServer } from "node:http";
 
 import { NodeHttpServer } from "@effect/platform-node";
-import type { AnyCapability } from "@rat-stack/capability";
+import type { AnyCapability } from "@hypertask-docs/capability";
 import {
   layerSubprocess,
   toCodeMode,
   toHttpApi,
   toToolkit,
-} from "@rat-stack/capability";
-import { capabilities as coreCapabilities } from "@rat-stack/core";
-import { flagWriteCapabilities } from "@rat-stack/core/flag-write-capabilities";
-import { devtools, devtoolsLayer } from "@rat-stack/devtools";
-import { learnCapabilities } from "@rat-stack/learn";
-import { localLearnCapabilities } from "@rat-stack/learn/local";
+} from "@hypertask-docs/capability";
+import { capabilities as coreCapabilities } from "@hypertask-docs/core";
+import { flagWriteCapabilities } from "@hypertask-docs/core/flag-write-capabilities";
+import { devtools, devtoolsLayer } from "@hypertask-docs/devtools";
+import { learnCapabilities } from "@hypertask-docs/learn";
+import { localLearnCapabilities } from "@hypertask-docs/learn/local";
 import { Effect, Layer, Logger } from "effect";
 import { McpServer } from "effect/ai";
 import { HttpRouter } from "effect/http";

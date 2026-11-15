@@ -1,6 +1,6 @@
-import { CallWatch } from "@rat-stack/capability/call-watch";
-import type { Around } from "@rat-stack/capability/call-watch";
-import { implement } from "@rat-stack/capability/implement";
+import { CallWatch } from "@hypertask-docs/capability/call-watch";
+import type { Around } from "@hypertask-docs/capability/call-watch";
+import { implement } from "@hypertask-docs/capability/implement";
 import { Effect, Option } from "effect";
 
 import {

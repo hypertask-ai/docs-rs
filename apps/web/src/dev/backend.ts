@@ -1,5 +1,5 @@
-import { contentCapabilities } from "@rat-stack/site/capabilities";
-import { nodeContentLayer } from "@rat-stack/site/node-content";
+import { contentCapabilities } from "@hypertask-docs/site/capabilities";
+import { nodeContentLayer } from "@hypertask-docs/site/node-content";
 import { Layer } from "effect";
 import { HttpRouter } from "effect/http";
 

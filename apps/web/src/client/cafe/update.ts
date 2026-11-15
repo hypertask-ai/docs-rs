@@ -1,5 +1,5 @@
-import { cafeLetters } from "@rat-stack/core/contracts";
-import type { CafeLetterValue } from "@rat-stack/core/contracts";
+import { cafeLetters } from "@hypertask-docs/core/contracts";
+import type { CafeLetterValue } from "@hypertask-docs/core/contracts";
 import type { Update } from "foldkit";
 import { modifyFields } from "foldkit/struct";
 

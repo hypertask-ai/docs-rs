@@ -1,5 +1,8 @@
-import { SubscriberIntake } from "@rat-stack/core/interest";
-import type { IntakeRequest, IntakeResult } from "@rat-stack/core/interest";
+import { SubscriberIntake } from "@hypertask-docs/core/interest";
+import type {
+  IntakeRequest,
+  IntakeResult,
+} from "@hypertask-docs/core/interest";
 import { Effect, Layer, Ref } from "effect";
 
 export const fakeIntake = (script: readonly IntakeResult[]) =>

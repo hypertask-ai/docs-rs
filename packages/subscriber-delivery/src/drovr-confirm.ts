@@ -1,5 +1,5 @@
-import { SubscriberConfirm } from "@rat-stack/core/interest";
-import type { ConfirmState } from "@rat-stack/core/interest";
+import { SubscriberConfirm } from "@hypertask-docs/core/interest";
+import type { ConfirmState } from "@hypertask-docs/core/interest";
 import { Effect, Layer, Option, Redacted, Schema } from "effect";
 import { HttpClient, HttpClientRequest } from "effect/http";
 

@@ -27,55 +27,57 @@ The base Effect plugin owns diagnostic severity. Child configs may add exact `al
 
 ## Packages
 
-- **`@rat-stack/capability`**:
+This is the template's package inventory. The docs project keeps it until HTPR-9202 cuts what the site does not use, so a role below describes the shipped package, not the docs product.
+
+- **`@hypertask-docs/capability`**:
   - Path: `packages/capability`
   - Role: `defineContract`, `implement`, and the `toCommand`, `toHttpApi`, `toToolkit`, `toRpc`, and `toCodeMode` projections
-- **`@rat-stack/core`**:
+- **`@hypertask-docs/core`**:
   - Path: `packages/core`
   - Role: Shared `inspectFile`, `search`, and `read` contracts; `inspectFile` handler, lifecycle machine, and `FileInspector`
-- **`@rat-stack/database`**:
+- **`@hypertask-docs/database`**:
   - Path: `packages/database`
   - Role: Database cartridge: the `RunLog` service and the `DatabaseVendor` choice (D1 or Hyperdrive Postgres), with each vendor's schema, migrations, and resources
-- **`@rat-stack/auth`**:
+- **`@hypertask-docs/auth`**:
   - Path: `packages/auth`
-  - Role: Better Auth cartridge over the chosen `DatabaseVendor`: `Auth`, `CurrentPerson`, and the RPC middleware that provides it; only `Unauthenticated` crosses the wire. `@rat-stack/auth/devtools` adds `runAsPerson`, the dev-only `rat_test_person` capability, and `testPersonLayer`
-- **`@rat-stack/flags`**:
+  - Role: Better Auth cartridge over the chosen `DatabaseVendor`: `Auth`, `CurrentPerson`, and the RPC middleware that provides it; only `Unauthenticated` crosses the wire. `@hypertask-docs/auth/devtools` adds `runAsPerson`, the dev-only `rat_test_person` capability, and `testPersonLayer`
+- **`@hypertask-docs/flags`**:
   - Path: `packages/flags`
   - Role: Typed flags cartridge: scoped evidence ladders, Config and memory adapters, cartridge-owned Alchemy KV, and a default Durable Object ledger. The DO commits values, receipts, and projection markers together; alarms project to KV. Readers never call the DO. Empty KV uses Config or declared defaults; read failures follow the catalog's `failurePolicy`. `EVENTS_ENABLED` stays deploy-time Config. Core owns declarations and the `flip_feature_flag`, `record_flag_evidence`, and `read_flag_ledger` contracts. Climbs use capability approval; `off` bypasses approval but stays audited. Only the CLI mounts operator capabilities; its default composition has no live ledger. Public readers and the sandbox stay read-only. Replace both exports in `apps/site/src/flags.ts` with `Flags.defaults(eventFlags)` to remove the adapter package.
-- **`@rat-stack/events`**:
+- **`@hypertask-docs/events`**:
   - Path: `packages/events`
-  - Role: Events cartridge: capture-first request analytics. `withEventCapture` records one `request` event per HTTP request into core's `EventSink` port and owns visitor ids, the visitor salt, identity modes, and query and geography redaction. `src/basin.ts` provides the Basin-backed sink and salt; `src/memory.ts` is the in-memory sink for tests. `@rat-stack/events/site` is the one seam: `apps/site/src/events.ts` is the only file outside the package that imports it, and `rat-stack-boundaries/no-cross-layer-imports` enforces that. Removal is one line in that file plus deleting the package and its `apps/site/package.json` line; `packages/events/README.md` has the steps. Core owns the `EventSink` port (no-op default), the `RawEvent` wire schemas, `@rat-stack/core/events-off`. Tests are property and model based (`it.prop`, `it.effect.prop`). `EVENTS_ENABLED` (default false) turns capture and the catalog, sink, and pipeline on, and reads `EVENTS_SINK_TOKEN` at deploy time only; off still declares the bucket, stream, and salt so their state survives. `EVENTS_IDENTITY_MODE` picks `daily` or `persistent` visitor ids
-- **`@rat-stack/turbo-cache`**:
+  - Role: Events cartridge: capture-first request analytics. `withEventCapture` records one `request` event per HTTP request into core's `EventSink` port and owns visitor ids, the visitor salt, identity modes, and query and geography redaction. `src/basin.ts` provides the Basin-backed sink and salt; `src/memory.ts` is the in-memory sink for tests. `@hypertask-docs/events/site` is the one seam: `apps/site/src/events.ts` is the only file outside the package that imports it, and `rat-stack-boundaries/no-cross-layer-imports` enforces that. Removal is one line in that file plus deleting the package and its `apps/site/package.json` line; `packages/events/README.md` has the steps. Core owns the `EventSink` port (no-op default), the `RawEvent` wire schemas, `@hypertask-docs/core/events-off`. Tests are property and model based (`it.prop`, `it.effect.prop`). `EVENTS_ENABLED` (default false) turns capture and the catalog, sink, and pipeline on, and reads `EVENTS_SINK_TOKEN` at deploy time only; off still declares the bucket, stream, and salt so their state survives. `EVENTS_IDENTITY_MODE` picks `daily` or `persistent` visitor ids
+- **`@hypertask-docs/turbo-cache`**:
   - Path: `packages/turbo-cache`
   - Role: Thin project declaration of `alchemy-turbo-cache` `0.0.0`, pinned to Git commit `a51a7ba6ea56728f89c4214befe8bf940a946e52`. The external package owns the binary-protocol Worker, lifecycle-expiring R2 bucket, team-scoped generated credentials and read-only state-to-stdin handoff. Its Git `prepare` builds exports during installation, authorized by the package-specific `allowBuilds` entry. Rat-stack supplies prefix `TurboCache`, team `rat-stack`, seven-day retention and prod-only resource retention. The Stack includes it with `yield* turboCache`. The local seam test preserves the exact three resource FQNs and credential handoff; the README records trust limits and removal steps.
-- **`@rat-stack/crash`**:
+- **`@hypertask-docs/crash`**:
   - Path: `packages/crash`
-  - Role: Private crash-trace archive: trace schemas, `captureCrashes`, and the R2 archive layer (`@rat-stack/crash/r2`). Mischief's tail consumer provides it in `apps/site/src/crash-tail.ts`
-- **`@rat-stack/subscriber-delivery`**:
+  - Role: Private crash-trace archive: trace schemas, `captureCrashes`, and the R2 archive layer (`@hypertask-docs/crash/r2`). Mischief's tail consumer provides it in `apps/site/src/crash-tail.ts`
+- **`@hypertask-docs/subscriber-delivery`**:
   - Path: `packages/subscriber-delivery`
   - Role: External subscriber intake and confirmation adapter; implements core's job-shaped `SubscriberIntake` and `SubscriberConfirm` ports, provided by the Worker, never imported by core
-- **`@rat-stack/learn`**:
+- **`@hypertask-docs/learn`**:
   - Path: `packages/learn`
-  - Role: Source-derived public concept deck and the learning lifecycle. Stateless capabilities return compact progress; `@rat-stack/learn/local` owns the local JSONL adapter and capabilities. The CLI provides the filesystem platform for core's `LearnerProgress` port.
-- **`@rat-stack/motion`**:
+  - Role: Source-derived public concept deck and the learning lifecycle. Stateless capabilities return compact progress; `@hypertask-docs/learn/local` owns the local JSONL adapter and capabilities. The CLI provides the filesystem platform for core's `LearnerProgress` port.
+- **`@hypertask-docs/motion`**:
   - Path: `packages/motion`
-  - Role: Motion for Foldkit apps. The `src/*.pure.ts` core (Penner and CSS easings, tweens, fixed-step springs, number, tuple, OKLab colour and 2D transform interpolation) imports nothing, so consumers can vendor it. `@rat-stack/motion/foldkit` adds the Model schemas, the `Motion.Message` union, `advance`, and subscriptions for animation frames and `prefers-reduced-motion`; Foldkit and Effect are optional peers. No Worker graph imports it
-- **`@rat-stack/lore`**:
+  - Role: Motion for Foldkit apps. The `src/*.pure.ts` core (Penner and CSS easings, tweens, fixed-step springs, number, tuple, OKLab colour and 2D transform interpolation) imports nothing, so consumers can vendor it. `@hypertask-docs/motion/foldkit` adds the Model schemas, the `Motion.Message` union, `advance`, and subscriptions for animation frames and `prefers-reduced-motion`; Foldkit and Effect are optional peers. No Worker graph imports it
+- **`@hypertask-docs/lore`**:
   - Path: `packages/lore`
   - Role: Public content graph and traversal service
-- **`@rat-stack/devtools`**:
+- **`@hypertask-docs/devtools`**:
   - Path: `packages/devtools`
   - Role: 🐀 devtools cartridge: `CallLog`, `record`, and the `rat_*` capabilities that list, read, dispatch, replay, and diff capability calls
-- **`@rat-stack/web`**:
+- **`@hypertask-docs/web`**:
   - Path: `apps/web`
-  - Role: Default UI bin: Foldkit on Vite, deployed through Alchemy's `Cloudflare.Website.Foldkit` as `Website` (`apps/web/src/website.ts`). Server rendering and prerendering are the default: one `foldkit({ ssr: { serverEntry, clientEntry, build: { prerender } } })` call in `vite.config.ts` builds the client bundle, the server fetch handler, and an HTML file for every path in `src/entry.server.ts`'s `prerenderPaths`. The Website serves those files, sends every other request to the handler, and the browser hydrates. System page: `.brain/areas/web.svx`. Browser `client/` Commands call an Effect `RpcClient` built from the contracts' `toRpcGroup`. The reader program mounts the document browser (`features/app.ts`, `client/docs`) as a Submodel at `/search`, where it calls `search` and `read` over that client. In production, the Worker that `@foldkit/vite-plugin` generates from `src/entry.server.ts` forwards `/rpc` through `src/server/website-bindings.ts` to the private `RpcBackend` in `apps/site/src/rpc-worker.ts`. `pnpm --filter @rat-stack/web dev` loads the `#backend` import, which resolves only under the `development` condition in `apps/web/package.json`, and serves the content capabilities in process from `src/dev/backend.ts`. In dev, `src/dev/backend.ts` runs the content capabilities under devtools: `/rpc` calls are recorded, `/__rat/rpc` serves the 🐀 overlay (`#devtools-overlay`, `src/dev/features/overlay`, ⌘K), and `/__rat/mcp` serves every `rat_*` tool to agents, with memory-Auth test people. `src/dev/client` and `src/dev/features` follow the browser rules. `test/production-bundle.test.ts` proves no `src/dev` module, no devtools code, and no test people reach a production build. Include it in the Stack with `const website = yield* Website;`
-- **`@rat-stack/cli`**:
+  - Role: Default UI bin: Foldkit on Vite, deployed through Alchemy's `Cloudflare.Website.Foldkit` as `Website` (`apps/web/src/website.ts`). Server rendering and prerendering are the default: one `foldkit({ ssr: { serverEntry, clientEntry, build: { prerender } } })` call in `vite.config.ts` builds the client bundle, the server fetch handler, and an HTML file for every path in `src/entry.server.ts`'s `prerenderPaths`. The Website serves those files, sends every other request to the handler, and the browser hydrates. System page: `.brain/areas/web.svx`. Browser `client/` Commands call an Effect `RpcClient` built from the contracts' `toRpcGroup`. The reader program mounts the document browser (`features/app.ts`, `client/docs`) as a Submodel at `/search`, where it calls `search` and `read` over that client. In production, the Worker that `@foldkit/vite-plugin` generates from `src/entry.server.ts` forwards `/rpc` through `src/server/website-bindings.ts` to the private `RpcBackend` in `apps/site/src/rpc-worker.ts`. `pnpm --filter @hypertask-docs/web dev` loads the `#backend` import, which resolves only under the `development` condition in `apps/web/package.json`, and serves the content capabilities in process from `src/dev/backend.ts`. In dev, `src/dev/backend.ts` runs the content capabilities under devtools: `/rpc` calls are recorded, `/__rat/rpc` serves the 🐀 overlay (`#devtools-overlay`, `src/dev/features/overlay`, ⌘K), and `/__rat/mcp` serves every `rat_*` tool to agents, with memory-Auth test people. `src/dev/client` and `src/dev/features` follow the browser rules. `test/production-bundle.test.ts` proves no `src/dev` module, no devtools code, and no test people reach a production build. Include it in the Stack with `const website = yield* Website;`
+- **`@hypertask-docs/cli`**:
   - Path: `apps/cli`
   - Role: Composition root: `stats`, `catalog`, `openapi`, `serve [--devtools]`, `mcp [--code-mode] [--devtools]` commands. Also builds the published `ratstack` npm package: `src/ratstack.ts` bundles the local learn commands and a learn-only `mcp` into `dist/npm` with Vite. `test/ratstack.e2e.test.ts` proves the package holds no devtools and serves only the learn tools
-- **`@rat-stack/infra`**:
+- **`@hypertask-docs/infra`**:
   - Path: `apps/infra`
   - Role: Alchemy Stack: the project's cloud footprint as one Effect program
-- **`@rat-stack/site`**:
+- **`@hypertask-docs/site`**:
   - Path: `apps/site`
   - Role: Cloudflare Worker: the public site, agent discovery, and sandboxed execute surface
   - Startup fence: `scripts/startup-budget.ts` measures Alchemy's actual upload. Follow static imports from each entry; count shared chunks once and exclude dynamic-only chunks. Hard startup ceilings are shrink-only: Mischief **1,114,000 bytes**, LearnFeedbackAuth **628,000 bytes**, Workshop **870,000 bytes**. Never raise them to accept growth. LearnFeedbackAuth's temporary raise has been retired; `apps/site/STARTUP.md` records the lazy-auth measurements. Entry bytes are evidence only; total JavaScript above **2,500,000 bytes** warns without blocking. Growing page data stays in static assets outside the startup code. Measurement and profiling: `apps/site/STARTUP.md`.
@@ -111,7 +113,7 @@ The base Effect plugin owns diagnostic severity. Child configs may add exact `al
 
 - **`pnpm install`**: Install workspace dependencies
 - **`pnpm sources:fetch`**: Import missing pinned code objects once before the first gate; generation stays local-only
-- **`pnpm dev`**: Run `apps/web` under `vite dev` through portless at `http://rat-stack.localhost:1355` (worktrees get their own prefix); `portless list` shows the route
+- **`pnpm dev`**: Run `apps/web` under `vite dev` through portless at `http://hypertask-docs.localhost:1355` (worktrees get their own prefix); `portless list` shows the route
 - **`pnpm check`**: Typecheck, verify formatting, and run type-aware linting
 - **`pnpm lint`**: Type-aware lint plus format check only; `turbo run check` runs this once at the root as `//#lint`
 - **`pnpm fix`**: Apply Oxfmt and safe Oxlint fixes
@@ -130,17 +132,13 @@ The base Effect plugin owns diagnostic severity. Child configs may add exact `al
 
 Run `pnpm fix` only when you intend to rewrite files. Finish with `pnpm turbo run check test build`.
 
+Nothing is built, tested or deployed on our servers. GitHub Actions runs the gate on every pull request and every merge.
+
 ## Deploy
 
 Follow [ship](/skills/ship) and `skills/ship/references/project.md` for deployment commands, approval, checks, and recovery.
 
-## Release the ratstack package
-
-- `.github/workflows/ratstack-publish.yml` publishes `ratstack` to npm with trusted publishing (OIDC). No npm token exists in the repo or its secrets.
-- Bump `apps/cli/npm/ratstack/package.json` and `apps/cli/src/version.ts` together. The e2e test fails when they differ.
-- Merge to `main`, then push the tag `ratstack-v<version>` on that merged commit. The workflow refuses a tag that does not match the version or is not on `main`.
-- The workflow runs the full gate, then `npm publish` from `apps/cli/dist/npm`. npm adds provenance.
-- The npm package settings name this repo, `ratstack-publish.yml`, and the `npm` environment as the trusted publisher. Changing the workflow filename breaks publishing.
+docs.hypertask.ai moves to the docs Stack in HTPR-9201. Until that ticket lands, the old Pages project serves the address and this repository deploys nothing. The template's npm publish workflow for the `ratstack` bin stays until HTPR-9202 removes it; the docs project never publishes that package.
 
 ## Fence (cheating is uncomfortable)
 
@@ -179,12 +177,25 @@ Mirrors are reference material, not runtime dependencies. Exclude them from type
 
 Preserve existing work. Inspect status before editing, stage only files changed for the current task, and do not commit generated output, secrets, or populated `.agent_sources/github.com/` trees. Use the repository's existing source-control tool; do not initialize or migrate one without approval. Never pass `--no-verify` to git.
 
-`.shitrat/public-allow.json` tells the ShitRat public-push guard that `.brain/` is public content here, because the site is built from it. A child project owns that file: narrow or delete it the day its `.brain` holds anything that isn't meant to be public.
+`.shitrat/public-allow.json` tells the ShitRat public-push guard that `.brain/` is public content here, because the docs site is built from it. This project owns that file. The repository is private today; narrow or delete the file the day `.brain` holds anything that is not meant to be public. Engineering notes that must never publish live in `internal/`, not in `.brain`.
 
 ## Project law
 
-A child project replaces this section on day one with its own product rules. These rules describe the rat-stack template, not the product in a clone. Keep durable product intent in `VISION.md`.
+Product rules for docs.hypertask.ai. Product intent lives in `VISION.md`. The engineering rules at the end of this section are the template's fence and stay as they ship.
 
+- The docs live at the addresses they have today. Every page, changelog entry, generated reference, markdown copy, llms file and feed keeps its address. A change that moves, renames or drops one is a bug, not a cleanup.
+- The docs keep their own look. The palette, typography, header, sidebar, code blocks and page frame come from the old Starlight site and arrive with the look step (HTPR-9192). Never take Rat Stack's look and never take Foldkit's default look, and never invent a value.
+- Search, the MCP read tools, the markdown copies, the llms files, the changelog feeds, the Fathom tag and the help chat are a public contract. The ticket that changes one proves it on a preview.
+- The site stores nothing: no database, no accounts, no sign-in, no scheduled jobs. The template's auth, database, events, flags, interest and subscriber packages are still installed and must not gain docs behavior; HTPR-9202 removes what the site does not use. If a change needs storage, stop and ask at rung 3.
+- Publishing runs from GitHub on every merge to `main`.
+- Pages are `.svx` sources in `.brain`. A page carries `title` and `description` frontmatter. A page that uses components needs the component in the reader; the Starlight `Aside`, `Tabs`, `Steps` and `Card` components do not exist here and do not come along.
+- Bare `{braces}` outside a code span are an expression in a page source, not text, and break the build. The content build names the file and the line.
+- Code examples come first, then the explanation. Tables carry parameters and comparisons. Examples of task descriptions and comments use HTML, because that is what the API accepts.
+- Generated pages are never hand-edited. The MCP tools reference and the CLI reference are regenerated from the live tools and the released CLI (HTPR-9191).
+- One changelog entry per change, one file per entry, named `YYYY-MM-DD-short-title.md`, with `date`, `title`, `tags` and `summary` frontmatter and the verified detail below. HTPR-9187 moves the existing entries and owns the folder.
+- Changelog sources are HTPR tickets from project 15 only. Skip test tickets and every other prefix. Never publish a privacy or cross-tenant bug. Reframe a bug as the fix a user gained, in user-facing words. Categories are Bug Fixes, Improvements, New Features and Infrastructure. Link a ticket by its full visible URL. The index, the filters and the feeds are generated, never hand-edited.
+- A docs change is done when the GitHub run for the merge is green and the page shows the change at its address. One broken page stops the publish, so build before pushing.
+- Contributions from outside the team arrive as GitHub issues. The outside pull request guard closes their pull requests (HTPR-9198). A security report carries no secrets, tokens or personal data.
 - One contract, every surface. Define schemas and metadata with `defineContract`; bind a server-side handler with `implement` and add the capability to `capabilities`. CLI, HTTP, MCP, RPC, and code mode are projections in `packages/capability`. Do not add a command, route, or tool handler that bypasses a capability.
 - Schemas are the contract. Input, output, and failure are Effect `Schema`; JSON Schema, OpenAPI, and the code-mode declarations are derived from them, never hand-written.
 - Lifecycles are machines. Finite modes, retries, and cancellation live in XState machines started with `createEffectActor`; side effects live in declared `createEffectLogic` actors, never inline.
@@ -201,23 +212,34 @@ A child project replaces this section on day one with its own product rules. The
 - Diagnostic overrides are targeted and explained: `// @effect-diagnostics-next-line <rule>:off -- <reason>`. File-level overrides exist only at projection boundaries (`packages/capability/src/to-toolkit.ts`, `packages/capability/src/to-code-mode.ts`, `packages/capability/src/to-rpc.ts`) and in process-spawning test files.
 - Lint overrides follow the same rule: `// oxlint-disable-next-line <rule> -- <reason>`. Every type assertion carries a one-line `SAFETY:` comment naming the invariant it relies on. `unicorn/throw-new-error` is off because `Schema.TaggedError(...)` looks like a throw to it. Anti-slop overrides exist only where a type is erased on purpose (the projections in `packages/capability`, the sandbox RPC boundary, the lint plugin's AST walker); anywhere else, parse the value at its boundary with Effect `Schema`.
 - `no-comments/directive-reason` (`scripts/oxlint-plugin-no-comments.ts`) enforces the reason: every `oxlint-disable*` or `eslint-disable*` comment without text after `--` fails lint.
-- Hot pink is the only accent. `--accent` (#ff1493) marks borders, rules and focus rings; `--accent-text` (#c8006e, 5.7:1 on white) is the only pink text. Use it for at most one thing per screen, plus focus. News chrome uses no pink. The allowed selectors cover `:focus-visible` and copy controls; links, headings, tables and tier cells never use it. `apps/site/test/accent.test.ts` holds the allowed selectors.
+- The docs keep one accent, taken from the old site's theme. Rat Stack's hot pink (#ff1493) is not the docs accent, and no page borrows it. `apps/site/test/accent.test.ts` belongs to the template CSS and leaves with it in HTPR-9192.
 - Pins stay exact. A vendored dependency carries a matching `minimumReleaseAgeExclude` entry and a removal rule in `vendor/README.md`.
 
 ## Architecture
 
-A child project replaces this section on day one with its own architecture. Record module boundaries, dependency direction, data ownership, and state-machine seams here. Link deeper docs instead of duplicating them.
+Where the docs project's parts live, and which way the imports run.
+
+- Pages live in `.brain`. A guide page is `.brain/resources/lore/<name>.svx` and a system page is `.brain/areas/<name>.svx`. Nothing publishes from anywhere else.
+- The content build (`apps/site/scripts/generate-content.ts`) reads `.brain` and writes the reader manifest, the markdown copies, the llms files, the changelog feeds and the search input under `apps/site/content`. Generated output is never edited by hand.
+- The reader is `apps/web`: Foldkit screens with StyleX styles. Routes come from `apps/web/src/reader-routes.ts`; the header, sidebar, page frame, copy control and theme live in `apps/web/src/features`. Browser modules import only `@hypertask-docs/core/contracts` and `@hypertask-docs/capability/rpc-group`.
+- The Worker is `apps/site`: content store, markdown negotiation, MCP surface, llms files, redirects and rate limits. docs.hypertask.ai is a Worker custom domain, not a Pages project. HTPR-9182 declares the settings and HTPR-9201 switches the address.
+- The Stack is `apps/infra/alchemy.run.ts`. It owns the docs domain records and the docs Worker, and it never adopts the ratstack.sh zone. Credentials come from an Alchemy profile (`pnpm alchemy profile edit --add Cloudflare`), never from an environment variable or a committed secret in this repository.
+- Search is a docs index behind a contract (HTPR-9188). The MCP read tools are capabilities on contracts (HTPR-9189); the MCP write tools stay switched off (HTPR-9190).
+- Reference pages come from the live MCP tools and the released CLI on a timer (HTPR-9191). No page is copied from a tool list by hand.
+- The site holds no database and no sessions. The template's auth, database, events, flags, interest, subscriber and live intake packages must not gain docs behavior; HTPR-9202 removes them.
+- Engineering notes live in `internal/`, outside `.brain`, because the content build publishes `.brain` and must never publish these. `internal/README.md` lists them.
+- The template's reference shapes below describe code that ships today and leave with HTPR-9202. Follow them in docs code until then.
 
 - `rat-stack-boundaries/no-core-adapters` keeps provider adapters out of core. Core owns job-shaped ports; adapter packages implement them, and apps provide them at composition. `packages/subscriber-delivery` implements subscriber intake and confirmation; `packages/core/test/boundaries-rule.test.ts` checks the boundary.
 - `rat-stack-boundaries/no-cross-layer-imports` enforces dependency direction: `apps/cli` → `packages/core` → `packages/capability` → Effect/XState. Packages do not import apps; `packages/capability` does not import domain code; `apps/infra` owns its Stack wiring. `core` owns shared contracts and the `inspectFile` handler; each capability's owner keeps its handler beside its data or infrastructure. Core depends on `capability` for `defineContract` and `implement`.
-- `rat-stack-boundaries/no-browser-server-imports` applies to `apps/*/src/features/**` and `apps/*/src/client/**`. Browser modules may import only `@rat-stack/core/contracts` and `@rat-stack/capability/rpc-group` from these packages; they cannot import handler modules. `rat-stack-boundaries/no-feature-transport` applies to `apps/*/src/features/**`.
+- `rat-stack-boundaries/no-browser-server-imports` applies to `apps/*/src/features/**` and `apps/*/src/client/**`. Browser modules may import only `@hypertask-docs/core/contracts` and `@hypertask-docs/capability/rpc-group` from these packages; they cannot import handler modules. `rat-stack-boundaries/no-feature-transport` applies to `apps/*/src/features/**`.
 - `rat-stack-boundaries/no-hand-rolled-surface` keeps `Rpc.make`, `RpcGroup.make`, `HttpApi*`, `Tool.make`, and `Toolkit.make` inside `packages/capability`; everything else projects contracts. `rat-stack-boundaries/no-browser-globals-on-server` keeps `window`, `document`, `navigator`, and web storage in `apps/*/src/client/**` and `apps/*/src/features/**`.
 - `rat-stack-patterns` (`scripts/oxlint-plugin-patterns.ts`): `contract-binding-matches-name` (`const searchContract = defineContract("search", …)`), `no-module-level-mutable-state` (module `let`/`var` in `apps/*/src` and `packages/*/src` leaks across Worker requests), and `acquire-release-constructs-in-acquire-body` (build pools inside acquire, not before).
 - `packages/core/src/file-inspector.ts` is the reference service shape: a `Context.Service` class whose `make` captures its dependencies so its methods carry no requirements, with `static layer` beside it. `packages/core/src/config-service.ts` derives a service from Effect `Config` (production `layer` reads the ConfigProvider, `configLayer` takes parsed values for tests); `AppConfig` is the instance and mirrors `.env.schema`.
 - `packages/core/src/inspect-machine.ts` is the reference shape for a lifecycle: the machine owns states, declared `createEffectLogic` actors own side effects and typed failures, `join` plus `Effect.orDie` hands the outcome back to Effect. `packages/core/src/contracts.ts` owns `inspectFileContract`; `packages/core/src/inspect-file.ts` implements it and registers the capability.
 - Effect-backed machines start only under `createEffectActor`, never `createActor`. Only actions and actors declared in `setupEffect` contribute to the actor's requirements; the `xstate-effect/no-inline-effect` lint rule enforces the inline cases.
 - `packages/capability/src`: `contract.ts` defines shared contracts; `implement.ts` binds typed handlers and adds approval requirements; `to-command.ts`, `to-http-api.ts`, `to-toolkit.ts`, `to-rpc.ts`, and `to-code-mode.ts` project implemented capabilities. `to-rpc-group.ts` builds the contract-only client group; `to-rpc.ts` derives the server group from those same contracts. `catalog.ts`, `sandbox-service.ts`, and `sandbox-subprocess.ts` support code mode. `to-code-mode.ts` imports from `to-toolkit.ts`, so MCP is a prerequisite for code mode.
-- Devtools are capabilities: `devtools(capabilities)` adds the `rat_*` capabilities, and a dev composition provides the recording layer from `devtoolsLayer()` through `CallWatch` (`@rat-stack/capability/call-watch`). `implement` reads that ambient reference once per call and surrounds the approval-gated handler, so denied calls are recorded too; the default is a no-op. `CallWatch` observes calls across projections without changing their capability lists. `aroundHandlers` stays as the explicit wrapper over one capability list: drovr uses it for `writeGate` to serialize and audit approval-gated writes. Both compose because `implement` reads `CallWatch` inside the handler that `aroundHandlers` wraps; the gate runs outside the recorder. `rat_call` dispatches through `invokerFor`, the same path code mode uses. Machines report through `watchActor` (`@rat-stack/capability/actor-watch`), a no-op `ActorWatch` reference that the recorder overrides; `rat-stack-patterns/watch-effect-actors` requires the call. `devtools(capabilities, { runAs })` records each call's identity and lets `rat_call` take `as`; the composition root passes `runAsPerson` from `@rat-stack/auth/devtools`, so devtools never imports auth. `rat-stack-boundaries/no-devtools-in-production` keeps `@rat-stack/devtools` and `@rat-stack/auth/devtools` in `apps/*/src/dev/**`, `apps/cli`, and tests, and keeps everything outside an app's `dev/` folder from importing it, so a deployed entry cannot reach `rat_call` or test people. `--devtools` binds `127.0.0.1` only. Plan and tool list: `.brain/archives/projects/rat-devtools.svx`.
+- Devtools are capabilities: `devtools(capabilities)` adds the `rat_*` capabilities, and a dev composition provides the recording layer from `devtoolsLayer()` through `CallWatch` (`@hypertask-docs/capability/call-watch`). `implement` reads that ambient reference once per call and surrounds the approval-gated handler, so denied calls are recorded too; the default is a no-op. `CallWatch` observes calls across projections without changing their capability lists. `aroundHandlers` stays as the explicit wrapper over one capability list: drovr uses it for `writeGate` to serialize and audit approval-gated writes. Both compose because `implement` reads `CallWatch` inside the handler that `aroundHandlers` wraps; the gate runs outside the recorder. `rat_call` dispatches through `invokerFor`, the same path code mode uses. Machines report through `watchActor` (`@hypertask-docs/capability/actor-watch`), a no-op `ActorWatch` reference that the recorder overrides; `rat-stack-patterns/watch-effect-actors` requires the call. `devtools(capabilities, { runAs })` records each call's identity and lets `rat_call` take `as`; the composition root passes `runAsPerson` from `@hypertask-docs/auth/devtools`, so devtools never imports auth. `rat-stack-boundaries/no-devtools-in-production` keeps `@hypertask-docs/devtools` and `@hypertask-docs/auth/devtools` in `apps/*/src/dev/**`, `apps/cli`, and tests, and keeps everything outside an app's `dev/` folder from importing it, so a deployed entry cannot reach `rat_call` or test people. `--devtools` binds `127.0.0.1` only. Plan and tool list: `.brain/archives/projects/rat-devtools.svx`.
 - `apps/cli/src/surfaces.ts` and `apps/cli/src/learn-surfaces.ts` are the only places projections are instantiated; `learn-surfaces.ts` stays devtools-free because the published `ratstack` bin imports it. `apps/cli/src/command.ts` maps them to subcommands; `apps/cli/src/cli.ts` is the composition root that provides `FileInspector` and `NodeServices`, and `apps/cli/src/ratstack.ts` is the composition root for the `ratstack` bin. Both share `learn-layer.ts`.
 - The [README's Keep or cut section](./README.md#keep-or-cut) lists what to delete per surface.
 
@@ -247,7 +269,7 @@ Never end a turn "waiting" without a wake. Procedure: `skills/rat-stack-mode/pri
 
 ## Boundaries and sign-off
 
-A child project replaces this section on day one with its own boundaries. This section names changes agents may make directly and changes that need owner approval.
+What an agent may change in the docs project directly, and what waits for Valentin.
 
-- Safe by default: adding a capability in `packages/core` and wiring it into `capabilities`; new or tightened tests; a targeted diagnostic override with a written reason; README, AGENTS.md, and `.brain/` edits; tightening a lint rule; removing a surface by following Keep or cut; any change under `apps/infra`, and `pnpm infra:deploy` once `pnpm infra:plan` shows only the intended diff and the gate passes, followed by `pnpm site:smoke`.
-- Needs owner sign-off: adding or changing a dependency version (pins are exact and CI installs cold); any edit to `oxlint.config.ts`, the diagnostics map in `tsconfig.base.json`, `lefthook.yml`, or `scripts/vcs-command-policy.js` that loosens the fence; `pnpm infra:destroy`, and a deploy whose plan replaces or deletes a resource; widening sandbox permissions or adding a runtime that reaches the network; exposing `serve` or `mcp` beyond localhost; vendoring a package as a `file:` tarball; deleting `.agent_sources/` or `vendor/`.
+- Safe by default: a page edit that keeps its address; a new changelog entry; README, AGENTS.md, VISION.md, `internal/` and `.brain/` edits; new or tightened tests; a targeted diagnostic override with a written reason; tightening a lint rule; a new capability in `packages/core` wired into `capabilities`.
+- Needs owner sign-off: adding or changing a dependency version (pins are exact and CI installs cold); any edit to `oxlint.config.ts`, the diagnostics map in `tsconfig.base.json`, `lefthook.yml`, or `scripts/vcs-command-policy.js` that loosens the fence; `pnpm infra:deploy` or `pnpm infra:destroy`, and any plan that replaces or deletes a resource; switching docs.hypertask.ai to this project; moving, renaming or dropping a live address, redirect, llms file, feed entry, search behavior or MCP tool; changing the header, theme, fonts or layout; adding a script, font or tracking tag from outside; switching the MCP write tools on; deleting `.agent_sources/` or `vendor/`; cutting a package before HTPR-9202; any change that costs money.

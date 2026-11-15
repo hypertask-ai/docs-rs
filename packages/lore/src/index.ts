@@ -32,6 +32,6 @@ export { LoreGraph } from "./lore-graph.js";
 
 export type { LoreGraphService } from "./lore-graph.js";
 
-export { NoPath } from "@rat-stack/core/contracts";
+export { NoPath } from "@hypertask-docs/core/contracts";
 
-export { UnknownPage } from "@rat-stack/core/contracts";
+export { UnknownPage } from "@hypertask-docs/core/contracts";

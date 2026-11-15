@@ -1,8 +1,8 @@
-import { CafeData, ResourceNotFound } from "@rat-stack/core/contracts";
-import { CardSchema } from "@rat-stack/core/learn";
-import type { Card } from "@rat-stack/core/learn";
-import { LoreGraph } from "@rat-stack/lore";
-import type { LoreGraphService } from "@rat-stack/lore";
+import { CafeData, ResourceNotFound } from "@hypertask-docs/core/contracts";
+import { CardSchema } from "@hypertask-docs/core/learn";
+import type { Card } from "@hypertask-docs/core/learn";
+import { LoreGraph } from "@hypertask-docs/lore";
+import type { LoreGraphService } from "@hypertask-docs/lore";
 import { Context, Effect, Layer, Option, Ref, Schema } from "effect";
 
 import { staticAssetGeneration } from "./bundled-content.generated.js";

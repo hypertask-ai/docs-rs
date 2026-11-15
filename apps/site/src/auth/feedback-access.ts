@@ -1,5 +1,5 @@
-import { LearnUnauthenticated } from "@rat-stack/core/learn";
-import { FeedbackAuthor } from "@rat-stack/learn/feedback-author";
+import { LearnUnauthenticated } from "@hypertask-docs/core/learn";
+import { FeedbackAuthor } from "@hypertask-docs/learn/feedback-author";
 import { RuntimeContext } from "alchemy";
 import type { HttpEffect } from "alchemy/Http";
 import { Context, Effect, Layer, Option } from "effect";

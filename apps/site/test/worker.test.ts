@@ -2,8 +2,8 @@ import { fileURLToPath } from "node:url";
 
 import { NodeServices } from "@effect/platform-node";
 import { expect, it } from "@effect/vitest";
-import { ExecuteResult } from "@rat-stack/capability/code-mode";
-import { parseCodeRequest } from "@rat-stack/code-snippets";
+import { ExecuteResult } from "@hypertask-docs/capability/code-mode";
+import { parseCodeRequest } from "@hypertask-docs/code-snippets";
 import {
   CafeNewsList,
   CafePeopleList,
@@ -12,7 +12,7 @@ import {
   NeighborsOutput,
   ReadOutput,
   SearchOutput,
-} from "@rat-stack/core/contracts";
+} from "@hypertask-docs/core/contracts";
 import { Effect, FileSystem, Layer, Schema } from "effect";
 import * as McpSchema from "effect/ai/McpSchema";
 import * as HttpRouter from "effect/http/HttpRouter";
@@ -494,10 +494,10 @@ it.effect(
         expect(markdown).toContain("/.well-known/agent-skills/index.json");
         expect(markdown).toContain("## Source files");
         expect(markdown).toContain(
-          "[Agent rules for rat-stack (AGENTS.md)](/AGENTS.md)"
+          "[Agent rules for the docs project (AGENTS.md)](/AGENTS.md)"
         );
         expect(markdown).toContain(
-          "[Purpose and boundaries of rat-stack (VISION.md)](/VISION.md)"
+          "[Purpose and boundaries of the docs project (VISION.md)](/VISION.md)"
         );
         expect(markdown).toContain("## Connect an agent");
         expect(html).toContain(

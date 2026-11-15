@@ -1,1 +1,1 @@
-export { AssetReadError } from "@rat-stack/core/contracts";
+export { AssetReadError } from "@hypertask-docs/core/contracts";

@@ -1,5 +1,5 @@
-import { toRpc } from "@rat-stack/capability/rpc";
-import { Flags } from "@rat-stack/core/flags";
+import { toRpc } from "@hypertask-docs/capability/rpc";
+import { Flags } from "@hypertask-docs/core/flags";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import { RpcSerialization, RpcServer } from "effect/rpc";

@@ -1,5 +1,5 @@
-import { sortCafeNewsNewest } from "@rat-stack/core/contracts";
-import type { CafeNewsItemValue } from "@rat-stack/core/contracts";
+import { sortCafeNewsNewest } from "@hypertask-docs/core/contracts";
+import type { CafeNewsItemValue } from "@hypertask-docs/core/contracts";
 
 import { escapeHtmlText } from "./document-html.ts";
 

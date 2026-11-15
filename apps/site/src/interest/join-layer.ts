@@ -2,17 +2,17 @@ import type {
   AbuseScore,
   IntakeEvents,
   IntakeTicket,
-} from "@rat-stack/core/intake";
+} from "@hypertask-docs/core/intake";
 import type {
   InterestTokens,
   SubscriberIntake,
-} from "@rat-stack/core/interest";
-import { joinIntakeLayer } from "@rat-stack/core/join-interest";
+} from "@hypertask-docs/core/interest";
+import { joinIntakeLayer } from "@hypertask-docs/core/join-interest";
 import type {
   IntakeApplications,
   JoinContactStore,
-} from "@rat-stack/core/join-interest";
-import { webCryptoLayer } from "@rat-stack/core/web-crypto";
+} from "@hypertask-docs/core/join-interest";
+import { webCryptoLayer } from "@hypertask-docs/core/web-crypto";
 import type { Context, Effect } from "effect";
 import { Layer } from "effect";
 

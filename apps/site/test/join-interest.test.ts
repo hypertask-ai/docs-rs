@@ -6,15 +6,18 @@ import {
   IntakeEventsTest,
   IntakeTicket,
   PAGE_TICKET_SOURCE,
-} from "@rat-stack/core/intake";
-import { InterestTokens, SubscriberIntake } from "@rat-stack/core/interest";
-import type { AgentIntakeRequest } from "@rat-stack/core/interest";
+} from "@hypertask-docs/core/intake";
+import {
+  InterestTokens,
+  SubscriberIntake,
+} from "@hypertask-docs/core/interest";
+import type { AgentIntakeRequest } from "@hypertask-docs/core/interest";
 import {
   JOIN_ANSWER,
   JoinContactStore,
   joinIntakeLayer,
   joinInterestContract,
-} from "@rat-stack/core/join-interest";
+} from "@hypertask-docs/core/join-interest";
 import { Clock, Effect, Layer, Logger, Redacted, Schema, Tracer } from "effect";
 import { HttpRouter } from "effect/http";
 

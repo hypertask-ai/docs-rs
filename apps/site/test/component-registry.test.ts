@@ -1,8 +1,12 @@
 import { NodeCrypto, NodeServices } from "@effect/platform-node";
 import { it } from "@effect/vitest";
-import { Drift, codeIdentity, prepareCode } from "@rat-stack/code-snippets";
-import type { CodeSnippet } from "@rat-stack/code-snippets";
-import { plainLayer } from "@rat-stack/code-snippets/plain";
+import {
+  Drift,
+  codeIdentity,
+  prepareCode,
+} from "@hypertask-docs/code-snippets";
+import type { CodeSnippet } from "@hypertask-docs/code-snippets";
+import { plainLayer } from "@hypertask-docs/code-snippets/plain";
 import { Context, Effect, FileSystem, Layer, Schema } from "effect";
 import { expect } from "vitest";
 
