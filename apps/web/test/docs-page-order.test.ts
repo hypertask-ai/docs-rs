@@ -87,7 +87,7 @@ it("DocsPageOrder: the changelog index sits in the page order but turns its own 
   ).toBe(false);
 
   expect(
-    Option.match(docsPageAt("/features/reports"), {
+    Option.match(docsPageAt("/features/boards"), {
       onNone: () => null,
       onSome: (page) => page.pagination,
     })
