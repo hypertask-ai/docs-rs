@@ -58,8 +58,7 @@ Treat your API key like a password. It grants full access to your projects and t
 
 Add the Hypertask MCP server to your client's configuration:
 
-<Tabs>
-  <TabItem label="Claude Code">
+<TabItem label="Claude Code">
 
 Add to your Claude Code MCP settings (`.claude/settings.json` or project-level `.mcp.json`):
 
@@ -77,8 +76,9 @@ Add to your Claude Code MCP settings (`.claude/settings.json` or project-level `
 }
 ```
 
-  </TabItem>
-  <TabItem label="Claude Desktop">
+</TabItem>
+
+<TabItem label="Claude Desktop">
 
 Open **Settings > Developer > Edit Config** and add to `claude_desktop_config.json`:
 
@@ -98,8 +98,9 @@ Open **Settings > Developer > Edit Config** and add to `claude_desktop_config.js
 
 Restart Claude Desktop after saving.
 
-  </TabItem>
-  <TabItem label="Cursor">
+</TabItem>
+
+<TabItem label="Cursor">
 
 Open **Settings > MCP Servers > Add Server** and configure:
 
@@ -117,8 +118,7 @@ Open **Settings > MCP Servers > Add Server** and configure:
 }
 ```
 
-  </TabItem>
-</Tabs>
+</TabItem>
 
 Replace `YOUR_API_KEY` with the token from the previous step.
 

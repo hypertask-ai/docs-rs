@@ -3,6 +3,7 @@ import { Data, Schema } from "effect";
 export const ReaderTag = Schema.Literals([
   "a",
   "abbr",
+  "aside",
   "blockquote",
   "br",
   "caption",
