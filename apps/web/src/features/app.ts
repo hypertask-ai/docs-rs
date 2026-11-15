@@ -296,10 +296,7 @@ const readView = (model: AppModel, h: HtmlBuilder<AppMessage>): Html =>
     ]
   );
 
-const pageView = (
-  model: AppModel,
-  h: HtmlBuilder<AppMessage>
-): Html =>
+const pageView = (model: AppModel, h: HtmlBuilder<AppMessage>): Html =>
   AppRoute.match<Html>(model.route, {
     NotFound: () =>
       h.section(
