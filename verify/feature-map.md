@@ -2,18 +2,23 @@
 
 One row per function in the docs site audit, 85 in all, with the address to try and what to look for. `who` says who meets it: `visitor` is driven in a browser, `machine` is fetched with curl, `repo` is build or CI behaviour that is read from the checkout rather than the served site.
 
-Three addresses answer during a verifier run:
+Five addresses answer during a verifier run:
 
-- head, the change under review: `$SITE_URL`, default `http://127.0.0.1:4173`
-- parent, the commit it is based on: `$BASE_URL`, default `http://127.0.0.1:4174`
+- head, the built files of the change under review: `$SITE_URL`, default `http://127.0.0.1:4173`
+- parent, the built files of the commit it is based on: `$BASE_URL`, default `http://127.0.0.1:4174`
+- head on the app's own dev server, when it starts: `$SITE_DEV_URL`, default `http://127.0.0.1:4175`
+- parent on the app's own dev server, when it starts: `$BASE_DEV_URL`, default `http://127.0.0.1:4176`
 - live, today's site and the look and content reference: `https://docs.hypertask.ai`
 
-`verify/driver.mjs` opens a page, reports its status, collects its links and structure, records console errors and screenshots it at 1440 and 390 pixels wide. Give it a path to open it on the head site, or a full URL for the parent and the live site.
+The built files are exactly what a deploy uploads, so they are the reference for pages, markdown copies, `llms` files, the sitemap and images. The dev server runs the same application in Node, so it is the place to ask what the code does with an unknown address, a trailing slash, `/rpc` and other worker-only routes. It also shows a floating devtools toggle button that the deployed site does not have. A `::notice` in the run and the `serve:` line of the verdict say which of the two answered for each side.
+
+`verify/driver.mjs` opens a page, reports its status, collects its links and structure, records console errors and screenshots it at 1440 and 390 pixels wide. Give it a path to open it on the head site, or a full URL for the parent, the dev servers and the live site.
 
 ```sh
 node verify/driver.mjs /getting-started/quickstart/ "$SCREENS_DIR" head-quickstart
 node verify/driver.mjs "$BASE_URL/getting-started/quickstart/" "$SCREENS_DIR" parent-quickstart
 curl -sS -o /dev/null -w '%{http_code} %{content_type}\n' "$SITE_URL/llms.txt"
+curl -sS -o /dev/null -w '%{http_code}\n' "${SITE_DEV_URL:-$SITE_URL}/no-such-page"
 ```
 
 | id | feature | who | try | look for |
