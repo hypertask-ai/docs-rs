@@ -153,13 +153,9 @@ const fileNameFor = (pagePath: string): string => {
 
 // @effect-diagnostics-next-line asyncFunction:off -- Playwright reads page text through Promises outside an Effect runtime.
 const visibleText = async (page: Page): Promise<string> => {
-  const main = page.locator("main").first();
-  const mainCount = await main.count();
-
-  const raw =
-    mainCount > 0
-      ? await main.textContent()
-      : await page.locator("body").textContent();
+  const raw = await page.evaluate<string | null>(
+    "(document.querySelector('main') ?? document.body).textContent"
+  );
 
   return (raw ?? "").replaceAll(/\s+/gu, " ").trim();
 };
