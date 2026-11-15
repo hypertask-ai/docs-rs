@@ -30,7 +30,9 @@ it.effect(
       const path = yield* Path.Path;
 
       const content = path.resolve(import.meta.dirname, "../dist/content");
+
       const assets = path.join(content, "assets", staticAssetGeneration);
+
       const manifest = yield* Schema.decodeUnknownEffect(
         Schema.fromJsonString(ContentAssetManifest)
       )(yield* fs.readFileString(path.join(content, "manifest.json")));

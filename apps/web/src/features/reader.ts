@@ -389,7 +389,7 @@ export const view = (
                     h.Class("docs-main"),
                   ],
                   [
-                    agentPointer(model, h),
+                    ...(group === undefined ? [agentPointer(model, h)] : []),
                     ...Option.match(model.newsTitle, {
                       onNone: () => [],
                       onSome: (title) => [readerNewsCallout(title, h)],

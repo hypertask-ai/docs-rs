@@ -67,7 +67,10 @@ export const readerBodyFlags = Effect.fn("readerBodyFlags")(
 
         const references = isDocsPageRoute(page.path)
           ? {
-              anchors: readerTocAnchors(page.html),
+              anchors: [
+                { id: "_top", text: "Overview" },
+                ...readerTocAnchors(page.html),
+              ],
               backlinks: [],
               inboundCounts: {},
             }
