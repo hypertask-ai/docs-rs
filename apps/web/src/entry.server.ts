@@ -43,6 +43,14 @@ const decodeErrorPage = Schema.decodeUnknownEffect(
   Schema.fromJsonString(ReaderErrorPage)
 );
 
+const isDocsSitemapAddress = (pathname: string) =>
+  pathname === docsSitemapIndexPath || pathname === docsSitemapPath;
+
+const docsSitemapContent = (pathname: string, origin: string) =>
+  pathname === docsSitemapIndexPath
+    ? docsSitemapIndexXml(origin)
+    : docsSitemapXml(origin, pagePaths);
+
 const previewHeaders = Effect.fn("reader.previewHeaders")(
   function* previewHeaders(request: Request) {
     const headers = new Headers();
@@ -159,13 +167,9 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
       );
     }
 
-    const origin = new URL(request.url).origin;
-
-    if (pathname === docsSitemapIndexPath || pathname === docsSitemapPath) {
-      const body =
-        pathname === docsSitemapIndexPath
-          ? docsSitemapIndexXml(origin)
-          : docsSitemapXml(origin, pagePaths);
+    if (isDocsSitemapAddress(pathname)) {
+      const { origin } = new URL(request.url);
+      const body = docsSitemapContent(pathname, origin);
 
       return yield* responded(
         request,
@@ -181,6 +185,7 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
     if (Option.isNone(found)) {
       const notFound = docsNotFoundPage(pathname);
       const flags = readerErrorFlags(errorTemplate, notFound);
+
       const application = yield* renderToString(
         { Flags: ReaderFlags, init, view },
         { flags }

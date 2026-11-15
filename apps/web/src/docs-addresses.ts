@@ -1,6 +1,7 @@
 export const docsHtmlHandling = "force-trailing-slash" as const;
 
 export const docsSitemapIndexPath = "/sitemap-index.xml";
+
 export const docsSitemapPath = "/sitemap-0.xml";
 
 export const docsSitemapFiles: readonly string[] = [
@@ -8,11 +9,11 @@ export const docsSitemapFiles: readonly string[] = [
   docsSitemapPath,
 ];
 
-export type DocsRedirect = {
+export interface DocsRedirect {
   readonly destination: string;
   readonly source: string;
   readonly status: 308;
-};
+}
 
 export const docsRedirects: readonly DocsRedirect[] = [
   {
@@ -58,6 +59,7 @@ export const docsAddressAnswer = (
   pathname: string
 ): DocsAddressAnswer => {
   const bare = docsBareAddress(pathname);
+
   const redirect = docsRedirects.find(
     (rule) => docsBareAddress(rule.source) === bare
   );
@@ -137,8 +139,11 @@ export const docsRedirectLines = (
 
   const slash = [...docsPageSet(pagePaths)]
     .toSorted()
-    .filter((source) => source !== "/" && !legacySources.has(source))
-    .map((source) => `${source} ${docsTrailingSlashAddress(source)} 308`);
+    .flatMap((source) =>
+      source === "/" || legacySources.has(source)
+        ? []
+        : [`${source} ${docsTrailingSlashAddress(source)} 308`]
+    );
 
   return [...legacy, ...slash];
 };

@@ -58,7 +58,7 @@ const oldAddresses = Effect.gen(function* oldAddresses() {
   const fs = yield* FileSystem.FileSystem;
 
   const source = yield* fs.readFileString(
-    new URL("./fixtures/docs-addresses/old-addresses.json", import.meta.url)
+    new URL("fixtures/docs-addresses/old-addresses.json", import.meta.url)
       .pathname
   );
 
@@ -206,8 +206,10 @@ it.layer(NodeServices.layer)("docs addresses", (test) => {
       );
 
       const locations = [
-        ...docsSitemapXml(origin, pages).matchAll(/<loc>([^<]+)<\/loc>/gu),
-      ].map((match) => match[1]);
+        ...docsSitemapXml(origin, pages).matchAll(
+          /<loc>(?<location>[^<]+)<\/loc>/gu
+        ),
+      ].map((match) => match.groups?.location);
 
       expect(sitemap.urlCount).toBe(695);
       expect(locations).toEqual(pages.map((path) => `${origin}${path}`));
@@ -256,6 +258,8 @@ it.layer(NodeServices.layer)("docs addresses", (test) => {
   );
 
   test.effect("the site keeps the slash form the old site answers with", () =>
-    Effect.sync(() => expect(docsHtmlHandling).toBe("force-trailing-slash"))
+    Effect.sync(() => {
+      expect(docsHtmlHandling).toBe("force-trailing-slash");
+    })
   );
 });
