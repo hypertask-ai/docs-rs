@@ -42,6 +42,7 @@ export const CopyPageMarkdown = Command.define("CopyPageMarkdown", {
     Effect.gen(function* copyPage() {
       const response = yield* Effect.tryPromise({
         catch: (cause) => new ClipboardFailure({ cause }),
+        // @effect-diagnostics-next-line globalFetchInEffect:off -- the reader copies its own Markdown in the browser, where the app runtime provides no HttpClient.
         try: () => fetch(url),
       });
 
