@@ -148,7 +148,9 @@ it("keeps the canonical on the old public address and marks a prefixed page noin
 });
 
 const make = Effect.gen(function* readerSiteBaseFixture() {
-  const home = yield* readerHomeFlags(origin);
+  const home = yield* readerHomeFlags(origin).pipe(
+    Effect.flatMap(Schema.decodeUnknownEffect(ReaderFlags))
+  );
   const bodies = yield* readerBodyFlags(origin);
 
   const deep = yield* Option.match(
@@ -178,10 +180,7 @@ class ReaderSiteBaseFixture extends Context.Service<
   );
 }
 
-const pageDocument = (
-  flags: ReaderPageFlags,
-  basePath: string
-): Effect.Effect<string> =>
+const pageDocument = (flags: ReaderPageFlags, basePath: string) =>
   Effect.gen(function* renderPageDocument() {
     const application = yield* renderToString(
       { Flags: ReaderFlags, init, view: viewAt(basePath) },
