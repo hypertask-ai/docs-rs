@@ -29,8 +29,8 @@ const encodeFlags = Effect.forEach((page: ReaderPageFlags) =>
   Schema.encodeEffect(ReaderFlags)(page)
 );
 
-const optionalPage = <A>(page: A | undefined): readonly A[] =>
-  page === undefined ? [] : [page];
+const optionalPage = <A>(page: A | null): readonly A[] =>
+  page === null ? [] : [page];
 
 const withPreviewRobots = (
   page: ReaderPageFlags,

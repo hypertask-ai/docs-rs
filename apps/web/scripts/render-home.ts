@@ -11,7 +11,7 @@ const program = Effect.gen(function* renderHomePrototype() {
   const fs = yield* FileSystem.FileSystem;
   const input = yield* readerHomeFlags("https://reader-prototype.invalid");
 
-  if (input === undefined) {
+  if (input === null) {
     return yield* Effect.die(new Error("This build serves the docs home."));
   }
 
