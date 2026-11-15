@@ -646,6 +646,7 @@ const compileMarkdownBody = Effect.fn("compileMarkdownBody")(
       try: () =>
         renderMarkdownHtml(htmlSource, {
           highlight: highlighter.render,
+          rawHtmlParagraphs: !docsPage,
           rehypePlugins: [
             ...(["/lore/", "/systems/", "/skills/"].some((prefix) =>
               routePath.startsWith(prefix)
@@ -666,7 +667,6 @@ const compileMarkdownBody = Effect.fn("compileMarkdownBody")(
             collectUnlinkedProse(unlinkedProse),
             dropOffSiteImages,
           ],
-          rawHtmlParagraphs: !docsPage,
           smartypants: !docsPage,
           sourcePath,
         }),
