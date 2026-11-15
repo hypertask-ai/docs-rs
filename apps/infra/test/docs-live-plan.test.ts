@@ -56,6 +56,10 @@ it.effect(
       expect(compiled.resources.Website?.Props).not.toHaveProperty("domain");
 
       for (const resource of Object.values(compiled.resources)) {
+        if (resource.Props === undefined) {
+          continue;
+        }
+
         expect(resource.Props, resource.FQN).not.toHaveProperty(
           "domain",
           "docs.hypertask.ai"
