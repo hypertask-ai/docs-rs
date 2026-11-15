@@ -48,6 +48,7 @@
     "tokenmaxx:sync": "node scripts/tokenmaxx-sync.ts",
     "cafe:import": "node scripts/cafe-import.ts",
     "content:migrate": "node apps/site/scripts/migrate-content.ts",
+    "docs:convert": "node apps/site/scripts/convert-docs-content.ts",
     "find-peers": "node scripts/find-peers.ts"
   },
   "devDependencies": {

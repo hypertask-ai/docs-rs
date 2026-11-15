@@ -62,7 +62,7 @@ export const docsHeader = <Message>(
   h: HtmlBuilder<Message>
 ): Html =>
   h.header(
-    [h.Class(className(docsChrome.header))],
+    [h.Class(`${className(docsChrome.header)} docs-header`)],
     [
       h.div(
         [h.Class(`${className(docsChrome.headerMain)} docs-header-main`)],

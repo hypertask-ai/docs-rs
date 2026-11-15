@@ -66,9 +66,9 @@ export const docsChrome = stylex.create({
   groupList: { listStyle: "none", margin: 0, padding: 0 },
   header: {
     background: docs.bg,
-    borderBottomColor: docs.hairline,
-    borderBottomStyle: "solid",
-    borderBottomWidth: "1px",
+    position: "sticky",
+    top: 0,
+    zIndex: 10,
   },
   headerLinks: {
     alignItems: "center",

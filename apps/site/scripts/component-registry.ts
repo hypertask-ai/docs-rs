@@ -141,6 +141,13 @@ const phrasingTypes = new Set([
   "footnoteReference",
 ]);
 
+const asideLabels = {
+  caution: "Caution",
+  danger: "Danger",
+  note: "Note",
+  tip: "Tip",
+} as const;
+
 const coreComponents = {
   AgentOnly: {
     agent: componentChildren,
@@ -259,6 +266,124 @@ const coreComponents = {
   HumanOnly: {
     agent: () => [],
     human: componentChildren,
+  },
+  Aside: {
+    agent(input) {
+      const { title, type } = Schema.decodeUnknownSync(
+        Schema.Struct({
+          title: Schema.optional(Schema.String),
+          type: Schema.optional(
+            Schema.Literals(["note", "tip", "caution", "danger"])
+          ),
+        })
+      )(input.attributes);
+
+      const label = title ?? asideLabels[type ?? "note"];
+
+      return [paragraph(`${label}:`), ...componentChildren(input)];
+    },
+    human(input) {
+      const { title, type } = Schema.decodeUnknownSync(
+        Schema.Struct({
+          title: Schema.optional(Schema.String),
+          type: Schema.optional(
+            Schema.Literals(["note", "tip", "caution", "danger"])
+          ),
+        })
+      )(input.attributes);
+
+      const kind = type ?? "note";
+      const label = title ?? asideLabels[kind];
+
+      return [
+        html(`<aside class="docs-aside docs-aside--${kind}">`),
+        html(`<p class="docs-aside-title">${escapeHtml(label)}</p>`),
+        ...componentChildren(input),
+        html("</aside>"),
+      ];
+    },
+  },
+  Card: {
+    agent(input) {
+      const { title } = Schema.decodeUnknownSync(
+        Schema.Struct({ title: Schema.optional(Schema.String) })
+      )(input.attributes);
+
+      return title === undefined
+        ? componentChildren(input)
+        : [
+            {
+              children: [{ type: "text", value: title }],
+              depth: 3,
+              type: "heading",
+            },
+            ...componentChildren(input),
+          ];
+    },
+    human(input) {
+      const { title } = Schema.decodeUnknownSync(
+        Schema.Struct({ title: Schema.optional(Schema.String) })
+      )(input.attributes);
+
+      return [
+        html('<div class="docs-card">'),
+        ...(title === undefined ? [] : [html(`<h3>${escapeHtml(title)}</h3>`)]),
+        ...componentChildren(input),
+        html("</div>"),
+      ];
+    },
+  },
+  CardGrid: {
+    agent: componentChildren,
+    human: (input) => [
+      html('<div class="docs-card-grid">'),
+      ...componentChildren(input),
+      html("</div>"),
+    ],
+  },
+  Steps: {
+    agent: componentChildren,
+    human: (input) => [
+      html('<div class="docs-steps">'),
+      ...componentChildren(input),
+      html("</div>"),
+    ],
+  },
+  TabItem: {
+    agent(input) {
+      const { label } = Schema.decodeUnknownSync(
+        Schema.Struct({ label: Schema.String })
+      )(input.attributes);
+
+      return [
+        {
+          children: [{ type: "text", value: label }],
+          depth: 3,
+          type: "heading",
+        },
+        ...componentChildren(input),
+      ];
+    },
+    human(input) {
+      const { label } = Schema.decodeUnknownSync(
+        Schema.Struct({ label: Schema.String })
+      )(input.attributes);
+
+      return [
+        html(`<section class="docs-tab" aria-label="${escapeHtml(label)}">`),
+        html(`<p class="docs-tab-label">${escapeHtml(label)}</p>`),
+        ...componentChildren(input),
+        html("</section>"),
+      ];
+    },
+  },
+  Tabs: {
+    agent: componentChildren,
+    human: (input) => [
+      html('<div class="docs-tabs">'),
+      ...componentChildren(input),
+      html("</div>"),
+    ],
   },
   Sources: {
     agent(_input, context) {
