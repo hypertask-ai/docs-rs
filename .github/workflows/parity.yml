@@ -53,8 +53,8 @@ jobs:
       - name: Capture and compare pages
         env:
           OLD_BASE: ${{ github.event.inputs.old_base || 'https://docs.hypertask.ai' }}
-          NEW_BASE: ${{ github.event.inputs.new_base || '' }}
-          PAGE_LIMIT: ${{ github.event.inputs.page_limit || '5' }}
+          NEW_BASE: ${{ github.event.inputs.new_base || (github.event_name == 'pull_request' && 'https://docs.hypertask.ai' || '') }}
+          PAGE_LIMIT: ${{ github.event.inputs.page_limit || (github.event_name == 'pull_request' && '24' || '5') }}
           THRESHOLD: ${{ github.event.inputs.threshold || '0.1' }}
         run: |
           node scripts/docs-parity.ts \

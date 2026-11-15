@@ -17,6 +17,7 @@ interface Capture {
 
 interface DiffResult {
   readonly diffImage: Buffer | null;
+  readonly heightDelta: number;
   readonly percent: number;
 }
 
@@ -28,6 +29,7 @@ interface Job {
 interface JobResult {
   readonly diffImagePath: string | null;
   readonly failure: string | null;
+  readonly heightDelta: number | null;
   readonly newImagePath: string | null;
   readonly newStatus: number | null;
   readonly newTitle: string | null;
@@ -60,6 +62,8 @@ const DEFAULT_THRESHOLD = "0.1";
 const LOC_PATTERN = /<loc>(?<loc>[^<]+)<\/loc>/gu;
 
 const NAVIGATION_TIMEOUT_MS = 90_000;
+
+const SETTLE_TIMEOUT_MS = 10_000;
 
 const VIEWPORTS: readonly Viewport[] = [
   { height: 900, name: "desktop", width: 1440 },
@@ -104,9 +108,11 @@ const fetchText = async (url: string): Promise<string | null> => {
 };
 
 const locsIn = (sitemapText: string): string[] =>
-  [...sitemapText.matchAll(LOC_PATTERN)]
-    .map((match) => match.groups?.loc ?? "")
-    .filter((loc) => loc.length > 0);
+  [...sitemapText.matchAll(LOC_PATTERN)].flatMap((match) => {
+    const loc = match.groups?.loc ?? "";
+
+    return loc.length === 0 ? [] : [loc];
+  });
 
 // @effect-diagnostics-next-line asyncFunction:off -- This Node CLI follows a sitemap index with native Promise I/O outside an Effect runtime.
 const readSitemaps = async (base: string): Promise<string[]> => {
@@ -159,6 +165,35 @@ const visibleText = async (page: Page): Promise<string> => {
 };
 
 // @effect-diagnostics-next-line asyncFunction:off -- Playwright is Promise based and this Node CLI drives it outside an Effect runtime.
+const settle = async (page: Page): Promise<void> => {
+  await Promise.allSettled([
+    page.evaluate("document.fonts.ready"),
+    page.waitForLoadState("networkidle", { timeout: SETTLE_TIMEOUT_MS }),
+  ]);
+
+  await page.addStyleTag({
+    content:
+      "*, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important; }",
+  });
+
+  await page.evaluate(
+    "window.scrollTo(0, document.documentElement.scrollHeight)"
+  );
+
+  await Promise.allSettled([
+    page.evaluate("document.fonts.ready"),
+    page.waitForLoadState("networkidle", { timeout: SETTLE_TIMEOUT_MS }),
+  ]);
+
+  await page.evaluate("window.scrollTo(0, 0)");
+
+  await Promise.allSettled([
+    page.evaluate("document.fonts.ready"),
+    page.waitForLoadState("networkidle", { timeout: SETTLE_TIMEOUT_MS }),
+  ]);
+};
+
+// @effect-diagnostics-next-line asyncFunction:off -- Playwright is Promise based and this Node CLI drives it outside an Effect runtime.
 const capture = async (
   page: Page,
   url: string,
@@ -173,7 +208,7 @@ const capture = async (
     throw new Error(`No response from ${url}`);
   }
 
-  await page.evaluate("document.fonts.ready");
+  await settle(page);
 
   const buffer = await page.screenshot({
     animations: "disabled",
@@ -193,42 +228,51 @@ const comparePixels = (before: Buffer, after: Buffer): DiffResult => {
   const first = PNG.sync.read(before);
   const mask = PNG.sync.read(after);
 
-  if (first.width !== mask.width || first.height !== mask.height) {
-    return { diffImage: null, percent: 100 };
+  const width = Math.min(first.width, mask.width);
+  const height = Math.min(first.height, mask.height);
+  const heightDelta = Math.abs(first.height - mask.height);
+  const pixels = width * height;
+
+  if (pixels === 0) {
+    return { diffImage: null, heightDelta, percent: 100 };
   }
 
-  const pixels = first.width * first.height;
   let changed = 0;
 
-  for (let index = 0; index < pixels; index += 1) {
-    const offset = index * 4;
+  for (let row = 0; row < height; row += 1) {
+    for (let column = 0; column < width; column += 1) {
+      const source = (row * first.width + column) * 4;
+      const target = (row * mask.width + column) * 4;
 
-    const differs =
-      first.data[offset] !== mask.data[offset] ||
-      first.data[offset + 1] !== mask.data[offset + 1] ||
-      first.data[offset + 2] !== mask.data[offset + 2];
+      const differs =
+        first.data[source] !== mask.data[target] ||
+        first.data[source + 1] !== mask.data[target + 1] ||
+        first.data[source + 2] !== mask.data[target + 2];
 
-    if (differs) {
-      changed += 1;
+      if (differs) {
+        changed += 1;
 
-      mask.data[offset] = 255;
-      mask.data[offset + 1] = 0;
-      mask.data[offset + 2] = 0;
-      mask.data[offset + 3] = 255;
-    } else {
-      mask.data[offset + 3] = 0;
+        mask.data[target] = 255;
+        mask.data[target + 1] = 0;
+        mask.data[target + 2] = 0;
+        mask.data[target + 3] = 255;
+      } else {
+        mask.data[target + 3] = 0;
+      }
     }
   }
 
   return {
     diffImage: PNG.sync.write(mask),
-    percent: pixels === 0 ? 0 : (changed / pixels) * 100,
+    heightDelta,
+    percent: (changed / pixels) * 100,
   };
 };
 
 const emptyResult = (job: Job): JobResult => ({
   diffImagePath: null,
   failure: null,
+  heightDelta: null,
   newImagePath: null,
   newStatus: null,
   newTitle: null,
@@ -313,6 +357,7 @@ const runJob = async (
         diff,
         path.join(imagesDir, "diff", name, `${pageName}.png`)
       ),
+      heightDelta: diff.heightDelta,
       newImagePath: newCapture.imagePath,
       newStatus: newCapture.status,
       newTitle: newCapture.title,
@@ -374,6 +419,9 @@ const violationsIn = (row: JobResult, baselineOnly: boolean): string[] => {
 const formatPercent = (percent: number | null): string =>
   percent === null ? "n/a" : `${percent.toFixed(2)}%`;
 
+const formatHeight = (row: JobResult): string =>
+  row.heightDelta === null ? "n/a" : `${row.heightDelta}px`;
+
 const formatStatus = (row: JobResult): string =>
   `${row.oldStatus ?? "none"} to ${row.newStatus ?? "none"}`;
 
@@ -401,8 +449,17 @@ const titleCell = (rows: readonly JobResult[]): string => {
     : "differs";
 };
 
+const reasonsFor = (rows: readonly JobResult[]): string[] =>
+  rows.flatMap((row) => {
+    const reasons = violationsIn(row, baselineMode);
+
+    return reasons.length === 0
+      ? []
+      : [`${row.viewport}: ${reasons.join(", ")}`];
+  });
+
 const pageRow = (pagePath: string, rows: readonly JobResult[]): string => {
-  const reasons = rows.flatMap((row) => violationsIn(row, baselineMode));
+  const reasons = reasonsFor(rows);
 
   const statuses = rows
     .map((row) => `${row.viewport} ${formatStatus(row)}`)
@@ -412,10 +469,14 @@ const pageRow = (pagePath: string, rows: readonly JobResult[]): string => {
     .map((row) => `${row.viewport} ${formatPercent(row.percent)}`)
     .join(", ");
 
+  const heights = rows
+    .map((row) => `${row.viewport} ${formatHeight(row)}`)
+    .join(", ");
+
   const verdict = reasons.length === 0 ? "pass" : reasons.join("; ");
   const target = new URL(pagePath, oldBase).href;
 
-  return `| [${pagePath}](${target}) | ${statuses} | ${titleCell(rows)} | ${textCell(rows)} | ${pixels} | ${verdict} |`;
+  return `| [${pagePath}](${target}) | ${statuses} | ${titleCell(rows)} | ${textCell(rows)} | ${pixels} | ${heights} | ${verdict} |`;
 };
 
 const pages = await readSitemaps(oldBase);
@@ -517,8 +578,8 @@ const summary = [
   `Pixel threshold: ${threshold}%`,
   `Failing page captures: ${failureCount}`,
   "",
-  "| Page | Status | Title | Text | Pixels | Verdict |",
-  "| --- | --- | --- | --- | --- | --- |",
+  "| Page | Status | Title | Text | Pixels | Heights | Verdict |",
+  "| --- | --- | --- | --- | --- | --- | --- |",
   ...tableRows,
 ];
 
