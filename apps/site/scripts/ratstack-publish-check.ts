@@ -42,7 +42,7 @@ const addressPath = (address: string): string =>
 
 const wordsIn = (html: string): readonly string[] => {
   const text = html
-    .replaceAll(/<(?:script|style)[^>]*>[\s\S]*?<\/(?:script|style)>/gu, " ")
+    .replaceAll(/<(?:script|style)[^>]*>[\s\S]*?<\/(?:script|style)>/giu, " ")
     .replaceAll(/<[^>]*>/gu, " ")
     .replaceAll(/&[a-z]+;|&#[0-9]+;/gu, " ")
     .toLowerCase();
