@@ -308,6 +308,7 @@ const verifyDeployedSite = Effect.fn("ratstackPublishCheck.verify")(
     const oldWords = wordsIn(old.body);
     const publishedWords = new Set(wordsIn(homeResponse.body));
     const missingWords = oldWords.filter((word) => !publishedWords.has(word));
+
     const share =
       oldWords.length === 0
         ? 0
@@ -315,13 +316,12 @@ const verifyDeployedSite = Effect.fn("ratstackPublishCheck.verify")(
             ((oldWords.length - missingWords.length) / oldWords.length) * 100
           );
 
-    if (missingWords.length === 0) {
-      yield* Console.log(`${home} carries every word on ${docsOrigin}/`);
-    } else {
-      yield* Console.log(
-        `::warning title=The published home page differs from the old docs home page::${home} carries ${share}% of the words on ${docsOrigin}/ (${oldWords.length - missingWords.length} of ${oldWords.length}). Missing: ${missingWords.slice(0, 12).join(", ")}. The slices that copy the old pages own this difference, and this line reports it on every publish until they land.`
-      );
-    }
+    const parity =
+      missingWords.length === 0
+        ? `${home} carries every word on ${docsOrigin}/`
+        : `::warning title=The published home page differs from the old docs home page::${home} carries ${share}% of the words on ${docsOrigin}/ (${oldWords.length - missingWords.length} of ${oldWords.length}). Missing: ${missingWords.slice(0, 12).join(", ")}. The slices that copy the old pages own this difference, and this line reports it on every publish until they land.`;
+
+    yield* Console.log(parity);
 
     const addresses = prefixedAddresses(basePath, homeResponse.body).slice(
       0,
