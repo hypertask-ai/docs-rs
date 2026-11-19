@@ -498,7 +498,7 @@ it.effect(
         expect(skillHtml).toContain("<strong>🐀 Rat Stack</strong>");
         expect(skillHtml.match(/<h1\b/gu)).toHaveLength(1);
         expect(html).toContain(
-          '<pre><code class="language-bash">npm install -g @hypertask/hypertask'
+          "<pre><code>npm install -g @hypertask/hypertask</code></pre>"
         );
         expect(html).not.toContain("catppuccin-latte");
         expect(skillHtml).toContain('<pre class="shiki catppuccin-latte"');
