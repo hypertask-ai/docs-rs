@@ -3,6 +3,7 @@ import { DomUtils, parseDocument } from "htmlparser2";
 import {
   docsHeaderLinks,
   docsHeaderTabs,
+  docsHref,
 } from "../../web/src/features/docs-sidebar.js";
 import { homeRouter, searchRouter } from "../../web/src/features/site-route.js";
 
@@ -40,7 +41,7 @@ export const docsHeaderTabAnchors = (
 ): readonly DocsHeaderAnchor[] =>
   docsHeaderTabs.map((tab) => ({
     active: tab.isActive(path),
-    href: tab.path,
+    href: docsHref(tab.path),
     text: tab.label,
   }));
 
