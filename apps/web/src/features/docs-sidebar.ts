@@ -148,6 +148,9 @@ export const docsSidebarGroups: readonly DocsSidebarGroup[] = [
   },
 ];
 
+export const docsHref = (path: string) =>
+  path === "/" || path.endsWith("/") ? path : `${path}/`;
+
 export const docsGroupForPath = (path: string): DocsSidebarGroup | undefined =>
   docsSidebarGroups.find((group) =>
     group.items.some((item) => item.path === path)
