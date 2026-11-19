@@ -3,6 +3,7 @@ import { Console, Effect, FileSystem, Path, Schema } from "effect";
 import type { PlatformError } from "effect";
 import { FetchHttpClient, HttpClient } from "effect/http";
 import * as Layer from "effect/Layer";
+import { DomUtils, ElementType, parseDocument } from "htmlparser2";
 
 import { normalizeSiteBasePath } from "../../web/src/site-base-path.ts";
 
@@ -42,15 +43,25 @@ const robotsMetaOf = (html: string): string =>
 const addressPath = (address: string): string =>
   address.split(/[?#]/u)[0] ?? "";
 
+const hiddenHtmlTags = new Set(["script", "style", "template", "noscript"]);
+
+const textIn = (nodes: ReturnType<typeof DomUtils.getChildren>): string =>
+  nodes
+    .map((node) => {
+      if (node.type === ElementType.Text) {
+        return node.data;
+      }
+
+      if (hiddenHtmlTags.has(DomUtils.getName(node))) {
+        return "";
+      }
+
+      return textIn(DomUtils.getChildren(node));
+    })
+    .join(" ");
+
 const wordsIn = (html: string): readonly string[] => {
-  const text = html
-    .replaceAll(
-      /<(?:script|style)[^>]*>[\s\S]*?<\/(?:script|style)\s*>/giu,
-      " "
-    )
-    .replaceAll(/<[^>]*>/gu, " ")
-    .replaceAll(/&[a-z]+;|&#[0-9]+;/gu, " ")
-    .toLowerCase();
+  const text = textIn(DomUtils.getChildren(parseDocument(html))).toLowerCase();
 
   return [
     ...new Set(text.split(/[^a-z0-9']+/u).filter((word) => word.length >= 4)),
