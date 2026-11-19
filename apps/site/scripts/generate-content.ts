@@ -631,6 +631,7 @@ const compileMarkdownBody = Effect.fn("compileMarkdownBody")(
     const docsPage = options.docsPage === true;
     const codeTargets = docsPage ? emptyTargets : targets;
     const terms = docsPage ? [] : loreTerms;
+
     const highlight = docsPage
       ? (code: string) => highlighter.render(code, "text")
       : highlighter.render;
