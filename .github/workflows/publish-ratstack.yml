@@ -57,6 +57,8 @@ jobs:
         run: node apps/site/scripts/ratstack-publish-check.ts audit
       - name: Record the old site before the deploy
         run: node apps/site/scripts/ratstack-publish-check.ts record "$RUNNER_TEMP/old-docs-site.json"
+      - name: Compare the built home page with the old docs home page
+        run: node apps/site/scripts/ratstack-publish-check.ts gate
       - name: Deploy the docs Worker and its one route
         working-directory: apps/infra
         env:

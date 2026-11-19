@@ -14,6 +14,8 @@ const auditedExtensions = [".css", ".html", ".js"] as const;
 
 const noindexHeader = "x-robots-tag";
 
+const requiredHomePageWordShare = 90;
+
 class RatstackPublishCheckError extends Schema.TaggedError<
   RatstackPublishCheckError,
   { readonly brand: unique symbol }
@@ -42,7 +44,10 @@ const addressPath = (address: string): string =>
 
 const wordsIn = (html: string): readonly string[] => {
   const text = html
-    .replaceAll(/<(?:script|style)[^>]*>[\s\S]*?<\/(?:script|style)>/giu, " ")
+    .replaceAll(
+      /<(?:script|style)[^>]*>[\s\S]*?<\/(?:script|style)\s*>/giu,
+      " "
+    )
     .replaceAll(/<[^>]*>/gu, " ")
     .replaceAll(/&[a-z]+;|&#[0-9]+;/gu, " ")
     .toLowerCase();
@@ -51,6 +56,42 @@ const wordsIn = (html: string): readonly string[] => {
     ...new Set(text.split(/[^a-z0-9']+/u).filter((word) => word.length >= 4)),
   ];
 };
+
+interface HomePageWords {
+  readonly carried: number;
+  readonly missing: readonly string[];
+  readonly share: number;
+  readonly total: number;
+}
+
+const homePageWords = (oldHtml: string, newHtml: string): HomePageWords => {
+  const oldWords = wordsIn(oldHtml);
+  const newWords = new Set(wordsIn(newHtml));
+  const missing = oldWords.filter((word) => !newWords.has(word));
+  const carried = oldWords.length - missing.length;
+
+  return {
+    carried,
+    missing,
+    share:
+      oldWords.length === 0 ? 0 : Math.round((carried / oldWords.length) * 100),
+    total: oldWords.length,
+  };
+};
+
+const requireHomePageWords = Effect.fn(
+  "ratstackPublishCheck.requireHomePageWords"
+)(function* requireHomePageWords(address: string, comparison: HomePageWords) {
+  if (comparison.share < requiredHomePageWordShare) {
+    return yield* new RatstackPublishCheckError({
+      reason: `${address} carries ${comparison.carried} of the ${comparison.total} words on ${docsOrigin}/ (${comparison.share}%), below the ${requiredHomePageWordShare}% this project requires before it publishes a home page at that address. Missing: ${comparison.missing.slice(0, 12).join(", ")}. Fix: land the slices that copy the old pages and publish again; nothing is deployed at that address until they do.`,
+    });
+  }
+
+  return yield* Console.log(
+    `${address} carries ${comparison.carried} of the ${comparison.total} words on ${docsOrigin}/ (${comparison.share}%)`
+  );
+});
 
 const sameSiteAddresses = (text: string): readonly string[] => {
   const addresses: string[] = [];
@@ -305,23 +346,10 @@ const verifyDeployedSite = Effect.fn("ratstackPublishCheck.verify")(
 
     yield* Console.log(`${home} answers 200 with title '${homeTitle}'`);
 
-    const oldWords = wordsIn(old.body);
-    const publishedWords = new Set(wordsIn(homeResponse.body));
-    const missingWords = oldWords.filter((word) => !publishedWords.has(word));
-
-    const share =
-      oldWords.length === 0
-        ? 0
-        : Math.round(
-            ((oldWords.length - missingWords.length) / oldWords.length) * 100
-          );
-
-    const parity =
-      missingWords.length === 0
-        ? `${home} carries every word on ${docsOrigin}/`
-        : `::warning title=The published home page differs from the old docs home page::${home} carries ${share}% of the words on ${docsOrigin}/ (${oldWords.length - missingWords.length} of ${oldWords.length}). Missing: ${missingWords.slice(0, 12).join(", ")}. The slices that copy the old pages own this difference, and this line reports it on every publish until they land.`;
-
-    yield* Console.log(parity);
+    yield* requireHomePageWords(
+      home,
+      homePageWords(old.body, homeResponse.body)
+    );
 
     const addresses = prefixedAddresses(basePath, homeResponse.body).slice(
       0,
@@ -351,11 +379,48 @@ const verifyDeployedSite = Effect.fn("ratstackPublishCheck.verify")(
   }
 );
 
+const gateBuiltHome = Effect.fn("ratstackPublishCheck.gate")(
+  function* gateBuiltHome() {
+    const basePath = siteBasePath();
+
+    if (basePath === "") {
+      return yield* new RatstackPublishCheckError({
+        reason:
+          "SITE_BASE_PATH is empty, so the home page this check compares is the site root. Fix: set SITE_BASE_PATH to /ratstack before building the site that this check reads.",
+      });
+    }
+
+    const fs = yield* FileSystem.FileSystem;
+    const path = yield* Path.Path;
+
+    const builtHome = yield* fs.readFileString(
+      path.resolve(
+        import.meta.dirname,
+        "../../..",
+        builtSiteDirectory,
+        basePath,
+        "index.html"
+      )
+    );
+
+    const old = yield* get(`${docsOrigin}/`);
+
+    return yield* requireHomePageWords(
+      `${basePath}/ in the built site`,
+      homePageWords(old.body, builtHome)
+    );
+  }
+);
+
 const program = Effect.gen(function* ratstackPublishCheck() {
   const [mode = "", file = ""] = process.argv.slice(2);
 
   if (mode === "audit") {
     return yield* auditBuiltSite;
+  }
+
+  if (mode === "gate") {
+    return yield* gateBuiltHome();
   }
 
   if (mode === "record") {
@@ -367,7 +432,7 @@ const program = Effect.gen(function* ratstackPublishCheck() {
   }
 
   return yield* new RatstackPublishCheckError({
-    reason: `Unknown mode '${mode}'. Fix: pass audit, record <file> or verify <file>.`,
+    reason: `Unknown mode '${mode}'. Fix: pass audit, gate, record <file> or verify <file>.`,
   });
 }).pipe(
   Effect.provide(Layer.mergeAll(NodeServices.layer, FetchHttpClient.layer))

@@ -134,7 +134,7 @@ Run `pnpm fix` only when you intend to rewrite files. Finish with `pnpm turbo ru
 
 Follow [ship](/skills/ship) and `skills/ship/references/project.md` for deployment commands, approval, checks, and recovery.
 
-`.github/workflows/publish-ratstack.yml` publishes `main` to https://docs.hypertask.ai/ratstack. It is the only path that runs `alchemy deploy` for this site, it runs from GitHub and never from a laptop, and it deploys `apps/infra/alchemy.docs-ratstack.ts` at stage `docs-ratstack` with the secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. Those two secrets live in the GitHub environment `ratstack-publish`, which only the default branch may use, so a run of a branch can never read them.
+`.github/workflows/publish-ratstack.yml` publishes `main` to https://docs.hypertask.ai/ratstack. It is the only path that runs `alchemy deploy` for this site, it runs from GitHub and never from a laptop, and it deploys `apps/infra/alchemy.docs-ratstack.ts` at stage `docs-ratstack` with the secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. Those two secrets live in the GitHub environment `ratstack-publish`, which only the default branch may use, so a run of a branch can never read them. The run stops before the deploy unless the built home page carries at least 90% of the distinct words on https://docs.hypertask.ai/, so the new address appears only once the pages that copy the old home page have landed.
 
 ## Rules and the step that enforces them
 
@@ -146,7 +146,7 @@ Follow [ship](/skills/ship) and `skills/ship/references/project.md` for deployme
 | Only `main` publishes, two publishes never overlap, and every action is pinned to a full commit sha | the `on`, `concurrency` and `permissions` blocks of `.github/workflows/publish-ratstack.yml` |
 | Only a run of the default branch can read the Cloudflare secrets, and a run without them stops before it builds | `environment: ratstack-publish` on the publish job, the deployment branch rule of that environment, and its first step, which names the missing secret |
 | Every workflow file in `.github/workflows` is valid GitHub Actions, with no unknown key, unknown context or bad expression | the `Lint every workflow file with actionlint` step in the `checks` job of `.github/workflows/ci.yml`, which downloads actionlint 1.7.7 from its release page, checks the release checksum, and lints every workflow file |
-| Every publish reports how the published home page's words compare with https://docs.hypertask.ai/ | the content comparison in the `verify` step of `apps/site/scripts/ratstack-publish-check.ts`, which prints the share of the old page's words that the published page carries and names the missing words |
+| Nothing is published at `/ratstack` until the home page it would serve carries the old docs home page's words | the `gate` step of `apps/site/scripts/ratstack-publish-check.ts`, which stops the publish before the deploy when the built home page carries less than 90% of the distinct words on https://docs.hypertask.ai/, names the missing words, and runs the same comparison again in `verify` after the deploy |
 
 ## Release the ratstack package
 
