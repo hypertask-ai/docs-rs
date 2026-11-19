@@ -138,8 +138,9 @@ export const collectStructure = (page) =>
 export const collectText = (page) =>
   page.evaluate(() => {
     const skipped = new Set(["NOSCRIPT", "SCRIPT", "STYLE", "TEMPLATE"]);
+
     const separates =
-      /^(block|flex|flow-root|grid|list-item|table|table-cell|table-row)$/u;
+      /^(?:block|flex|flow-root|grid|list-item|table|table-cell|table-row)$/u;
 
     /**
      * @param {Node} node
@@ -156,7 +157,7 @@ export const collectText = (page) =>
 
       if (
         skipped.has(node.tagName) ||
-        (node instanceof HTMLElement && node.hidden)
+        (node instanceof HTMLElement && node.hidden === true)
       ) {
         return "";
       }
