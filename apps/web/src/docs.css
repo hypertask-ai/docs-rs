@@ -127,6 +127,7 @@ html {
   font:
     16px/26px "IBM Plex Sans",
     sans-serif;
+  overflow-wrap: normal;
 }
 
 body {
@@ -507,13 +508,54 @@ body > .docs-layout {
   text-align: center;
 }
 
+.docs-group {
+  margin: 0;
+  padding: 0;
+}
+
+.docs-group > summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.docs-group > summary::-webkit-details-marker {
+  display: none;
+}
+
+.docs-group[open] > summary .docs-group-caret {
+  rotate: 90deg;
+}
+
+.docs-action {
+  padding: 0.3rem 0.65rem;
+}
+
+button.docs-action {
+  font:
+    500 0.8rem/1 "IBM Plex Sans",
+    sans-serif;
+}
+
 .docs-search-label,
 .docs-kbd {
   display: inline;
 }
 
 .docs-search-icon {
-  display: none;
+  display: block;
+  flex-shrink: 0;
+}
+
+@media (min-width: 50rem) {
+  #docs-sidebar {
+    padding-right: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .docs-group-caret {
+    transition: rotate 0.2s ease-in-out;
+  }
 }
 
 @media (min-width: 72rem) {
@@ -548,7 +590,7 @@ body > .docs-layout {
     background: transparent;
     border: 0;
     height: 40px;
-    padding: 8px;
+    padding: 10px;
     width: 40px;
   }
 
@@ -581,9 +623,5 @@ body > .docs-layout {
   .docs-search-label,
   .docs-kbd {
     display: none;
-  }
-
-  .docs-search-icon {
-    display: block;
   }
 }
