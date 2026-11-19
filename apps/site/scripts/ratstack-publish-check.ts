@@ -15,8 +15,6 @@ const auditedExtensions = [".css", ".html", ".js"] as const;
 
 const noindexHeader = "x-robots-tag";
 
-const requiredHomePageWordShare = 90;
-
 class RatstackPublishCheckError extends Schema.TaggedError<
   RatstackPublishCheckError,
   { readonly brand: unique symbol }
@@ -71,23 +69,16 @@ const wordsIn = (html: string): readonly string[] => {
 };
 
 interface HomePageWords {
-  readonly carried: number;
   readonly missing: readonly string[];
-  readonly share: number;
   readonly total: number;
 }
 
 const homePageWords = (oldHtml: string, newHtml: string): HomePageWords => {
   const oldWords = wordsIn(oldHtml);
   const newWords = new Set(wordsIn(newHtml));
-  const missing = oldWords.filter((word) => !newWords.has(word));
-  const carried = oldWords.length - missing.length;
 
   return {
-    carried,
-    missing,
-    share:
-      oldWords.length === 0 ? 0 : Math.round((carried / oldWords.length) * 100),
+    missing: oldWords.filter((word) => !newWords.has(word)),
     total: oldWords.length,
   };
 };
@@ -95,14 +86,14 @@ const homePageWords = (oldHtml: string, newHtml: string): HomePageWords => {
 const requireHomePageWords = Effect.fn(
   "ratstackPublishCheck.requireHomePageWords"
 )(function* requireHomePageWords(address: string, comparison: HomePageWords) {
-  if (comparison.share < requiredHomePageWordShare) {
+  if (comparison.missing.length > 0) {
     return yield* new RatstackPublishCheckError({
-      reason: `${address} carries ${comparison.carried} of the ${comparison.total} words on ${docsOrigin}/ (${comparison.share}%), below the ${requiredHomePageWordShare}% this project requires before it publishes a home page at that address. Missing: ${comparison.missing.slice(0, 12).join(", ")}. Fix: land the slices that copy the old pages and publish again; nothing is deployed at that address until they do.`,
+      reason: `${address} is missing ${comparison.missing.length} of the ${comparison.total} distinct words on ${docsOrigin}/, and this project publishes a home page at that address only when it carries every one of them. Missing: ${comparison.missing.slice(0, 12).join(", ")}. Fix: land the slices that copy the old pages and publish again; nothing is deployed at that address until they do.`,
     });
   }
 
   return yield* Console.log(
-    `${address} carries ${comparison.carried} of the ${comparison.total} words on ${docsOrigin}/ (${comparison.share}%)`
+    `${address} carries all ${comparison.total} distinct words on ${docsOrigin}/`
   );
 });
 
