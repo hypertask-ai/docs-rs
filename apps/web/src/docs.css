@@ -287,9 +287,11 @@ body > .docs-layout {
   background: #111113;
   border: 1px solid #303036;
   border-radius: 10px;
+  box-sizing: border-box;
   color: #8e8e97;
   display: flex;
   font-size: 14px;
+  font-weight: 400;
   gap: 12px;
   height: 44px;
   margin-top: 24px;
@@ -465,7 +467,9 @@ body > .docs-layout {
 }
 
 .docs-main .docs-card-grid {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .docs-main .docs-card {
