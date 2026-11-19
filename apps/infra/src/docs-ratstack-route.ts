@@ -1,8 +1,12 @@
+import {
+  docsPublishHost,
+  docsPublishZoneName,
+} from "../../web/src/docs-addresses.js";
 import { normalizeSiteBasePath } from "../../web/src/site-base-path.js";
 
-export const docsHost = "docs.hypertask.ai";
+export const docsHost = docsPublishHost;
 
-export const docsZoneName = "hypertask.ai";
+export const docsZoneName = docsPublishZoneName;
 
 export interface DocsRatstackRoute {
   readonly basePath: string;

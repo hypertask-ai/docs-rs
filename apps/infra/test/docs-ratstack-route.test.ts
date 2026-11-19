@@ -1,6 +1,9 @@
 import { expect, it } from "@effect/vitest";
 
-import { docsRatstackResourcesAllowed } from "../src/docs-ratstack-resources.js";
+import {
+  docsRatstackResourcesAllowed,
+  docsRatstackResourcesError,
+} from "../src/docs-ratstack-resources.js";
 import { docsRatstackRoute } from "../src/docs-ratstack-route.js";
 
 it("the published docs route names the same prefix the site build mounts at", () => {
@@ -19,32 +22,67 @@ it("the published docs route follows a trailing slash and refuses the origin roo
   expect(() => docsRatstackRoute("/")).toThrow(/SITE_BASE_PATH/u);
 });
 
-it("the publish stack accepts only the docs Worker, its backend, the zone and one route", () => {
-  const declared = {
+it("the publish stack accepts only the docs Worker and its RPC backend", () => {
+  const allowed = {
+    RpcBackend: { Type: "Cloudflare.Worker" },
+    Website: { Type: "Cloudflare.Worker" },
+  };
+
+  expect(docsRatstackResourcesAllowed(allowed)).toBe(true);
+  expect(docsRatstackResourcesError(allowed)).toBeUndefined();
+});
+
+it("the publish stack refuses a Zone resource", () => {
+  const headDeclared = {
     HypertaskDocsZone: { Type: "Cloudflare.Zone.Zone" },
     RatstackDocsRoute: { Type: "Cloudflare.Workers.Route" },
     RpcBackend: { Type: "Cloudflare.Worker" },
     Website: { Type: "Cloudflare.Worker" },
   };
 
-  expect(docsRatstackResourcesAllowed(declared)).toBe(true);
+  expect(docsRatstackResourcesAllowed(headDeclared)).toBe(false);
+  expect(docsRatstackResourcesError(headDeclared)).toMatch(
+    /apps\/infra\/alchemy\.docs-ratstack\.ts.*Zone/
+  );
+});
+
+it("the publish stack refuses DnsRecord, WorkerRoute and extra resources", () => {
+  const allowed = {
+    RpcBackend: { Type: "Cloudflare.Worker" },
+    Website: { Type: "Cloudflare.Worker" },
+  };
+
   expect(
-    docsRatstackResourcesAllowed({
-      ...declared,
+    docsRatstackResourcesError({
+      ...allowed,
       HypertaskDocsPages: { Type: "Cloudflare.Pages.Project" },
     })
-  ).toBe(false);
+  ).toContain("apps/infra/alchemy.docs-ratstack.ts");
+
   expect(
-    docsRatstackResourcesAllowed({
-      HypertaskDocsZone: declared.HypertaskDocsZone,
-      RatstackDocsRoute: declared.RatstackDocsRoute,
-      Website: declared.Website,
+    docsRatstackResourcesError({
+      ...allowed,
+      RatstackDocsRoute: { Type: "Cloudflare.Workers.Route" },
     })
-  ).toBe(false);
+  ).toMatch(/WorkerRoute/);
+
+  expect(
+    docsRatstackResourcesError({
+      ...allowed,
+      OldCname: { Type: "Cloudflare.DNS.Record" },
+    })
+  ).toMatch(/DnsRecord/);
+
   expect(
     docsRatstackResourcesAllowed({
-      ...declared,
-      RatstackDocsRoute: { Type: "Cloudflare.DNS.Record" },
+      RpcBackend: allowed.RpcBackend,
+      Website: allowed.Website,
+    })
+  ).toBe(true);
+  expect(
+    docsRatstackResourcesAllowed({
+      ...allowed,
+      Website: allowed.Website,
     })
   ).toBe(false);
 });

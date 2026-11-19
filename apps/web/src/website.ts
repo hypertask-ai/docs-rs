@@ -13,6 +13,11 @@ import {
   traceObservability,
   traceSettings,
 } from "../../site/src/observability.js";
+import {
+  docsHtmlHandling,
+  docsPublishHost,
+  docsPublishZoneName,
+} from "./docs-addresses.js";
 import { normalizeSiteBasePath } from "./site-base-path.js";
 import { WebsiteContentManifestError } from "./website-content-manifest-error.js";
 
@@ -59,7 +64,7 @@ export class Website extends Cloudflare.Website.Foldkit<Website>()(
 
     const props = {
       assets: {
-        htmlHandling: "drop-trailing-slash",
+        htmlHandling: docsHtmlHandling,
         runWorkerFirst: [
           "/rpc",
           "/rpc/*",
@@ -86,6 +91,18 @@ export class Website extends Cloudflare.Website.Foldkit<Website>()(
           env: { ...props.env, TRACES_ENABLED: "true" },
         }
       : props;
+
+    if (mounted) {
+      return {
+        ...tracedProps,
+        routes: [
+          {
+            pattern: `${docsPublishHost}${siteBasePath}*`,
+            zoneName: docsPublishZoneName,
+          },
+        ],
+      };
+    }
 
     if (!preview) {
       return tracedProps;
