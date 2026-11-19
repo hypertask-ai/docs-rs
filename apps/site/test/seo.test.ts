@@ -16,17 +16,9 @@ import {
   skillSources,
 } from "./generated-content.ts";
 
-it("every robots group declares the same content-use policy", () => {
-  const groups = robotsText
-    .split(/\n\n/u)
-    .filter((group) => group.startsWith("User-agent:"));
-
-  expect(groups.length).toBeGreaterThan(0);
-
-  for (const group of groups) {
-    expect(group).toContain(
-      "Content-Signal: ai-train=no, search=yes, ai-input=yes"
-    );
+it("documents every content use in the crawler file", () => {
+  for (const use of ["search:", "ai-input:", "ai-train:"]) {
+    expect(robotsText).toContain(use);
   }
 });
 

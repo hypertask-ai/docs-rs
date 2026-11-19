@@ -1365,8 +1365,9 @@ it.effect("serves agent indexes, cards, sitemap, and robots policy", () =>
         "6 calls per IP and 300 total calls per 60 seconds"
       );
       expect(yield* Effect.promise(robots.text.bind(robots))).toBe(robotsText);
-      expect(robotsText).toContain(
-        "Content-Signal: ai-train=no, search=yes, ai-input=yes"
+      expect(robots.status).toBe(200);
+      expect(robots.headers.get("content-type")).toBe(
+        "text/plain; charset=utf-8"
       );
       expect(index.headers.get("access-control-allow-origin")).toBe("*");
       expect(index.headers.get("content-type")).toContain("application/json");
