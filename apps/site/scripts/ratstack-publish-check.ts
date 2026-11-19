@@ -3,7 +3,7 @@ import { Console, Effect, FileSystem, Path, Schema } from "effect";
 import type { PlatformError } from "effect";
 import { FetchHttpClient, HttpClient } from "effect/http";
 import * as Layer from "effect/Layer";
-import { DomUtils, ElementType, parseDocument } from "htmlparser2";
+import { ElementType, parseDocument } from "htmlparser2";
 
 import { normalizeSiteBasePath } from "../../web/src/site-base-path.ts";
 
@@ -45,23 +45,25 @@ const addressPath = (address: string): string =>
 
 const hiddenHtmlTags = new Set(["script", "style", "template", "noscript"]);
 
-const textIn = (nodes: ReturnType<typeof DomUtils.getChildren>): string =>
+type HtmlChildren = ReturnType<typeof parseDocument>["children"];
+
+const textIn = (nodes: HtmlChildren): string =>
   nodes
     .map((node) => {
       if (node.type === ElementType.Text) {
         return node.data;
       }
 
-      if (hiddenHtmlTags.has(DomUtils.getName(node))) {
+      if (node.type !== ElementType.Tag || hiddenHtmlTags.has(node.name)) {
         return "";
       }
 
-      return textIn(DomUtils.getChildren(node));
+      return textIn(node.children);
     })
     .join(" ");
 
 const wordsIn = (html: string): readonly string[] => {
-  const text = textIn(DomUtils.getChildren(parseDocument(html))).toLowerCase();
+  const text = textIn(parseDocument(html).children).toLowerCase();
 
   return [
     ...new Set(text.split(/[^a-z0-9']+/u).filter((word) => word.length >= 4)),
