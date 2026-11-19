@@ -5,10 +5,10 @@ const allowedResources = [
   { id: "Website", type: "Cloudflare.Worker" },
 ] as const;
 
-const forbiddenResourceTypes: ReadonlyArray<{
+const forbiddenResourceTypes: readonly {
   readonly label: string;
   readonly match: (type: string) => boolean;
-}> = [
+}[] = [
   {
     label: "Zone",
     match: (type) => type.startsWith("Cloudflare.Zone."),

@@ -42,7 +42,7 @@ it("the publish stack refuses a Zone resource", () => {
 
   expect(docsRatstackResourcesAllowed(headDeclared)).toBe(false);
   expect(docsRatstackResourcesError(headDeclared)).toMatch(
-    /apps\/infra\/alchemy\.docs-ratstack\.ts.*Zone/
+    /apps\/infra\/alchemy\.docs-ratstack\.ts.*Zone/u
   );
 });
 
@@ -64,14 +64,14 @@ it("the publish stack refuses DnsRecord, WorkerRoute and extra resources", () =>
       ...allowed,
       RatstackDocsRoute: { Type: "Cloudflare.Workers.Route" },
     })
-  ).toMatch(/WorkerRoute/);
+  ).toMatch(/WorkerRoute/u);
 
   expect(
     docsRatstackResourcesError({
       ...allowed,
       OldCname: { Type: "Cloudflare.DNS.Record" },
     })
-  ).toMatch(/DnsRecord/);
+  ).toMatch(/DnsRecord/u);
 
   expect(
     docsRatstackResourcesAllowed({
