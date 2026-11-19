@@ -18,7 +18,13 @@ import { writeFileAtomically } from "../../site/scripts/write-file-atomically.ts
 import { ReaderFlags } from "../src/client/reader/model.ts";
 import type { ReaderPageFlags } from "../src/client/reader/model.ts";
 import { contentGenerationHeader } from "../src/content-generation-header.ts";
-import { docsRedirectsFile } from "../src/docs-addresses.ts";
+import {
+  docsRedirectsFile,
+  docsSitemapIndexPath,
+  docsSitemapIndexXml,
+  docsSitemapPath,
+  docsSitemapXml,
+} from "../src/docs-addresses.ts";
 import {
   isReaderRoutePath,
   readerNoStoreRoutePaths,
@@ -237,10 +243,25 @@ export const finalizeReader = Effect.fn("reader.finalize")(
         ? ""
         : `  ${contentGenerationHeader}: ${generation}\n`;
 
+    const addresses = pages.map((page) => page.page.path);
+
     yield* fs.writeFileString(
       `${clientDirectory}/_redirects`,
-      docsRedirectsFile(pages.map((page) => page.page.path))
+      docsRedirectsFile(addresses)
     );
+
+    const origin = pages[0]?.origin;
+
+    if (origin !== undefined) {
+      yield* fs.writeFileString(
+        `${clientDirectory}${docsSitemapIndexPath}`,
+        docsSitemapIndexXml(origin)
+      );
+      yield* fs.writeFileString(
+        `${clientDirectory}${docsSitemapPath}`,
+        docsSitemapXml(origin, addresses)
+      );
+    }
 
     if (Option.isSome(commit)) {
       if (

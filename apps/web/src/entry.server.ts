@@ -10,16 +10,10 @@ import {
   ReaderErrorPage,
   readerErrorPath,
 } from "../../site/src/reader-error-page.js";
-import { findPage, pagePaths } from "./client/reader-pages.js";
+import { findPage } from "./client/reader-pages.js";
 import { init } from "./client/reader/init.js";
 import { ReaderFlags } from "./client/reader/model.js";
-import {
-  docsNotFoundPage,
-  docsSitemapIndexPath,
-  docsSitemapIndexXml,
-  docsSitemapPath,
-  docsSitemapXml,
-} from "./docs-addresses.js";
+import { docsNotFoundPage, docsRedirectFor } from "./docs-addresses.js";
 import { view } from "./features/reader.js";
 import { isWorkerFirstReaderRoute } from "./reader-routes.js";
 import { readerPrerenderOrigin } from "./server/prerender-origin.js";
@@ -42,14 +36,6 @@ const errorTemplate =
 const decodeErrorPage = Schema.decodeUnknownEffect(
   Schema.fromJsonString(ReaderErrorPage)
 );
-
-const isDocsSitemapAddress = (pathname: string) =>
-  pathname === docsSitemapIndexPath || pathname === docsSitemapPath;
-
-const docsSitemapContent = (pathname: string, origin: string) =>
-  pathname === docsSitemapIndexPath
-    ? docsSitemapIndexXml(origin)
-    : docsSitemapXml(origin, pagePaths);
 
 const previewHeaders = Effect.fn("reader.previewHeaders")(
   function* previewHeaders(request: Request) {
@@ -167,14 +153,14 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
       );
     }
 
-    if (isDocsSitemapAddress(pathname)) {
-      const { origin } = new URL(request.url);
-      const body = docsSitemapContent(pathname, origin);
+    const redirect = docsRedirectFor(pathname);
 
+    if (redirect !== undefined) {
       return yield* responded(
         request,
-        new Response(body, {
-          headers: { "content-type": "application/xml; charset=utf-8" },
+        new Response(null, {
+          headers: { location: redirect.destination },
+          status: redirect.status,
         })
       );
     }

@@ -54,15 +54,19 @@ export type DocsAddressAnswer =
       readonly status: 308;
     };
 
+export const docsRedirectFor = (pathname: string) => {
+  const bare = docsBareAddress(pathname);
+
+  return docsRedirects.find((rule) => docsBareAddress(rule.source) === bare);
+};
+
 export const docsAddressAnswer = (
   pages: ReadonlySet<string>,
   pathname: string
 ): DocsAddressAnswer => {
   const bare = docsBareAddress(pathname);
 
-  const redirect = docsRedirects.find(
-    (rule) => docsBareAddress(rule.source) === bare
-  );
+  const redirect = docsRedirectFor(pathname);
 
   if (redirect !== undefined) {
     return {
