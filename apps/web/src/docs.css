@@ -407,6 +407,8 @@ body > .docs-layout {
 
 .docs-main .docs-aside-title + p {
   display: inline;
+  font-size: 14px;
+  line-height: 26px;
   margin: 0;
 }
 
