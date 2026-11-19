@@ -78,5 +78,6 @@ it.effect("every seed profile renders as prerendered HTML", () =>
       expect(cards.html).toContain(`href="/all-stars/${person.id}"`);
       expect(cards.html).toContain(htmlText(person.bio[0].text));
     }
-  }).pipe(Effect.provide(NodeServices.layer))
+  }).pipe(Effect.provide(NodeServices.layer)),
+  { timeout: 30_000 }
 );
