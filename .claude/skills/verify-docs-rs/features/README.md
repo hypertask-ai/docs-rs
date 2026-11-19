@@ -8,7 +8,7 @@ This directory is the maintained source for verifying that the docs site this re
 - The preview answers `200 text/html` at `https://docs.hypertask.ai/ratstack/`, carries `noindex` in both the `X-Robots-Tag` header and the robots meta tag, and answers with `X-Content-Generation`.
 - `node .claude/skills/verify-docs-rs/doctor.mjs` prints `doctor: PASS`.
 - One evidence folder per run, outside the clone: `RUN="${DOCS_VERIFY_EVIDENCE:-/tmp/docs-verify-evidence}/run-$(date -u +%Y%m%dT%H%M%SZ)"`.
-- Playwright resolves from the checkout, or `NODE_PATH` points at a directory that holds it.
+- Playwright 1.65.1 resolves from the checkout; the doctor prints the version it finds.
 - Nothing is started: the preview is published by GitHub and the live site is the reference.
 
 ## Driving conventions

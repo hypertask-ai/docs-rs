@@ -1,11 +1,9 @@
 import { mkdir } from "node:fs/promises";
-import { createRequire } from "node:module";
 import path from "node:path";
 import process from "node:process";
 import { pathToFileURL } from "node:url";
 
-const playwrightChromium = () =>
-  createRequire(import.meta.url)("playwright").chromium;
+import { chromium } from "playwright";
 
 export const WIDTHS = { desktop: 1440, phone: 390 };
 
@@ -138,12 +136,49 @@ export const collectStructure = (page) =>
  * @returns {Promise<string[]>}
  */
 export const collectText = (page) =>
-  page.evaluate(() =>
-    document.body.innerText
+  page.evaluate(() => {
+    const skipped = new Set(["NOSCRIPT", "SCRIPT", "STYLE", "TEMPLATE"]);
+    const separates =
+      /^(block|flex|flow-root|grid|list-item|table|table-cell|table-row)$/u;
+
+    /**
+     * @param {Node} node
+     * @returns {string}
+     */
+    const read = (node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return node.textContent ?? "";
+      }
+
+      if (!(node instanceof Element)) {
+        return "";
+      }
+
+      if (
+        skipped.has(node.tagName) ||
+        (node instanceof HTMLElement && node.hidden)
+      ) {
+        return "";
+      }
+
+      const style = getComputedStyle(node);
+
+      if (style.display === "none" || style.visibility === "hidden") {
+        return "";
+      }
+
+      const children = [...node.childNodes]
+        .map((child) => read(child))
+        .join("");
+
+      return separates.test(style.display) ? `\n${children}\n` : children;
+    };
+
+    return read(document.body)
       .split("\n")
       .map((line) => line.replaceAll(/\s+/gu, " ").trim())
-      .filter((line) => line !== "")
-  );
+      .filter((line) => line !== "");
+  });
 
 /**
  * @param {PageEntry} entry
@@ -185,7 +220,7 @@ export const screenshot = async (browser, url, outDir, name) => {
  * @returns {Promise<object>}
  */
 export const snapshot = async (url, outDir, name) => {
-  const browser = await playwrightChromium().launch();
+  const browser = await chromium.launch();
 
   try {
     const desktop = await openPage(browser, url, WIDTHS.desktop);

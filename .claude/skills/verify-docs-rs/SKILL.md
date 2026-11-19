@@ -32,10 +32,11 @@ node .claude/skills/verify-docs-rs/doctor.mjs
 
 It checks these and prints one line each:
 
-1. the live site answers `200 text/html` and is not `noindex`;
-2. `https://docs.hypertask.ai/ratstack/` answers `200 text/html`;
-3. the preview carries `noindex` in both the `X-Robots-Tag` header and the `<meta name="robots">` tag, and answers with `X-Content-Generation`;
-4. the preview is the newest publish: the newest successful publish run on `main` has no site change after it.
+1. `playwright` resolves from this checkout, and it prints the version it found;
+2. the live site answers `200 text/html` and is not `noindex`;
+3. `https://docs.hypertask.ai/ratstack/` answers `200 text/html`;
+4. the preview carries `noindex` in both the `X-Robots-Tag` header and the `<meta name="robots">` tag, and answers with `X-Content-Generation`;
+5. the preview is the newest publish: the newest successful publish run on `main` has no site change after it.
 
 `doctor: PASS` means drive. A `FAIL` line names the fix. A `SKIP` line means the check could not run, usually because the publish workflow is not on `main` yet; a skip does not pass the check.
 
@@ -61,11 +62,7 @@ node .claude/skills/verify-docs-rs/drive.mjs changelog <live-url> <preview-url> 
 
 Addresses on the preview are the live address with `/ratstack` in front. The driver records each final URL after redirects and normalizes paths before it compares, so a difference in the address itself appears in the two status lines, not as a false text difference.
 
-The driver imports `playwright` from this checkout. When the checkout has no `node_modules`, point `NODE_PATH` at a directory that holds it:
-
-```sh
-NODE_PATH=/path/to/node_modules node .claude/skills/verify-docs-rs/drive.mjs page https://docs.hypertask.ai/ "$RUN" live-home
-```
+`drive.mjs` imports `playwright` from this checkout, the same install the verifier and CI use, and the doctor prints the version it finds. A clone with no dependencies fails that doctor line. Link an existing install into the clone before driving, for example `ln -s /path/to/a/checkout/node_modules node_modules`, and never commit the link.
 
 Stable handles, used by the driver and named in every feature file:
 

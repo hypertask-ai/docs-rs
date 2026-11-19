@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import { mkdir, writeFile } from "node:fs/promises";
-import { createRequire } from "node:module";
 import path from "node:path";
 import process from "node:process";
+
+import { chromium } from "playwright";
 
 import {
   collectLinks,
@@ -16,13 +17,9 @@ const TIMEOUT_MS = 45_000;
 const BASE_PATH = "/ratstack";
 const HOST = "docs.hypertask.ai";
 
-const chromium = () => createRequire(import.meta.url)("playwright").chromium;
-
 const launch = async () => {
-  const browserType = chromium();
-
   try {
-    return await browserType.launch();
+    return await chromium.launch();
   } catch (error) {
     console.error(
       `playwright could not start its own Chromium (${
@@ -30,7 +27,7 @@ const launch = async () => {
       }), so this run uses /usr/bin/google-chrome`
     );
 
-    return await browserType.launch({
+    return await chromium.launch({
       executablePath: "/usr/bin/google-chrome",
     });
   }

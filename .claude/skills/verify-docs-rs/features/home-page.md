@@ -34,4 +34,4 @@ Preconditions:
 - The H1 sits inside `main` on the live page. Compare the whole page text, not only the article body, because the ask bar and the cards sit outside it.
 - The ask bar is a link into the help chat. Checking it means reading its address and text, never starting a conversation.
 - The live canonical is the full address with a trailing slash. The preview may add `/ratstack`; the driver normalizes that prefix, so a canonical that differs by anything else is a FAIL.
-- The live page carries a theme picker (`Select theme`, `Dark`, `Light`, `Auto`). The preview must keep the same control and the same three choices.
+- The theme picker (`Select theme`, `Dark`, `Light`, `Auto`) sits in the mobile preferences area and is hidden at desktop width, so the desktop text diff does not cover it. Compare the phone screenshots when a change touches the theme control.

@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import path from "node:path";
 import process from "node:process";
 
 const liveUrl = process.env.LIVE_DOCS_URL ?? "https://docs.hypertask.ai/";
@@ -47,6 +50,22 @@ const fetchText = async (url) => {
 const robotsMeta = (html) =>
   /<meta[^>]*name="robots"[^>]*content="(?<content>[^"]*)"/u.exec(html)?.groups
     ?.content ?? "";
+
+const checkPlaywright = async () => {
+  try {
+    const resolved = createRequire(import.meta.url).resolve("playwright");
+    const manifest = JSON.parse(
+      readFileSync(path.join(path.dirname(resolved), "package.json"), "utf8")
+    );
+
+    pass(`playwright ${manifest.version} resolves from ${resolved}`);
+  } catch (error) {
+    fail(
+      "playwright",
+      `playwright does not resolve from this checkout (${String(error).split("\n")[0]}). Fix: install the checkout's dependencies, or link an existing install into node_modules, then run this doctor again; drive.mjs needs playwright and its Chromium.`
+    );
+  }
+};
 
 const checkLive = async () => {
   let page;
@@ -259,6 +278,7 @@ const checkBuild = async () => {
   );
 };
 
+await checkPlaywright();
 await checkLive();
 await checkPreview();
 await checkBuild();
