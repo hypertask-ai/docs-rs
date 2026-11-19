@@ -528,7 +528,7 @@ jobs:
               --cd "$GITHUB_WORKSPACE" \
               --output-last-message "$RUNNER_TEMP/verdict.md" \
               - < "$RUNNER_TEMP/prompt.md"
-          first="$(sed -n '1{s/[[:space:]]*$//;p}' "$RUNNER_TEMP/verdict.md" 2>/dev/null || true)"
+          first="$(grep -E '^pstack-verifier: (PASS|PASS\+NOTES|FAIL) @ [0-9a-f]{40}$' "$RUNNER_TEMP/verdict.md" 2>/dev/null | head -n 1 | sed 's/[[:space:]]*$//' || true)"
           if [[ ! "$first" =~ ^pstack-verifier:\ (PASS|PASS\+NOTES|FAIL)\ @\ ([0-9a-f]{40})$ ]]; then
             echo "::error::Codex produced no verdict in the required format, so the next configured engine stands in: $first"
             sed -n '1,40p' "$RUNNER_TEMP/verdict.md" 2>/dev/null || true
@@ -576,7 +576,7 @@ jobs:
             BASE_DEV_URL="${BASE_DEV_URL:-}" \
             LIVE_URL="$LIVE_URL" \
             claude --print --dangerously-skip-permissions < "$RUNNER_TEMP/prompt.md" > "$RUNNER_TEMP/verdict.md"
-          first="$(sed -n '1{s/[[:space:]]*$//;p}' "$RUNNER_TEMP/verdict.md")"
+          first="$(grep -E '^pstack-verifier: (PASS|PASS\+NOTES|FAIL) @ [0-9a-f]{40}$' "$RUNNER_TEMP/verdict.md" | head -n 1 | sed 's/[[:space:]]*$//' || true)"
           if [[ ! "$first" =~ ^pstack-verifier:\ (PASS|PASS\+NOTES|FAIL)\ @\ ([0-9a-f]{40})$ ]]; then
             echo "::error::Claude produced no verdict in the required format: $first"
             sed -n '1,40p' "$RUNNER_TEMP/verdict.md"
@@ -603,9 +603,9 @@ jobs:
             echo "::error::The verifier produced no verdict. Codex: ${CODEX_OUTCOME:-not run}. Claude: ${CLAUDE_OUTCOME:-not run}."
             exit 1
           fi
-          first="$(sed -n '1{s/[[:space:]]*$//;p}' "$RUNNER_TEMP/verdict.md")"
+          first="$(grep -E '^pstack-verifier: (PASS|PASS\+NOTES|FAIL) @ [0-9a-f]{40}$' "$RUNNER_TEMP/verdict.md" | head -n 1 | sed 's/[[:space:]]*$//' || true)"
           if [[ ! "$first" =~ ^pstack-verifier:\ (PASS|PASS\+NOTES|FAIL)\ @\ ([0-9a-f]{40})$ ]]; then
-            echo "::error::The verifier's first line is not a verdict in the required format: $first"
+            echo "::error::The verifier produced no line in the required verdict format: $first"
             sed -n '1,40p' "$RUNNER_TEMP/verdict.md"
             exit 1
           fi
