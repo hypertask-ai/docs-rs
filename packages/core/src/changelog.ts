@@ -71,10 +71,39 @@ const decodeAnnouncementEntities = (text: string) =>
         : (plainAnnouncementEntities.get(entity.toLowerCase()) ?? entity)
   );
 
+const stripMarkdownLinks = (text: string) => {
+  let result = "";
+  let index = 0;
+
+  while (index < text.length) {
+    const open = text.indexOf("[", index);
+
+    if (open === -1) {
+      break;
+    }
+
+    const label = text.indexOf("]", open + 2);
+
+    const target =
+      label !== -1 && text[label + 1] === "("
+        ? text.indexOf(")", label + 3)
+        : -1;
+
+    if (label === -1 || target === -1) {
+      result += text.slice(index, open + 1);
+      index = open + 1;
+    } else {
+      result += `${text.slice(index, open)}${text.slice(open + 1, label)}`;
+      index = target + 1;
+    }
+  }
+
+  return `${result}${text.slice(index)}`;
+};
+
 export const plainAnnouncement = (text: string) =>
   decodeAnnouncementEntities(
-    text
-      .replaceAll(/\[(?<text>[^\]]+)\]\([^)]+\)/gu, "$<text>")
+    stripMarkdownLinks(text)
       .replaceAll(/<\/?(?:p|strong|li|ul|code|kbd|em|a)\b[^>]*>/gu, "")
       .replaceAll(/\*\*(?<text>[^*]+)\*\*/gu, "$<text>")
       .replaceAll("`", "")
@@ -209,16 +238,88 @@ const legacyItems = (block: string) => {
   return items;
 };
 
+interface LegacyUpdateTag {
+  readonly end: number;
+  readonly label: string;
+}
+
+const legacyUpdateTagAt = (
+  text: string,
+  start: number
+): LegacyUpdateTag | undefined => {
+  let cursor = start + "<Update".length;
+
+  while (cursor < text.length && /\s/u.test(text.charAt(cursor))) {
+    cursor += 1;
+  }
+
+  if (
+    cursor === start + "<Update".length ||
+    !text.startsWith("label=", cursor)
+  ) {
+    return undefined;
+  }
+
+  cursor += "label=".length;
+
+  if (text.charAt(cursor) !== '"' && text.charAt(cursor) !== "'") {
+    return undefined;
+  }
+
+  const labelStart = cursor + 1;
+
+  cursor = labelStart;
+
+  while (
+    cursor < text.length &&
+    text.charAt(cursor) !== '"' &&
+    text.charAt(cursor) !== "'"
+  ) {
+    cursor += 1;
+  }
+
+  if (cursor === labelStart || cursor === text.length) {
+    return undefined;
+  }
+
+  const end = text.indexOf(">", cursor + 1);
+
+  return end === -1
+    ? undefined
+    : { end: end + 1, label: text.slice(labelStart, cursor) };
+};
+
+const foldLegacyUpdates = (text: string) => {
+  let result = "";
+  let index = 0;
+
+  while (index < text.length) {
+    const start = text.indexOf("<Update", index);
+
+    if (start === -1) {
+      break;
+    }
+
+    const tag = legacyUpdateTagAt(text, start);
+
+    if (tag === undefined) {
+      result += text.slice(index, start + 1);
+      index = start + 1;
+    } else {
+      result += `${text.slice(index, start)}\n## ${tag.label}\n`;
+      index = tag.end;
+    }
+  }
+
+  return `${result}${text.slice(index)}`;
+};
+
 export const parseLegacyChangelog = (
   raw: string,
   source: string,
   digest: (text: string) => string
 ): readonly LegacyChangelogEntry[] => {
-  const normalized = raw
-    .replaceAll(
-      /<Update\s+label=["'](?<label>[^"']+)["'][^>]*>/gu,
-      "\n## $<label>\n"
-    )
+  const normalized = foldLegacyUpdates(raw)
     .replaceAll("</Update>", "\n")
     .replaceAll(/\\+n/gu, "\n");
 
