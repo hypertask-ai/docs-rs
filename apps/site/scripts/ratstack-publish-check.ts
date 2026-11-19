@@ -40,6 +40,18 @@ const robotsMetaOf = (html: string): string =>
 const addressPath = (address: string): string =>
   address.split(/[?#]/u)[0] ?? "";
 
+const wordsIn = (html: string): readonly string[] => {
+  const text = html
+    .replaceAll(/<(?:script|style)[^>]*>[\s\S]*?<\/(?:script|style)>/gu, " ")
+    .replaceAll(/<[^>]*>/gu, " ")
+    .replaceAll(/&[a-z]+;|&#[0-9]+;/gu, " ")
+    .toLowerCase();
+
+  return [
+    ...new Set(text.split(/[^a-z0-9']+/u).filter((word) => word.length >= 4)),
+  ];
+};
+
 const sameSiteAddresses = (text: string): readonly string[] => {
   const addresses: string[] = [];
 
@@ -292,6 +304,24 @@ const verifyDeployedSite = Effect.fn("ratstackPublishCheck.verify")(
     }
 
     yield* Console.log(`${home} answers 200 with title '${homeTitle}'`);
+
+    const oldWords = wordsIn(old.body);
+    const publishedWords = new Set(wordsIn(homeResponse.body));
+    const missingWords = oldWords.filter((word) => !publishedWords.has(word));
+    const share =
+      oldWords.length === 0
+        ? 0
+        : Math.round(
+            ((oldWords.length - missingWords.length) / oldWords.length) * 100
+          );
+
+    if (missingWords.length === 0) {
+      yield* Console.log(`${home} carries every word on ${docsOrigin}/`);
+    } else {
+      yield* Console.log(
+        `::warning title=The published home page differs from the old docs home page::${home} carries ${share}% of the words on ${docsOrigin}/ (${oldWords.length - missingWords.length} of ${oldWords.length}). Missing: ${missingWords.slice(0, 12).join(", ")}. The slices that copy the old pages own this difference, and this line reports it on every publish until they land.`
+      );
+    }
 
     const addresses = prefixedAddresses(basePath, homeResponse.body).slice(
       0,

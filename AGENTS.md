@@ -145,6 +145,8 @@ Follow [ship](/skills/ship) and `skills/ship/references/project.md` for deployme
 | A publish cannot change the live site, its Pages project, its DNS records or any other Cloudflare resource | the resource allowlist in `apps/infra/alchemy.docs-ratstack.ts`, which dies on any resource outside the docs Worker, its RPC backend, the `hypertask.ai` zone and one route, plus the old-site title check in the `verify` step |
 | Only `main` publishes, two publishes never overlap, and every action is pinned to a full commit sha | the `on`, `concurrency` and `permissions` blocks of `.github/workflows/publish-ratstack.yml` |
 | Only a run of the default branch can read the Cloudflare secrets, and a run without them stops before it builds | `environment: ratstack-publish` on the publish job, the deployment branch rule of that environment, and its first step, which names the missing secret |
+| Every workflow file in `.github/workflows` is valid GitHub Actions, with no unknown key, unknown context or bad expression | the `Lint every workflow file with actionlint` step in the `checks` job of `.github/workflows/ci.yml`, which downloads actionlint 1.7.7 from its release page, checks the release checksum, and lints every workflow file |
+| Every publish reports how the published home page's words compare with https://docs.hypertask.ai/ | the content comparison in the `verify` step of `apps/site/scripts/ratstack-publish-check.ts`, which prints the share of the old page's words that the published page carries and names the missing words |
 
 ## Release the ratstack package
 
