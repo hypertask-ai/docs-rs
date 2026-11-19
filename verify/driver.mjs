@@ -1,9 +1,11 @@
 import { mkdir } from "node:fs/promises";
+import { createRequire } from "node:module";
 import path from "node:path";
 import process from "node:process";
 import { pathToFileURL } from "node:url";
 
-import { chromium } from "playwright";
+const playwrightChromium = () =>
+  createRequire(import.meta.url)("playwright").chromium;
 
 export const WIDTHS = { desktop: 1440, phone: 390 };
 
@@ -30,6 +32,7 @@ export const statusOf = async (url) => {
   return {
     bytes: body.byteLength,
     contentType: response.headers.get("content-type"),
+    headers: Object.fromEntries(response.headers.entries()),
     location: response.headers.get("location"),
     status: response.status,
     url,
@@ -124,8 +127,23 @@ export const collectStructure = (page) =>
       nav: document.querySelectorAll("nav").length,
     },
     lang: document.documentElement.lang || null,
+    robots:
+      document.querySelector('meta[name="robots"]')?.getAttribute("content") ??
+      null,
     title: document.title,
   }));
+
+/**
+ * @param {import("playwright").Page} page
+ * @returns {Promise<string[]>}
+ */
+export const collectText = (page) =>
+  page.evaluate(() =>
+    document.body.innerText
+      .split("\n")
+      .map((line) => line.replaceAll(/\s+/gu, " ").trim())
+      .filter((line) => line !== "")
+  );
 
 /**
  * @param {PageEntry} entry
@@ -167,7 +185,7 @@ export const screenshot = async (browser, url, outDir, name) => {
  * @returns {Promise<object>}
  */
 export const snapshot = async (url, outDir, name) => {
-  const browser = await chromium.launch();
+  const browser = await playwrightChromium().launch();
 
   try {
     const desktop = await openPage(browser, url, WIDTHS.desktop);
