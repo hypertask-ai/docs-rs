@@ -151,6 +151,9 @@ const firstByClass = (element: Element, name: string): Element | undefined => {
   return undefined;
 };
 
+const textOf = (parts: readonly string[]) =>
+  normalizeArticleText(parts.join(""));
+
 const writeCard = (state: ArticleState, element: Element) => {
   const title = firstByClass(element, "docs-card-title");
   const body = firstByClass(element, "docs-card-body");
@@ -167,9 +170,6 @@ const writeCard = (state: ArticleState, element: Element) => {
     title: title === undefined ? "" : textOf([DomUtils.textContent(title)]),
   });
 };
-
-const textOf = (parts: readonly string[]) =>
-  normalizeArticleText(parts.join(""));
 
 const writeText = (
   state: ArticleState,

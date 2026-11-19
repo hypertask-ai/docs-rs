@@ -128,6 +128,7 @@ const componentChildren = (input: ComponentInput): readonly RootContent[] =>
 
 const dedentComponentSource = (source: string): string => {
   const lines = source.split("\n");
+
   const indents = lines
     .filter((line) => line.trim() !== "")
     .map((line) => /^[ \t]*/u.exec(line)?.[0].length ?? 0);
