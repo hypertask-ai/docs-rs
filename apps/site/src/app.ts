@@ -40,6 +40,7 @@ import {
   search,
 } from "./capabilities/index.js";
 import { learnLayer } from "./capabilities/learn.js";
+import { changelogRoutes } from "./changelog-routes.js";
 import type { ContentCatalogData as ContentCatalog } from "./content-data.js";
 import { ContentStore } from "./content-store.js";
 import {
@@ -1233,6 +1234,7 @@ export const mischiefRoutes = (options: MischiefRouteOptions = {}) =>
           tokens: options.joinTokens,
         }),
         options.feedback === undefined ? apiRoutes : authenticatedApiRoutes,
+        changelogRoutes,
         options.feedback?.routes ?? Layer.empty,
         options.interest === undefined
           ? Layer.empty
