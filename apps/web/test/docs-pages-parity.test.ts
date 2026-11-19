@@ -167,6 +167,11 @@ it.layer(DocsParityFixture.layer)((test) => {
 
           const article = docsArticleOf(rendered.html, fixture.routePath);
 
+          expect(rendered.html, fixture.routePath).not.toContain(
+            "catppuccin-latte"
+          );
+          expect(rendered.html, fixture.routePath).not.toContain("#eff1f5");
+
           expect(page.page.metadata.title, fixture.routePath).toBe(
             fixture.titleTag
           );

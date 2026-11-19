@@ -631,6 +631,9 @@ const compileMarkdownBody = Effect.fn("compileMarkdownBody")(
     const docsPage = options.docsPage === true;
     const codeTargets = docsPage ? emptyTargets : targets;
     const terms = docsPage ? [] : loreTerms;
+    const highlight = docsPage
+      ? (code: string) => highlighter.render(code, "text")
+      : highlighter.render;
 
     const renderPrompt = source.includes("<CopyPrompt")
       ? renderPromptHtml
@@ -645,7 +648,7 @@ const compileMarkdownBody = Effect.fn("compileMarkdownBody")(
           : buildError("markdown html", sourcePath, cause),
       try: () =>
         renderMarkdownHtml(htmlSource, {
-          highlight: highlighter.render,
+          highlight,
           rawHtmlParagraphs: !docsPage,
           rehypePlugins: [
             ...(["/lore/", "/systems/", "/skills/"].some((prefix) =>
