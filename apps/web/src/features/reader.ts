@@ -356,7 +356,7 @@ export const view = (
 
   const toc = docsHasContentsList(model.page.path)
     ? Option.match(model.references, {
-        onNone: () => docsToc([], h),
+        onNone: () => null,
         onSome: (references) => docsToc(references.anchors, h),
       })
     : null;

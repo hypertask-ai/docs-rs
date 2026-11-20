@@ -4,7 +4,6 @@ import type { Attribute, Html, HtmlBuilder } from "foldkit/html";
 
 import { CopyStatus } from "../client/reader/model.js";
 import { docsChrome } from "./docs-chrome.stylex.js";
-import { DOCS_TOP_ANCHOR_ID } from "./docs-contents.js";
 import {
   docsHeaderLinks,
   docsHeaderTabs,
@@ -260,35 +259,21 @@ export const docsToc = <Message>(
       ),
       h.ul(
         [h.Class(className(docsChrome.groupList))],
-        [
+        anchors.map((anchor, index) =>
           h.li(
-            [h.Key(DOCS_TOP_ANCHOR_ID)],
+            [h.Key(anchor.id)],
             [
               h.a(
                 [
-                  h.Href(`#${DOCS_TOP_ANCHOR_ID}`),
+                  h.Href(`#${anchor.id}`),
                   h.Class(className(docsChrome.tocLink)),
-                  h.Attribute("aria-current", "true"),
+                  ...(index === 0 ? [h.Attribute("aria-current", "true")] : []),
                 ],
-                ["Overview"]
+                [anchor.text]
               ),
             ]
-          ),
-          ...anchors.map((anchor) =>
-            h.li(
-              [h.Key(anchor.id)],
-              [
-                h.a(
-                  [
-                    h.Href(`#${anchor.id}`),
-                    h.Class(className(docsChrome.tocLink)),
-                  ],
-                  [anchor.text]
-                ),
-              ]
-            )
-          ),
-        ]
+          )
+        )
       ),
     ]
   );

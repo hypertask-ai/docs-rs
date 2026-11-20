@@ -65,7 +65,7 @@ const docsFlags = (fixture: DocsEndFixture): ReaderPageFlags => ({
     path: docsNormalizedPath(fixture.path),
   },
   references: Option.some({
-    anchors: fixture.contents.slice(1).map((row) => ({
+    anchors: fixture.contents.map((row) => ({
       id: row.href.replace(/^#/u, ""),
       text: row.text,
     })),
