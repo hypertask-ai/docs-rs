@@ -9,15 +9,15 @@ import {
   toExecuteCapability,
   toRpc,
   toToolkit,
-} from "@rat-stack/capability";
-import type { AnyContract } from "@rat-stack/capability";
-import { watchActor } from "@rat-stack/capability/actor-watch";
+} from "@hypertask-docs/capability";
+import type { AnyContract } from "@hypertask-docs/capability";
+import { watchActor } from "@hypertask-docs/capability/actor-watch";
 import type {
   ActorEvent,
   WatchableActor,
-} from "@rat-stack/capability/actor-watch";
-import { CallWatch } from "@rat-stack/capability/call-watch";
-import type { CallWatchService } from "@rat-stack/capability/call-watch";
+} from "@hypertask-docs/capability/actor-watch";
+import { CallWatch } from "@hypertask-docs/capability/call-watch";
+import type { CallWatchService } from "@hypertask-docs/capability/call-watch";
 import { Clock, Effect, Layer, Schema, Stream } from "effect";
 import { Tool } from "effect/ai";
 import { RpcTest } from "effect/rpc";

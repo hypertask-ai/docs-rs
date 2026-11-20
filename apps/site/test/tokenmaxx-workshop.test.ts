@@ -1,14 +1,17 @@
 import { NodeServices } from "@effect/platform-node";
 import { describe, expect, it } from "@effect/vitest";
-import { Workshop, publishWorkshop } from "@rat-stack/core/tokenmaxx-workshop";
-import { UnknownExercise } from "@rat-stack/core/workshop-contracts";
+import {
+  Workshop,
+  publishWorkshop,
+} from "@hypertask-docs/core/tokenmaxx-workshop";
+import { UnknownExercise } from "@hypertask-docs/core/workshop-contracts";
 import {
   WorkshopDirectory,
   listExercises,
   readExercise,
   workshopLinks,
   workshopPrep,
-} from "@rat-stack/core/workshop-directory";
+} from "@hypertask-docs/core/workshop-directory";
 import { Effect, FileSystem, Path, Schema } from "effect";
 
 import { emitAssets } from "../scripts/emit-assets.ts";

@@ -1,5 +1,5 @@
 import { expect, it } from "@effect/vitest";
-import { IntakeTicket } from "@rat-stack/core/intake";
+import { IntakeTicket } from "@hypertask-docs/core/intake";
 import {
   CONSENT_VERSION,
   InterestGate,
@@ -10,8 +10,11 @@ import {
   InterestMode,
   InterestTokens,
   SubscriberConfirm,
-} from "@rat-stack/core/interest";
-import type { ConfirmState, SubscriberIntake } from "@rat-stack/core/interest";
+} from "@hypertask-docs/core/interest";
+import type {
+  ConfirmState,
+  SubscriberIntake,
+} from "@hypertask-docs/core/interest";
 import { Clock, Effect, Layer, Redacted, Ref, Schema } from "effect";
 import type { Context } from "effect";
 import * as HttpRouter from "effect/http/HttpRouter";

@@ -1,4 +1,4 @@
-import type { ContactRef } from "@rat-stack/core/intake";
+import type { ContactRef } from "@hypertask-docs/core/intake";
 import { Context, Effect, Layer, Ref } from "effect";
 
 export interface SealedRow {
@@ -25,7 +25,7 @@ export class IntakeVault extends Context.Service<
       rows: readonly SealedRow[]
     ) => Effect.Effect<void>;
   }
->()("@rat-stack/intake-live/IntakeVault") {}
+>()("@hypertask-docs/intake-live/IntakeVault") {}
 
 export const doIntakeVault = (stub: (actor: ContactRef) => IntakeVaultStub) =>
   Layer.succeed(IntakeVault, {

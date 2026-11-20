@@ -1,7 +1,7 @@
 import { expect, it } from "@effect/vitest";
-import { ContactRefSchema } from "@rat-stack/core/intake";
-import { InterestTokens } from "@rat-stack/core/interest";
-import { JoinContactStore } from "@rat-stack/core/join-interest";
+import { ContactRefSchema } from "@hypertask-docs/core/intake";
+import { InterestTokens } from "@hypertask-docs/core/interest";
+import { JoinContactStore } from "@hypertask-docs/core/join-interest";
 import { Effect, Layer, Redacted, Schema } from "effect";
 import * as Arbitrary from "effect/Arbitrary";
 

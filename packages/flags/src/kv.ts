@@ -9,19 +9,19 @@ import {
   flagPartition,
   validateFlagScope,
   validateFlagChangeQuery,
-} from "@rat-stack/core/flag-control";
-import type { ListFlagChangesInput } from "@rat-stack/core/flag-control";
+} from "@hypertask-docs/core/flag-control";
+import type { ListFlagChangesInput } from "@hypertask-docs/core/flag-control";
 import {
   FlagStateStore,
   flagLedgerEngine,
-} from "@rat-stack/core/flag-ledger-engine";
+} from "@hypertask-docs/core/flag-ledger-engine";
 import {
   FlagStorageError,
   Flags,
   decodeFlag,
   InvalidFlagValue,
-} from "@rat-stack/core/flags";
-import type { Flag } from "@rat-stack/core/flags";
+} from "@hypertask-docs/core/flags";
+import type { Flag } from "@hypertask-docs/core/flags";
 import { Clock, Effect, Layer, Schema } from "effect";
 
 import { InvalidFlagJournal } from "./invalid-flag-journal.js";

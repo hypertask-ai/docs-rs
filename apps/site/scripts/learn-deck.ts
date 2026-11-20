@@ -1,4 +1,4 @@
-import { deriveDeck } from "@rat-stack/learn/build";
+import { deriveDeck } from "@hypertask-docs/learn/build";
 import { Effect, Schema } from "effect";
 
 import { buildError } from "./content-error.ts";

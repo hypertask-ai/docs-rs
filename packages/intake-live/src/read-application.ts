@@ -1,8 +1,8 @@
-import { IntakeAnswersSchema } from "@rat-stack/core/intake";
+import { IntakeAnswersSchema } from "@hypertask-docs/core/intake";
 import {
   IntakeApplicationsUnavailable,
   JoinIdentity,
-} from "@rat-stack/core/join-interest";
+} from "@hypertask-docs/core/join-interest";
 import { Effect, Schema } from "effect";
 
 import type { SealedRow } from "./intake-vault.js";

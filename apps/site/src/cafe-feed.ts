@@ -1,8 +1,8 @@
-import { githubProfileUrl, xProfileUrl } from "@rat-stack/core/contracts";
+import { githubProfileUrl, xProfileUrl } from "@hypertask-docs/core/contracts";
 import type {
   CafeNewsItemValue,
   CafeNewsList,
-} from "@rat-stack/core/contracts";
+} from "@hypertask-docs/core/contracts";
 
 const xmlEscapes = new Map([
   ['"', "&quot;"],

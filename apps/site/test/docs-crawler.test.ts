@@ -3,7 +3,7 @@
 import { readFileSync } from "node:fs";
 
 import { expect, it } from "@effect/vitest";
-import { IntakeTicket } from "@rat-stack/core/intake";
+import { IntakeTicket } from "@hypertask-docs/core/intake";
 import { Effect, Layer } from "effect";
 import * as HttpRouter from "effect/http/HttpRouter";
 

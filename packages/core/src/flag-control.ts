@@ -44,7 +44,7 @@ export type {
 export { FlagJournal, validateFlagChangeQuery } from "./flag-journal.js";
 
 export const FlagActor = Context.Reference<string>(
-  "@rat-stack/core/FlagActor",
+  "@hypertask-docs/core/FlagActor",
   {
     defaultValue: () => "anonymous",
   }

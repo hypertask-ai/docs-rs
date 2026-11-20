@@ -1,6 +1,6 @@
-import { toCommand } from "@rat-stack/capability";
-import { formatFileStats, inspectFile } from "@rat-stack/core";
-import { flipFeatureFlag } from "@rat-stack/core/flag-write-capabilities";
+import { toCommand } from "@hypertask-docs/capability";
+import { formatFileStats, inspectFile } from "@hypertask-docs/core";
+import { flipFeatureFlag } from "@hypertask-docs/core/flag-write-capabilities";
 import { Console, Effect, Layer } from "effect";
 import { Command, Flag } from "effect/cli";
 

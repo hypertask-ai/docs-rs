@@ -1,6 +1,6 @@
-import { watchActor } from "@rat-stack/capability/actor-watch";
-import { ApprovalDenied } from "@rat-stack/capability/approval";
-import type { Around } from "@rat-stack/capability/call-watch";
+import { watchActor } from "@hypertask-docs/capability/actor-watch";
+import { ApprovalDenied } from "@hypertask-docs/capability/approval";
+import type { Around } from "@hypertask-docs/capability/call-watch";
 import {
   createEffectActor,
   createEffectLogic,

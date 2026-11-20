@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
-import type { IdentityMode } from "@rat-stack/core/event-sink";
-import { webCryptoLayer } from "@rat-stack/core/web-crypto";
+import type { IdentityMode } from "@hypertask-docs/core/event-sink";
+import { webCryptoLayer } from "@hypertask-docs/core/web-crypto";
 import { Effect, Schema } from "effect";
 import * as Arbitrary from "effect/Arbitrary";
 

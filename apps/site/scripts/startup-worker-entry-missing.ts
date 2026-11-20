@@ -11,7 +11,7 @@ export class StartupWorkerEntryMissing extends Schema.TaggedError<
     const fix =
       this.worker === "TurboCache"
         ? "remove the `TurboCache` entry from `apps/site/scripts/startup-budget.ts`"
-        : `restore \`${this.entry}\` before running \`pnpm --filter @rat-stack/site startup:check\``;
+        : `restore \`${this.entry}\` before running \`pnpm --filter @hypertask-docs/site startup:check\``;
 
     return `${this.worker} Worker entry is missing. A missing entry prevents measuring its startup ceiling. Fix: ${fix}.`;
   }

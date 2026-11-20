@@ -1,12 +1,12 @@
-export { defineFlag, Flags } from "@rat-stack/core/flags";
+export { defineFlag, Flags } from "@hypertask-docs/core/flags";
 
-export type { Flag, FlagContext } from "@rat-stack/core/flags";
+export type { Flag, FlagContext } from "@hypertask-docs/core/flags";
 
 export {
   flagCapabilities,
   getFlag,
   listFlags,
-} from "@rat-stack/core/flag-capabilities";
+} from "@hypertask-docs/core/flag-capabilities";
 
 export {
   evaluateFlag,

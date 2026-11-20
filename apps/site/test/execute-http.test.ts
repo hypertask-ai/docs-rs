@@ -1,7 +1,10 @@
 import { NodeServices } from "@effect/platform-node";
 import { expect, it } from "@effect/vitest";
-import { layerSubprocess } from "@rat-stack/capability";
-import { ExecuteError, ExecuteResult } from "@rat-stack/capability/code-mode";
+import { layerSubprocess } from "@hypertask-docs/capability";
+import {
+  ExecuteError,
+  ExecuteResult,
+} from "@hypertask-docs/capability/code-mode";
 import { Effect, FileSystem, Layer, Schema } from "effect";
 import * as HttpRouter from "effect/http/HttpRouter";
 

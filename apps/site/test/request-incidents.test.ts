@@ -1,5 +1,5 @@
 import { it } from "@effect/vitest";
-import { webCryptoLayer } from "@rat-stack/core/web-crypto";
+import { webCryptoLayer } from "@hypertask-docs/core/web-crypto";
 import { Cause, Context, Effect, Layer, Logger, Schema, Stream } from "effect";
 import * as Arbitrary from "effect/Arbitrary";
 import * as SecureRandom from "effect/crypto/SecureRandom";

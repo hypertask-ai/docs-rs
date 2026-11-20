@@ -1,6 +1,6 @@
 import { expect, it } from "@effect/vitest";
-import { personProfile } from "@rat-stack/core/cafe-people";
-import { CafePerson, CafePersonEntry } from "@rat-stack/core/contracts";
+import { personProfile } from "@hypertask-docs/core/cafe-people";
+import { CafePerson, CafePersonEntry } from "@hypertask-docs/core/contracts";
 import { Schema } from "effect";
 import * as Arbitrary from "effect/Arbitrary";
 

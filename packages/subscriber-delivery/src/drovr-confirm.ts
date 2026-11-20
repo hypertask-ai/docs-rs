@@ -1,5 +1,5 @@
-import { SubscriberConfirm } from "@rat-stack/core/interest";
-import type { ConfirmState } from "@rat-stack/core/interest";
+import { SubscriberConfirm } from "@hypertask-docs/core/interest";
+import type { ConfirmState } from "@hypertask-docs/core/interest";
 import { Effect, Layer, Option, Redacted, Schema } from "effect";
 import { HttpClient, HttpClientRequest } from "effect/http";
 
@@ -37,9 +37,13 @@ export const drovrConfirmLayer = (settings: ConfirmSettings) =>
           return "invalid" as const;
         }
 
-        const request = HttpClientRequest.post(
-          `${settings.base.value.replace(/\/+$/u, "")}${path}`
-        ).pipe(
+        let base = settings.base.value;
+
+        while (base.endsWith("/")) {
+          base = base.slice(0, -1);
+        }
+
+        const request = HttpClientRequest.post(`${base}${path}`).pipe(
           HttpClientRequest.bearerToken(
             Redacted.value(settings.credential.value)
           ),

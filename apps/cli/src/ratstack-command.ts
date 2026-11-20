@@ -1,5 +1,5 @@
-import { toCommand } from "@rat-stack/capability";
-import { localLearnCapabilities } from "@rat-stack/learn/local";
+import { toCommand } from "@hypertask-docs/capability";
+import { localLearnCapabilities } from "@hypertask-docs/learn/local";
 import { Effect, Layer } from "effect";
 import { Command } from "effect/cli";
 

@@ -1,5 +1,5 @@
-import { UnknownPrompt } from "@rat-stack/core/contracts";
-import { PromptLibrary } from "@rat-stack/core/prompts";
+import { UnknownPrompt } from "@hypertask-docs/core/contracts";
+import { PromptLibrary } from "@hypertask-docs/core/prompts";
 import { Effect, Layer } from "effect";
 
 import { ContentStore } from "./content-store.js";

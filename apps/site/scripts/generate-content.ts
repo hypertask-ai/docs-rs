@@ -3,9 +3,12 @@ import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 import { NodeCrypto, NodeRuntime, NodeServices } from "@effect/platform-node";
-import { Drift, prepareCode } from "@rat-stack/code-snippets";
-import type { Diagnostics } from "@rat-stack/code-snippets";
-import { FenceHighlighter, shikiLayer } from "@rat-stack/code-snippets/shiki";
+import { Drift, prepareCode } from "@hypertask-docs/code-snippets";
+import type { Diagnostics } from "@hypertask-docs/code-snippets";
+import {
+  FenceHighlighter,
+  shikiLayer,
+} from "@hypertask-docs/code-snippets/shiki";
 import {
   CafeDirectory,
   cafeNewsFile,
@@ -14,11 +17,14 @@ import {
   decodeCafeData,
   listPeople,
   readPerson,
-} from "@rat-stack/core";
-import { unlistedAuthors } from "@rat-stack/core/cafe-people";
-import { CafeData } from "@rat-stack/core/contracts";
-import { buildLoreGraph, LoreGraphSnapshotSchema } from "@rat-stack/lore/build";
-import type { LoreBuildPage } from "@rat-stack/lore/build";
+} from "@hypertask-docs/core";
+import { unlistedAuthors } from "@hypertask-docs/core/cafe-people";
+import { CafeData } from "@hypertask-docs/core/contracts";
+import {
+  buildLoreGraph,
+  LoreGraphSnapshotSchema,
+} from "@hypertask-docs/lore/build";
+import type { LoreBuildPage } from "@hypertask-docs/lore/build";
 import { Resvg } from "@resvg/resvg-js";
 import {
   Array as Arr,
@@ -1004,7 +1010,7 @@ export const runDebtLint = Effect.fn("runDebtLint")(function* runDebtLint(
       violation(
         "No debt source paths were found.",
         "An empty scan would publish a ledger that falsely reports no debt.",
-        "check `isDebtSourcePath` in `apps/site/scripts/content-lib.ts` and the walk roots `apps`, `packages`, `scripts`, and `tools` in `apps/site/scripts/generate-content.ts`, then rerun `pnpm --filter @rat-stack/site run generate`."
+        "check `isDebtSourcePath` in `apps/site/scripts/content-lib.ts` and the walk roots `apps`, `packages`, `scripts`, and `tools` in `apps/site/scripts/generate-content.ts`, then rerun `pnpm --filter @hypertask-docs/site run generate`."
       )
     );
   }
