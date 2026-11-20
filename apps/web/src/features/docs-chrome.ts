@@ -418,36 +418,38 @@ export const docsMobileToc = <Message>(
 export const docsToc = <Message>(
   anchors: readonly { readonly id: string; readonly text: string }[],
   h: HtmlBuilder<Message>
-): Html | null =>
-  anchors.length === 0
-    ? null
-    : h.nav(
-        [
-          h.AriaLabel("On this page"),
-          h.Class(className(docsChrome.toc)),
-          h.Id("docs-toc"),
-        ],
-        [
-          h.p([h.Class(className(docsChrome.tocHeading))], ["On this page"]),
-          h.ul(
-            [h.Class(className(docsChrome.groupList))],
-            anchors.map((anchor) =>
-              h.li(
-                [h.Key(anchor.id)],
+): Html =>
+  h.nav(
+    [
+      h.AriaLabelledBy("docs-toc-heading"),
+      h.Class(className(docsChrome.toc)),
+      h.Id("docs-toc"),
+    ],
+    [
+      h.h2(
+        [h.Id("docs-toc-heading"), h.Class(className(docsChrome.tocHeading))],
+        ["On this page"]
+      ),
+      h.ul(
+        [h.Class(className(docsChrome.groupList))],
+        anchors.map((anchor, index) =>
+          h.li(
+            [h.Key(anchor.id)],
+            [
+              h.a(
                 [
-                  h.a(
-                    [
-                      h.Href(`#${anchor.id}`),
-                      h.Class(className(docsChrome.tocLink)),
-                    ],
-                    [anchor.text]
-                  ),
-                ]
-              )
-            )
-          ),
-        ]
-      );
+                  h.Href(`#${anchor.id}`),
+                  h.Class(className(docsChrome.tocLink)),
+                  ...(index === 0 ? [h.Attribute("aria-current", "true")] : []),
+                ],
+                [anchor.text]
+              ),
+            ]
+          )
+        )
+      ),
+    ]
+  );
 
 export const docsActions = <Message>(
   options: {

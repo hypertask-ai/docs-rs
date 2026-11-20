@@ -27,6 +27,8 @@ import {
   TOP_ANCHOR_ID,
 } from "./docs-chrome.js";
 import { docsChrome } from "./docs-chrome.stylex.js";
+import { docsPagination } from "./docs-page-end.js";
+import { docsHasContentsList } from "./docs-page-order.js";
 import { docsSearchDialog } from "./docs-search.js";
 import { docsGroupForPath, docsPageMarkdownPath } from "./docs-sidebar.js";
 import * as MotionView from "./motion/index.js";
@@ -357,10 +359,14 @@ export const view = (
 ): Document => {
   const group = docsGroupForPath(model.page.path);
 
-  const toc = Option.match(model.references, {
-    onNone: () => null,
-    onSome: (references) => docsToc(references.anchors, h),
-  });
+  const toc = docsHasContentsList(model.page.path)
+    ? Option.match(model.references, {
+        onNone: () => null,
+        onSome: (references) => docsToc(references.anchors, h),
+      })
+    : null;
+
+  const pagination = docsPagination(model.page.path, h);
 
   const mobileToc = docsMobileToc(
     model,
@@ -434,13 +440,14 @@ export const view = (
                     ...readerReferences(model, h),
                   ]
                 ),
+                ...(pagination === null ? [] : [pagination]),
                 readerFooter(h, footerLinksPrompts(model.page)),
-                docsFooterNote(h),
               ]
             ),
             ...(toc === null ? [] : [toc]),
           ]
         ),
+        docsFooterNote(h),
       ]
     ),
     canonical: `${model.origin}${model.page.metadata.canonicalPath}`,
