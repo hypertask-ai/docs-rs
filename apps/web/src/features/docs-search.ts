@@ -231,6 +231,7 @@ export const docsSearchDialog = (
                   h.input([
                     h.Class(className(docsSearch.field)),
                     h.Type("text"),
+                    h.AriaLabel("Search docs"),
                     h.Attribute("title", "Search docs"),
                     h.Value(model.docsSearchQuery),
                     h.Placeholder("Search docs"),
