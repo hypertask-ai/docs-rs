@@ -41,5 +41,5 @@ export const loadReaderSubviewViews = (flags: ReaderPageFlags) =>
       ...docs,
       ...motion,
       ...tube,
-    } as Partial<ReaderSubviewViews>;
+    } satisfies Partial<ReaderSubviewViews>;
   });
