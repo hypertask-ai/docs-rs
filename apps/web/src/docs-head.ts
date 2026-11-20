@@ -56,6 +56,9 @@ export interface DocsPageRoute {
   readonly status: number;
 }
 
+const barePath = (path: string): string =>
+  path === "/" ? path : path.replace(/\/+$/u, "");
+
 export const docsPageKind = ({
   path,
   status,
@@ -68,23 +71,25 @@ export const docsPageKind = ({
     return undefined;
   }
 
-  if (path === "/search") {
+  const route = barePath(path);
+
+  if (route === "/search") {
     return "search";
   }
 
-  if (path === "/changelog") {
+  if (route === "/changelog") {
     return "changelog-index";
   }
 
-  if (path.startsWith("/changelog/")) {
+  if (route.startsWith("/changelog/")) {
     return "changelog-entry";
   }
 
-  if (path === "/") {
+  if (route === "/") {
     return "home";
   }
 
-  return docsHeaderTabs.some((tab) => tab.isActive(path)) ? "page" : undefined;
+  return docsHeaderTabs.some((tab) => tab.isActive(route)) ? "page" : undefined;
 };
 
 export interface DocsHeadInput extends DocsPageRoute {
