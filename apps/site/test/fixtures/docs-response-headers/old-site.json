@@ -1,0 +1,185 @@
+{
+  "capturedOn": "2026-11-15",
+  "site": "https://docs.hypertask.ai",
+  "method": "curl -sS -D -, GET and HEAD, no cookies, Accept-Encoding: gzip, br",
+  "droppedHeaders": [
+    "age",
+    "alt-svc",
+    "cf-ray",
+    "content-encoding",
+    "content-length",
+    "date",
+    "nel",
+    "report-to",
+    "server"
+  ],
+  "droppedReason": "These change per request, per connection or per encoding, and none of them is a setting the site chooses.",
+  "bodySha256": {
+    "/favicon.svg": "1c5916552822da7c14eec873c524beda5af8cb761a203758030fdab60b8affb5"
+  },
+  "compression": "brotli when the request accepts it, identity otherwise; the host decides",
+  "outsideCodeHeaders": {
+    "access-control-allow-origin": {
+      "appliesTo": "every answer, including the 404 and the trailing slash 308",
+      "value": "*"
+    },
+    "referrer-policy": {
+      "appliesTo": "every answer, including the 404 and the trailing slash 308",
+      "value": "strict-origin-when-cross-origin"
+    },
+    "x-content-type-options": {
+      "appliesTo": "every answer except the trailing slash 308",
+      "value": "nosniff"
+    },
+    "link": {
+      "appliesTo": "HTML answers whose page carries a preconnect tag; the /features/desktop/ meta refresh page and every non HTML answer carry none",
+      "value": "<https://fonts.googleapis.com>; rel=\"preconnect\""
+    }
+  },
+  "answers": [
+    {
+      "address": "/",
+      "kind": "html",
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "etag": "absent",
+      "etagOwner": "host",
+      "vary": "absent"
+    },
+    {
+      "address": "/getting-started/introduction/",
+      "kind": "html",
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "etag": "absent",
+      "etagOwner": "host",
+      "vary": "absent"
+    },
+    {
+      "address": "/_astro/print.DNXP8c50.css",
+      "kind": "stylesheet",
+      "status": 200,
+      "contentType": "text/css; charset=utf-8",
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "etag": "weak",
+      "etagOwner": "host",
+      "vary": "absent"
+    },
+    {
+      "address": "/_astro/page.BIhdncjw.js",
+      "kind": "script",
+      "status": 200,
+      "contentType": "application/javascript",
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "etag": "weak",
+      "etagOwner": "host",
+      "vary": "absent"
+    },
+    {
+      "address": "/glyph-white.png",
+      "kind": "image",
+      "status": 200,
+      "contentType": "image/png",
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "etag": "strong",
+      "etagOwner": "host",
+      "vary": "absent"
+    },
+    {
+      "address": "/favicon.svg",
+      "kind": "image",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "etag": "weak",
+      "etagOwner": "host",
+      "vary": "absent"
+    },
+    {
+      "address": "/index.md",
+      "kind": "markdown",
+      "status": 200,
+      "contentType": "text/markdown; charset=utf-8",
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "etag": "weak",
+      "etagOwner": "code",
+      "vary": "absent"
+    },
+    {
+      "address": "/getting-started/introduction.md",
+      "kind": "markdown",
+      "status": 200,
+      "contentType": "text/markdown; charset=utf-8",
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "etag": "weak",
+      "etagOwner": "code",
+      "vary": "absent"
+    },
+    {
+      "address": "/changelog.md",
+      "kind": "markdown",
+      "status": 200,
+      "contentType": "text/markdown; charset=utf-8",
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "etag": "weak",
+      "etagOwner": "code",
+      "vary": "absent"
+    },
+    {
+      "address": "/llms.txt",
+      "kind": "llms",
+      "status": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "etag": "weak",
+      "etagOwner": "code",
+      "vary": "absent",
+      "contentTypeOwner": "HTPR-9185"
+    },
+    {
+      "address": "/llms-full.txt",
+      "kind": "llms",
+      "status": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "etag": "weak",
+      "etagOwner": "code",
+      "vary": "absent",
+      "contentTypeOwner": "HTPR-9185"
+    },
+    {
+      "address": "/changelog.xml",
+      "kind": "feed",
+      "status": 200,
+      "contentType": "application/xml",
+      "contentTypeOwner": "HTPR-9187",
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "etag": "weak",
+      "etagOwner": "code",
+      "vary": "absent"
+    },
+    {
+      "address": "/changelog.json",
+      "kind": "feed",
+      "status": 200,
+      "contentType": "application/json",
+      "contentTypeOwner": "HTPR-9187",
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "etag": "weak",
+      "etagOwner": "code",
+      "vary": "absent"
+    },
+    {
+      "address": "/nope-not-a-page",
+      "kind": "notFound",
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "no-store",
+      "etag": "absent",
+      "etagOwner": "code",
+      "vary": "absent"
+    }
+  ]
+}

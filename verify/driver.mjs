@@ -30,6 +30,7 @@ export const statusOf = async (url) => {
   return {
     bytes: body.byteLength,
     contentType: response.headers.get("content-type"),
+    headers: Object.fromEntries(response.headers.entries()),
     location: response.headers.get("location"),
     status: response.status,
     url,
@@ -124,8 +125,61 @@ export const collectStructure = (page) =>
       nav: document.querySelectorAll("nav").length,
     },
     lang: document.documentElement.lang || null,
+    robots:
+      document.querySelector('meta[name="robots"]')?.getAttribute("content") ??
+      null,
     title: document.title,
   }));
+
+/**
+ * @param {import("playwright").Page} page
+ * @returns {Promise<string[]>}
+ */
+export const collectText = (page) =>
+  page.evaluate(() => {
+    const skipped = new Set(["NOSCRIPT", "SCRIPT", "STYLE", "TEMPLATE"]);
+
+    const separates =
+      /^(?:block|flex|flow-root|grid|list-item|table|table-cell|table-row)$/u;
+
+    /**
+     * @param {Node} node
+     * @returns {string}
+     */
+    const read = (node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return node.textContent ?? "";
+      }
+
+      if (!(node instanceof Element)) {
+        return "";
+      }
+
+      if (
+        skipped.has(node.tagName) ||
+        (node instanceof HTMLElement && node.hidden === true)
+      ) {
+        return "";
+      }
+
+      const style = getComputedStyle(node);
+
+      if (style.display === "none" || style.visibility === "hidden") {
+        return "";
+      }
+
+      const children = [...node.childNodes]
+        .map((child) => read(child))
+        .join("");
+
+      return separates.test(style.display) ? `\n${children}\n` : children;
+    };
+
+    return read(document.body)
+      .split("\n")
+      .map((line) => line.replaceAll(/\s+/gu, " ").trim())
+      .filter((line) => line !== "");
+  });
 
 /**
  * @param {PageEntry} entry

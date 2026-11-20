@@ -55,6 +55,8 @@ export const ReaderFlags = Schema.Struct({
 
 export type ReaderPageFlags = typeof ReaderFlags.Type;
 
+export const pageCopyId = "document";
+
 export const CopyStatus = defineTaggedUnion({
   Copied: {},
   Copying: {},

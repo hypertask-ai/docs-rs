@@ -4,6 +4,7 @@ import { installOverlay } from "#devtools-overlay";
 
 import { view } from "../features/reader.js";
 import { DocumentQueries } from "./docs/queries.js";
+import { bindHelpChat } from "./help-chat.js";
 import { browserInit } from "./reader/init.js";
 import { Message } from "./reader/message.js";
 import { Model, ReaderFlags } from "./reader/model.js";
@@ -12,6 +13,7 @@ import { update } from "./reader/update.js";
 
 import "../../../site/src/rat.css";
 import "./reader.css";
+import "../docs.css";
 
 const application = Runtime.makeApplication({
   Flags: ReaderFlags,
@@ -26,5 +28,7 @@ const application = Runtime.makeApplication({
 });
 
 installOverlay();
+
+bindHelpChat();
 
 Runtime.hydrate(application);
