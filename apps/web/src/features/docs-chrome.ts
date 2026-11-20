@@ -1,8 +1,10 @@
 import { Button } from "@foldkit/ui";
 import * as stylex from "@stylexjs/stylex";
+import { Option } from "effect";
 import type { Attribute, Html, HtmlBuilder } from "foldkit/html";
 
-import { CopyStatus } from "../client/reader/model.js";
+import { CopyStatus, currentAnchorText } from "../client/reader/model.js";
+import type { ReaderModel } from "../client/reader/model.js";
 import { docsChrome } from "./docs-chrome.stylex.js";
 import {
   docsHeaderLinks,
@@ -15,6 +17,8 @@ import { homeRouter, searchRouter } from "./site-route.js";
 
 const className = (...styles: stylex.StyleXStyles[]) =>
   stylex.props(...styles).className ?? "";
+
+export const TOP_ANCHOR_ID = "_top";
 
 const activeTab = (active: boolean) => (active ? docsChrome.tabActive : false);
 
@@ -241,6 +245,182 @@ export const docsSidebar = <Message>(
       ),
     ]
   );
+
+export const docsMenuButton = <Message>(
+  open: boolean,
+  onToggle: () => Message,
+  h: HtmlBuilder<Message>
+): Html =>
+  h.button(
+    [
+      h.Id("docs-menu-button"),
+      h.Class("docs-menu-button"),
+      h.Attribute("type", "button"),
+      h.AriaLabel("Menu"),
+      h.AriaExpanded(open),
+      h.AriaControls("docs-sidebar"),
+      h.OnClick(onToggle()),
+    ],
+    [
+      h.svg(
+        [
+          h.Class("docs-menu-icon docs-menu-open"),
+          h.Width("16"),
+          h.Height("16"),
+          h.ViewBox("0 0 24 24"),
+          h.Fill("currentColor"),
+          h.AriaHidden(true),
+        ],
+        [
+          h.path([
+            h.D(
+              "M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"
+            ),
+          ]),
+        ]
+      ),
+      h.svg(
+        [
+          h.Class("docs-menu-icon docs-menu-close"),
+          h.Width("16"),
+          h.Height("16"),
+          h.ViewBox("0 0 24 24"),
+          h.Fill("currentColor"),
+          h.AriaHidden(true),
+        ],
+        [
+          h.path([
+            h.D(
+              "m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"
+            ),
+          ]),
+        ]
+      ),
+    ]
+  );
+
+export const docsBreadcrumb = <Message>(
+  path: string,
+  title: string,
+  h: HtmlBuilder<Message>
+): Html =>
+  h.div(
+    [h.Class("docs-breadcrumb")],
+    [
+      docsHeaderTabs.find((tab) => tab.isActive(path))?.label ??
+        "Getting started",
+      " ",
+      h.span([h.AriaHidden(true)], ["\u203A"]),
+      " ",
+      h.span([], [path === "/" ? "Overview" : title]),
+    ]
+  );
+
+const tocCaret = <Message>(h: HtmlBuilder<Message>) =>
+  h.svg(
+    [
+      h.Class("docs-mobile-toc-caret"),
+      h.Width("16"),
+      h.Height("16"),
+      h.ViewBox("0 0 24 24"),
+      h.Fill("currentColor"),
+      h.AriaHidden(true),
+    ],
+    [
+      h.path([
+        h.D(
+          "m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"
+        ),
+      ]),
+    ]
+  );
+
+export const docsMobileToc = <Message>(
+  model: Pick<ReaderModel, "mobileToc" | "readingAnchorId" | "references">,
+  options: {
+    readonly onEscape: () => Message;
+    readonly onSelect: () => Message;
+    readonly onToggle: () => Message;
+  },
+  h: HtmlBuilder<Message>
+): Html | null =>
+  Option.match(model.references, {
+    onNone: () => null,
+    onSome: (references) => {
+      const currentId = Option.getOrElse(model.readingAnchorId, () => "");
+
+      return h.div(
+        [h.Class("docs-toc-slot")],
+        [
+          h.nav(
+            [
+              h.AriaLabelledBy("docs-mobile-toc-summary"),
+              h.Class("docs-toc-bar"),
+            ],
+            [
+              h.details(
+                [
+                  h.Id("docs-mobile-toc"),
+                  h.Class("docs-mobile-toc"),
+                  h.Open(model.mobileToc.open),
+                  h.OnKeyDownPreventDefault((key) =>
+                    key === "Escape"
+                      ? Option.some(options.onEscape())
+                      : Option.none()
+                  ),
+                ],
+                [
+                  h.summary(
+                    [
+                      h.Id("docs-mobile-toc-summary"),
+                      h.Class("docs-mobile-toc-summary"),
+                      h.OnClick(options.onToggle()),
+                    ],
+                    [
+                      h.span(
+                        [h.Class("docs-mobile-toc-toggle")],
+                        ["On this page", tocCaret(h)]
+                      ),
+                      h.span(
+                        [h.Class("docs-mobile-toc-current")],
+                        [currentAnchorText(model)]
+                      ),
+                    ]
+                  ),
+                  h.div(
+                    [h.Class("docs-mobile-toc-dropdown")],
+                    [
+                      h.ul(
+                        [h.Class("docs-mobile-toc-list")],
+                        references.anchors.map((anchor) =>
+                          h.li(
+                            [h.Key(anchor.id)],
+                            [
+                              h.a(
+                                [
+                                  h.Href(`#${anchor.id}`),
+                                  h.Class("docs-mobile-toc-link"),
+                                  ...(anchor.id === currentId
+                                    ? [h.Attribute("aria-current", "true")]
+                                    : []),
+                                  h.OnClick(options.onSelect()),
+                                ],
+                                [anchor.text]
+                              ),
+                            ]
+                          )
+                        )
+                      ),
+                    ]
+                  ),
+                ]
+              ),
+            ]
+          ),
+        ]
+      );
+    },
+  });
 
 export const docsToc = <Message>(
   anchors: readonly { readonly id: string; readonly text: string }[],
