@@ -1,0 +1,60 @@
+{
+  "routePath": "/",
+  "titleTag": "Hypertask documentation | Hypertask Docs",
+  "description": "Learn how people and AI agents share one board, and how to connect yours.",
+  "headings": [
+    {
+      "level": 1,
+      "text": "Hypertask documentation"
+    },
+    {
+      "level": 2,
+      "text": "Choose your interface"
+    },
+    {
+      "level": 3,
+      "text": "Web App"
+    },
+    {
+      "level": 3,
+      "text": "MCP for AI agents"
+    },
+    {
+      "level": 2,
+      "text": "Install the CLI"
+    }
+  ],
+  "links": [
+    {
+      "href": "https://help.hypertask.ai/help",
+      "text": "✦ Ask a question about Hypertask… ⌘ I"
+    },
+    {
+      "href": "/getting-started/quickstart/",
+      "text": "Quickstart"
+    },
+    {
+      "href": "/getting-started/concepts/",
+      "text": "Core concepts"
+    },
+    {
+      "href": "https://app.hypertask.ai/login",
+      "text": "Hypertask account"
+    },
+    {
+      "href": "/connect-an-agent/",
+      "text": "Agent access"
+    },
+    {
+      "href": "/features/boards/",
+      "text": "Open the app guide"
+    },
+    {
+      "href": "/mcp/overview/",
+      "text": "Connect an agent"
+    }
+  ],
+  "images": [],
+  "tabLabels": [],
+  "text": "Hypertask documentation Learn how people and AI agents share one board, and how to connect yours. ✦ Ask a question about Hypertask… ⌘ I Hypertask runs on boards, tasks and comments. Agents work the same tickets as people. New here? Start with the Quickstart, then read Core concepts. You need a Hypertask account. The Free plan includes the CLI and MCP. Note Agents get their own login. They never use your password. See Agent access. Choose your interface Web App Boards, tasks and comments in the browser. Open the app guide MCP for AI agents Let Claude, Codex or Cursor work your tickets. Connect an agent Install the CLI Run this once, then sign in with your browser. npm install -g @hypertask/hypertask"
+}

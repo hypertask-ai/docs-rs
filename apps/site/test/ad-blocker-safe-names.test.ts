@@ -2,8 +2,8 @@ import { expect, it } from "@effect/vitest";
 import { Effect } from "effect";
 
 import {
-  homeDocumentHtml,
   lawSources,
+  loreIndexDocumentHtml,
   loreSources,
   skillSources,
 } from "./generated-content.js";
@@ -32,7 +32,7 @@ it.effect(
   () =>
     Effect.sync(() => {
       const documents = [
-        homeDocumentHtml,
+        loreIndexDocumentHtml,
         ...[...lawSources, ...loreSources, ...skillSources].map(
           (source) => source.documentHtml
         ),
@@ -43,7 +43,7 @@ it.effect(
       );
 
       expect(offenders).toStrictEqual([]);
-      expect(homeDocumentHtml).toContain('class="news-callout"');
+      expect(loreIndexDocumentHtml).toContain('class="news-callout"');
     })
 );
 

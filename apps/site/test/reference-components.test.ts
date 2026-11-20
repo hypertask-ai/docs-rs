@@ -17,6 +17,7 @@ import {
   visitContentNodes,
 } from "../scripts/svx-ast.ts";
 import { UnlinkedMentionsSchema } from "../scripts/unlinked-mentions.ts";
+import { ContentAssetManifest } from "../src/asset-manifest.ts";
 import { staticAssetGeneration } from "../src/bundled-content.generated.js";
 import { contentResources, readContent } from "./content-fixture.js";
 import { lawSources, loreSources, skillSources } from "./generated-content.js";
@@ -28,15 +29,23 @@ it.effect(
       const fs = yield* FileSystem.FileSystem;
       const path = yield* Path.Path;
 
-      const assets = path.resolve(
-        import.meta.dirname,
-        "../dist/content/assets",
-        staticAssetGeneration
-      );
+      const content = path.resolve(import.meta.dirname, "../dist/content");
+
+      const assets = path.join(content, "assets", staticAssetGeneration);
+
+      const manifest = yield* Schema.decodeUnknownEffect(
+        Schema.fromJsonString(ContentAssetManifest)
+      )(yield* fs.readFileString(path.join(content, "manifest.json")));
 
       for (const resource of contentResources) {
+        const page = manifest.pages.find(
+          (candidate) => candidate.route === resource.routePath
+        );
+
+        expect(page, resource.routePath).toBeDefined();
+
         const markdown = yield* fs.readFileString(
-          path.join(assets, `${resource.routePath.slice(1)}.md`)
+          path.join(assets, (page?.markdown ?? "").slice(1))
         );
 
         const read = readContent(resource.id);

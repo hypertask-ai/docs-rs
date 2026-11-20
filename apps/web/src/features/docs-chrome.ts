@@ -1,6 +1,6 @@
 import { Button } from "@foldkit/ui";
 import * as stylex from "@stylexjs/stylex";
-import type { Html, HtmlBuilder } from "foldkit/html";
+import type { Attribute, Html, HtmlBuilder } from "foldkit/html";
 
 import { CopyStatus } from "../client/reader/model.js";
 import { docsChrome } from "./docs-chrome.stylex.js";
@@ -8,15 +8,32 @@ import { DOCS_TOP_ANCHOR_ID } from "./docs-contents.js";
 import {
   docsHeaderLinks,
   docsHeaderTabs,
+  docsHref,
   docsSidebarGroups,
 } from "./docs-sidebar.js";
-import type { DocsSidebarGroup } from "./docs-sidebar.js";
+import type { DocsHeaderTab, DocsSidebarGroup } from "./docs-sidebar.js";
 import { homeRouter, searchRouter } from "./site-route.js";
 
 const className = (...styles: stylex.StyleXStyles[]) =>
   stylex.props(...styles).className ?? "";
 
 const activeTab = (active: boolean) => (active ? docsChrome.tabActive : false);
+
+const tabAttributes = <Message>(
+  tab: DocsHeaderTab,
+  path: string,
+  h: HtmlBuilder<Message>
+): readonly Attribute<Message>[] => {
+  const attributes: readonly Attribute<Message>[] = [
+    h.Key(tab.path),
+    h.Href(docsHref(tab.path)),
+    h.Class(className(docsChrome.tab, activeTab(tab.isActive(path)))),
+  ];
+
+  return tab.isActive(path)
+    ? [...attributes, h.AriaCurrent("page")]
+    : attributes;
+};
 
 const activeLink = (current: boolean) =>
   current ? docsChrome.sidebarLinkActive : false;
@@ -76,7 +93,7 @@ const copyIcon = <Message>(h: HtmlBuilder<Message>) =>
 const groupCaret = <Message>(h: HtmlBuilder<Message>) =>
   h.svg(
     [
-      h.Class(className(docsChrome.groupCaret)),
+      h.Class(`${className(docsChrome.groupCaret)} docs-group-caret`),
       h.Width("16"),
       h.Height("16"),
       h.ViewBox("0 0 24 24"),
@@ -100,35 +117,40 @@ const sidebarGroup = <Message>(
   h.li(
     [h.Key(group.label)],
     [
-      h.div(
-        [h.Class(className(docsChrome.groupLabel))],
-        [h.span([], [group.label]), groupCaret(h)]
-      ),
-      h.ul(
-        [h.Class(className(docsChrome.groupList))],
-        group.items.map((item) =>
-          h.li(
-            [h.Key(item.path)],
-            [
-              h.a(
+      h.details(
+        [h.Open(true), h.Class("docs-group")],
+        [
+          h.summary(
+            [h.Class(className(docsChrome.groupLabel))],
+            [h.span([], [group.label]), groupCaret(h)]
+          ),
+          h.ul(
+            [h.Class(className(docsChrome.groupList))],
+            group.items.map((item) =>
+              h.li(
+                [h.Key(item.path)],
                 [
-                  h.Href(item.path),
-                  h.Class(
-                    className(
-                      docsChrome.sidebarLink,
-                      activeLink(item.path === path)
-                    )
+                  h.a(
+                    [
+                      h.Href(docsHref(item.path)),
+                      h.Class(
+                        className(
+                          docsChrome.sidebarLink,
+                          activeLink(item.path === path)
+                        )
+                      ),
+                      h.Attribute(
+                        "aria-current",
+                        item.path === path ? "page" : "false"
+                      ),
+                    ],
+                    [item.label]
                   ),
-                  h.Attribute(
-                    "aria-current",
-                    item.path === path ? "page" : "false"
-                  ),
-                ],
-                [item.label]
-              ),
-            ]
-          )
-        )
+                ]
+              )
+            )
+          ),
+        ]
       ),
     ]
   );
@@ -197,18 +219,7 @@ export const docsHeader = <Message>(
           h.Class(`${className(docsChrome.tabs)} docs-section-tabs`),
         ],
         docsHeaderTabs.map((tab) =>
-          h.a(
-            [
-              h.Key(tab.path),
-              h.Href(tab.path),
-              h.Class(className(docsChrome.tab, activeTab(tab.isActive(path)))),
-              h.Attribute(
-                "aria-current",
-                tab.isActive(path) ? "page" : "false"
-              ),
-            ],
-            [tab.label]
-          )
+          h.a(tabAttributes(tab, path, h), [tab.label])
         )
       ),
     ]
@@ -306,7 +317,7 @@ export const docsActions = <Message>(
             h.button(
               [
                 ...button,
-                h.Class(className(docsChrome.action)),
+                h.Class(`${className(docsChrome.action)} docs-action`),
                 h.AriaLabel("Copy page as markdown"),
               ],
               [
@@ -320,7 +331,7 @@ export const docsActions = <Message>(
       h.a(
         [
           h.Href(`https://claude.ai/new?q=${encodeURIComponent(prompt)}`),
-          h.Class(className(docsChrome.action)),
+          h.Class(`${className(docsChrome.action)} docs-action`),
           h.Rel("noopener"),
           h.Attribute("target", "_blank"),
         ],
@@ -331,7 +342,7 @@ export const docsActions = <Message>(
           h.Href(
             `https://chatgpt.com/?hints=search&q=${encodeURIComponent(prompt)}`
           ),
-          h.Class(className(docsChrome.action)),
+          h.Class(`${className(docsChrome.action)} docs-action`),
           h.Rel("noopener"),
           h.Attribute("target", "_blank"),
         ],
@@ -340,7 +351,9 @@ export const docsActions = <Message>(
       h.a(
         [
           h.Href(options.markdownUrl),
-          h.Class(className(docsChrome.action, docsChrome.actionGhost)),
+          h.Class(
+            `${className(docsChrome.action, docsChrome.actionGhost)} docs-action`
+          ),
           h.Title("View raw markdown"),
         ],
         ["View as markdown"]

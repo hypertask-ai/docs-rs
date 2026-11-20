@@ -2,6 +2,8 @@
 
 For a non-trivial task, start with `skills/rat-stack-mode`.
 
+To prove the docs site matches the live one, follow `.claude/skills/verify-docs-rs/SKILL.md`.
+
 This file is the repo law for agents and contributors. It holds commands, validation rules, architecture constraints, and project stop rules. Read `VISION.md` for intent before planning substantial work. `VISION.md` does not override this file. Pi sessions also load `.pi/APPEND_SYSTEM.md` and the repo-local extension `.pi/extensions/project.ts`.
 
 ## Stack contract

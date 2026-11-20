@@ -67,6 +67,66 @@ it("converts Starlight components and drops module scope", () => {
   ]);
 });
 
+it("keeps LinkCard and turns JSX class attributes into HTML ones", () => {
+  const converted = convertDocsPage(
+    `---
+title: Quickstart
+description: Start here.
+---
+
+<div className="grid">
+<LinkCard title="Core Concepts" description="Read the data model." href="/getting-started/concepts/" />
+</div>
+`,
+    "/getting-started/quickstart"
+  );
+
+  expect(converted.problems).toEqual([]);
+  expect(converted.body).toContain('<div class="grid">');
+  expect(converted.body).not.toContain("className");
+  expect(converted.body).toContain("<LinkCard");
+});
+
+it("puts a multi line component tag on one line so it stays a block", () => {
+  const converted = convertDocsPage(
+    `---
+title: Quickstart
+description: Start here.
+---
+
+<LinkCard
+  title="Core Concepts"
+  href="/getting-started/concepts/"
+/>
+`,
+    "/getting-started/quickstart"
+  );
+
+  expect(converted.body).toBe(
+    '<LinkCard title="Core Concepts" href="/getting-started/concepts/" />'
+  );
+});
+
+it("keeps module-scope words inside a code fence", () => {
+  const converted = convertDocsPage(
+    `---
+title: Connect a new agent
+description: Start here.
+---
+
+\`\`\`bash
+export HT_TOKEN="<agent token>"
+hypertask context
+\`\`\`
+`,
+    "/connect-an-agent"
+  );
+
+  expect(converted.problems).toEqual([]);
+  expect(converted.body).toContain('export HT_TOKEN="<agent token>"');
+  expect(converted.body).toContain("hypertask context");
+});
+
 it("renders a converted page with frontmatter and keeps route paths", () => {
   const converted = convertDocsPage(page, "/features/boards");
 
