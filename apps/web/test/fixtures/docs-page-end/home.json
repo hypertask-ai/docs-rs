@@ -1,0 +1,29 @@
+{
+  "kind": "home",
+  "path": "/",
+  "title": "Hypertask documentation",
+  "contents": [
+    {
+      "href": "#_top",
+      "text": "Overview"
+    },
+    {
+      "href": "#choose-your-interface",
+      "text": "Choose your interface"
+    },
+    {
+      "href": "#install-the-cli",
+      "text": "Install the CLI"
+    }
+  ],
+  "pagination": [
+    {
+      "href": "/getting-started/introduction/",
+      "label": "What is Hypertask?",
+      "rel": "next",
+      "text": "Next"
+    }
+  ],
+  "footerText": "© 2026 Hypertask Lab Ltd.",
+  "url": "https://docs.hypertask.ai/"
+}
