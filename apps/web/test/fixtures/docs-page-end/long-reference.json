@@ -1,0 +1,159 @@
+{
+  "kind": "long-reference",
+  "path": "/api/tools-reference/",
+  "title": "MCP Tools Reference",
+  "contents": [
+    {
+      "href": "#_top",
+      "text": "Overview"
+    },
+    {
+      "href": "#context-and-projects",
+      "text": "Context and projects"
+    },
+    {
+      "href": "#hypertask_projects",
+      "text": "hypertask_projects"
+    },
+    {
+      "href": "#hypertask_user_context",
+      "text": "hypertask_user_context"
+    },
+    {
+      "href": "#comments",
+      "text": "Comments"
+    },
+    {
+      "href": "#hypertask_comments",
+      "text": "hypertask_comments"
+    },
+    {
+      "href": "#tasks",
+      "text": "Tasks"
+    },
+    {
+      "href": "#hypertask_tasks",
+      "text": "hypertask_tasks"
+    },
+    {
+      "href": "#drafts",
+      "text": "Drafts"
+    },
+    {
+      "href": "#hypertask_drafts",
+      "text": "hypertask_drafts"
+    },
+    {
+      "href": "#pages",
+      "text": "Pages"
+    },
+    {
+      "href": "#hypertask_pages",
+      "text": "hypertask_pages"
+    },
+    {
+      "href": "#sections",
+      "text": "Sections"
+    },
+    {
+      "href": "#hypertask_sections",
+      "text": "hypertask_sections"
+    },
+    {
+      "href": "#views",
+      "text": "Views"
+    },
+    {
+      "href": "#hypertask_views",
+      "text": "hypertask_views"
+    },
+    {
+      "href": "#skills",
+      "text": "Skills"
+    },
+    {
+      "href": "#hypertask_skills",
+      "text": "hypertask_skills"
+    },
+    {
+      "href": "#inbox",
+      "text": "Inbox"
+    },
+    {
+      "href": "#hypertask_chat_inbox",
+      "text": "hypertask_chat_inbox"
+    },
+    {
+      "href": "#hypertask_inbox",
+      "text": "hypertask_inbox"
+    },
+    {
+      "href": "#time-tracking",
+      "text": "Time tracking"
+    },
+    {
+      "href": "#hypertask_time",
+      "text": "hypertask_time"
+    },
+    {
+      "href": "#other",
+      "text": "Other"
+    },
+    {
+      "href": "#hypertask_agents",
+      "text": "hypertask_agents"
+    },
+    {
+      "href": "#hypertask_attachments",
+      "text": "hypertask_attachments"
+    },
+    {
+      "href": "#hypertask_chat_reply",
+      "text": "hypertask_chat_reply"
+    },
+    {
+      "href": "#hypertask_custom_fields",
+      "text": "hypertask_custom_fields"
+    },
+    {
+      "href": "#hypertask_decisions",
+      "text": "hypertask_decisions"
+    },
+    {
+      "href": "#hypertask_labels",
+      "text": "hypertask_labels"
+    },
+    {
+      "href": "#hypertask_report_feedback",
+      "text": "hypertask_report_feedback"
+    },
+    {
+      "href": "#hypertask_reports",
+      "text": "hypertask_reports"
+    },
+    {
+      "href": "#hypertask_search",
+      "text": "hypertask_search"
+    },
+    {
+      "href": "#hypertask_webhooks",
+      "text": "hypertask_webhooks"
+    }
+  ],
+  "pagination": [
+    {
+      "href": "/api/rest-api/",
+      "label": "REST API",
+      "rel": "prev",
+      "text": "Previous"
+    },
+    {
+      "href": "/connect-an-agent/",
+      "label": "Connect a new agent",
+      "rel": "next",
+      "text": "Next"
+    }
+  ],
+  "footerText": "© 2026 Hypertask Lab Ltd.",
+  "url": "https://docs.hypertask.ai/api/tools-reference/"
+}
