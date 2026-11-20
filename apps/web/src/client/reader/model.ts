@@ -1,3 +1,4 @@
+import { DocsSearchOutput } from "@rat-stack/core/contracts";
 import { Array, Option, Record, Schema } from "effect";
 import { defineTaggedUnion } from "foldkit/schema";
 
@@ -75,6 +76,15 @@ export const DetectedClipboardAccess = ClipboardAccess.subset([
   "Unavailable",
 ]);
 
+export const DocsSearchState = defineTaggedUnion({
+  Failed: { query: Schema.String },
+  Idle: {},
+  Loaded: { query: Schema.String, result: DocsSearchOutput },
+  Loading: { query: Schema.String },
+});
+
+export type DocsSearchStateType = typeof DocsSearchState.Type;
+
 export const MobileNav = Schema.Struct({ open: Schema.Boolean });
 
 export const MobileToc = Schema.Struct({ open: Schema.Boolean });
@@ -83,6 +93,9 @@ export const Model = Schema.Struct({
   ...ReaderFlags.fields,
   clipboardAccess: ClipboardAccess,
   copyStatuses: Schema.Record(Schema.String, CopyStatus),
+  docsSearch: DocsSearchState,
+  docsSearchQuery: Schema.String,
+  docsSearchSelected: Schema.Finite,
   mobileNav: MobileNav,
   mobileToc: MobileToc,
   readingAnchorId: Schema.OptionFromOptional(Schema.String),
@@ -94,10 +107,29 @@ export const initialModel = (flags: ReaderPageFlags): ReaderModel => ({
   ...flags,
   clipboardAccess: ClipboardAccess.Unknown(),
   copyStatuses: {},
+  docsSearch: DocsSearchState.Idle(),
+  docsSearchQuery: "",
+  docsSearchSelected: 0,
   mobileNav: { open: false },
   mobileToc: { open: false },
   readingAnchorId: Option.none(),
 });
+
+export const docsSearchMatchesOf = (model: ReaderModel) =>
+  DocsSearchState.match(model.docsSearch, {
+    Failed: () => [],
+    Idle: () => [],
+    Loaded: ({ result }) => result.matches,
+    Loading: () => [],
+  });
+
+export const docsSearchTotalOf = (model: ReaderModel) =>
+  DocsSearchState.match(model.docsSearch, {
+    Failed: () => 0,
+    Idle: () => 0,
+    Loaded: ({ result }) => result.total,
+    Loading: () => 0,
+  });
 
 export const copyStatusOf = (
   model: Pick<ReaderModel, "copyStatuses">,

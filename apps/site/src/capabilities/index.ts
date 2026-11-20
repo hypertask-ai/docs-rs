@@ -18,6 +18,7 @@ import { promptLibraryLayer } from "../prompt-library.js";
 import { learnCapabilities, learnLayer } from "./learn.js";
 import { backlinks, mentions, neighbors, path } from "./lore.js";
 import { read } from "./read.js";
+import { searchDocs } from "./search-docs.js";
 import { search } from "./search.js";
 
 export { read } from "./read.js";
@@ -30,6 +31,12 @@ export {
 } from "@rat-stack/core/cafe-directory";
 
 export { backlinks, mentions, neighbors, path } from "./lore.js";
+
+export {
+  DocsSearchMatch,
+  DocsSearchOutput,
+  DocsSearchSection,
+} from "@rat-stack/core/contracts";
 
 export {
   BacklinksOutput,
@@ -51,11 +58,14 @@ export {
 
 export { search } from "./search.js";
 
+export { searchDocs } from "./search-docs.js";
+
 export const readerCapabilities = [
   ...flagCapabilities,
   listPrompts,
   getPrompt,
   search,
+  searchDocs,
   read,
   backlinks,
   neighbors,

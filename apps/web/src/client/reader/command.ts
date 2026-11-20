@@ -1,6 +1,8 @@
 import { Effect, Schema } from "effect";
 import { Command, Dom } from "foldkit";
+import { pushUrl } from "foldkit/navigation";
 
+import { DocumentQueries } from "../docs/queries.js";
 import { Message } from "./message.js";
 import { ClipboardAccess } from "./model.js";
 
@@ -87,4 +89,60 @@ export const WaitBeforeCopyReset = Command.define("WaitBeforeCopyReset", {
       Effect.as(Message.CompletedWaitBeforeCopyReset({ id }))
     ),
   messages: [Message.CompletedWaitBeforeCopyReset],
+});
+
+export const QueryDocsSearch = Command.define("QueryDocsSearch", {
+  args: { query: Schema.String },
+  execute: ({ query }) =>
+    Effect.sleep("200 millis").pipe(
+      Effect.andThen(
+        DocumentQueries.use((queries) => queries.docsSearch(query))
+      ),
+      Effect.map((result) => Message.SucceededDocsSearch({ query, result })),
+      Effect.orElseSucceed(() => Message.FailedDocsSearch({ query }))
+    ),
+  messages: [Message.SucceededDocsSearch, Message.FailedDocsSearch],
+});
+
+const docsSearchDialogId = "docs-search";
+
+const docsSearchDialog = () => {
+  const element = document.querySelector(`#${docsSearchDialogId}`);
+
+  return element instanceof HTMLDialogElement ? element : undefined;
+};
+
+export const ToggleDocsSearchDialog = Command.define("ToggleDocsSearchDialog", {
+  execute: Effect.sync(() => {
+    const dialog = docsSearchDialog();
+
+    if (dialog === undefined) {
+      return Message.CompletedDocsSearchNavigation();
+    }
+
+    if (dialog.open) {
+      dialog.close();
+    } else {
+      dialog.showModal();
+    }
+
+    return Message.CompletedDocsSearchNavigation();
+  }),
+  messages: [Message.CompletedDocsSearchNavigation],
+});
+
+export const OpenDocsSearchResult = Command.define("OpenDocsSearchResult", {
+  args: { url: Schema.String },
+  execute: ({ url }) =>
+    Effect.sync(() => {
+      const dialog = docsSearchDialog();
+
+      if (dialog !== undefined && dialog.open) {
+        dialog.close();
+      }
+    }).pipe(
+      Effect.andThen(pushUrl(url)),
+      Effect.as(Message.CompletedDocsSearchNavigation())
+    ),
+  messages: [Message.CompletedDocsSearchNavigation],
 });

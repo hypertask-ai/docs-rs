@@ -6,6 +6,8 @@ import type { Attribute, Html, HtmlBuilder } from "foldkit/html";
 import { CopyStatus, currentAnchorText } from "../client/reader/model.js";
 import type { ReaderModel } from "../client/reader/model.js";
 import { docsChrome } from "./docs-chrome.stylex.js";
+import { docsSearchIcon } from "./docs-search-icon.js";
+import { docsSearchDialogId } from "./docs-search.js";
 import {
   docsHeaderLinks,
   docsHeaderTabs,
@@ -13,7 +15,7 @@ import {
   docsSidebarGroups,
 } from "./docs-sidebar.js";
 import type { DocsHeaderTab, DocsSidebarGroup } from "./docs-sidebar.js";
-import { homeRouter, searchRouter } from "./site-route.js";
+import { homeRouter } from "./site-route.js";
 
 const className = (...styles: stylex.StyleXStyles[]) =>
   stylex.props(...styles).className ?? "";
@@ -49,23 +51,7 @@ const copyLabel = CopyStatus.match({
 });
 
 const searchIcon = <Message>(h: HtmlBuilder<Message>) =>
-  h.svg(
-    [
-      h.Class("docs-search-icon"),
-      h.Width("16"),
-      h.Height("16"),
-      h.ViewBox("0 0 24 24"),
-      h.Fill("currentColor"),
-      h.AriaHidden(true),
-    ],
-    [
-      h.path([
-        h.D(
-          "M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"
-        ),
-      ]),
-    ]
-  );
+  docsSearchIcon(h, "docs-search-icon", 14);
 
 const copyIcon = <Message>(h: HtmlBuilder<Message>) =>
   h.svg(
@@ -182,19 +168,26 @@ export const docsHeader = <Message>(
               h.span([h.Class(className(docsChrome.docsLabel))], ["Docs"]),
             ]
           ),
-          h.a(
+          h.button(
             [
-              h.Href(searchRouter()),
               h.Class(`${className(docsChrome.search)} docs-search`),
               h.AriaLabel("Search docs"),
               h.Attribute("aria-keyshortcuts", "Control+K"),
+              h.Attribute("command", "show-modal"),
+              h.Attribute("commandfor", docsSearchDialogId),
             ],
             [
               searchIcon(h),
-              h.span([h.Class("docs-search-label")], ["Search docs"]),
               h.span(
+                [h.Class("docs-search-label"), h.AriaHidden(true)],
+                ["Search docs"]
+              ),
+              h.kbd(
                 [h.Class(`${className(docsChrome.kbd)} docs-kbd`)],
-                ["Ctrl K"]
+                [
+                  h.kbd([h.Class(className(docsChrome.kbdKey))], ["Ctrl"]),
+                  h.kbd([h.Class(className(docsChrome.kbdKey))], ["K"]),
+                ]
               ),
             ]
           ),

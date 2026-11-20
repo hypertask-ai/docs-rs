@@ -97,6 +97,7 @@ it.effect.prop(
                 "listPrompts",
                 "getPrompt",
                 "search",
+                "searchDocs",
                 "read",
                 "backlinks",
                 "neighbors",

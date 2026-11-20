@@ -8,6 +8,22 @@ import { Message } from "./message.js";
 import type { ReaderMessage } from "./message.js";
 import type { ReaderModel } from "./model.js";
 
+const docsSearchShortcut = Subscription.make<ReaderModel, ReaderMessage>()(
+  () => ({
+    docsSearchShortcut: Subscription.persistentEntry(
+      Dom.streamFromKeyBindings<ReaderMessage>({
+        bindings: [
+          {
+            keys: "Mod+K",
+            mapEvent: () => Message.PressedDocsSearchShortcut(),
+            whileTyping: "Allow",
+          },
+        ],
+      })
+    ),
+  })
+);
+
 const motion = Subscription.lift(MotionDemo.subscriptions)<
   ReaderModel,
   ReaderMessage
@@ -85,6 +101,7 @@ export const subscriptions = Subscription.aggregate<
   ReaderMessage
 >()(
   motion,
+  docsSearchShortcut,
   Subscription.make<ReaderModel, ReaderMessage>()(() => ({
     outsideTocClick: Subscription.persistentEntry(outsideTocClick()),
     readingPosition: Subscription.persistentEntry(readingPosition()),

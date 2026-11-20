@@ -30,6 +30,7 @@ import {
 import { docsChrome } from "./docs-chrome.stylex.js";
 import { docsPagination } from "./docs-page-end.js";
 import { docsHasContentsList } from "./docs-page-order.js";
+import { docsSearchDialog } from "./docs-search.js";
 import { docsGroupForPath, docsPageMarkdownPath } from "./docs-sidebar.js";
 import * as MotionView from "./motion/index.js";
 import { readerFooter, readerNewsCallout } from "./reader-chrome.js";
@@ -394,6 +395,7 @@ const readerDocument = (
       ],
       [
         docsHeader(model.page.path, h),
+        docsSearchDialog(model, h),
         docsMenuButton(
           model.mobileNav.open,
           () => Message.ClickedMobileNavToggle(),

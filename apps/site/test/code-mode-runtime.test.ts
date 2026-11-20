@@ -197,6 +197,7 @@ test.provider(
             "listPrompts",
             "getPrompt",
             "search",
+            "searchDocs",
             "read",
             "backlinks",
             "neighbors",
