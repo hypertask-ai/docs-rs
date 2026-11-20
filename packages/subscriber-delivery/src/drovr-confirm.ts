@@ -37,9 +37,12 @@ export const drovrConfirmLayer = (settings: ConfirmSettings) =>
           return "invalid" as const;
         }
 
-        const request = HttpClientRequest.post(
-          `${settings.base.value.replace(/\/+$/u, "")}${path}`
-        ).pipe(
+        let base = settings.base.value;
+        while (base.endsWith("/")) {
+          base = base.slice(0, -1);
+        }
+
+        const request = HttpClientRequest.post(`${base}${path}`).pipe(
           HttpClientRequest.bearerToken(
             Redacted.value(settings.credential.value)
           ),
