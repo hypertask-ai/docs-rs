@@ -15,11 +15,6 @@ import {
 import type { ReaderModel } from "../client/reader/model.js";
 import { docsHead, docsPageTitleFromDocumentTitle } from "../docs-head.js";
 import { siteBasePath, siteBuilder } from "../site-base.js";
-import type {
-  ReaderSubviewKey,
-  ReaderSubviewResolver,
-  ReaderSubviewViews,
-} from "./reader-subview-types.js";
 import {
   docsActions,
   docsBreadcrumb,
@@ -41,6 +36,11 @@ import { renderReaderBlock } from "./reader-document.js";
 import type { SnippetReference } from "./reader-document.js";
 import { renderReaderNode } from "./reader-node.js";
 import { readerReferences } from "./reader-references.js";
+import type {
+  ReaderSubviewKey,
+  ReaderSubviewResolver,
+  ReaderSubviewViews,
+} from "./reader-subview-types.js";
 import { readerStyles } from "./reader.stylex.js";
 import {
   agentGuideRouter,
@@ -482,24 +482,26 @@ const readerDocument = (
   });
 };
 
-const makeSubviewResolver = (
-  subviews: Partial<ReaderSubviewViews>
-): ReaderSubviewResolver => {
-  return <K extends ReaderSubviewKey>(key: K) => {
+const buildSubviewResolver =
+  (subviews: Partial<ReaderSubviewViews>): ReaderSubviewResolver =>
+  <K extends ReaderSubviewKey>(key: K) => {
     const candidate = subviews[key];
 
     if (candidate === undefined) {
-      throw new Error(`Reader subview ${String(key)} is not available`);
+      throw new Error(`Reader subview ${key} is not available`);
     }
 
     return candidate;
   };
-};
 
-export const makeViewAt =
+export const buildReaderViewAt =
   (subviews: Partial<ReaderSubviewViews>, basePath: string) =>
   (model: ReaderModel, h: HtmlBuilder<ReaderMessage>): Document =>
-    readerDocument(model, siteBuilder(basePath, h), makeSubviewResolver(subviews));
+    readerDocument(
+      model,
+      siteBuilder(basePath, h),
+      buildSubviewResolver(subviews)
+    );
 
-export const makeView = (subviews: Partial<ReaderSubviewViews>) =>
-  makeViewAt(subviews, siteBasePath);
+export const buildReaderView = (subviews: Partial<ReaderSubviewViews>) =>
+  buildReaderViewAt(subviews, siteBasePath);

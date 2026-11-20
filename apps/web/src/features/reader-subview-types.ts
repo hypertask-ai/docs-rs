@@ -1,5 +1,5 @@
-import type * as Cafe from "./cafe/index.js";
 import type * as DocsApp from "./app.js";
+import type * as Cafe from "./cafe/index.js";
 import type * as Motion from "./motion/index.js";
 import type * as Tube from "./tube/index.js";
 

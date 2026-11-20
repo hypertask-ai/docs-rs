@@ -8,19 +8,27 @@ export const loadReaderSubviewViews = (flags: ReaderPageFlags) =>
     const subviews: Partial<ReaderSubviewViews> = {};
 
     if (Option.isSome(flags.cafe)) {
-      subviews.cafe = (await import("../features/cafe/index.js")).view;
+      const cafe = await import("../features/cafe/index.js");
+
+      subviews.cafe = cafe.view;
     }
 
     if (Option.isSome(flags.docs)) {
-      subviews.docs = (await import("../features/app.js")).view;
+      const docs = await import("../features/app.js");
+
+      subviews.docs = docs.view;
     }
 
     if (Option.isSome(flags.motion)) {
-      subviews.motion = (await import("../features/motion/index.js")).view;
+      const motion = await import("../features/motion/index.js");
+
+      subviews.motion = motion.view;
     }
 
     if (Option.isSome(flags.tube)) {
-      subviews.tube = (await import("../features/tube/index.js")).view;
+      const tube = await import("../features/tube/index.js");
+
+      subviews.tube = tube.view;
     }
 
     return subviews;

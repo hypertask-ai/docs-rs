@@ -8,12 +8,12 @@ import {
 } from "../../site/src/reader-error-page.js";
 import { findPage, pagePaths } from "./client/reader-pages.js";
 import { docsNotFoundPage, docsRedirectFor } from "./docs-addresses.js";
-import { renderReaderToString } from "./server/render-reader.js";
 import { isWorkerFirstReaderRoute } from "./reader-routes.js";
 import { readerPrerenderOrigin } from "./server/prerender-origin.js";
 import { withReaderHead } from "./server/reader-document.js";
 import { ReaderErrorTemplate } from "./server/reader-error-template.js";
 import { readerErrorFlags } from "./server/reader-error.js";
+import { renderReaderToString } from "./server/render-reader.js";
 import { WebsiteBindingError } from "./server/website-binding-error.js";
 import {
   WebsiteBindings,

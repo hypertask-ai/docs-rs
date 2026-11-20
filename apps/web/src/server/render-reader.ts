@@ -4,7 +4,7 @@ import { renderToString } from "foldkit/experimental/server";
 import { init } from "../client/reader/init.js";
 import { ReaderFlags } from "../client/reader/model.js";
 import type { ReaderPageFlags } from "../client/reader/model.js";
-import { makeView } from "../features/reader.js";
+import { buildReaderView } from "../features/reader.js";
 import { loadReaderSubviewViews } from "./reader-subviews-preload.js";
 
 export const renderReaderToString = (flags: ReaderPageFlags) =>
@@ -12,7 +12,7 @@ export const renderReaderToString = (flags: ReaderPageFlags) =>
     const subviews = yield* loadReaderSubviewViews(flags);
 
     return yield* renderToString(
-      { Flags: ReaderFlags, init, view: makeView(subviews) },
+      { Flags: ReaderFlags, init, view: buildReaderView(subviews) },
       { flags }
     );
   });
