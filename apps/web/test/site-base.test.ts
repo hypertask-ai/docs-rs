@@ -14,6 +14,7 @@ import { inertHtml } from "foldkit/html";
 
 import { readerBodyFlags } from "../../site/scripts/reader-body-flags.ts";
 import { readerHomeFlags } from "../../site/scripts/reader-home-flags.ts";
+import { copyPublicIcons, publicIcons } from "../scripts/reader-assets.ts";
 import { init } from "../src/client/reader/init.js";
 import { ReaderFlags } from "../src/client/reader/model.js";
 import type { ReaderPageFlags } from "../src/client/reader/model.js";
@@ -304,6 +305,32 @@ it.layer(ReaderSiteBaseFixture.layer)((test) => {
 });
 
 it.layer(NodeServices.layer)((test) => {
+  test.effect(
+    "copies the public icons under the site base path and nowhere else",
+    () =>
+      Effect.gen(function* mountedIcons() {
+        const fs = yield* FileSystem.FileSystem;
+        const path = yield* Path.Path;
+        const root = path.resolve(import.meta.dirname, "..");
+        const client = yield* fs.makeTempDirectoryScoped();
+
+        yield* copyPublicIcons(root, client, "/ratstack");
+
+        for (const icon of publicIcons) {
+          expect(yield* fs.exists(`${client}/ratstack${icon}`)).toBe(true);
+          expect(yield* fs.exists(`${client}${icon}`)).toBe(false);
+        }
+
+        const atOriginRoot = yield* fs.makeTempDirectoryScoped();
+
+        yield* copyPublicIcons(root, atOriginRoot, "");
+
+        for (const icon of publicIcons) {
+          expect(yield* fs.exists(`${atOriginRoot}${icon}`)).toBe(false);
+        }
+      })
+  );
+
   test.effect(
     "today's built home page and deep page carry no site base path",
     () =>

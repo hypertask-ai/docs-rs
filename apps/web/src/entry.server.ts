@@ -236,7 +236,7 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
         { flags }
       );
 
-      return Rendered(withReaderHead(application, flags), {
+      return Rendered(withReaderHead(application, flags, siteBasePath), {
         headers: yield* previewHeaders(request),
         status: notFound.code,
       });

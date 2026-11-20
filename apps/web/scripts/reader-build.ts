@@ -34,7 +34,7 @@ import {
   addSiteBasePath,
   normalizeSiteBasePath,
 } from "../src/site-base-path.ts";
-import { copyReaderAssets } from "./reader-assets.ts";
+import { copyPublicIcons, copyReaderAssets } from "./reader-assets.ts";
 
 const encodeFlags = Effect.forEach((page: ReaderPageFlags) =>
   Schema.encodeEffect(ReaderFlags)(page)
@@ -197,6 +197,8 @@ export const finalizeReader = Effect.fn("reader.finalize")(
       `${root}/dist/reader-pages.json`,
       siteBasePath
     );
+
+    yield* copyPublicIcons(root, clientDirectory, siteBasePath);
 
     yield* Effect.forEach((page: (typeof pages)[number]) =>
       Effect.gen(function* finalizePage() {
