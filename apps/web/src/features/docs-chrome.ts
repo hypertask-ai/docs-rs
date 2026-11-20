@@ -1,6 +1,6 @@
 import { Button } from "@foldkit/ui";
 import * as stylex from "@stylexjs/stylex";
-import type { Html, HtmlBuilder } from "foldkit/html";
+import type { Attribute, Html, HtmlBuilder } from "foldkit/html";
 
 import { CopyStatus } from "../client/reader/model.js";
 import { docsChrome } from "./docs-chrome.stylex.js";
@@ -10,13 +10,29 @@ import {
   docsHref,
   docsSidebarGroups,
 } from "./docs-sidebar.js";
-import type { DocsSidebarGroup } from "./docs-sidebar.js";
+import type { DocsHeaderTab, DocsSidebarGroup } from "./docs-sidebar.js";
 import { homeRouter, searchRouter } from "./site-route.js";
 
 const className = (...styles: stylex.StyleXStyles[]) =>
   stylex.props(...styles).className ?? "";
 
 const activeTab = (active: boolean) => (active ? docsChrome.tabActive : false);
+
+const tabAttributes = <Message>(
+  tab: DocsHeaderTab,
+  path: string,
+  h: HtmlBuilder<Message>
+): readonly Attribute<Message>[] => {
+  const attributes: readonly Attribute<Message>[] = [
+    h.Key(tab.path),
+    h.Href(docsHref(tab.path)),
+    h.Class(className(docsChrome.tab, activeTab(tab.isActive(path)))),
+  ];
+
+  return tab.isActive(path)
+    ? [...attributes, h.AriaCurrent("page")]
+    : attributes;
+};
 
 const activeLink = (current: boolean) =>
   current ? docsChrome.sidebarLinkActive : false;
@@ -202,18 +218,7 @@ export const docsHeader = <Message>(
           h.Class(`${className(docsChrome.tabs)} docs-section-tabs`),
         ],
         docsHeaderTabs.map((tab) =>
-          h.a(
-            [
-              h.Key(tab.path),
-              h.Href(docsHref(tab.path)),
-              h.Class(className(docsChrome.tab, activeTab(tab.isActive(path)))),
-              h.Attribute(
-                "aria-current",
-                tab.isActive(path) ? "page" : "false"
-              ),
-            ],
-            [tab.label]
-          )
+          h.a(tabAttributes(tab, path, h), [tab.label])
         )
       ),
     ]

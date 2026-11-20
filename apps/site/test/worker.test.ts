@@ -1137,8 +1137,8 @@ it.effect(
 
           expect(cachedMarkdown.headers.get("x-ratstack-cache")).toBe("MISS");
           expect(cachedMarkdownBody).toBe(markdownBody);
-          expect(markdownResponse.headers.get("cache-control")).toContain(
-            "s-maxage=31536000"
+          expect(markdownResponse.headers.get("cache-control")).toBe(
+            "public, max-age=0, must-revalidate"
           );
           expect(markdownResponse.headers.get("vary")).toBe("Accept");
           expect(etag).toMatch(/^W\//u);
@@ -1152,8 +1152,8 @@ it.effect(
           expect(mcp.headers.get("x-fence")).toBe("electrified");
           expect(favicon.headers.get("x-ratstack-cache")).toBe("MISS");
           expect(favicon.headers.get("x-fence")).toBe("electrified");
-          expect(favicon.headers.get("cache-control")).toContain(
-            "s-maxage=31536000"
+          expect(favicon.headers.get("cache-control")).toBe(
+            "public, max-age=0, must-revalidate"
           );
           expect(cache.matchKeys).toHaveLength(0);
           expect(cache.putKeys).toHaveLength(0);

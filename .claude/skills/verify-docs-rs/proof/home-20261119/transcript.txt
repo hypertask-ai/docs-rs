@@ -1,0 +1,43 @@
+PASS playwright 1.65.1 resolves from /tmp/ratstack/work/own-docs-rs-16/node_modules/.pnpm/playwright@1.65.1/node_modules/playwright/index.js
+PASS live answers 200 text/html at https://docs.hypertask.ai/
+FAIL https://docs.hypertask.ai/ratstack/ answered 404 text/html; charset=utf-8. Fix: land the publish slice HYST-18 on main, then run .github/workflows/publish-ratstack.yml from main and wait for it to finish; nothing is published at that address until it does.
+SKIP gh could not list publish-ratstack.yml runs on main (HTTP 404: Not Found (https://api.github.com/repos/hypertask-ai/docs-rs/actions/workflows/publish-ratstack.yml)). Fix: an HTTP 404 here means the workflow is not on main yet, so land the publish slice HYST-18 first; any other error means run gh auth status.
+doctor notes: publish-runs did not run
+doctor: FAIL (preview-status)
+doctor exit=1
+---
+home: live and preview
+  live https://docs.hypertask.ai/ answers 200
+  preview https://docs.hypertask.ai/ratstack/ answers 404
+  text: 78 live lines missing, 2 extra lines
+  links: 48 missing, 0 extra, 7 changed
+  head: 4 differences
+  evidence: /tmp/docs-verify-evidence/run-20261119T224349Z/home
+  - status: live 200, preview 404. Fix: the preview must serve the same address before its look can be compared.
+  - live text missing from the preview: Getting started
+  - live text missing from the preview: Web App
+  - live text missing from the preview: MCP for AI agents
+  - live text missing from the preview: CLI reference
+  - live text missing from the preview: Changelog
+  - live text missing from the preview: Overview
+  - live text missing from the preview: What is Hypertask?
+  - live text missing from the preview: Quickstart
+  - live text missing from the preview: Switching from Trello, Jira, or Asana
+  - live text missing from the preview: Core concepts
+  - live text missing from the preview: Profile & Settings
+  - live text missing from the preview: Security and privacy
+  - live text missing from the preview: Troubleshooting Login
+  - live text missing from the preview: Mobile and desktop apps
+  - live text missing from the preview: Get help
+  - live text missing from the preview: Explore the platform
+  - live text missing from the preview: AI features
+  - live text missing from the preview: What AI chat can do
+  - live text missing from the preview: Boards & sections
+  - live text missing from the preview: Search Screen
+  - live text missing from the preview: Tasks
+  - live text missing from the preview: Scheduling
+  - live text missing from the preview: Inbox & notifications
+  - live text missing from the preview: Collaboration
+  - and 115 more differences
+home: FAIL (140 differences)
+diff exit=1
