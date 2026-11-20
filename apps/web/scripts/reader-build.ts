@@ -34,7 +34,8 @@ import {
   addSiteBasePath,
   normalizeSiteBasePath,
 } from "../src/site-base-path.ts";
-import { copyPublicIcons, copyReaderAssets } from "./reader-assets.ts";
+import { copyPublicIcons } from "./public-icons.ts";
+import { copyReaderAssets } from "./reader-assets.ts";
 
 const encodeFlags = Effect.forEach((page: ReaderPageFlags) =>
   Schema.encodeEffect(ReaderFlags)(page)

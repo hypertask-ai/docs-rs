@@ -14,7 +14,7 @@ import { inertHtml } from "foldkit/html";
 
 import { readerBodyFlags } from "../../site/scripts/reader-body-flags.ts";
 import { readerHomeFlags } from "../../site/scripts/reader-home-flags.ts";
-import { copyPublicIcons, publicIcons } from "../scripts/reader-assets.ts";
+import { copyPublicIcons, publicIcons } from "../scripts/public-icons.ts";
 import { init } from "../src/client/reader/init.js";
 import { ReaderFlags } from "../src/client/reader/model.js";
 import type { ReaderPageFlags } from "../src/client/reader/model.js";
