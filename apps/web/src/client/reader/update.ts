@@ -3,13 +3,19 @@ import { Update } from "foldkit";
 import { modifyFields } from "foldkit/struct";
 
 import { update as updateDocs } from "../../features/app.js";
+import { docsPageMarkdownPath } from "../../features/docs-sidebar.js";
 import * as Cafe from "../cafe/index.js";
 import type { AppMessage as DocsMessage } from "../docs/message.js";
 import type { AppModel as DocsModel } from "../docs/model.js";
 import type { DocumentQueries } from "../docs/queries.js";
 import * as MotionDemo from "../motion/index.js";
 import * as Tube from "../tube/index.js";
-import { CopyReaderText, WaitBeforeCopyReset } from "./command.js";
+import {
+  CopyPageMarkdown,
+  CopyReaderText,
+  MoveFocus,
+  WaitBeforeCopyReset,
+} from "./command.js";
 import { Message } from "./message.js";
 import type { ReaderMessage } from "./message.js";
 import {
@@ -17,6 +23,7 @@ import {
   copyStatusOf,
   CopyStatus,
   findCopyPrompt,
+  pageCopyId,
 } from "./model.js";
 import type { ReaderModel } from "./model.js";
 
@@ -25,6 +32,12 @@ const withCopyStatus = (
   id: string,
   status: typeof CopyStatus.Type
 ) => modifyFields(model, { copyStatuses: Record.set(id, status) });
+
+const withMobileNav = (model: ReaderModel, open: boolean) =>
+  modifyFields(model, { mobileNav: () => ({ open }) });
+
+const withMobileToc = (model: ReaderModel, open: boolean) =>
+  modifyFields(model, { mobileToc: () => ({ open }) });
 
 const isCopyInFlight = CopyStatus.isAnyOf(["Copying", "Copied"]);
 
@@ -85,13 +98,41 @@ export const update = (
             model: withCopyStatus(model, id, CopyStatus.Copying()),
           }),
         }),
+      ClickedCopyPage: () =>
+        ClipboardAccess.guards.Available(model.clipboardAccess) &&
+        !isCopyInFlight(copyStatusOf(model, pageCopyId))
+          ? {
+              commands: [
+                CopyPageMarkdown({
+                  url: `${model.origin}${docsPageMarkdownPath(model.page.path)}`,
+                }),
+              ],
+              model: withCopyStatus(model, pageCopyId, CopyStatus.Copying()),
+            }
+          : { model },
+      ClickedMobileNavToggle: () => ({
+        model: withMobileNav(model, !model.mobileNav.open),
+      }),
+      ClickedMobileTocLink: () => ({
+        model: withMobileToc(model, false),
+      }),
+      ClickedMobileTocToggle: () => ({
+        model: withMobileToc(model, !model.mobileToc.open),
+      }),
+      ClickedOutsideMobileToc: () => ({
+        model: withMobileToc(model, false),
+      }),
       CompletedDetectClipboard: ({ access }) => ({
         model: modifyFields(model, { clipboardAccess: () => access }),
       }),
+      CompletedMoveFocus: () => ({ model }),
       CompletedWaitBeforeCopyReset: ({ id }) => ({
         model: CopyStatus.guards.Copied(copyStatusOf(model, id))
           ? withCopyStatus(model, id, CopyStatus.Idle())
           : model,
+      }),
+      FailedCopyPage: () => ({
+        model: withCopyStatus(model, pageCopyId, CopyStatus.Failed()),
       }),
       FailedCopyReaderText: ({ id }) => ({
         model: CopyStatus.guards.Copying(copyStatusOf(model, id))
@@ -106,6 +147,27 @@ export const update = (
         foldMotion(model, motionMessage),
       GotTubeMessage: ({ message: tubeMessage }) =>
         foldTube(model, tubeMessage),
+      MeasuredReadingAnchor: ({ id }) => ({
+        model: modifyFields(model, { readingAnchorId: () => id }),
+      }),
+      PressedEscapeInMobileNav: () =>
+        model.mobileNav.open
+          ? {
+              commands: [MoveFocus({ selector: "#docs-menu-button" })],
+              model: withMobileNav(model, false),
+            }
+          : { model },
+      PressedEscapeInMobileToc: () =>
+        model.mobileToc.open
+          ? {
+              commands: [MoveFocus({ selector: "#docs-mobile-toc-summary" })],
+              model: withMobileToc(model, false),
+            }
+          : { model },
+      SucceededCopyPage: () => ({
+        commands: [WaitBeforeCopyReset({ id: pageCopyId })],
+        model: withCopyStatus(model, pageCopyId, CopyStatus.Copied()),
+      }),
       SucceededCopyReaderText: ({ id }) =>
         CopyStatus.guards.Copying(copyStatusOf(model, id))
           ? {

@@ -1,0 +1,94 @@
+---
+title: Changelog
+description: Shipped improvements to Hypertask.
+---
+
+## November 10, 2026
+
+### New features
+
+- New: The Task Writer checks up to eight similar tickets before you save. When one is clearly the same work, your draft opens with Looks like HTPR-123 may cover the same work, so you can merge or drop it. Everything else in the draft is unchanged. ([HTPR-9046](https://app.hypertask.ai/detail/project-15/9046))
+
+### Improvements
+
+- Improved: Summarize the current task now says what the task is first, then where it stands, then up to three open points. It does not open with a next action. ([HTPR-8966](https://app.hypertask.ai/detail/project-15/8966))
+
+## November 6, 2026
+
+### Improvements
+
+- Improved: An agent comment or new ticket is refused when it uses a dashed code name, quotes Valentin in plain quote marks, asks a Question in the wrong shape, or leaves out Problem, Fix, Done when, Risk, or Decision. People can still write those. ([HTPR-8798](https://app.hypertask.ai/detail/project-15/8798))
+
+- Improved: When a provider rejects your own AI key, chat names that key instead of a generic error, and tells you to update it in Settings, under AI, Bring your own key. ([HTPR-7751](https://app.hypertask.ai/detail/project-15/7751))
+
+## November 3, 2026
+
+### Improvements
+
+- Improved: Inbox rows use the whole line. The sender, ticket number and title sit together on the left with no fixed name column, and the grey preview runs up to the tags, so a short sender no longer leaves an empty gap. The preview leads with why the row is in your inbox, then the latest human comment, then the description, joined by a dot and cut at a whole word before the tags. ([HTPR-8264](https://app.hypertask.ai/detail/project-15/8264))
+
+- Improved: The AI chat no longer opens by itself when you create a task. It opens when you open it and stays as you left it, on desktop and phone. The three automatic switches in **Settings > General > Task Page** are gone, because nothing opens on its own now. ([HTPR-8252](https://app.hypertask.ai/detail/project-15/8252))
+
+- Improved: In the <kbd>Ctrl+J</kbd> new task box, <kbd>Ctrl</kbd> + <kbd>Enter</kbd> (<kbd>Cmd</kbd> + <kbd>Enter</kbd> on a Mac) now creates the task and <kbd>Enter</kbd> starts a new paragraph. The hint under the box shows the new shortcut. ([HTPR-8253](https://app.hypertask.ai/detail/project-15/8253))
+
+- Improved: Board cards now line up in a tidier rhythm. An unmarked card has even padding with no hidden stripe, a card you are working on or one marked as blocked keeps a single 4px stripe, card avatars are a little smaller, column titles sit on the same line as card text, and each column's scroll bar is a plain pill with no arrows. Every other view, the card colours and the way columns behave are unchanged. ([HTPR-8255](https://app.hypertask.ai/detail/project-15/8255))
+
+## November 2, 2026
+
+### Improvements
+
+- Improved: The Ctrl+J New Task box now puts the microphone just left of a word **Create** button, and a **Dictation** pill takes its place while you speak. The key hints under the box are written in words and switch while dictation runs: `Ctrl Shift D` starts and stops, `Enter` stops and keeps your words, `Ctrl Enter` stops and creates the ticket, `Esc` cancels. ([HTPR-8260](https://app.hypertask.ai/detail/project-15/8260))
+
+## October 30, 2026
+
+### Improvements
+
+- Improved: After Ctrl+J creates a ticket, the AI chat sidebar now shows up to three one-tap chips with next actions or open decisions based on your original note and your board's rules, instead of questions about wording. When nothing fits, no chips appear. ([HTPR-7979](https://app.hypertask.ai/detail/project-15/7979))
+
+## October 24, 2026
+
+### Improvements
+
+- Improved: [Included AI now follows your team's plan](/features/ai-features/#included-ai-allowance): Free gets a small starter AI allowance on fast budget models, Pro includes more AI on managed models with no keys needed, and BYOK uses your own model keys. Owners and board admins see percent used in Settings > AI Usage. Background AI shares the same allowance; calls on your own key do not use it. Demo chat requires a demo guest session. ([HTPR-7324](https://app.hypertask.ai/detail/project-15/7324))
+
+- Improved: Choose where AI chat opens by itself with three switches in **Settings > General > Task Page**: on newly created tickets, when you open a ticket, and on boards. They work on desktop and phone and are saved to your account. **Keep AI chat closed always** and **Open AI chat by default** are replaced and carry over to the new switches. ([HTPR-7650](https://app.hypertask.ai/detail/project-15/7650))
+
+## October 23, 2026
+
+### New Features
+
+- New: Select cards on your phone. Hold a card for about a second and let go to tick it and open the selection bar, then tap other cards to add them. Holding and dragging still moves a card, and a tap still opens it when nothing is selected. ([HTPR-7263](https://app.hypertask.ai/detail/project-15/7263))
+
+## October 22, 2026
+
+### New Features
+
+- New: Click the hints below the textbox in the desktop Ctrl+J New Task window: Attach opens the file picker, Search opens search, and Board opens the board chooser. Your text stays in the box. ([HTPR-7307](https://app.hypertask.ai/detail/project-15/7307))
+
+### Improvements
+
+- Improved: After Ctrl+J creates a ticket, the questions and ideas in the AI chat sidebar now help you improve how the ticket is written: a clearer title, missing sections such as the goal or acceptance criteria, plainer wording, vague words to replace, or a missing screenshot or example. They no longer ask about the ticket's subject. Click one to send it in the same chat. ([HTPR-7534](https://app.hypertask.ai/detail/project-15/7534))
+
+- Improved: Images now appear inline by default when Ctrl+J, AI chat, an MCP client, or the API writes a task description or comment that references an uploaded image or image link. Ask for "attachment only" or "link only" to keep it as an attachment or link. Uploading images to someone else's comment adds attachments without changing their text. ([HTPR-7514](https://app.hypertask.ai/detail/project-15/7514))
+
+- Improved: In the desktop Ctrl+J New Task window, name the board in your note, for example "on the board Marketing" or "for the project Website", and the task is saved on that board. The board chip switches as you type, so you can see where it will go and change it. A board name without "for", "on", "in" or "to" in front is ignored. ([HTPR-7305](https://app.hypertask.ai/detail/project-15/7305))
+
+- Improved: Enable **Keep AI chat closed always** in **Settings > General > Task Page** to stop docked AI chat opening automatically on tickets, boards, reloads, and after Ctrl+J task creation. You can still open chat manually, and find the setting by name in the command palette. ([HTPR-7530](https://app.hypertask.ai/detail/project-15/7530))
+
+- Improved: On a ticket page, choose **Current ticket** in the docked AI chat's scope menu to focus on that ticket's title, description, and comments. The scope stays on **Current board** until you choose it and returns to **Current board** when you leave the ticket. Full-screen chat is unchanged. ([HTPR-7316](https://app.hypertask.ai/detail/project-15/7316))
+
+- Improved: Slack-style search operators now autocomplete with consistent colours. Use `priority:` (urgent, high, medium, low) and `type:` (ticket, comment), or follow the search tips for `priority:high`, `type:ticket`, `"exact phrase"`, and `-word`. Quoted phrases and word exclusions stay plain text. ([HTPR-7387](https://app.hypertask.ai/detail/project-15/7387))
+
+- Improved: Shortcut hints below the textbox in the desktop Ctrl+J New Task window now fit on one line. The "Esc Close" hint has been removed; Esc still closes the window. ([HTPR-7306](https://app.hypertask.ai/detail/project-15/7306))
+
+## October 21, 2026
+
+### Improvements
+
+- Improved: After Ctrl+J creates a ticket, the AI chat sidebar shows 2 to 4 questions and improvement ideas written for that ticket. Click one to send it in the same chat. ([HTPR-7317](https://app.hypertask.ai/detail/project-15/7317))
+
+## October 20, 2026
+
+### Improvements
+
+- Improved: The AI ticket writer follows the board's saved custom instructions in Ctrl+J compose, AI chat, and CLI/MCP. It keeps the section layout shared by past tickets, keeps sections short, and fills Number, Select, Text, Date, and Checkbox custom fields when instructions or past tickets show them. Values that do not fit the field are skipped. ([HTPR-7471](https://app.hypertask.ai/detail/project-15/7471))

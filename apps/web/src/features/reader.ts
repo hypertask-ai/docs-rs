@@ -10,10 +10,28 @@ import {
   copyStatusOf,
   CopyStatus,
   findCopyPrompt,
+  pageCopyId,
 } from "../client/reader/model.js";
 import type { ReaderModel } from "../client/reader/model.js";
+import { docsHead, docsPageTitleFromDocumentTitle } from "../docs-head.js";
+import { siteBasePath, siteBuilder } from "../site-base.js";
 import { view as docsView } from "./app.js";
 import * as CafeView from "./cafe/index.js";
+import {
+  docsActions,
+  docsBreadcrumb,
+  docsFooterNote,
+  docsHeader,
+  docsMenuButton,
+  docsMobileToc,
+  docsSidebar,
+  docsToc,
+  TOP_ANCHOR_ID,
+} from "./docs-chrome.js";
+import { docsChrome } from "./docs-chrome.stylex.js";
+import { docsPagination } from "./docs-page-end.js";
+import { docsHasContentsList } from "./docs-page-order.js";
+import { docsGroupForPath, docsPageMarkdownPath } from "./docs-sidebar.js";
 import * as MotionView from "./motion/index.js";
 import { readerFooter, readerNewsCallout } from "./reader-chrome.js";
 import { readerCopyIcon } from "./reader-copy-icon.js";
@@ -24,13 +42,11 @@ import { readerReferences } from "./reader-references.js";
 import { readerStyles } from "./reader.stylex.js";
 import {
   agentGuideRouter,
-  allStarsRouter,
   glossaryRouter,
   homeRouter,
   isWithinSection,
   learnRouter,
   loreRouter,
-  newsRouter,
   promptsRouter,
   searchRouter,
   skillsRouter,
@@ -45,16 +61,6 @@ const copyStatusText = CopyStatus.match({
   Failed: () => "Copy failed. Select the text and copy it.",
   Idle: () => "",
 });
-
-const siteSections = [
-  [skillsRouter(), "skills"],
-  [loreRouter(), "lore"],
-  [systemsRouter(), "systems"],
-  [newsRouter(), "news"],
-  [allStarsRouter(), "all stars"],
-  [glossaryRouter(), "glossary"],
-  [searchRouter(), "search"],
-] as const;
 
 const sectionIndexes: ReadonlySet<string> = new Set([
   homeRouter(),
@@ -208,41 +214,6 @@ const readerSnippet = (
     }
   );
 
-const siteHeader = (h: HtmlBuilder<ReaderMessage>) =>
-  h.header(
-    [
-      h.Class(
-        stylex.props(readerStyles.bounded, readerStyles.header).className ?? ""
-      ),
-    ],
-    [
-      h.nav(
-        [h.AriaLabel("Primary navigation"), h.Class("site-nav")],
-        [
-          h.a(
-            [h.Class("brand"), h.Href(homeRouter())],
-            [h.strong([], ["🐀 Rat Stack"])]
-          ),
-          h.div(
-            [h.Class("site-links")],
-            [
-              h.ul(
-                [],
-                siteSections.map(([href, name]) =>
-                  h.li([], [h.a([h.Href(href)], [name])])
-                )
-              ),
-              h.ul(
-                [],
-                [h.li([], [h.a([h.Href(agentGuideRouter())], ["agent guide"])])]
-              ),
-            ]
-          ),
-        ]
-      ),
-    ]
-  );
-
 const agentPointer = (model: ReaderModel, h: HtmlBuilder<ReaderMessage>) =>
   h.p(
     [h.Class("agent-pointer visually-hidden"), h.AriaHidden(true)],
@@ -383,32 +354,131 @@ const bibliographyView = (
     ],
   });
 
-export const view = (
+const readerDocument = (
   model: ReaderModel,
   h: HtmlBuilder<ReaderMessage>
-): Document => ({
-  body: h.div(
-    [h.Class(stylex.props(readerStyles.shell).className ?? "")],
+): Document => {
+  const group = docsGroupForPath(model.page.path);
+
+  const toc = docsHasContentsList(model.page.path)
+    ? Option.match(model.references, {
+        onNone: () => null,
+        onSome: (references) => docsToc(references.anchors, h),
+      })
+    : null;
+
+  const pagination = docsPagination(model.page.path, h);
+
+  const mobileToc = docsMobileToc(
+    model,
+    {
+      onEscape: () => Message.PressedEscapeInMobileToc(),
+      onSelect: () => Message.ClickedMobileTocLink(),
+      onToggle: () => Message.ClickedMobileTocToggle(),
+    },
+    h
+  );
+
+  const shellClass = `${stylex.props(readerStyles.shell).className ?? ""} docs-layout`;
+  const kickerClass = `${stylex.props(docsChrome.kicker).className ?? ""} docs-kicker`;
+
+  const body = h.div(
     [
-      siteHeader(h),
-      h.main(
-        [h.DataAttribute("path", model.page.path)],
+      h.Class(shellClass),
+      h.DataAttribute("mobile-nav", model.mobileNav.open ? "open" : "closed"),
+      h.OnKeyDownPreventDefault((key) =>
+        key === "Escape" && model.mobileNav.open
+          ? Option.some(Message.PressedEscapeInMobileNav())
+          : Option.none()
+      ),
+    ],
+    [
+      docsHeader(model.page.path, h),
+      docsMenuButton(
+        model.mobileNav.open,
+        () => Message.ClickedMobileNavToggle(),
+        h
+      ),
+      ...(mobileToc === null ? [] : [mobileToc]),
+      ...(group === undefined
+        ? []
+        : [docsBreadcrumb(model.page.path, model.heading, h)]),
+      h.div(
+        [h.Class("docs-body")],
         [
-          agentPointer(model, h),
-          ...Option.match(model.newsTitle, {
-            onNone: () => [],
-            onSome: (title) => [readerNewsCallout(title, h)],
-          }),
-          ...breadcrumbView(model, h),
-          ...bodyView(model, h),
-          ...bibliographyView(model, h),
-          ...readerReferences(model, h),
+          docsSidebar(model.page.path, h),
+          h.div(
+            [h.Class("docs-pane")],
+            [
+              docsActions(
+                {
+                  copyStatus: copyStatusOf(model, pageCopyId),
+                  markdownUrl: `${model.origin}${docsPageMarkdownPath(model.page.path)}`,
+                  onCopyPage: () => Message.ClickedCopyPage(),
+                },
+                h
+              ),
+              ...(group === undefined
+                ? []
+                : [h.div([h.Class(kickerClass)], [group.label])]),
+              h.main(
+                [
+                  h.Id(TOP_ANCHOR_ID),
+                  h.DataAttribute("path", model.page.path),
+                  h.Class("docs-main"),
+                ],
+                [
+                  ...(group === undefined ? [agentPointer(model, h)] : []),
+                  ...Option.match(model.newsTitle, {
+                    onNone: () => [],
+                    onSome: (title) => [readerNewsCallout(title, h)],
+                  }),
+                  ...(group === undefined ? breadcrumbView(model, h) : []),
+                  ...bodyView(model, h),
+                  ...bibliographyView(model, h),
+                  ...readerReferences(model, h),
+                ]
+              ),
+              ...(pagination === null ? [] : [pagination]),
+              readerFooter(h, footerLinksPrompts(model.page)),
+            ]
+          ),
+          ...(toc === null ? [] : [toc]),
         ]
       ),
-      readerFooter(h, footerLinksPrompts(model.page)),
+      docsFooterNote(h),
     ]
-  ),
-  canonical: `${model.origin}${model.page.metadata.canonicalPath}`,
-  ogUrl: `${model.origin}${model.page.metadata.canonicalPath}`,
-  title: model.page.metadata.title,
-});
+  );
+
+  const head = docsHead({
+    description: model.page.metadata.description,
+    noindex: model.page.metadata.robots === "noindex",
+    origin: model.origin,
+    pageTitle: docsPageTitleFromDocumentTitle(model.page.metadata.title),
+    path: model.page.path,
+    status: model.page.status,
+  });
+
+  return Option.match(head, {
+    onNone: () => ({
+      body,
+      canonical: `${model.origin}${model.page.metadata.canonicalPath}`,
+      ogUrl: `${model.origin}${model.page.metadata.canonicalPath}`,
+      title: model.page.metadata.title,
+    }),
+    onSome: (docs) => ({
+      body,
+      canonical: docs.canonical,
+      lang: docs.lang,
+      ogUrl: docs.ogUrl,
+      title: docs.title,
+    }),
+  });
+};
+
+export const viewAt =
+  (basePath: string) =>
+  (model: ReaderModel, h: HtmlBuilder<ReaderMessage>): Document =>
+    readerDocument(model, siteBuilder(basePath, h));
+
+export const view = viewAt(siteBasePath);

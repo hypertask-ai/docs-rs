@@ -126,6 +126,26 @@ const componentChildren = (input: ComponentInput): readonly RootContent[] =>
       )
     : input.children.children;
 
+const dedentComponentSource = (source: string): string => {
+  const lines = source.split("\n");
+
+  const indents = lines
+    .filter((line) => line.trim() !== "")
+    .map((line) => /^[ \t]*/u.exec(line)?.[0].length ?? 0);
+
+  if (indents.length === 0) {
+    return source;
+  }
+
+  const indent = Math.min(...indents);
+
+  return indent === 0
+    ? source
+    : lines
+        .map((line) => (line.trim() === "" ? line : line.slice(indent)))
+        .join("\n");
+};
+
 const phrasingTypes = new Set([
   "text",
   "inlineCode",
@@ -141,6 +161,13 @@ const phrasingTypes = new Set([
   "footnoteReference",
 ]);
 
+const asideLabels = {
+  caution: "Caution",
+  danger: "Danger",
+  note: "Note",
+  tip: "Tip",
+} as const;
+
 const coreComponents = {
   AgentOnly: {
     agent: componentChildren,
@@ -152,6 +179,88 @@ const coreComponents = {
       html(
         `<p class="agent-pointer visually-hidden" aria-hidden="true">${agentPointerHtml}</p>`
       ),
+    ],
+  },
+  Aside: {
+    agent(input) {
+      const { title, type } = Schema.decodeUnknownSync(
+        Schema.Struct({
+          title: Schema.optional(Schema.String),
+          type: Schema.optional(
+            Schema.Literals(["note", "tip", "caution", "danger"])
+          ),
+        })
+      )(input.attributes);
+
+      const label = title ?? asideLabels[type ?? "note"];
+
+      return [paragraph(`${label}:`), ...componentChildren(input)];
+    },
+    human(input) {
+      const { title, type } = Schema.decodeUnknownSync(
+        Schema.Struct({
+          title: Schema.optional(Schema.String),
+          type: Schema.optional(
+            Schema.Literals(["note", "tip", "caution", "danger"])
+          ),
+        })
+      )(input.attributes);
+
+      const kind = type ?? "note";
+      const label = title ?? asideLabels[kind];
+
+      return [
+        html(`<aside class="docs-aside docs-aside--${kind}">`),
+        html(`<p class="docs-aside-title">${escapeHtml(label)}</p>`),
+        ...componentChildren(input),
+        html("</aside>"),
+      ];
+    },
+  },
+  Card: {
+    agent(input) {
+      const { title } = Schema.decodeUnknownSync(
+        Schema.Struct({ title: Schema.optional(Schema.String) })
+      )(input.attributes);
+
+      return title === undefined
+        ? componentChildren(input)
+        : [
+            {
+              children: [{ type: "text", value: title }],
+              depth: 3,
+              type: "heading",
+            },
+            ...componentChildren(input),
+          ];
+    },
+    human(input) {
+      const { title } = Schema.decodeUnknownSync(
+        Schema.Struct({ title: Schema.optional(Schema.String) })
+      )(input.attributes);
+
+      return [
+        html('<article class="docs-card">'),
+        ...(title === undefined
+          ? []
+          : [
+              html(
+                `<p class="docs-card-title"><span class="docs-card-icon" aria-hidden="true"></span><span class="docs-card-title-text">${escapeHtml(title)}</span></p>`
+              ),
+            ]),
+        html('<div class="docs-card-body">'),
+        ...componentChildren(input),
+        html("</div>"),
+        html("</article>"),
+      ];
+    },
+  },
+  CardGrid: {
+    agent: componentChildren,
+    human: (input) => [
+      html('<div class="docs-card-grid">'),
+      ...componentChildren(input),
+      html("</div>"),
     ],
   },
   CopyPrompt: {
@@ -260,6 +369,63 @@ const coreComponents = {
     agent: () => [],
     human: componentChildren,
   },
+  LinkCard: {
+    agent(input): readonly RootContent[] {
+      const { description, href, title } = Schema.decodeUnknownSync(
+        Schema.Struct({
+          description: Schema.optional(Schema.String),
+          href: Schema.String,
+          title: Schema.String,
+        })
+      )(input.attributes);
+
+      const paragraphs: RootContent[] = [
+        {
+          children: [
+            {
+              children: [{ type: "text", value: title }],
+              type: "link",
+              url: href,
+            },
+          ],
+          type: "paragraph",
+        },
+      ];
+
+      if (description !== undefined) {
+        paragraphs.push({
+          children: [{ type: "text", value: description }],
+          type: "paragraph",
+        });
+      }
+
+      return paragraphs;
+    },
+    human(input) {
+      const { description, href, title } = Schema.decodeUnknownSync(
+        Schema.Struct({
+          description: Schema.optional(Schema.String),
+          href: Schema.String,
+          title: Schema.String,
+        })
+      )(input.attributes);
+
+      return [
+        html('<div class="docs-link-card">'),
+        html(
+          `<p class="docs-link-card-title"><a href="${escapeHtml(href)}">${escapeHtml(title)}</a></p>`
+        ),
+        ...(description === undefined
+          ? []
+          : [
+              html(
+                `<p class="docs-link-card-description">${escapeHtml(description)}</p>`
+              ),
+            ]),
+        html("</div>"),
+      ];
+    },
+  },
   Sources: {
     agent(_input, context) {
       if (context.sources.length === 0) {
@@ -314,6 +480,50 @@ const coreComponents = {
             ),
           ];
     },
+  },
+  Steps: {
+    agent: componentChildren,
+    human: (input) => [
+      html('<div class="docs-steps">'),
+      ...componentChildren(input),
+      html("</div>"),
+    ],
+  },
+  TabItem: {
+    agent(input) {
+      const { label } = Schema.decodeUnknownSync(
+        Schema.Struct({ label: Schema.String })
+      )(input.attributes);
+
+      return [
+        {
+          children: [{ type: "text", value: label }],
+          depth: 3,
+          type: "heading",
+        },
+        ...componentChildren(input),
+      ];
+    },
+    human(input) {
+      const { label } = Schema.decodeUnknownSync(
+        Schema.Struct({ label: Schema.String })
+      )(input.attributes);
+
+      return [
+        html(`<section class="docs-tab" aria-label="${escapeHtml(label)}">`),
+        html(`<p class="docs-tab-label">${escapeHtml(label)}</p>`),
+        ...componentChildren(input),
+        html("</section>"),
+      ];
+    },
+  },
+  Tabs: {
+    agent: componentChildren,
+    human: (input) => [
+      html('<div class="docs-tabs">'),
+      ...componentChildren(input),
+      html("</div>"),
+    ],
   },
 } satisfies ComponentRegistry;
 
@@ -744,7 +954,9 @@ export const transformComponentMarkdown = (
           value += source.slice(cursor, nested.start);
 
           const children = transformComponentMarkdown(
-            source.slice(nested.innerStart, nested.innerEnd),
+            dedentComponentSource(
+              source.slice(nested.innerStart, nested.innerEnd)
+            ),
             target,
             renderContext,
             registry
@@ -781,7 +993,7 @@ export const transformComponentMarkdown = (
       }
 
       const children = transformComponentMarkdown(
-        source.slice(range.innerStart, range.innerEnd),
+        dedentComponentSource(source.slice(range.innerStart, range.innerEnd)),
         target,
         renderContext,
         registry

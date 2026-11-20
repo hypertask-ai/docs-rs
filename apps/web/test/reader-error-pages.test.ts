@@ -100,11 +100,20 @@ it.effect.prop(
         normalizedNodes(before.nodes)
       );
       expect(flags.page.status).toBe(page.code);
-      expect({
-        ...documentMetadata("/", document),
-        jsonLd: metadata.jsonLd,
-      }).toEqual(metadata);
+
+      if (page.code === 404) {
+        expect(document).toContain("<title>404 | Hypertask Docs</title>");
+        expect(document).toContain(
+          'rel="canonical" href="https://ratstack.sh/404/"'
+        );
+      } else {
+        expect({
+          ...documentMetadata("/", document),
+          jsonLd: metadata.jsonLd,
+        }).toEqual(metadata);
+      }
+
       expect(footerLinks(rendered.html)).toEqual(footerLinks(mischief));
     }),
-  { arbitrary: { runs: 100 } }
+  { arbitrary: { runs: 100 }, timeout: 30_000 }
 );

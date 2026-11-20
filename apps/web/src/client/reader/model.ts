@@ -55,6 +55,8 @@ export const ReaderFlags = Schema.Struct({
 
 export type ReaderPageFlags = typeof ReaderFlags.Type;
 
+export const pageCopyId = "document";
+
 export const CopyStatus = defineTaggedUnion({
   Copied: {},
   Copying: {},
@@ -73,10 +75,17 @@ export const DetectedClipboardAccess = ClipboardAccess.subset([
   "Unavailable",
 ]);
 
+export const MobileNav = Schema.Struct({ open: Schema.Boolean });
+
+export const MobileToc = Schema.Struct({ open: Schema.Boolean });
+
 export const Model = Schema.Struct({
   ...ReaderFlags.fields,
   clipboardAccess: ClipboardAccess,
   copyStatuses: Schema.Record(Schema.String, CopyStatus),
+  mobileNav: MobileNav,
+  mobileToc: MobileToc,
+  readingAnchorId: Schema.OptionFromOptional(Schema.String),
 });
 
 export type ReaderModel = typeof Model.Type;
@@ -85,6 +94,9 @@ export const initialModel = (flags: ReaderPageFlags): ReaderModel => ({
   ...flags,
   clipboardAccess: ClipboardAccess.Unknown(),
   copyStatuses: {},
+  mobileNav: { open: false },
+  mobileToc: { open: false },
+  readingAnchorId: Option.none(),
 });
 
 export const copyStatusOf = (
@@ -97,3 +109,19 @@ export const findCopyPrompt = (
   model: Pick<ReaderModel, "copyPrompts">,
   id: string
 ) => Array.findFirst(model.copyPrompts, (prompt) => prompt.id === id);
+
+export const currentAnchorText = (
+  model: Pick<ReaderModel, "readingAnchorId" | "references">
+): string =>
+  Option.match(model.readingAnchorId, {
+    onNone: () => "",
+    onSome: (id) =>
+      Option.match(model.references, {
+        onNone: () => "",
+        onSome: (references) =>
+          Option.match(
+            Array.findFirst(references.anchors, (anchor) => anchor.id === id),
+            { onNone: () => "", onSome: (anchor) => anchor.text }
+          ),
+      }),
+  });

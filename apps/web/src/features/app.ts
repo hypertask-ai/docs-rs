@@ -21,6 +21,11 @@ import type { AppMessage } from "../client/docs/message.js";
 import { initialModel, ReadState, SearchState } from "../client/docs/model.js";
 import type { AppModel } from "../client/docs/model.js";
 import type { DocumentQueries } from "../client/docs/queries.js";
+import {
+  siteBasePath,
+  siteBuilder,
+  withoutSiteBasePath,
+} from "../site-base.js";
 import { resultCount, searchCopy } from "./docs-copy.js";
 import { docsStyles } from "./docs.stylex.js";
 import { AppRoute, docsSearchRouter, parseRoute } from "./route.js";
@@ -79,8 +84,11 @@ const enterRoute = (model: AppModel, route: AppRouteState): DocsReturn => {
   });
 };
 
+const routeOf = (url: Url): AppRouteState =>
+  parseRoute({ ...url, pathname: withoutSiteBasePath(url.pathname) });
+
 export const init = (url: Url): DocsReturn =>
-  enterRoute(initialModel, parseRoute(url));
+  enterRoute(initialModel, routeOf(url));
 
 export const boot: DocsReturn = {
   commands: [ReadLocation()],
@@ -89,7 +97,7 @@ export const boot: DocsReturn = {
 
 export const update = (model: AppModel, message: AppMessage): DocsReturn =>
   Message.match<DocsReturn>(message, {
-    ChangedUrl: ({ url }) => enterRoute(model, parseRoute(url)),
+    ChangedUrl: ({ url }) => enterRoute(model, routeOf(url)),
     ClickedLink: ({ request }) =>
       UrlRequest.match<DocsReturn>(request, {
         External: ({ href }) => ({
@@ -288,7 +296,7 @@ const readView = (model: AppModel, h: HtmlBuilder<AppMessage>): Html =>
     ]
   );
 
-export const view = Submodel.defineView<AppModel, AppMessage>((model, h) =>
+const pageView = (model: AppModel, h: HtmlBuilder<AppMessage>): Html =>
   AppRoute.match<Html>(model.route, {
     NotFound: () =>
       h.section(
@@ -297,5 +305,8 @@ export const view = Submodel.defineView<AppModel, AppMessage>((model, h) =>
       ),
     Read: () => readView(model, h),
     Search: () => searchView(model, h),
-  })
+  });
+
+export const view = Submodel.defineView<AppModel, AppMessage>((model, h) =>
+  pageView(model, siteBuilder(siteBasePath, h))
 );

@@ -3,12 +3,14 @@ import { Effect, FileSystem, Path } from "effect";
 import { ReaderInputError } from "../../site/scripts/reader-input-error.ts";
 import { readerAssetInputs } from "../../site/scripts/reader-site-inputs.ts";
 import type { ReaderPageFlags } from "../src/client/reader/model.ts";
+import { addSiteBasePath } from "../src/site-base-path.ts";
 
 export const copyReaderAssets = Effect.fn("reader.copyAssets")(
   function* copyReaderAssets(
     pages: readonly ReaderPageFlags[],
     clientDirectory: string,
-    sourcePath: string
+    sourcePath: string,
+    siteBasePath: string
   ) {
     const fs = yield* FileSystem.FileSystem;
     const paths = yield* Path.Path;
@@ -44,7 +46,8 @@ export const copyReaderAssets = Effect.fn("reader.copyAssets")(
 
     return yield* Effect.forEach((image: string) =>
       Effect.gen(function* copyReaderImage() {
-        const destination = `${clientDirectory}${image}`;
+        const mountedImage = addSiteBasePath(siteBasePath, image);
+        const destination = `${clientDirectory}${mountedImage}`;
 
         yield* fs.makeDirectory(paths.dirname(destination), {
           recursive: true,

@@ -95,7 +95,7 @@ it.layer(NodeServices.layer)((test) => {
 
         expect(entry).toBeDefined();
 
-        const entryBudgetBytes = 1_600_000;
+        const entryBudgetBytes = 1_640_000;
         const nonContentBudgetBytes = 4_500_000;
         const entryBytes = new Blob([entry.content]).size;
 

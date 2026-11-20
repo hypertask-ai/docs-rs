@@ -70,7 +70,7 @@ const build = (nodeEnv: "development" | "production") => {
 
     expect(result.status, result.stderr).toBe(0);
     expect(readFileSync(path.join(outDir, "index.html"), "utf-8")).toMatch(
-      /<h1(?: [^>]*)?>Rat Stack<\/h1>/u
+      /<h1(?: [^>]*)?>Hypertask documentation<\/h1>/u
     );
 
     const contentRoot = path.resolve(webRoot, "../site/dist/content");
@@ -82,6 +82,21 @@ const build = (nodeEnv: "development" | "production") => {
     const preparedPages = decodeReaderPages(
       readFileSync(path.join(webRoot, "dist/reader-pages.json"), "utf-8")
     );
+
+    expect(readFileSync(path.join(outDir, "_redirects"), "utf-8")).toContain(
+      "/features/desktop /getting-started/apps/ 308"
+    );
+
+    const sitemap = readFileSync(path.join(outDir, "sitemap-0.xml"), "utf-8");
+
+    expect(
+      [...sitemap.matchAll(/<loc>(?<location>[^<]+)<\/loc>/gu)].map(
+        (match) => match.groups?.location
+      )
+    ).toHaveLength(preparedPages.length);
+    expect(
+      readFileSync(path.join(outDir, "sitemap-index.xml"), "utf-8")
+    ).toContain("/sitemap-0.xml</loc>");
 
     for (const image of manifest.images.filter((asset) =>
       preparedPages.some(

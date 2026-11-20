@@ -1,0 +1,115 @@
+{
+  "kind": "last-of-section-cross",
+  "path": "/features/images/",
+  "title": "Images and Attachments",
+  "contents": [
+    {
+      "href": "#_top",
+      "text": "Overview"
+    },
+    {
+      "href": "#supported-formats",
+      "text": "Supported formats"
+    },
+    {
+      "href": "#viewing-heicheif",
+      "text": "Viewing HEIC/HEIF"
+    },
+    {
+      "href": "#downloading-heicheif",
+      "text": "Downloading HEIC/HEIF"
+    },
+    {
+      "href": "#who-can-download-attachments",
+      "text": "Who can download attachments"
+    },
+    {
+      "href": "#how-it-works",
+      "text": "How it works"
+    },
+    {
+      "href": "#what-this-protects",
+      "text": "What this protects"
+    },
+    {
+      "href": "#when-it-applies",
+      "text": "When it applies"
+    },
+    {
+      "href": "#excluding-previews",
+      "text": "Excluding previews"
+    },
+    {
+      "href": "#lightbox-image-strip",
+      "text": "Lightbox image strip"
+    },
+    {
+      "href": "#handling-malformed-previews-in-the-lightbox-strip",
+      "text": "Handling malformed previews in the lightbox strip"
+    },
+    {
+      "href": "#warnings-for-unexpected-content",
+      "text": "Warnings for unexpected content"
+    },
+    {
+      "href": "#upload-tips",
+      "text": "Upload tips"
+    },
+    {
+      "href": "#paste-support",
+      "text": "Paste support"
+    },
+    {
+      "href": "#handling-blocked-image-hosts",
+      "text": "Handling blocked image hosts"
+    },
+    {
+      "href": "#how-it-works-1",
+      "text": "How it works"
+    },
+    {
+      "href": "#when-this-helps",
+      "text": "When this helps"
+    },
+    {
+      "href": "#reloading-for-browsers-that-blocked-images-before",
+      "text": "Reloading for browsers that blocked images before"
+    },
+    {
+      "href": "#resizing-images-on-pages-and-ticket-descriptions",
+      "text": "Resizing images on pages and ticket descriptions"
+    },
+    {
+      "href": "#auto-fit-vs-manual-resize",
+      "text": "Auto-fit vs manual resize"
+    },
+    {
+      "href": "#persisted-size",
+      "text": "Persisted size"
+    },
+    {
+      "href": "#mobile-experience",
+      "text": "Mobile experience"
+    },
+    {
+      "href": "#common-use-cases",
+      "text": "Common use cases"
+    }
+  ],
+  "pagination": [
+    {
+      "href": "/features/agent-chat/",
+      "label": "Agent Chat",
+      "rel": "prev",
+      "text": "Previous"
+    },
+    {
+      "href": "/cli/reference/",
+      "label": "CLI reference",
+      "rel": "next",
+      "text": "Next"
+    }
+  ],
+  "footerText": "© 2026 Hypertask Lab Ltd.",
+  "url": "https://docs.hypertask.ai/features/images/"
+}

@@ -38,6 +38,7 @@ import {
   stringifyContentMarkdown,
 } from "../scripts/svx-ast.ts";
 import { buildWorkshop } from "../scripts/tokenmaxx-workshop.ts";
+import { isDocsPageRoute } from "../src/docs-page-routes.ts";
 import {
   contentResources,
   llmsText,
@@ -47,7 +48,9 @@ import {
   allStarsRoutes,
   appleTouchIconPngBase64,
   faviconIcoBase64,
+  codeSnippetsDocumentHtml,
   homeDocumentHtml,
+  learnRatStackDocumentHtml,
   homeMarkdownTemplate,
   interestConfirmDocumentHtml,
   interestResultDocumentHtml,
@@ -84,7 +87,6 @@ it.effect("links promoted pages to the newest CAFE news headline", () =>
     expect(newest).toBeDefined();
 
     const pages = [
-      homeDocumentHtml,
       loreIndexDocumentHtml,
       systemsIndexDocumentHtml,
       skillIndexDocumentHtml,
@@ -582,7 +584,9 @@ it.layer(contentServices)("generated content", (test) => {
         tokenmaxxDocumentHtml,
         interestResultDocumentHtml,
         interestConfirmDocumentHtml,
-        ...lawSources.map((page) => page.documentHtml),
+        ...lawSources
+          .filter((page) => !isDocsPageRoute(page.routePath))
+          .map((page) => page.documentHtml),
         ...skillSources.map((page) => page.documentHtml),
         ...loreSources.map((page) => page.documentHtml),
       ];
@@ -949,17 +953,19 @@ it.layer(contentServices)("generated content", (test) => {
       expect(fence?.documentHtml).toContain(
         '<a href="/VISION.md">Purpose and boundaries of the docs project (VISION.md)</a>'
       );
-      expect(homeDocumentHtml).toContain('href="/lore/');
+      expect(codeSnippetsDocumentHtml).toContain('href="/lore/');
     })
   );
 
   test.effect("uses Shiki for code and leaves text diagrams uncoloured", () =>
     Effect.sync(() => {
-      expect(homeDocumentHtml).toContain('class="shiki catppuccin-latte"');
-      expect(homeDocumentHtml).toMatch(
+      expect(learnRatStackDocumentHtml).toContain(
+        'class="shiki catppuccin-latte"'
+      );
+      expect(codeSnippetsDocumentHtml).toMatch(
         /<figure role="img"[^>]*>\s*<pre><code>/u
       );
-      expect(homeDocumentHtml).not.toMatch(
+      expect(codeSnippetsDocumentHtml).not.toMatch(
         /<figure role="img"[^>]*>\s*<pre[^>]*style=/u
       );
     })
@@ -1012,7 +1018,7 @@ it.layer(contentServices)("generated content", (test) => {
 
   test.effect("keeps the line breaks in a text diagram", () =>
     Effect.sync(() => {
-      const figures = homeDocumentHtml.match(
+      const figures = codeSnippetsDocumentHtml.match(
         /<figure role="img"[\s\S]*?<\/figure>/gu
       );
 

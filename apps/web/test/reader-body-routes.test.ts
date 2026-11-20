@@ -12,6 +12,12 @@ import {
   readerCopyPrompts,
 } from "../../site/scripts/reader-body-flags.ts";
 import { prepareReaderSiteInputs } from "../../site/scripts/reader-site-inputs.ts";
+import { isDocsPageRoute } from "../../site/src/docs-page-routes.ts";
+import {
+  docsHeaderAnchors,
+  docsHeaderLinkedPaths,
+  docsHeaderTabAnchors,
+} from "../../site/test/reader-docs-header.ts";
 import { init } from "../src/client/reader/init.js";
 import { ReaderFlags } from "../src/client/reader/model.js";
 import { view } from "../src/features/reader.js";
@@ -49,9 +55,14 @@ it.layer(ReaderParityFixture.layer)((test) => {
         .map((page) => page.path)
         .filter(isAllStarsProfilePath);
 
+      const docs = inputs.pages
+        .map((page) => page.path)
+        .filter(isDocsPageRoute);
+
       expect(allStars).toContain("/all-stars/devinjameson");
+      expect(docs.length).toBeGreaterThan(0);
       expect(flags.map((page) => page.page.path).toSorted()).toEqual(
-        [...readerBodyRoutePaths, ...allStars].toSorted()
+        [...readerBodyRoutePaths, ...allStars, ...docs].toSorted()
       );
     })
   );
@@ -93,7 +104,19 @@ it.layer(ReaderParityFixture.layer)((test) => {
         expect(readerNewsTitle(rendered.html), path).toBe(
           readerNewsTitle(original?.html ?? "")
         );
-        expect(rendered.html).toMatch(/<a [^>]*href="\/news"[^>]*>news<\/a>/u);
+
+        const headerAnchors = docsHeaderAnchors(rendered.html);
+        const headerTabs = docsHeaderTabAnchors(path);
+        const tabHrefs = new Set(headerTabs.map((tab) => tab.href));
+
+        expect(
+          headerAnchors.filter((anchor) => tabHrefs.has(anchor.href)),
+          path
+        ).toEqual(headerTabs);
+        expect(
+          headerAnchors.map((anchor) => anchor.href),
+          path
+        ).toEqual(expect.arrayContaining([...docsHeaderLinkedPaths]));
         expect(after.heading, path).toBe(before.heading);
         expect(after.breadcrumb, path).toEqual(before.breadcrumb);
         expect(normalizedNodes(after.nodes), path).toEqual(

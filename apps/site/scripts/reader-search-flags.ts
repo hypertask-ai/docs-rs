@@ -35,7 +35,7 @@ export const readerSearchFlags = Effect.fn("readerSearchFlags")(
       origin,
       page: {
         generation: inputs.generation,
-        metadata: descriptor.metadata,
+        metadata: { ...descriptor.metadata, robots: "noindex" as const },
         path: searchPath,
         sourcePath: searchSourcePath,
         status: 200,

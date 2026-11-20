@@ -10,6 +10,11 @@ import { view } from "../src/features/reader.ts";
 const program = Effect.gen(function* renderHomePrototype() {
   const fs = yield* FileSystem.FileSystem;
   const input = yield* readerHomeFlags("https://reader-prototype.invalid");
+
+  if (input === null) {
+    return yield* Effect.die(new Error("This build serves the docs home."));
+  }
+
   const flags = yield* Schema.decodeUnknownEffect(ReaderFlags)(input);
 
   const rendered = yield* renderToString(

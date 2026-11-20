@@ -2,6 +2,8 @@
 
 For a non-trivial task, start with `skills/rat-stack-mode`.
 
+To prove the docs site matches the live one, follow `.claude/skills/verify-docs-rs/SKILL.md`.
+
 This file is the repo law for agents and contributors. It holds commands, validation rules, architecture constraints, and project stop rules. Read `VISION.md` for intent before planning substantial work. `VISION.md` does not override this file. Pi sessions also load `.pi/APPEND_SYSTEM.md` and the repo-local extension `.pi/extensions/project.ts`.
 
 ## Stack contract
@@ -138,7 +140,23 @@ Nothing is built, tested or deployed on our servers. GitHub Actions runs the gat
 
 Follow [ship](/skills/ship) and `skills/ship/references/project.md` for deployment commands, approval, checks, and recovery.
 
-docs.hypertask.ai moves to the docs Stack in HTPR-9201. Until that ticket lands, the old Pages project serves the address and this repository deploys nothing. The template's npm publish workflow for the `ratstack` bin stays until HTPR-9202 removes it; the docs project never publishes that package.
+docs.hypertask.ai moves to the docs Stack in HTPR-9201. Until that ticket lands, the old Pages project serves the root address. `.github/workflows/publish-ratstack.yml` publishes `main` to https://docs.hypertask.ai/ratstack. It is the only path that runs `alchemy deploy` for this site, it runs from GitHub and never from a laptop, and it deploys `apps/infra/alchemy.docs-ratstack.ts` at stage `docs-ratstack` with the secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. Those two secrets live in the GitHub environment `ratstack-publish`, which only the default branch may use, so a run of a branch can never read them. The run stops before the deploy unless the built home page carries every one of the distinct words on https://docs.hypertask.ai/, so the new address appears only once the pages that copy the old home page have landed.
+
+## Rules and the step that enforces them
+
+| Rule | Enforced by |
+| --- | --- |
+| `SITE_BASE_PATH` is the only owner of the site's base path, and every same-site address, asset, stylesheet, script, form target, fetch and redirect stays inside it | `apps/web/test/site-base.test.ts`, plus the `audit` step of `apps/site/scripts/ratstack-publish-check.ts` over the built output in the publish workflow |
+| The preview under the base path never competes with the live site in search | the `verify` step of `apps/site/scripts/ratstack-publish-check.ts`, which requires `X-Robots-Tag: noindex` and the page robots meta tag on every address it fetches |
+| A publish cannot change the live site, its Pages project, its DNS records or any other Cloudflare resource | the resource allowlist in `apps/infra/alchemy.docs-ratstack.ts`, which dies on any Zone, DNS record, CustomDomain or separate route resource and allows only the docs Worker and its RPC backend, with the route attached to the Worker through `zoneName`, plus the old-site title check in the `verify` step |
+| Only `main` publishes, two publishes never overlap, and every action is pinned to a full commit sha | the `on`, `concurrency` and `permissions` blocks of `.github/workflows/publish-ratstack.yml` |
+| Only a run of the default branch can read the Cloudflare secrets, and a run without them stops before it builds | `environment: ratstack-publish` on the publish job, the deployment branch rule of that environment, and its first step, which names the missing secret |
+| Every workflow file in `.github/workflows` is valid GitHub Actions, with no unknown key, unknown context or bad expression | the `Lint every workflow file with actionlint` step in the `checks` job of `.github/workflows/ci.yml`, which downloads actionlint 1.7.7 from its release page, checks the release checksum, and lints every workflow file |
+| Nothing is published at `/ratstack` until the home page it would serve carries the old docs home page's words | the `gate` step of `apps/site/scripts/ratstack-publish-check.ts`, which stops the publish before the deploy when the built home page is missing any distinct word on https://docs.hypertask.ai/, names up to twelve missing words, and runs the same comparison again in `verify` after the deploy |
+
+## Release the ratstack package
+
+This project never publishes the template's npm CLI. The template's `.github/workflows/ratstack-publish.yml` was deleted in HTPR-9125 for that reason, so there is no tag to push and no npm trusted publisher to configure here.
 
 ## Fence (cheating is uncomfortable)
 

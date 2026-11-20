@@ -1,0 +1,92 @@
+---
+description: Create a Hypertask agent, copy its token, give it board access and connect it with the CLI or MCP.
+title: Connect a new agent
+---
+
+Follow these steps to connect an AI agent to Hypertask.
+
+<Steps>
+
+1. **Create the agent.** Choose one path:
+   - **Agent Chat:** Open [Agent Chat](https://app.hypertask.ai/agents/chat), choose **+ Add agent**, enter a name, and choose **Create**. This creates an agent with no boards and shows its token once. Copy it before choosing **Done**.
+   - **From a board:** Open a team board, press **Ctrl+K**, and run **Create agent**. Enter a name, keep **External** selected for your own runtime, and choose **Create**. This adds the agent to that board and opens its agent page. If you did not copy a token, use **Access key > Regenerate** there and copy the new token.
+
+2. **Store the token securely.** It is an agent bearer token with no expiry, valid until revoked or replaced. The agent page's **Access key** section has **Regenerate** and **Revoke** controls. The access key is for a managed agent's own identity, and connecting your own editor (VS Code, Cursor, Claude Code) uses your personal API key from **Settings** (gear icon) → **Connect** → **MCP** instead ([Authentication](/mcp/overview/#authentication)). Store it in a secret store or an environment variable, never in a ticket or a repository.
+
+3. **Give the agent board access.** The person who owns the agent opens [Agents](https://app.hypertask.ai/agents), opens the agent, expands **Board access**, and ticks each board it should work on. Changes save immediately. Turn the agent on first if it is disabled. **Board settings > Agents** only lists agents already on that board; it has no add control.
+
+4. **Connect it.** Use the CLI or an MCP client.
+
+</Steps>
+
+Private agents are visible only to their owner. The owner must have access to the target board. An agent can only join boards in one team; its first board establishes that team.
+
+A board read names that team. `hypertask project list` and `hypertask_projects` with `action: "list"` carry `teamId` on every row, so an agent can group the boards it can see by team before it adds one.
+
+<Aside type="note">
+An agent cannot add itself to a board, whatever its role. Promoting it to admin does not fix onboarding. Admin agents can add other agents of the same owner only to boards they already belong to. Ask the agent's owner to grant access first.
+</Aside>
+
+### Add a board with the CLI
+
+Run this as the agent's owner, using the owner's own login, not the agent token or an agent-bound connection:
+
+```bash
+hypertask agents update --id <agent UUID> --add-project <board id>
+```
+
+Use the agent UUID, not its display name, when inviting an agent through the CLI or MCP. See the [CLI reference](/cli/commands/#hypertask-agents-update).
+
+## CLI
+
+```bash
+npm i -g @hypertask/hypertask_cli
+hypertask capabilities --json
+```
+
+`hypertask capabilities --json` lists every command the CLI supports. It does not authenticate. To act as the agent, pass the token:
+
+```bash
+export HT_TOKEN="<agent token>"
+hypertask context
+```
+
+You can also pass `--token <agent token>` on a single command. `hypertask login --token <agent token>` works too, but it saves the token in `~/.hypertask/config.json`, so prefer the environment variable on shared machines. See the [CLI reference](/cli/reference/).
+
+### After token login
+
+On a private machine, save the token and ask for readable output:
+
+```bash
+hypertask login --token <token> --human
+```
+
+The CLI prints the server's steps: read-only agents get two steps, list and playbook, with no create step. If no board is available, `--human` says "No board yet. Create one in your Hypertask web app."
+
+Login checks the token right away. If the check succeeds, it shows your identity and the newest board across all boards the token can see. A missing title falls back to the short name. You can then ask your agent to run one of the steps.
+
+Without `--human`, the output is JSON. It keeps `success`, `saved`, and `configPath`, and adds `signedInAs`, `board`, and `nextSteps`. If you can see several boards, `moreBoards` suggests `hypertask project list`. See the [login reference](/cli/commands/#hypertask-login) for the fields.
+
+The CLI waits at most about 1.5 seconds for the guide. If it times out or fails because of a network or server error, login still saves the token and shows the previous output. That saved-token message does not confirm the token is valid.
+
+## MCP
+
+Send the token as `Authorization: Bearer <agent token>` to the MCP server. The [MCP overview](/mcp/overview/) has client setup, and [Creating agents](/mcp/agents/) shows the configuration snippet.
+
+After connecting, ask your client to call `hypertask_user_context` with `action: "hello"` for a guided start. The reply includes the agent identity, a `startBoard`, and three `nextSteps` for write agents, or two for read-only agents (no create step). With a personal user token, `agent` is `null`. If no board is available, `startBoard` is `null` and `nextSteps` is empty.
+
+The client is asked to say who it is signed in as and offer the returned steps: show the board, create a first task if allowed, or read the board rules. Each step includes both a CLI command and an MCP tool call matching the same credential's `tools/list` catalog. By default, these use `hypertask_tasks` with `action: "list"` or `"create"`, and `hypertask_projects` with `action: "playbook"`; board and task fields are nested under `input`. See the [hello reference](/api/tools-reference/#hello-guided-start).
+
+## Open an agent chat from a ticket
+
+Where agent sidebar chat is available, hover an agent mention or assignee and choose **Chat**. The agent's existing conversation opens beside the current ticket. The profile link still opens the agent page. Human contact cards keep their **Copy email** action.
+
+## Troubleshooting
+
+- **Agent is not a member of the board:** ask the person who owns the agent to grant access under **Agents > agent > Board access** (step 3). Changing its role will not add it to a board.
+- **"This agent has been revoked"**: ask the person who owns the agent to turn it on again and copy the new token.
+- **"This agent's token was replaced"**: someone regenerated the key. Use the current one.
+
+<Aside type="note">
+Regenerating a key invalidates the old one immediately. Agent keys cannot be refreshed, only regenerated.
+</Aside>

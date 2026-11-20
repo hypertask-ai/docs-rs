@@ -40,6 +40,7 @@ import {
   search,
 } from "./capabilities/index.js";
 import { learnLayer } from "./capabilities/learn.js";
+import { changelogRoutes } from "./changelog-routes.js";
 import type { ContentCatalogData as ContentCatalog } from "./content-data.js";
 import { ContentStore } from "./content-store.js";
 import {
@@ -60,6 +61,7 @@ import {
   staticAssetGeneration,
 } from "./content.js";
 import { docsLlmsFull, docsLlmsText, isDocsRoute } from "./docs-export.js";
+import { docsCacheControl, docsContentType } from "./docs-response-headers.js";
 import { ErrorPageRenderer } from "./error-page-renderer.js";
 import { renderErrorPage } from "./error-page.js";
 import type { ErrorPage } from "./error-page.js";
@@ -189,11 +191,9 @@ const staticPaths = new Set([
   "/.well-known/mcp.json",
 ]);
 
-const staticCacheControl =
-  "public, max-age=60, s-maxage=31536000, stale-while-revalidate=86400";
+const staticCacheControl = docsCacheControl;
 
-const assetCacheControl =
-  "public, max-age=14400, s-maxage=31536000, stale-while-revalidate=86400";
+const assetCacheControl = docsCacheControl;
 
 const staticRepresentation = () => "default";
 
@@ -239,33 +239,10 @@ const staticHeaders = (
   return headers;
 };
 
-const assetImageContentType = (path: string) => {
-  if (path.endsWith(".md")) {
-    return "text/markdown; charset=utf-8";
-  }
-
-  if (path.endsWith(".json")) {
-    return "application/json";
-  }
-
-  if (path.endsWith(".cjs") || path.endsWith("/LICENSE")) {
-    return "text/plain; charset=utf-8";
-  }
-
-  if (path.endsWith(".jpg")) {
-    return "image/jpeg";
-  }
-
-  if (path.endsWith(".ico")) {
-    return "image/x-icon";
-  }
-
-  if (path.endsWith(".svg")) {
-    return "image/svg+xml; charset=utf-8";
-  }
-
-  return "image/png";
-};
+const assetImageContentType = (path: string) =>
+  path.endsWith("/LICENSE")
+    ? "text/plain; charset=utf-8"
+    : docsContentType(path, "image/png");
 
 const assetImageResponse = (
   request: HttpServerRequest.HttpServerRequest,
@@ -278,7 +255,7 @@ const assetImageResponse = (
   let headers = HttpHeaders.set(
     staticHeaders(path, etag, revalidated ? "REVALIDATED" : "MISS"),
     "cache-control",
-    path.endsWith(".jpg") ? "public, max-age=86400" : assetCacheControl
+    assetCacheControl
   );
 
   if (path.startsWith("/tokenmaxx/")) {
@@ -1257,6 +1234,7 @@ export const mischiefRoutes = (options: MischiefRouteOptions = {}) =>
           tokens: options.joinTokens,
         }),
         options.feedback === undefined ? apiRoutes : authenticatedApiRoutes,
+        changelogRoutes,
         options.feedback?.routes ?? Layer.empty,
         options.interest === undefined
           ? Layer.empty

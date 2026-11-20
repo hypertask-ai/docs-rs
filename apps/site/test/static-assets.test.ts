@@ -191,26 +191,17 @@ it.effect(
 );
 
 it.effect(
-  "keeps per-type asset cache lifetimes across GET, HEAD and validators",
+  "keeps one revalidate-every-visit policy across every asset kind, GET, HEAD and validators",
   () =>
     withAssetHandler((handler) =>
       Effect.gen(function* assetCachePolicies() {
-        const standard =
-          "public, max-age=14400, s-maxage=31536000, stale-while-revalidate=86400";
+        const standard = "public, max-age=0, must-revalidate";
 
         for (const [path, accept, policy] of [
           ["/lore/cartridges", "text/markdown", standard],
           ["/og/home.png", "image/png", standard],
-          [
-            "/tokenmaxx/four-comma-club.jpg",
-            "image/jpeg",
-            "public, max-age=86400",
-          ],
-          [
-            "/lore/cartridges/snes-sfam-cartridges.jpg",
-            "image/jpeg",
-            "public, max-age=86400",
-          ],
+          ["/tokenmaxx/four-comma-club.jpg", "image/jpeg", standard],
+          ["/lore/cartridges/snes-sfam-cartridges.jpg", "image/jpeg", standard],
           ["/favicon.ico", "image/x-icon", standard],
           ["/", "text/markdown", standard],
         ]) {
@@ -290,7 +281,7 @@ it.effect(
 
         expect(conditional.status).toBe(304);
         expect(conditional.headers.get("cache-control")).toBe(
-          "public, max-age=14400, s-maxage=31536000, stale-while-revalidate=86400"
+          "public, max-age=0, must-revalidate"
         );
         expect(yield* Effect.promise(conditional.text.bind(conditional))).toBe(
           ""
@@ -361,6 +352,7 @@ it.effect(
         );
 
         for (const view of [html, markdown]) {
+          expect(view).toContain("c1c8a8c1471069fb0e188eeaff69b8e8db6564a8");
           expect(view).toContain("2025-2026 Cloudflare, Inc.");
           expect(view).toContain("security-audit-skill/tree/");
           expect(view).toContain("rat-stack audit boundaries");

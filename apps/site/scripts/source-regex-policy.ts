@@ -5,6 +5,16 @@ export interface AuditedRegex {
 
 export const auditedStringRegexes: readonly AuditedRegex[] = [
   {
+    expression: "/[^\\p{L}\\p{N}\\p{M}_\\s-]/gu",
+    reason:
+      "Strip the punctuation GitHub removes from a heading before the docs page id is built.",
+  },
+  {
+    expression: "/\\s/gu",
+    reason:
+      "Turn each whitespace character in a docs heading into a hyphen, as GitHub does.",
+  },
+  {
     expression: "/^h[1-6]$/u",
     reason: "Classify an already-parsed HAST element tag name.",
   },

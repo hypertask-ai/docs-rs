@@ -2,6 +2,7 @@ import { Effect } from "effect";
 import * as HttpServerRequest from "effect/http/HttpServerRequest";
 import * as HttpServerResponse from "effect/http/HttpServerResponse";
 
+import { docsContentType } from "./docs-response-headers.js";
 import { acceptsHtml } from "./negotiation.js";
 import { readerContentSecurityPolicy, secureResponse } from "./security.js";
 import type { AssetBinding } from "./static-assets.js";
@@ -18,12 +19,14 @@ export const readerWebsiteRoutes: readonly string[] = [
   "/AGENTS.md",
   "/all-stars",
   "/all-stars/*",
+  "/connect-an-agent",
   "/directory",
   "/news",
   "/search",
   "/README.md",
   "/VISION.md",
   "/debt.md",
+  "/getting-started/*",
   "/glossary",
   "/log",
   "/log.md",
@@ -164,8 +167,13 @@ export const withReaderWebsite =
       }
 
       const headers = new Headers(response.headers);
+      const contentType = headers.get("content-type");
       const vary = headers.get("vary");
       headers.set("vary", vary === null ? "Accept" : `${vary}, Accept`);
+
+      if (target === "asset" && contentType !== null) {
+        headers.set("content-type", docsContentType(pathname, contentType));
+      }
 
       return yield* responseHeaders(
         pathname,

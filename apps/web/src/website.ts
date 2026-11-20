@@ -13,6 +13,12 @@ import {
   traceObservability,
   traceSettings,
 } from "../../site/src/observability.js";
+import {
+  docsHtmlHandling,
+  docsPublishHost,
+  docsPublishZoneName,
+} from "./docs-addresses.js";
+import { normalizeSiteBasePath } from "./site-base-path.js";
 import { WebsiteContentManifestError } from "./website-content-manifest-error.js";
 
 const contentManifestPath = fileURLToPath(
@@ -48,9 +54,17 @@ export class Website extends Cloudflare.Website.Foldkit<Website>()(
     const generation = yield* contentGeneration;
     const preview = /^pr-[1-9][0-9]*$/u.test(stage);
 
+    const siteBasePath = yield* Config.String("SITE_BASE_PATH").pipe(
+      Config.withDefault(""),
+      Config.map(normalizeSiteBasePath),
+      Effect.orDie
+    );
+
+    const mounted = siteBasePath !== "";
+
     const props = {
       assets: {
-        htmlHandling: "drop-trailing-slash",
+        htmlHandling: docsHtmlHandling,
         runWorkerFirst: [
           "/rpc",
           "/rpc/*",
@@ -62,7 +76,7 @@ export class Website extends Cloudflare.Website.Foldkit<Website>()(
         ],
       },
       env: {
-        BACKEND: preview ? PreviewRpcBackend : RpcBackend,
+        BACKEND: preview || mounted ? PreviewRpcBackend : RpcBackend,
         CONTENT_GENERATION: generation,
       },
       observability: traceObservability(traces),
@@ -77,6 +91,18 @@ export class Website extends Cloudflare.Website.Foldkit<Website>()(
           env: { ...props.env, TRACES_ENABLED: "true" },
         }
       : props;
+
+    if (mounted) {
+      return {
+        ...tracedProps,
+        routes: [
+          {
+            pattern: `${docsPublishHost}${siteBasePath}*`,
+            zoneName: docsPublishZoneName,
+          },
+        ],
+      };
+    }
 
     if (!preview) {
       return tracedProps;

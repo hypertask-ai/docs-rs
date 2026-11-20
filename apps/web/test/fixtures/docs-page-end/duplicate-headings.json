@@ -1,0 +1,91 @@
+{
+  "kind": "duplicate-headings",
+  "path": "/features/scheduling/",
+  "title": "Scheduling",
+  "contents": [
+    {
+      "href": "#_top",
+      "text": "Overview"
+    },
+    {
+      "href": "#due-dates",
+      "text": "Due dates"
+    },
+    {
+      "href": "#snoozed-tasks-in-my-tasks",
+      "text": "Snoozed tasks in My Tasks"
+    },
+    {
+      "href": "#grouping-by-due-time",
+      "text": "Grouping by due time"
+    },
+    {
+      "href": "#my-tasks-planning-view",
+      "text": "My Tasks planning view"
+    },
+    {
+      "href": "#saved-views",
+      "text": "Saved views"
+    },
+    {
+      "href": "#repeating-tasks",
+      "text": "Repeating tasks"
+    },
+    {
+      "href": "#task-templates",
+      "text": "Task templates"
+    },
+    {
+      "href": "#start-dates",
+      "text": "Start dates"
+    },
+    {
+      "href": "#api",
+      "text": "API"
+    },
+    {
+      "href": "#repeating-tasks-1",
+      "text": "Repeating tasks"
+    },
+    {
+      "href": "#what-finishing-means",
+      "text": "What \"finishing\" means"
+    },
+    {
+      "href": "#api-1",
+      "text": "API"
+    },
+    {
+      "href": "#task-templates-1",
+      "text": "Task templates"
+    },
+    {
+      "href": "#api-2",
+      "text": "API"
+    },
+    {
+      "href": "#my-tasks",
+      "text": "My tasks"
+    },
+    {
+      "href": "#agent-scheduling-and-provider-selection",
+      "text": "Agent scheduling and provider selection"
+    }
+  ],
+  "pagination": [
+    {
+      "href": "/features/tasks/",
+      "label": "Tasks",
+      "rel": "prev",
+      "text": "Previous"
+    },
+    {
+      "href": "/features/inbox/",
+      "label": "Inbox & notifications",
+      "rel": "next",
+      "text": "Next"
+    }
+  ],
+  "footerText": "© 2026 Hypertask Lab Ltd.",
+  "url": "https://docs.hypertask.ai/features/scheduling/"
+}
