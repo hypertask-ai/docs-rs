@@ -2,6 +2,7 @@ import { Effect } from "effect";
 import { DomUtils, parseDocument } from "htmlparser2";
 
 import { copyPrompts } from "./component-data.ts";
+import { docsContentDirectory } from "./docs-content.ts";
 import { readerNewsTitle } from "./reader-body-document.ts";
 import { compileReaderDocument } from "./reader-home-document.ts";
 import { ReaderInputError } from "./reader-input-error.ts";
@@ -16,6 +17,10 @@ export const readerHomeFlags = Effect.fn("readerHomeFlags")(
       return yield* Effect.die(
         new Error("The reader manifest has no home page")
       );
+    }
+
+    if (page.sourcePath.startsWith(`${docsContentDirectory}/`)) {
+      return null;
     }
 
     const home = yield* Effect.try({

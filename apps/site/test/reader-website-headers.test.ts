@@ -169,9 +169,9 @@ it.layer(ContentStore.layer.pipe(Layer.provide(nodeAssetsLayer)))((test) => {
 
         if (html || upstream.status >= 500) {
           expect(response.headers["cache-control"]).toBe(
-            upstream.status >= 500
+            upstream.status >= 400
               ? "no-store"
-              : (upstream.cacheControl ?? "no-cache")
+              : (upstream.cacheControl ?? "public, max-age=0, must-revalidate")
           );
         }
       })

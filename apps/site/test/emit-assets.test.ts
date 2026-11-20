@@ -47,7 +47,6 @@ it.effect(
 
       expect(manifest.pages.map((page) => page.route).toSorted()).toEqual(
         [
-          "/",
           "/lore",
           "/prompts",
           "/news",

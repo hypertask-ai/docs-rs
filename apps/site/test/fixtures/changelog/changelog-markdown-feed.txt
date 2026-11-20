@@ -1,0 +1,5105 @@
+# Changelog
+
+## Bulk archive clears the column at once
+
+November 10, 2026 | Boards, Tasks
+
+Selecting a whole column and pressing Ctrl+E now empties it immediately while the tickets archive in the background.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-11-10-bulk-archive-clears-the-column-at-once-htpr-8928/)
+
+## Summarize the current task now says what the task is first, then where it stands, then...
+
+November 10, 2026 | Tasks
+
+Improved: Summarize the current task now says what the task is first, then where it stands, then up to three open points. It does not open with a next action.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-11-10-summarize-the-current-task-now-says-what-the-task-is-first-then-where-it-stands-then-944774c34a/)
+
+## The Task Writer checks up to eight similar tickets before you save. When one is...
+
+November 10, 2026 | Tasks
+
+New: The Task Writer checks up to eight similar tickets before you save. When one is clearly the same work, your draft opens with Looks like may cover the same work, so you can merge or drop it.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-11-10-the-task-writer-checks-up-to-eight-similar-tickets-before-you-save-when-one-is-d6f8291815/)
+
+## Group table rows by tag
+
+November 9, 2026 | Boards, Views
+
+Table view can group rows by tag instead of only by column, so one screen can show the backlog split by topic.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-11-09-group-table-rows-by-tag-htpr-8630/)
+
+## Try the board with the AI chat already open
+
+November 9, 2026 | AI Chat, Onboarding
+
+A guest demo board now opens the AI chat for you on desktop, and a phone shows a Sign up button on the board so you can keep the work you just tried.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-11-09-guest-board-chat-open-and-sign-up-htpr-7983/)
+
+## An agent comment or new ticket is refused when it uses a dashed code name, quotes...
+
+November 6, 2026 | AI, Tasks
+
+Improved: An agent comment or new ticket is refused when it uses a dashed code name, quotes Valentin in plain quote marks, asks a Question in the wrong shape, or leaves out Problem, Fix, Done when, Risk, or Decision. People can still write those.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-11-06-an-agent-comment-or-new-ticket-is-refused-when-it-uses-a-dashed-code-name-quotes-d82a290c3c/)
+
+## When a provider rejects your own AI key, chat names that key instead of a generic...
+
+November 6, 2026 | AI, Settings
+
+Improved: When a provider rejects your own AI key, chat names that key instead of a generic error, and tells you to update it in Settings, under AI, Bring your own key.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-11-06-when-a-provider-rejects-your-own-ai-key-chat-names-that-key-instead-of-a-generic-f3e0a0e5c0/)
+
+## Board cards now line up in a tidier rhythm. An unmarked card has even padding with no...
+
+November 3, 2026 | Board
+
+Improved: Board cards now line up in a tidier rhythm. An unmarked card has even padding with no hidden stripe, a card you are working on or one marked as blocked keeps a single 4px stripe, card avatars are a little smaller, column titles sit on the same line as card text, and each column's scroll bar is a plain pill with no arrows.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-11-03-board-cards-now-line-up-in-a-tidier-rhythm-an-unmarked-card-has-even-padding-with-no-13328106e0/)
+
+## In the Ctrl+J new task box, Ctrl + Enter (Cmd + Enter on a Mac) now creates the task...
+
+November 3, 2026 | Tasks
+
+Improved: In the Ctrl+J new task box, Ctrl + Enter (Cmd + Enter on a Mac) now creates the task and Enter starts a new paragraph. The hint under the box shows the new shortcut.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-11-03-in-the-ctrl-j-new-task-box-ctrl-enter-cmd-enter-on-a-mac-now-creates-the-task-60c01c663b/)
+
+## Inbox rows use the whole line. The sender, ticket number and title sit together on the...
+
+November 3, 2026 | Board, Tasks, Inbox
+
+Improved: Inbox rows use the whole line. The sender, ticket number and title sit together on the left with no fixed name column, and the grey preview runs up to the tags, so a short sender no longer leaves an empty gap.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-11-03-inbox-rows-use-the-whole-line-the-sender-ticket-number-and-title-sit-together-on-the-9d5f799ffa/)
+
+## A New sub-task button in the sub-task window
+
+November 3, 2026 | Tasks, Subtasks
+
+Creating a sub-task no longer needs a name that matches nothing. A New sub-task button sits under the search box and opens the usual create window with the parent task already attached.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-11-03-new-sub-task-button-htpr-8250/)
+
+## The AI chat no longer opens by itself when you create a task. It opens when you open...
+
+November 3, 2026 | AI, Tasks, Mobile, Settings
+
+Improved: The AI chat no longer opens by itself when you create a task. It opens when you open it and stays as you left it, on desktop and phone.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-11-03-the-ai-chat-no-longer-opens-by-itself-when-you-create-a-task-it-opens-when-you-open-a614584968/)
+
+## The Ctrl+J New Task box now puts the microphone just left of a word Create button, and...
+
+November 2, 2026 | AI, Tasks, Mobile
+
+Improved: The Ctrl+J New Task box now puts the microphone just left of a word Create button, and a Dictation pill takes its place while you speak. The key hints under the box are written in words and switch while dictation runs: Ctrl Shift D starts and stops, Enter stops and keeps your words, Ctrl Enter stops and creates the ticket, Esc cancels.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-11-02-the-ctrl-j-new-task-box-now-puts-the-microphone-just-left-of-a-word-create-button-and-6fca0f9071/)
+
+## Agents follow, star and set a reminder on a ticket
+
+October 31, 2026 | Agents, Tickets
+
+An agent can now follow a ticket, star it and set a reminder on it, the same way a person can, and read its own state back.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-31-agents-follow-star-remind-htpr-8217/)
+
+## Agents share a ticket and read its public link
+
+October 31, 2026 | Agents, Tickets
+
+An agent can now make a ticket public, hand its client link to someone outside the team, and read back whether the ticket is public.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-31-agents-share-a-ticket-htpr-8216/)
+
+## After Ctrl+J creates a ticket, the AI chat sidebar now shows up to three one-tap chips...
+
+October 30, 2026 | AI, Board, Tasks
+
+Improved: After Ctrl+J creates a ticket, the AI chat sidebar now shows up to three one-tap chips with next actions or open decisions based on your original note and your board's rules, instead of questions about wording. When nothing fits, no chips appear.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-30-after-ctrl-j-creates-a-ticket-the-ai-chat-sidebar-now-shows-up-to-three-one-tap-chips-4250e6f076/)
+
+## Agents ask their owner for board access, approved in one click
+
+October 30, 2026 | Agents, Boards
+
+An agent that is not on a board can ask its owner for access. The owner approves or declines in Inbox Decisions, and approving adds the agent as a plain member.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-30-agents-ask-their-owner-for-board-access-htpr-7582/)
+
+## AI chat changes your settings, with Apply and Undo
+
+October 29, 2026 | AI, Settings
+
+On a Settings page, ask the AI chat for a change in plain words. It answers with one card showing from and to. Press Apply, then Undo if you change your mind.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-29-ai-chat-changes-your-settings-with-apply-and-undo-htpr-7622/)
+
+## Haiku 4.5 leaves the model picker
+
+October 25, 2026 | AI
+
+The old Haiku 4.5 entry is gone from the model picker; saved Haiku 4.5 choices now load Claude Haiku 5.5.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-25-haiku-4-5-leaves-the-model-picker-htpr-7940/)
+
+## Hover a share option to see its keyboard shortcut
+
+October 25, 2026 | Board, Share
+
+The Share Task window now shows each of its four options' keys on hover, and the private link keys are listed as Ctrl+; and Ctrl+Shift+; in this shortcut list.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-25-share-task-shortcuts-on-hover-htpr-7839/)
+
+## Choose where AI chat opens by itself with three switches in Settings > General > Task...
+
+October 24, 2026 | AI, Board, Tasks, Mobile, Settings
+
+Improved: Choose where AI chat opens by itself with three switches in Settings > General > Task Page: on newly created tickets, when you open a ticket, and on boards. They work on desktop and phone and are saved to your account.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-24-choose-where-ai-chat-opens-by-itself-with-three-switches-in-settings-general-task-2cb3587a9d/)
+
+## Included AI now follows your team's plan: Free gets a small starter AI allowance on...
+
+October 24, 2026 | AI, Board, Settings
+
+Improved: Included AI now follows your team's plan: Free gets a small starter AI allowance on fast budget models, Pro includes more AI on managed models with no keys needed, and BYOK uses your own model keys. Owners and board admins see percent used in Settings > AI Usage.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-24-included-ai-now-follows-your-team-s-plan-free-gets-a-small-starter-ai-allowance-on-10a8ae7a55/)
+
+## Select cards on your phone. Hold a card for about a second and let go to tick it and...
+
+October 23, 2026 | Mobile
+
+New: Select cards on your phone. Hold a card for about a second and let go to tick it and open the selection bar, then tap other cards to add them.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-23-select-cards-on-your-phone-hold-a-card-for-about-a-second-and-let-go-to-tick-it-and-00c7aaefeb/)
+
+## Task writer quotes the real page and explains each ICE score
+
+October 23, 2026 | AI
+
+Tickets written with Ctrl+J now quote the current page copy as the Control and give a short reason for every ICE score.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-23-task-writer-quotes-the-real-page-htpr-7500/)
+
+## After Ctrl+J creates a ticket, the questions and ideas in the AI chat sidebar now help...
+
+October 22, 2026 | AI, Tasks
+
+Improved: After Ctrl+J creates a ticket, the questions and ideas in the AI chat sidebar now help you improve how the ticket is written: a clearer title, missing sections such as the goal or acceptance criteria, plainer wording, vague words to replace, or a missing screenshot or example. They no longer ask about the ticket's subject.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-22-after-ctrl-j-creates-a-ticket-the-questions-and-ideas-in-the-ai-chat-sidebar-now-help-7fb5d52f97/)
+
+## Click the hints below the textbox in the desktop Ctrl+J New Task window: Attach opens...
+
+October 22, 2026 | Board, Tasks, Search
+
+New: Click the hints below the textbox in the desktop Ctrl+J New Task window: Attach opens the file picker, Search opens search, and Board opens the board chooser. Your text stays in the box.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-22-click-the-hints-below-the-textbox-in-the-desktop-ctrl-j-new-task-window-attach-opens-4e958b8ddd/)
+
+## Decisions opens the ticket at the question
+
+October 22, 2026 | Inbox
+
+Opening a ticket from Inbox > Decisions now scrolls straight to the question waiting for your answer.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-22-decisions-open-at-the-question-htpr-7311/)
+
+## Enable Keep AI chat closed always in Settings > General > Task Page to stop docked AI...
+
+October 22, 2026 | AI, Board, Tasks, Settings
+
+Improved: Enable Keep AI chat closed always in Settings > General > Task Page to stop docked AI chat opening automatically on tickets, boards, reloads, and after Ctrl+J task creation. You can still open chat manually, and find the setting by name in the command palette.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-22-enable-keep-ai-chat-closed-always-in-settings-general-task-page-to-stop-docked-ai-afacd20f98/)
+
+## Images now appear inline by default when Ctrl+J, AI chat, an MCP client, or the API...
+
+October 22, 2026 | AI, Tasks, MCP, API
+
+Improved: Images now appear inline by default when Ctrl+J, AI chat, an MCP client, or the API writes a task description or comment that references an uploaded image or image link. Ask for "attachment only" or "link only" to keep it as an attachment or link.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-22-images-now-appear-inline-by-default-when-ctrl-j-ai-chat-an-mcp-client-or-the-api-50db81a413/)
+
+## In the desktop Ctrl+J New Task window, name the board in your note, for example "on...
+
+October 22, 2026 | Board, Tasks
+
+Improved: In the desktop Ctrl+J New Task window, name the board in your note, for example "on the board Marketing" or "for the project Website", and the task is saved on that board. The board chip switches as you type, so you can see where it will go and change it.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-22-in-the-desktop-ctrl-j-new-task-window-name-the-board-in-your-note-for-example-on-2b1c9b35e5/)
+
+## On a ticket page, choose Current ticket in the docked AI chat's scope menu to focus on...
+
+October 22, 2026 | AI, Board, Tasks
+
+Improved: On a ticket page, choose Current ticket in the docked AI chat's scope menu to focus on that ticket's title, description, and comments. The scope stays on Current board until you choose it and returns to Current board when you leave the ticket.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-22-on-a-ticket-page-choose-current-ticket-in-the-docked-ai-chat-s-scope-menu-to-focus-on-f4fe7d819f/)
+
+## Shortcut hints below the textbox in the desktop Ctrl+J New Task window now fit on one...
+
+October 22, 2026 | Tasks
+
+Improved: Shortcut hints below the textbox in the desktop Ctrl+J New Task window now fit on one line. The "Esc Close" hint has been removed; Esc still closes the window.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-22-shortcut-hints-below-the-textbox-in-the-desktop-ctrl-j-new-task-window-now-fit-on-one-6238a44a80/)
+
+## Slack-style search operators now autocomplete with consistent colours. Use priority:...
+
+October 22, 2026 | Tasks, Search
+
+Improved: Slack-style search operators now autocomplete with consistent colours. Use priority: (urgent, high, medium, low) and type: (ticket, comment), or follow the search tips for priority:high, type:ticket, "exact phrase", and -word.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-22-slack-style-search-operators-now-autocomplete-with-consistent-colours-use-priority-d77f07c2b1/)
+
+## After Ctrl+J creates a ticket, the AI chat sidebar shows 2 to 4 questions and...
+
+October 21, 2026 | AI, Tasks
+
+Improved: After Ctrl+J creates a ticket, the AI chat sidebar shows 2 to 4 questions and improvement ideas written for that ticket. Click one to send it in the same chat.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-21-after-ctrl-j-creates-a-ticket-the-ai-chat-sidebar-shows-2-to-4-questions-and-50c5f92634/)
+
+## A guided start after agent login
+
+October 21, 2026 | CLI, MCP, Agents
+
+Token login now shows who you are signed in as and a board to start with. Hello steps use your advertised MCP tools; read-only agents get no create step.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-21-login-guided-start-htpr-7519/)
+
+## The AI ticket writer follows the board's saved custom instructions in Ctrl+J compose,...
+
+October 20, 2026 | AI, Board, Tasks, CLI, MCP
+
+Improved: The AI ticket writer follows the board's saved custom instructions in Ctrl+J compose, AI chat, and CLI/MCP. It keeps the section layout shared by past tickets, keeps sections short, and fills Number, Select, Text, Date, and Checkbox custom fields when instructions or past tickets show them.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-20-the-ai-ticket-writer-follows-the-board-s-saved-custom-instructions-in-ctrl-j-compose-c297ea58e7/)
+
+## GDPR cookie consent banner
+
+October 17, 2026 | Settings
+
+cookie banner on login/signup/boards; no tracking until consent; shared consent across hypertask.ai products
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-17-gdpr-cookie-consent-banner-htpr-7274/)
+
+## MCP: Don't create false error when missing PR link
+
+October 17, 2026 | MCP, Agents
+
+Agents that reference a pull request from a private GitHub repo now receive a warning instead of a false error ticket, avoiding noisy tickets for legitimately missing remote PRs.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-17-mcp-don-t-create-false-error-when-missing-pr-link-htpr-7279/)
+
+## Reliable archive tip visibility in Inbox
+
+October 16, 2026 | Inbox, Keyboard Shortcuts
+
+Reliable display of keyboard shortcuts tips in the Inbox after clearing it via archive shortcuts or reaching inbox zero.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-16-reliable-archive-tip-visibility-in-inbox-htpr-7267/)
+
+## Agents get clear refusals for boards they don’t access
+
+October 15, 2026 | Agents, API
+
+Agents that try to act on a board they don’t belong to receive a clear refusal instead of a 500 server error. Added API response and related docs on board membership.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-15-agents-get-clear-refusals-for-boards-they-don-t-access-htpr-7237/)
+
+## Better Auth origin validation improvements
+
+October 15, 2026 | API
+
+Fixed invalid-accept-header and invalid-origin verification errors with Better Auth on preview releases by tightening origin validation and stabilizing trust relationships across domains.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-15-better-auth-origin-validation-improvements-htpr-7246/)
+
+## CLI network-error retries (ReadFailed)
+
+October 15, 2026 | CLI
+
+CLI now retries once on network problems and surfaces the actual error instead of a bare "ReadFailed" message.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-15-cli-network-error-retries-readfailed-htpr-7261/)
+
+## Eliminated ResizeObserver loop chatter from browser console
+
+October 15, 2026 | Inbox
+
+Fix: Chrome browser no longer logs harmless ResizeObserver warnings on ticket pages; false errors no longer clutter error reports and user activity streams.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-15-eliminated-resizeobserver-loop-chatter-from-browser-console-htpr-7256/)
+
+## Fixed AI allowance errors in Vercel logging
+
+October 15, 2026 | AI, Billing
+
+Fixed when teams run out of its AI allowance, users no longer see Allowance Exceeded errors in certain output contexts, instead getting the normal upgrade message.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-15-fixed-ai-allowance-errors-in-vercel-logging-htpr-7238/)
+
+## Fixed board error screen crashes
+
+October 15, 2026 | Board
+
+Fixed the "Return to previous board" button crash when landing on an unavailable board screen.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-15-fixed-board-error-screen-crashes-htpr-7248/)
+
+## Fixed bulk archiving to avoid 500
+
+October 15, 2026 | Tasks
+
+Agents attempting to bulk-archive Done tickets now receive a clear "not allowed" response instead of a 500 server error.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-15-fixed-bulk-archiving-to-avoid-500-htpr-7202/)
+
+## Fixed console.timeEnd warning on board pages
+
+October 15, 2026 | Board
+
+Fixed console.timeEnd warning "No such label 'board'" on board pages. Verified on production with 0 warnings after deployment, from 3 warnings in the previous 30 minutes.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-15-fixed-console-timeend-warning-on-board-pages-htpr-7219/)
+
+## Fixed task creation with non-string ranking value
+
+October 15, 2026 | Tasks
+
+Creating a task with a numeric ranking parameter now fails with a clear validation message instead of crashing. The ranking field accepts only text values, and integer positions are rejected.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-15-fixed-task-creation-with-non-string-ranking-value-htpr-7217/)
+
+## Fixed ticket page crash on early public-link copy
+
+October 15, 2026 | Tasks, Pages
+
+Fixed crash when copying the public link to a task before the page had finished loading.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-15-fixed-ticket-page-crash-on-early-public-link-copy-htpr-7259/)
+
+## Fixed timer warnings on board list endpoint
+
+October 15, 2026 | Board
+
+Fixed duplicate timer warnings that appeared when multiple users loaded their boards at once. The server now creates a dedicated timer per board list request, preventing noise in the logs without changing the user experience.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-15-fixed-timer-warnings-on-board-list-endpoint-htpr-7233/)
+
+## Improve error responses for invalid task fields
+
+October 15, 2026 | API, MCP
+
+API now returns 400 for out-of-range values instead of 500 when creating tasks with null descriptions or invalid field data.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-15-improve-error-responses-for-invalid-task-fields-htpr-7230/)
+
+## Prevent AI-generated bug tickets
+
+October 15, 2026 | AI, Tasks
+
+AI agents no longer file bug tickets when Hypertask deliberately refuses their operations.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-15-prevent-ai-generated-bug-tickets-htpr-7251/)
+
+## Task page boxes consistency
+
+October 15, 2026 | Tasks, Appearance
+
+Task page boxes now share one consistent 1px outline and corner radius (5px for Porcelain/Graphite/AMOLED, 10px for Dia).
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-15-task-page-boxes-consistency-htpr-7194/)
+
+## AI feedback bot account
+
+October 14, 2026 | AI, Agents
+
+A dedicated "AI Feedback" bot account is now used for failed-login reports, keeping user identity out of logs. The account ai-feedback@crolab.org is live and properly configured in production.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-14-ai-feedback-bot-account-htpr-7200/)
+
+## AI writes use text compression for Turbopuffer upserts
+
+October 14, 2026 | AI, Search, Boards
+
+AI-generated content for comments and pages is now compressed before upserting, silently rotating text when the embedding service refuses it so content remains searchable with proper tags (HTPR-7212, HTPR-7213, HTPR-7215, HTPR-7216).
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-14-ai-writes-use-text-compression-for-turbopuffer-upserts-htpr-7212/)
+
+## CLI pagination no longer segfaults
+
+October 14, 2026 | CLI
+
+Fixed intermittent crash when paginating CLI tasks list with offset.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-14-cli-pagination-no-longer-segfaults-htpr-7201/)
+
+## Fixed cross-team board column access
+
+October 14, 2026 | Board
+
+Fixed: Only board members can now add columns, not outsider users. (HTPR-7165)
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-14-fixed-cross-team-board-column-access-htpr-7165/)
+
+## Fixed false AI agent success messages in error logs
+
+October 14, 2026 | AI
+
+AI agent success notes like "Files attached successfully" no longer appear in error logs, preventing false error alerts.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-14-fixed-false-ai-agent-success-messages-in-error-logs-htpr-7234/)
+
+## Fixed smart labels parsing
+
+October 14, 2026 | AI, Tasks
+
+Smart labels now correctly parse label lists even when AI returns extra text, fixing cases where short sentences around label lists caused parsing errors.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-14-fixed-smart-labels-parsing-htpr-7211/)
+
+## Guest cleanup safely deletes associated drafts
+
+October 14, 2026 | API, Board
+
+The hourly guest cleanup workflow now safely deletes associated board drafts created by guest users after signing out.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-14-guest-cleanup-safely-deletes-associated-drafts-htpr-7210/)
+
+## Guest cleanup workflow now safely deletes associated drafts
+
+October 14, 2026 | AI, Inbox
+
+Fixed hourly guest cleanup failing when task drafts or AI summaries still existed. Cleanup now removes those records before deleting the task.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-14-guest-cleanup-workflow-now-safely-deletes-associated-drafts-htpr-7209/)
+
+## MCP invalid date API fix
+
+October 14, 2026 | MCP, API
+
+Fixed a crash on /api/mcp/tasks when filtering by an invalid date by showing "invalid date" instead of crashing. The fix addresses AI clients requesting tickets with non-date values in updated_since filters.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-14-mcp-invalid-date-api-fix-htpr-7198/)
+
+## MCP tool keep-alive for SSE connections
+
+October 14, 2026 | API, MCP, AI
+
+Old-style AI tool SSE connections now receive periodic keep-alives and stay open cleanly instead of dropping after a short timeout. Integrated into the hypertask_tasks MCP tool so task queries can proceed without stutter.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-14-mcp-tool-keep-alive-for-sse-connections-htpr-7220/)
+
+## MCP tool listing and task identifier fixes
+
+October 14, 2026 | MCP
+
+Fixed Claude Code MCP tool discovery and clarified how task lookup tools handle ticket numbers.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-14-mcp-tool-listing-and-task-identifier-fixes-htpr-7203/)
+
+## Reduced SSL configuration warning spam in Vercel error logs
+
+October 14, 2026 | Infrastructure
+
+Vercel error log spam from SSL configuration warnings dropped after fixing source warnings.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-14-reduced-ssl-configuration-warning-spam-in-vercel-error-logs-htpr-7235/)
+
+## Task list date filter validation
+
+October 14, 2026 | Tasks
+
+Tasks with invalid dates in board filters will no longer throw server errors. The fix clusters likely invalid date values and shows a clear message instead.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-14-task-list-date-filter-validation-htpr-7214/)
+
+## AI Chat suggestions in ticket panels
+
+October 13, 2026 | AI, Agents
+
+AI chat panels now generate ticket-specific suggestions instead of generic ones. Fixed server errors that caused no output.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-ai-chat-suggestions-in-ticket-panels-htpr-7153/)
+
+## Board and saved-view access security fix
+
+October 13, 2026 | Board, Security
+
+Saved-view endpoints now reject access for users not on the owning board. Cross-board columns, pages, and settings are no longer readable through chat, MCP, or saved views.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-board-and-saved-view-access-security-fix-htpr-7166/)
+
+## Board and task security bugs fixed
+
+October 13, 2026 | Board, Tasks, Agents
+
+Fixed three bugs that could expose user data or let agents act beyond intended scopes.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-board-and-task-security-bugs-fixed-htpr-7187/)
+
+## Board column names and settings hidden to unauthorized users
+
+October 13, 2026 | Board
+
+All logged-in users can no longer read another board's column names and settings. Cross-board reads blocked for tasks, pages, and search.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-board-column-names-and-settings-hidden-to-unauthorized-users-htpr-7172/)
+
+## Board detail endpoint properly gated and authentication-enforced
+
+October 13, 2026 | API, Security, Board
+
+A board detail endpoint that anyone could access without login now requires authentication and properly gates board data.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-board-detail-endpoint-properly-gated-and-authentication-enforced-htpr-7160/)
+
+## Board page and column visibility security fix
+
+October 13, 2026 | Board, Security, Pages
+
+Moving a task now follows its pages and tables to other boards, closing pages and columns to users who lack access. Security test showed the fix stops cross-board leaks.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-board-page-and-column-visibility-security-fix-htpr-7154/)
+
+## Board profile privacy for members
+
+October 13, 2026 | Board, Settings
+
+Board members now see only id, name, and photo for owner and assignees instead of full profile fields. The old board detail answer no longer exposes private details.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-board-profile-privacy-for-members-htpr-7183/)
+
+## Bookmark action no longer exposes cross-team private content
+
+October 13, 2026 | Security, Tasks
+
+Bookmarking a task no longer lets a logged-in user read another team’s private tasks or comments.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-bookmark-action-no-longer-exposes-cross-team-private-content-htpr-7161/)
+
+## Clear error when AI key is missing
+
+October 13, 2026 | AI, Agents, CLI
+
+Teams without an AI key now see a clear message instead of server errors when using AI in agents or the CLI.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-clear-error-when-ai-key-is-missing-htpr-7149/)
+
+## Domain-restricted share links verified
+
+October 13, 2026 | Board
+
+A team-only share link no longer shows tasks to people outside the board's domain. Outsiders see only a "Sign up or Login" bar instead of blurred task content.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-domain-restricted-share-links-verified-htpr-7174/)
+
+## Fixed reminder access security issue
+
+October 13, 2026 | Inbox, Security
+
+Fixed a security issue where unauthorized users could trigger another person's reminder without logging in. Now only the reminder owner can fire their reminder early.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-fixed-reminder-access-security-issue-htpr-7175/)
+
+## Fixed task linking restriction in cross-team scenarios
+
+October 13, 2026 | Board, Security
+
+Fixed a security issue where setting a parent task could reveal another team’s task titles when you cannot access that board. Linking tasks across unopenable boards now refuses the operation.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-fixed-task-linking-restriction-in-cross-team-scenarios-htpr-7167/)
+
+## Fixed theme text readability issues
+
+October 13, 2026 | Appearance, Inbox
+
+All four themes now display readable text on the not-found page, including high-contrast modes.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-fixed-theme-text-readability-issues-htpr-7184/)
+
+## Fixed thumbs-up reuse via edited comments
+
+October 13, 2026 | Agents
+
+Fixed a security issue where an agent could reuse a thumbs-up on an edited comment to switch feature flags. Thumbs-ups now only count after an edit if the original comment was never edited.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-fixed-thumbs-up-reuse-via-edited-comments-htpr-7181/)
+
+## Fixed visibility in smart search and on not-found pages
+
+October 13, 2026 | Search, Appearance, Inbox
+
+Users can now see and correctly interact with contact chips on mobile, and all theme variants display readable text on error pages.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-fixed-visibility-in-smart-search-and-on-not-found-pages-htpr-7163/)
+
+## Improve board creation access controls
+
+October 13, 2026 | Board, Settings
+
+Restricted board creation to team members only; non-members now receive an error message when trying to create a board in another team.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-improve-board-creation-access-controls-htpr-7164/)
+
+## Instant signup now treats Gmail aliases as taken
+
+October 13, 2026 | Settings
+
+Instant signup now recognises all Gmail address variants as the same user. A stranger can no longer rename or hijack an existing account via alternate spellings.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-instant-signup-now-treats-gmail-aliases-as-taken-htpr-7159/)
+
+## Label permission restriction fixed
+
+October 13, 2026 | Board
+
+Users without board membership can no longer add labels to or modify labels on board tasks they do not belong to. They now receive a "Forbidden" error when attempting label modifications.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-label-permission-restriction-fixed-htpr-7177/)
+
+## MCP tools now appear after sign-in
+
+October 13, 2026 | MCP, Agents
+
+Fixed a sign-in bug where strict MCP clients weren't loading tools because the server responded to the wrong address. Both addresses now work correctly.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-mcp-tools-now-appear-after-sign-in-htpr-7190/)
+
+## Resending board invites restricted by scope
+
+October 13, 2026 | Board, Security
+
+Resending a board invite now works only on the board it was created for.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-resending-board-invites-restricted-by-scope-htpr-7176/)
+
+## Secure PR updates for board 15
+
+October 13, 2026 | API, Tasks
+
+PR updates on board 15 now require originating from known GitHub accounts, so outsiders cannot link or move tasks from public forks.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-secure-pr-updates-for-board-15-htpr-7156/)
+
+## Shared saved views shown only to accepted members
+
+October 13, 2026 | Board, Security
+
+Saved views shared with a board now appear only to the board owner and members who accepted the invite, fixing unintended access by pending invitees.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-shared-saved-views-shown-only-to-accepted-members-htpr-7188/)
+
+## Strict board invite access gating
+
+October 13, 2026 | Board, Security
+
+Board invites are now strictly scoped: each invite only adds the signed-in person to the intended board and is refused if used elsewhere or without login.([HTPR-7162](https://app.hypertask.ai/detail/project-15/7162))
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-strict-board-invite-access-gating-htpr-7162/)
+
+## Ticket page no longer shifts on mobile
+
+October 13, 2026 | Tasks
+
+The ticket detail page no longer jumps or shifts when first opened on mobile. Comments and controls now appear in place from the initial load on both desktop and phone, with consistent layout across requests.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-ticket-page-no-longer-shifts-on-mobile-htpr-7074/)
+
+## Timeline sort for Important tasks
+
+October 13, 2026 | Inbox
+
+Important tasks now appear first, sorted by priority and timeline order.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-timeline-sort-for-important-tasks-htpr-7182/)
+
+## Undo restored after task deletion
+
+October 13, 2026 | Tasks
+
+After deleting a task, you can now restore it instantly using Undo or keyboard shortcuts. The task goes back to its original column without refreshing.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-undo-restored-after-task-deletion-htpr-7185/)
+
+## Unified MCP endpoint address
+
+October 13, 2026 | MCP
+
+The official MCP endpoint is now mcp.hypertask.ai/mcp across docs, the MCP settings dialog, and the CLI. The app address continues working for signed-in calls for now, but sign-ins are directed to the new address.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-unified-mcp-endpoint-address-htpr-7193/)
+
+## Validated login cookies after sign-out
+
+October 13, 2026 | Settings
+
+Copied login cookies no longer work after sign-out. Sessions are now invalidated on logout, closing a security gap where stale cookies kept working.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-13-validated-login-cookies-after-sign-out-htpr-7158/)
+
+## Agent chatter no longer reaches the inbox
+
+October 12, 2026 | Inbox, Agents
+
+Only questions from human users reach your inbox; agent-only notes and @mentions land in Important instead.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-12-agent-chatter-no-longer-reaches-the-inbox-htpr-7096/)
+
+## API-created tasks appear in search immediately
+
+October 12, 2026 | Search, API
+
+Tasks created via API or quick-add now show in search pipeline within seconds, without requiring a title edit to index.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-12-api-created-tasks-appear-in-search-immediately-htpr-7131/)
+
+## CLI pages restore version flag now works
+
+October 12, 2026 | CLI
+
+Fixed pages restore --version to restore a specific version ID instead of printing the CLI version.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-12-cli-pages-restore-version-flag-now-works-htpr-7192/)
+
+## Comment summaries preserve open questions
+
+October 12, 2026 | AI, Inbox
+
+AI-generated comment summaries now keep open questions as questions instead of fabricating answers.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-12-comment-summaries-preserve-open-questions-htpr-7046/)
+
+## Ctrl+E only archives selected tasks
+
+October 12, 2026 | Keyboard Shortcuts, Tasks
+
+Ctrl+E (or Cmd+E) now archives only selected tasks instead of also archiving adjacent unselected tasks. Undo restores the exact selection.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-12-ctrl-e-only-archives-selected-tasks-htpr-7138/)
+
+## Ctrl+J board chip in inbox
+
+October 12, 2026 | Inbox, Keyboard
+
+The Ctrl+J shortcut now displays a board chip in the inbox to clarify where new tasks land.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-12-ctrl-j-board-chip-in-inbox-htpr-7053/)
+
+## Fixed AI usage tracking after database repair
+
+October 12, 2026 | AI
+
+AI reply counts now populate correctly after the database repair and no duplicate alerts fire for the same event.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-12-fixed-ai-usage-tracking-after-database-repair-htpr-7102/)
+
+## Fixed board card updates after closing tasks with Escape
+
+October 12, 2026 | Board
+
+After closing a task with Escape, priority, size and tags now update on the card immediately.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-12-fixed-board-card-updates-after-closing-tasks-with-escape-htpr-7129/)
+
+## Invite link validation
+
+October 12, 2026 | Inbox, Tasks
+
+Pages that generate invite links now validate board context. My Tasks and Inbox no longer fire requests without a board, and invalid requests now show a clear message instead of a console error.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-12-invite-link-validation-htpr-7139/)
+
+## New Task box shows real AI writer failure reasons
+
+October 12, 2026 | Tasks
+
+Ctrl+J New Task box now shows real AI writer failure reasons; notes are still saved.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-12-new-task-box-shows-real-ai-writer-failure-reasons-htpr-7132/)
+
+## Remove agent chat polling flag
+
+October 12, 2026 | Agents
+
+Agent Chat no longer uses a polling flag; status checking is simpler and direct.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-12-remove-agent-chat-polling-flag-htpr-7145/)
+
+## Retire legacy REST API routes
+
+October 12, 2026 | API
+
+Completed migration of tasks, projects, sections, and notifications to the App Router; legacy Routes have been retired.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-12-retire-legacy-rest-api-routes-htpr-6992/)
+
+## Run background AI jobs at half price
+
+October 12, 2026 | AI, Agents
+
+Background smart-label runs now go through Anthropic's half-price Batch API, keeping work cost-efficient at scale.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-12-run-background-ai-jobs-at-half-price-htpr-7098/)
+
+## Server errors no longer crash when accessing AI usage tracks
+
+October 12, 2026 | API, AI
+
+Fixed server errors when AI usage records require a user. Launch verifies AI usage rows have an associated user and uses the owner as the fallback.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-12-server-errors-no-longer-crash-when-accessing-ai-usage-tracks-htpr-7143/)
+
+## Undo for bulk archiving tasks
+
+October 12, 2026 | Tasks
+
+Undo now correctly restores multiple tasks archived in a single action.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-12-undo-for-bulk-archiving-tasks-htpr-7137/)
+
+## Agent authentication and ticket creation improvements
+
+October 11, 2026 | Agents, Tasks, Flags
+
+Fixed authentication issues when creating agents via MCP from a person token, improved error messages for invalid columns and labels in ticket creation, and ensured every flag card now shows its real type on the Flags page.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-agent-authentication-and-ticket-creation-improvements-htpr-7117/)
+
+## Agent Chat released to everyone
+
+October 11, 2026 | Agents, UI
+
+Agent Chat is now visible to everyone. The decision to hide Agent Chat was superseded by releasing all Agent Chat flags to Everyone.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-agent-chat-released-to-everyone-htpr-7070/)
+
+## Agent chat Stop button for long-running tasks
+
+October 11, 2026 | Agents, API
+
+Agent Chat now includes a Stop button to cancel long-running agent tasks. Queued messages are cleared when stopped.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-agent-chat-stop-button-for-long-running-tasks-htpr-7066/)
+
+## AI chat false progress after Ctrl+J
+
+October 11, 2026 | AI
+
+AI chat no longer shows “another reply is in progress” after creating tasks with Ctrl+J, so you can ask follow‑up questions immediately.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-ai-chat-false-progress-after-ctrl-j-htpr-7048/)
+
+## AI chat retries when connection lost
+
+October 11, 2026 | AI, Agents
+
+AI chat now retries sending when connection drops during prompt submission, and reliably receives answer.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-ai-chat-retries-when-connection-lost-htpr-7099/)
+
+## AI chats named after tickets or initial messages
+
+October 11, 2026 | AI, Agents
+
+New AI chats are named after the associated ticket, the board, or your first message. A follow-up rename preserves your choice.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-ai-chats-named-after-tickets-or-initial-messages-htpr-7052/)
+
+## AI review runs from repository program via CLI
+
+October 11, 2026 | AI, CLI
+
+AI review now runs from the repo program via CLI and standard input
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-ai-review-runs-from-repository-program-via-cli-htpr-7115/)
+
+## AI usage now tracked correctly after database repair
+
+October 11, 2026 | AI, API
+
+Fixed AI usage count after a database repair. Replies now increment AI usage in real time.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-ai-usage-now-tracked-correctly-after-database-repair-htpr-7101/)
+
+## Board quick entry grows with text
+
+October 11, 2026 | Board
+
+The quick add box on boards now grows up to 8 lines with long card titles, then scrolls so the full text stays visible, matching Trello-style behavior.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-board-quick-entry-grows-with-text-htpr-6873/)
+
+## CLI help and login instructions clarify authentication
+
+October 11, 2026 | CLI
+
+Added clarification that CLI help and command listings work without logging in. login now provides clear guidance on obtaining a token.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-cli-help-and-login-instructions-clarify-authentication-htpr-7119/)
+
+## CLI inbox no longer treats agent emoji as human
+
+October 11, 2026 | CLI, Inbox
+
+Agent emoji reactions in the inbox are now correctly distinguished from human reactions, and human reactions are no longer dropped by the CLI.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-cli-inbox-no-longer-treats-agent-emoji-as-human-htpr-7128/)
+
+## Comment links now scroll to the comment
+
+October 11, 2026 | Tasks
+
+A shared comment link now opens on that comment instead of the ticket top
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-comment-links-now-scroll-to-the-comment-htpr-7090/)
+
+## Connect a new agent hub
+
+October 11, 2026 | Agents, API
+
+An agent connection hub page now tells users how to create, save, and connect an agent, and docs.hypertask.ai/llms.txt points to it.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-connect-a-new-agent-hub-htpr-7120/)
+
+## Decisions split and view for waiting work
+
+October 11, 2026 | Board
+
+Inbox now has a Decisions split, and each board shows a Decisions view to group tasks waiting on your yes or no.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-decisions-split-and-view-for-waiting-work-htpr-7092/)
+
+## Deleted saved views immediately removed from tabs
+
+October 11, 2026 | Board
+
+After deleting a saved view, it leaves the view tabs right away without requiring a page reload.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-deleted-saved-views-immediately-removed-from-tabs-htpr-7097/)
+
+## Double-tap ticket description opens editor
+
+October 11, 2026 | Tasks
+
+On mobile, double-tapping the text of a ticket description now opens the editor instead of keeping read mode. A single tap still keeps read mode, matching the expected behavior and making editors easier to reach on phone screens.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-double-tap-ticket-description-opens-editor-htpr-7124/)
+
+## Fixed blurry add-task plus signs in board columns
+
+October 11, 2026 | Board, Appearance
+
+Add-task plus signs are now crisp and visible in all four themes and on both desktop and mobile devices.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-fixed-blurry-add-task-plus-signs-in-board-columns-htpr-7047/)
+
+## Fixed brief ticket disappearance when opened from the board on a phone
+
+October 11, 2026 | Mobile, Tasks
+
+On a phone, tickets opened from the board no longer briefly disappear after the fastest Back button configuration.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-fixed-brief-ticket-disappearance-when-opened-from-the-board-on-a-phone-htpr-7116/)
+
+## Fixed onboarding invite server error
+
+October 11, 2026 | Inbox
+
+Fixed a server error on the final onboarding step that blocked invite links for new users. Onboarding now completes successfully so team members can be invited immediately after signup.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-fixed-onboarding-invite-server-error-htpr-7094/)
+
+## Fixed rocket-digest agent announcements retrieval
+
+October 11, 2026 | Agents
+
+The rocket-digest agent can now retrieve announcements successfully. A library update had made a dependency incompatible with Vercel.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-fixed-rocket-digest-agent-announcements-retrieval-htpr-7126/)
+
+## Fixed Slack thread summaries
+
+October 11, 2026 | Slack, Inbox
+
+Slack thread summaries now reach new threads instead of being stuck on 50 old finished ones.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-fixed-slack-thread-summaries-htpr-7127/)
+
+## Fuzzy person name matching in search
+
+October 11, 2026 | Search, Tasks
+
+Typed person filters for from: and assignee: now match every person whose name or email contains the text, ignoring case and accents. People picked from the list stay exact match.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-fuzzy-person-name-matching-in-search-htpr-6881/)
+
+## Human comments notify assigned agents
+
+October 11, 2026 | Inbox, Calendar
+
+A person's comment on a ticket now notifies assigned and following agents in their inbox and through webhooks. Agents no longer see their own comments in these feeds, keeping notifications relevant and accurate.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-human-comments-notify-assigned-agents-htpr-7088/)
+
+## Inbox bulk archive selection count
+
+October 11, 2026 | Inbox
+
+No shipping evidence yet; deferred.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-inbox-bulk-archive-selection-count-htpr-7111/)
+
+## Open task from board without page twice
+
+October 11, 2026 | Platform
+
+No shipping evidence yet; deferred.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-open-task-from-board-without-page-twice-htpr-7104/)
+
+## Preferences work with signed login
+
+October 11, 2026 | Settings, Inbox
+
+Preferences now load and save with signed login alone, without requiring the older profile cookie.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-preferences-work-with-signed-login-htpr-7068/)
+
+## Quick card Esc fix
+
+October 11, 2026 | Board, Tasks
+
+Pressing Esc to close a quick card now safely closes the box and discards its text without crashing.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-quick-card-esc-fix-htpr-6877/)
+
+## Remove search ranking flag
+
+October 11, 2026 | Search
+
+Search across boards now always places results from the current board first, followed by other boards. Results for tasks with both typed words are now safely hidden.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-remove-search-ranking-flag-htpr-7108/)
+
+## Task descriptions appear sooner
+
+October 11, 2026 | Tasks
+
+Writing descriptions in the app now shows them about 2.5 seconds sooner on cold app opens, measured on desktop and mobile.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-task-descriptions-appear-sooner-htpr-7110/)
+
+## Task detail downloads once
+
+October 11, 2026 | Tasks
+
+Opening a ticket now downloads task details once instead of repeatedly, improving speed on both board cards and direct ticket links.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-task-detail-downloads-once-htpr-7009/)
+
+## Task Writer unfurls pasted image links
+
+October 11, 2026 | AI, Tasks
+
+Task Writer now unfurls pasted image links so they display as images instead of plain text.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-11-task-writer-unfurls-pasted-image-links-htpr-7051/)
+
+## Agents can no longer bypass person-based board access checks
+
+October 10, 2026 | Boards, Security
+
+Someone outside a board can no longer read it, and owners, members and agents keep their access.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-10-agents-can-no-longer-bypass-person-based-board-access-checks-htpr-7019/)
+
+## Agents respond to emoji reactions, and inbox avoids agent chatter
+
+October 10, 2026 | Agents, Inbox
+
+Agents now hear reply-emoji reactions on their comments as an acknowledgment signal, and inbox filters out chatty agent messages.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-10-agents-respond-to-emoji-reactions-and-inbox-avoids-agent-chatter-htpr-7095/)
+
+## AI sidebar and detail layout adjustments
+
+October 10, 2026 | Tasks
+
+Ticket detail layout is more responsive to AI sidebar width changes in various window sizes, with details rendered on the right under sidebars in a fixed window range.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-10-ai-sidebar-and-detail-layout-adjustments-htpr-7055/)
+
+## Better error messages in AI Task Writer
+
+October 10, 2026 | AI
+
+The AI Task Writer now shows plain accounts the real reason when they can't generate drafts, instead of the generic "try again" message.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-10-better-error-messages-in-ai-task-writer-htpr-7077/)
+
+## Chat history and pages load for signed-in users without legacy cookie
+
+October 10, 2026 | Inbox, AI
+
+signed-in users without the older profile cookie now load board, ticket, AI chat, and connection pages correctly instead of hitting silent 401s
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-10-chat-history-and-pages-load-for-signed-in-users-without-legacy-cookie-htpr-7073/)
+
+## Ctrl+O now lists all links
+
+October 10, 2026 | Inbox
+
+Ctrl+O on tickets now lists every link and attachment across descriptions, comments, and files.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-10-ctrl-o-now-lists-all-links-htpr-7050/)
+
+## Default AI model change
+
+October 10, 2026 | AI
+
+Claude Haiku 5.5 is now the default for everyone, replacing Gemini Flash Lite.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-10-default-ai-model-change-htpr-7038/)
+
+## Fixed: board no longer flashes empty when refusing last-column delete
+
+October 10, 2026 | Board, Tasks
+
+Deleting the last column with cards now shows a helpful message instead of temporarily clearing the board, improving visual stability.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-10-fixed-board-no-longer-flashes-empty-when-refusing-last-column-delete-htpr-7043/)
+
+## Fixed: delete last column with cards sends helpful error
+
+October 10, 2026 | Board, Tasks
+
+When deleting the last column with cards, the app now shows a clear message explaining why the deletion cannot proceed, and the column and its cards remain safely in place.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-10-fixed-delete-last-column-with-cards-sends-helpful-error-htpr-7040/)
+
+## Gated downloads for ticket viewers only
+
+October 10, 2026 | Tasks, Security
+
+Only people who can see a ticket can download its files.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-10-gated-downloads-for-ticket-viewers-only-htpr-7018/)
+
+## Hover icons open edit mode only on double-click
+
+October 10, 2026 | Tasks
+
+Hover icons on comments and descriptions now require double-click for edit mode to open.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-10-hover-icons-open-edit-mode-only-on-double-click-htpr-7044/)
+
+## Keyboard shortcuts help expands on phones
+
+October 10, 2026 | Keyboard
+
+Keyboard shortcuts help on phones now fills the screen and shows all key labels fully.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-10-keyboard-shortcuts-help-expands-on-phones-htpr-7045/)
+
+## Remind keeps you in Inbox
+
+October 10, 2026 | Inbox
+
+Choosing Remind from an Inbox notification no longer opens the task and keeps the notification around.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-10-remind-keeps-you-in-inbox-htpr-7064/)
+
+## Removed Connect your agent block from new board start
+
+October 10, 2026 | Board
+
+On a never-connected new user, the Connect your agent block above board columns is no longer shown on desktop and mobile; the board now opens at the top.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-10-removed-connect-your-agent-block-from-new-board-start-htpr-7078/)
+
+## Task Writer headings respect language requests
+
+October 10, 2026 | AI
+
+when you ask Task Writer to write in a specific language, headings and content are now generated in that language (e.g., German headings for German prompts)
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-10-task-writer-headings-respect-language-requests-htpr-7057/)
+
+## Agent-first-task email with invite-a-teammate CTA
+
+October 9, 2026 | Agents, Inbox, Tasks
+
+Hypertask now sends an email when an agent completes its first task, including the task’s name and board, plus an optional invite-a-teammate button.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-09-agent-first-task-email-with-invite-a-teammate-cta-htpr-7028/)
+
+## Clearer AI key errors for teams
+
+October 9, 2026 | AI, Agents
+
+When a team lacks an AI Gateway key, the AI task writer now displays a clear message instead of crashing. For owners only, automatic drafting behavior respects ownership settings.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-09-clearer-ai-key-errors-for-teams-htpr-7011/)
+
+## CLI install command consistency
+
+October 9, 2026 | CLI
+
+All new-user-facing CLI install commands now show the same install method and consistent guidance.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-09-cli-install-command-consistency-htpr-7033/)
+
+## Existing account login from the demo
+
+October 9, 2026 | Inbox
+
+From the demo, logging into an existing account no longer opens an unwanted or unavailable board; you’re now taken to your own MyBoard.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-09-existing-account-login-from-the-demo-htpr-7035/)
+
+## Faster phone board first visit
+
+October 9, 2026 | Board, Performance
+
+Phone boards now show cards in about 1.5 seconds on first visit.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-09-faster-phone-board-first-visit-htpr-7016/)
+
+## Fixed AI board question generation errors
+
+October 9, 2026 | AI, Board
+
+AI board questions no longer produce "No output generated" errors.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-09-fixed-ai-board-question-generation-errors-htpr-7013/)
+
+## Fixed private ticket comment access
+
+October 9, 2026 | Collaboration, Security
+
+Comments on private tickets can no longer be read by users outside the board.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-09-fixed-private-ticket-comment-access-htpr-7017/)
+
+## Welcome email with MCP CLI install
+
+October 9, 2026 | Inbox, Agents, Tasks
+
+New users receive a welcome email after sign-in that includes install commands for Claude Code and Cursor MCP, plus a direct link to their board, improving first-run setup.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-09-welcome-email-with-mcp-cli-install-htpr-7025/)
+
+## Board card Back does not show the ticket title
+
+October 8, 2026 | Board, Keyboard Shortcuts
+
+Pressing Back immediately after opening a card shows the board and no flash of the ticket.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-08-board-card-back-does-not-show-the-ticket-title-htpr-7003/)
+
+## Inbox J/arrow opens the next item quickly
+
+October 8, 2026 | Inbox, Keyboard Shortcuts
+
+Pressing J or the arrow keys to move through Inbox items now opens each item within ~0.3 seconds on desktop and mobile.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-08-inbox-j-arrow-opens-the-next-item-quickly-htpr-7001/)
+
+## Reduced loading flash when returning to parent tickets
+
+October 8, 2026 | Tasks, Inbox
+
+Returning to a parent task after a subtask shows the page immediately, with no brief "Loading..." flash.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-08-reduced-loading-flash-when-returning-to-parent-tickets-htpr-7004/)
+
+## Subtask Back shows the parent task immediately
+
+October 8, 2026 | Tasks, Keyboard Shortcuts
+
+Back after opening a subtask now shows the parent structure right away instead of the subtask, and Forward returns to the subtask if needed.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-08-subtask-back-shows-the-parent-task-immediately-htpr-6991/)
+
+## Attachment persistence when saving before preview
+
+October 7, 2026 | Tasks
+
+Saving a file preview while uploading now keeps the attachment on the new ticket.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-07-attachment-persistence-when-saving-before-preview-htpr-6976/)
+
+## Board scroll now stays in place when going back
+
+October 7, 2026 | Board
+
+Fixed board scroll restoration when returning from search or ticket detail pages.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-07-board-scroll-now-stays-in-place-when-going-back-htpr-6998/)
+
+## Ctrl+J writes with view defaults in AI tasker
+
+October 7, 2026 | AI, Board, Tasks
+
+Writing a ticket with Ctrl+J inside a view now applies the view's filters and default properties (labels, assignee, priority, size, column).
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-07-ctrl-j-writes-with-view-defaults-in-ai-tasker-htpr-6999/)
+
+## Fixed inbox at narrow window widths
+
+October 7, 2026 | Inbox
+
+Ticket comments are now always legible at all window sizes. Narrow desktop windows and the mobile desktop site mode no longer push the ticket content to zero width.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-07-fixed-inbox-at-narrow-window-widths-htpr-6990/)
+
+## Inbox bulk undo works correctly
+
+October 7, 2026 | Inbox
+
+Undo after bulk archiving now safely restores all affected items, not just one. Fixed by gracefully skipping empty row slots during undo operations.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-07-inbox-bulk-undo-works-correctly-htpr-6989/)
+
+## Inbox J/K navigation keeps correct ticket visible
+
+October 7, 2026 | Inbox, Keyboard
+
+J and the next-arrow keys now reliably open the correct Inbox item without an accidental 15-second delay on stale content.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-07-inbox-j-k-navigation-keeps-correct-ticket-visible-htpr-7000/)
+
+## Midscene demo passes nightly
+
+October 7, 2026 | Agents
+
+The demo ticket now passes reliably after waiting for the demo board to be fully ready. Normal run ~18 seconds, fix improves timing.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-07-midscene-demo-passes-nightly-htpr-6984/)
+
+## No error when deleting a saved view
+
+October 7, 2026 | Pages
+
+Deleting a saved view now shows no error. One click sends one delete on desktop, phone, and any account.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-07-no-error-when-deleting-a-saved-view-htpr-6985/)
+
+## Search Escape restores previous page
+
+October 7, 2026 | Search
+
+Press / to open search, then one Escape closes it and returns you to the exact page you came from.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-07-search-escape-restores-previous-page-htpr-6994/)
+
+## Session paging and board detail payloads
+
+October 7, 2026 | API, Board
+
+The Sessions rows API uses a stable paging key for session history, and session/board detail responses now include parent and child subtask payloads.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-07-session-paging-and-board-detail-payloads-htpr-6924/)
+
+## Stable tooltip hover on details
+
+October 7, 2026 | Tasks
+
+Hovering over date or Repeats on a ticket detail page no longer triggers a crash or "Something went wrong" error.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-07-stable-tooltip-hover-on-details-htpr-6974/)
+
+## Task assignee after picker
+
+October 7, 2026 | Tasks
+
+An assigned task keeps the human assignee visible after closing the picker or pressing Escape, across page reload and subsequent operations.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-07-task-assignee-after-picker-htpr-6962/)
+
+## Task size picker label click returns value
+
+October 7, 2026 | Tasks
+
+Fixed a bug where clicking a size label in the task size picker did nothing and showed an error. Size words now correctly set the task's size.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-07-task-size-picker-label-click-returns-value-htpr-6978/)
+
+## Tooltip hover stability on cycle boards
+
+October 7, 2026 | Board
+
+Tickets on cycle boards no longer crash to “Something went wrong” when hover tooltips are enabled.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-07-tooltip-hover-stability-on-cycle-boards-htpr-6973/)
+
+## Typed client slices for chat, writes, and OpenAPI
+
+October 7, 2026 | API, REST
+
+Chat session paging, writes, and OpenAPI now use a typed client behind a feature flag, with full TypeScript types and automatic validation.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-07-typed-client-slices-for-chat-writes-and-openapi-htpr-6975/)
+
+## Updated REST API to use new App Router for notifications
+
+October 7, 2026 | API
+
+Notifications now save through the new App Router and typed writer implementation instead of legacy routes.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-07-updated-rest-api-to-use-new-app-router-for-notifications-htpr-6968/)
+
+## A clearer My Tasks toolbar
+
+October 6, 2026 | Tasks
+
+My Tasks uses icon controls with tooltips. Active controls turn blue, and Group shows the current choice.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-06-a-clearer-my-tasks-toolbar-c220d1/)
+
+## A typed REST API client
+
+October 6, 2026 | API
+
+A new client provides TypeScript types and checks API inputs automatically. It is available behind a feature flag.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-06-a-typed-rest-api-client-5fd30f/)
+
+## AI Chat stays available while tasks load
+
+October 6, 2026 | Board, AI, Tasks
+
+AI Chat no longer crashes when columns arrive before their tasks. The welcome screen remains available.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-06-ai-chat-stays-available-while-tasks-load-dae729/)
+
+## Clearer MCP tool descriptions
+
+October 6, 2026 | MCP, Tasks, API
+
+MCP tools now say whether they read, change, or delete data. Task updates use a simpler process, and the legacy endpoint has been removed.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-06-clearer-mcp-tool-descriptions-b8f467/)
+
+## Consistent comment positioning
+
+October 6, 2026 | Tasks
+
+Ticket comments and the comment box line up consistently whether the stable layout switch is on or off.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-06-consistent-comment-positioning-f37543/)
+
+## Find and understand feature flags
+
+October 6, 2026 | Settings
+
+The Flags page shows each flag's type and related flags. Search is always visible.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-06-find-and-understand-feature-flags-2aac8c/)
+
+## More reliable AI question suggestions
+
+October 6, 2026 | AI
+
+AI question suggestions now follow a consistent format, avoiding display problems caused by stray quotes or invalid responses.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-06-more-reliable-ai-question-suggestions-ef978a/)
+
+## More reliable demo board checks
+
+October 6, 2026 | Board, Tasks
+
+Demo board checks now wait until a new task card appears before checking that it was created.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-06-more-reliable-demo-board-checks-f446b8/)
+
+## Open a task once and go back once
+
+October 6, 2026 | Board, Mobile, Tasks
+
+Opening a board task loads it only once. One press of Back returns to the board on desktop and phone.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-06-open-a-task-once-and-go-back-once-65518d/)
+
+## Open New Task from any view
+
+October 6, 2026 | Tasks
+
+The New Task window is available to everyone. Press Ctrl+J from any view to open it.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-06-open-new-task-from-any-view-b88384/)
+
+## REST API write routes are moving
+
+October 6, 2026 | Tasks, Inbox, API
+
+Task, board, column, and notification writes are moving to new routes behind a flag. Legacy routes remain off by default.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-06-rest-api-write-routes-are-moving-4cf8c3/)
+
+## Search before boards finish loading
+
+October 6, 2026 | Board, Search, Tasks
+
+Pressing Enter shows search results even if boards have not loaded yet.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-06-search-before-boards-finish-loading-fa76d9/)
+
+## See progress when creating a task
+
+October 6, 2026 | Tasks
+
+The New Task window shows its writing steps and keeps its size while saving.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-06-see-progress-when-creating-a-task-c0ec05/)
+
+## Set a reminder without leaving Inbox
+
+October 6, 2026 | Tasks, Inbox
+
+Choosing Remind clears the notification and keeps you in Inbox instead of opening the task.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-06-set-a-reminder-without-leaving-inbox-d276b8/)
+
+## Task names stay saved
+
+October 6, 2026 | Mobile, Tasks
+
+Pressing Enter saves a renamed task without reverting its title. The new name survives reloads on desktop and phone.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-06-task-names-stay-saved-394769/)
+
+## The comment box follows the conversation
+
+October 6, 2026 | Mobile, Tasks, Pages
+
+The comment box now appears below the last comment on desktop and phone, rather than in the middle of the conversation.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-06-the-comment-box-follows-the-conversation-61ddb5/)
+
+## A clearer My Tasks toolbar
+
+October 5, 2026 | Tasks
+
+My Tasks uses icon controls with tooltips. Active controls turn blue, and Group shows the current choice.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-05-a-clearer-my-tasks-toolbar-c220d1/)
+
+## AI Chat stays available while tasks load
+
+October 5, 2026 | Board, AI, Tasks
+
+AI Chat no longer crashes when columns arrive before their tasks. The welcome screen remains available.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-05-ai-chat-stays-available-while-tasks-load-dae729/)
+
+## More reliable AI question suggestions
+
+October 5, 2026 | AI
+
+AI question suggestions now follow a consistent format, avoiding display problems caused by stray quotes or invalid responses.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-05-more-reliable-ai-question-suggestions-ef978a/)
+
+## Open a task once and go back once
+
+October 5, 2026 | Board, Mobile, Tasks
+
+Opening a board task loads it only once. One press of Back returns to the board on desktop and phone.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-05-open-a-task-once-and-go-back-once-65518d/)
+
+## Open New Task from any view
+
+October 5, 2026 | Tasks
+
+The New Task window is available to everyone. Press Ctrl+J from any view to open it.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-05-open-new-task-from-any-view-b88384/)
+
+## Search before boards finish loading
+
+October 5, 2026 | Board, Search, Tasks
+
+Pressing Enter shows search results even if boards have not loaded yet.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-05-search-before-boards-finish-loading-fa76d9/)
+
+## See progress when creating a task
+
+October 5, 2026 | Tasks
+
+The New Task window shows its writing steps and keeps its size while saving.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-05-see-progress-when-creating-a-task-c0ec05/)
+
+## Set a reminder without leaving Inbox
+
+October 5, 2026 | Tasks, Inbox
+
+Choosing Remind clears the notification and keeps you in Inbox instead of opening the task.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-05-set-a-reminder-without-leaving-inbox-d276b8/)
+
+## Task names stay saved
+
+October 5, 2026 | Mobile, Tasks
+
+Pressing Enter saves a renamed task without reverting its title. The new name survives reloads on desktop and phone.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-05-task-names-stay-saved-394769/)
+
+## Aligned search suggestions
+
+October 4, 2026 | Search
+
+Search suggestions are full-width, with recent searches and tips shown once. Owner and QA can try inline completions behind the existing flags.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-04-aligned-search-suggestions-c9c61c/)
+
+## An official Slack app
+
+October 4, 2026 | Slack
+
+The official Slack app is available to Owner and QA behind its flag. It rejects unsigned, expired, and incorrectly signed requests.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-04-an-official-slack-app-4c8157/)
+
+## Cleaner board chips
+
+October 4, 2026 | Board
+
+Board chips show the board icon and name without an extra # prefix.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-04-cleaner-board-chips-1b55cd/)
+
+## CLI connections and page loading improvements
+
+October 4, 2026 | Board, AI, CLI, Mobile, Tasks, Inbox, Pages
+
+CLI v0.2.11 reduces repeated connection work while preserving read-command behavior. This update also covers steadier page loading and AI fallback handling.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-04-cli-connections-and-page-loading-improvements-2a6ff2/)
+
+## Consistent search row highlights
+
+October 4, 2026 | Search, Inbox, Appearance
+
+Search rows now use a full-width highlight and a left accent bar, matching Inbox across themes and devices.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-04-consistent-search-row-highlights-38b05d/)
+
+## Easier search tabs on phone
+
+October 4, 2026 | Board, Search, Mobile
+
+Board tabs appear directly below the search box and above bottom navigation, making them easier to tap.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-04-easier-search-tabs-on-phone-c1e2cf/)
+
+## Keep your search when pressing Esc
+
+October 4, 2026 | Search
+
+Esc now keeps your last search and shows recent searches and tips instead of a blank page.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-04-keep-your-search-when-pressing-esc-9903c3/)
+
+## Less noise from AI activity alerts
+
+October 4, 2026 | Board, AI
+
+AI Chat limits Manager alerts for tracked activity on selected boards, keeping owners and QA informed with less noise.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-04-less-noise-from-ai-activity-alerts-9a3af1/)
+
+## Scroll only the column when moving tasks
+
+October 4, 2026 | Board, Tasks
+
+Moving a task with J or K scrolls its column while the board and column headers stay fixed.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-04-scroll-only-the-column-when-moving-tasks-f82807/)
+
+## Steady cards on hover
+
+October 4, 2026 | Board, Appearance
+
+Hovering over Kanban cards no longer moves them or pushes other cards down. Quick actions remain visible in light and dark themes.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-04-steady-cards-on-hover-020e09/)
+
+## Zoom into ticket pages on phone
+
+October 4, 2026 | Mobile, Tasks
+
+Use a two-finger pinch to zoom ticket page content up to 5x, including embedded screenshots.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-04-zoom-into-ticket-pages-on-phone-51a882/)
+
+## A clearer mobile ticket header
+
+October 3, 2026 | Mobile, Tasks, Pages, Settings
+
+The mobile Back row uses normal spacing and stays visible at phone width. Delete has moved to the Commands menu.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-a-clearer-mobile-ticket-header-3fc363/)
+
+## AI Chat remembers when you close it
+
+October 3, 2026 | Board, AI, Tasks, Inbox, Calendar, Pages
+
+Closing AI Chat keeps it closed after a reload. The panel respects your default setting and manual close action.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-ai-chat-remembers-when-you-close-it-71f4a8/)
+
+## Board renaming requires membership
+
+October 3, 2026 | Board
+
+The app now checks board membership before allowing a board rename.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-board-renaming-requires-membership-e5132d/)
+
+## Claude Haiku 5.5 replaces Haiku 4.5
+
+October 3, 2026 | AI, API
+
+Claude Haiku 5.5 has been released as the default AI model, offering consistent behavior across all AI features.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-claude-haiku-5-5-replaces-haiku-4-5-htpr-7010/)
+
+## Clearer label suggestions
+
+October 3, 2026 | Board, AI, Tasks
+
+Label suggestions show task counts for each board and put unused labels last. Duplicate names are grouped per board.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-clearer-label-suggestions-5a997d/)
+
+## Consistent agent status and names
+
+October 3, 2026 | Mobile, Agents
+
+Agent detail pages show one consistent status. Phone headers display the full agent name.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-consistent-agent-status-and-names-7ee2f2/)
+
+## Faster task opening
+
+October 3, 2026 | Board, Tasks
+
+Tasks open instantly from saved board data without a spinner or loading animation.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-faster-task-opening-697206/)
+
+## Filter CLI tasks by priority
+
+October 3, 2026 | CLI, Tasks
+
+CLI task lists accept priority names or numbers, without caring about letter case.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-filter-cli-tasks-by-priority-1d758d/)
+
+## Full-width search suggestions
+
+October 3, 2026 | Board, Search, AI, Tasks
+
+Recent searches appear before tips, and Ask AI appears first. Tab accepts people, label, and board completions.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-full-width-search-suggestions-2df8ae/)
+
+## More helpful search autocomplete
+
+October 3, 2026 | Board, Search
+
+Search suggests operators and values, shows tips, and supports arrow keys or J/K for navigating suggestions.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-more-helpful-search-autocomplete-bd1106/)
+
+## Pinch to zoom mobile ticket pages
+
+October 3, 2026 | Mobile, Tasks, Pages
+
+Mobile ticket pages support two-finger zoom up to 5x, including screenshots.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-pinch-to-zoom-mobile-ticket-pages-e39442/)
+
+## Rename boards from the CLI
+
+October 3, 2026 | Board, CLI
+
+The CLI can rename boards using the same permission checks as the app.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-rename-boards-from-the-cli-b033e1/)
+
+## Rename boards through the MCP API
+
+October 3, 2026 | Board, MCP, API
+
+The MCP board endpoint supports renaming. Only board members can rename a board.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-rename-boards-through-the-mcp-api-fccb0a/)
+
+## Rename boards with AI Chat or MCP
+
+October 3, 2026 | Board, AI, MCP
+
+Ask AI Chat to rename a board, or use the MCP tool to do the same.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-rename-boards-with-ai-chat-or-mcp-46aef3/)
+
+## Resized images keep their size
+
+October 3, 2026 | Tasks, Pages
+
+Images resized on a page or in a task description keep their chosen size after a reload.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-resized-images-keep-their-size-ecffcc/)
+
+## Single-use email sign-in links
+
+October 3, 2026 | Tasks
+
+Sign-in and verification links work only once. Clicking again shows an expired message and asks for a new link.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-single-use-email-sign-in-links-9636f1/)
+
+## Undo restores the original column
+
+October 3, 2026 | Board, Tasks
+
+Undoing a task archive puts the task back in its original column without a page reload.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-undo-restores-the-original-column-7ec995/)
+
+## Up-to-date pull request status
+
+October 3, 2026 | Tasks
+
+Opening a ticket refreshes its pull request status from GitHub, so merged requests are shown as Merged.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-03-up-to-date-pull-request-status-652fdc/)
+
+## A simpler My Tasks view
+
+October 2, 2026 | Tasks
+
+The removable Quick add a task row has been removed from My Tasks.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-02-a-simpler-my-tasks-view-7b90f6/)
+
+## Agent chat deliveries stop repeating
+
+October 2, 2026 | Agents, API
+
+Successful webhook chats are no longer marked undelivered, and webhook agents are kept out of the polling queue.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-02-agent-chat-deliveries-stop-repeating-5ec3ff/)
+
+## Board API requests require sign-in
+
+October 2, 2026 | Board, API
+
+Logged-out requests cannot read board data or make unauthorized calls through the legacy routes.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-02-board-api-requests-require-sign-in-3513d3/)
+
+## Move tasks between boards with the CLI
+
+October 2, 2026 | Board, CLI, Tasks
+
+CLI task moves now work across boards. You can choose the destination board and optionally its column.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-02-move-tasks-between-boards-with-the-cli-f021ff/)
+
+## Reliable board switching in QA
+
+October 2, 2026 | Board, AI, Infrastructure
+
+QA board switching no longer reloads the page. Columns remain visible while AI Chat prompts load.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-02-reliable-board-switching-in-qa-35da99/)
+
+## Reliable task read markers
+
+October 2, 2026 | Tasks
+
+Marking a task as read no longer fails when requests arrive together or the task was recently deleted.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-02-reliable-task-read-markers-29864a/)
+
+## Remove description attachments without duplicates
+
+October 2, 2026 | Tasks
+
+Fixed a bug where removing a file from a task description would incorrectly save a duplicate of the remaining file. When you had multiple attachments and removed one, only one copy of each remaining file now persists.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-02-remove-description-attachments-without-duplicates-htpr-6629/)
+
+## Saved views show columns and tasks
+
+October 2, 2026 | Board, Tasks
+
+Opening a saved view now loads its columns and tasks instead of showing a blank board.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-02-saved-views-show-columns-and-tasks-a15ef7/)
+
+## The browser stylesheet loads correctly
+
+October 2, 2026 | Tasks
+
+The missing production browser stylesheet error has been fixed.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-02-the-browser-stylesheet-loads-correctly-46f404/)
+
+## A simpler My Tasks view
+
+October 1, 2026 | Tasks
+
+The removable Quick add a task row has been removed from My Tasks.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-01-a-simpler-my-tasks-view-7b90f6/)
+
+## Agent chat deliveries stop repeating
+
+October 1, 2026 | Agents, API
+
+Successful webhook chats are no longer marked undelivered, and webhook agents are kept out of the polling queue.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-01-agent-chat-deliveries-stop-repeating-5ec3ff/)
+
+## Block deployments with known page errors
+
+October 1, 2026 | Infrastructure
+
+The production watchdog and deployment check block releases while existing, unhandled page-rendering errors remain.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-01-block-deployments-with-known-page-errors-8ec8ef/)
+
+## Bug fixes can ship without a flag
+
+October 1, 2026 | Tasks
+
+The bug-fix check distinguishes fixes from features, letting qualifying customer-visible fixes ship without a flag.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-01-bug-fixes-can-ship-without-a-flag-788155/)
+
+## Pick people and boards in search
+
+October 1, 2026 | Board, Search
+
+Search offers filter chips, an @ people picker, a # board picker, and suggested values.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-01-pick-people-and-boards-in-search-7d6550/)
+
+## Reliable board switching in QA
+
+October 1, 2026 | Board, AI, Infrastructure
+
+QA board switching no longer reloads the page. Columns remain visible while AI Chat prompts load.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-01-reliable-board-switching-in-qa-35da99/)
+
+## Reliable task read markers
+
+October 1, 2026 | Tasks
+
+Marking a task as read no longer fails when requests arrive together or the task was recently deleted.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-01-reliable-task-read-markers-29864a/)
+
+## Saved views show columns and tasks
+
+October 1, 2026 | Board, Tasks
+
+Opening a saved view now loads its columns and tasks instead of showing a blank board.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-01-saved-views-show-columns-and-tasks-a15ef7/)
+
+## The browser stylesheet loads correctly
+
+October 1, 2026 | Tasks
+
+The missing production browser stylesheet error has been fixed.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-01-the-browser-stylesheet-loads-correctly-46f404/)
+
+## Use search operators on boards
+
+October 1, 2026 | Board, Search, Tasks
+
+Kanban and saved views support filters for people, boards, labels, task status, dates, and attachments.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-01-use-search-operators-on-boards-da0f32/)
+
+## Web addresses become clickable links
+
+October 1, 2026 | Tasks
+
+Plain web addresses in task descriptions and comments are linked automatically.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-10-01-web-addresses-become-clickable-links-0aaa9c/)
+
+## Board switching keeps columns visible
+
+September 30, 2026 | Board, AI, Infrastructure
+
+QA checks now switch boards without reloading the page, while columns stay visible as AI Chat prompts load.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-30-board-switching-keeps-columns-visible-ee1c74/)
+
+## Smoother board switching checks
+
+September 30, 2026 | Board, AI, Infrastructure
+
+QA board switching keeps the page open and columns visible while AI Chat prompts load.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-30-smoother-board-switching-checks-464862/)
+
+## Assignee tips wait for intentional hover
+
+September 21, 2026 | Tasks
+
+The assignee tooltip no longer blocks Add Description when you open a task. It waits until you deliberately hover.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-21-assignee-tips-wait-for-intentional-hover-3ab5ad/)
+
+## Clearer CLI board access errors
+
+September 21, 2026 | CLI
+
+The CLI explains board membership failures instead of reporting a generic internal error.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-21-clearer-cli-board-access-errors-5541da/)
+
+## Create native reports from a board
+
+September 21, 2026 | Board, Reports
+
+Open Ctrl+K on a board and choose Create native report.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-21-create-native-reports-from-a-board-aaf922/)
+
+## Deployment checks catch existing page errors
+
+September 21, 2026 | Infrastructure
+
+The watchdog and deployment check stop releases when unhandled page-rendering errors are already present in production.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-21-deployment-checks-catch-existing-page-errors-beb15e/)
+
+## Matching saved-view controls
+
+September 21, 2026 | Board, Tasks
+
+My Tasks uses the same Save view and Reset controls as Kanban.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-21-matching-saved-view-controls-e64a70/)
+
+## Native board reports
+
+September 21, 2026 | Board, Reports
+
+You can create a native report from a board using Ctrl+K and Create native report.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-21-native-board-reports-6af954/)
+
+## Recover messages from failed webhooks
+
+September 21, 2026 | API
+
+Messages for dead webhooks return to polling. Deleting a webhook releases messages it never acknowledged.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-21-recover-messages-from-failed-webhooks-424873/)
+
+## Send feedback on Agent Templates
+
+September 21, 2026 | Agents, API
+
+A public endpoint accepts Agent Template corrections without requiring sign-in.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-21-send-feedback-on-agent-templates-7f9d5a/)
+
+## Improve CLI comments with a bare flag
+
+September 20, 2026 | CLI, Tasks
+
+The CLI comment improvement flag works without a value and defaults to improving readability.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-20-improve-cli-comments-with-a-bare-flag-230176/)
+
+## Simpler CLI comment improvement
+
+September 20, 2026 | CLI, Tasks
+
+The CLI accepts the comment improvement flag without a value, using readability improvement by default.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-20-simpler-cli-comment-improvement-787972/)
+
+## A board shipping overview
+
+September 19, 2026 | Board, Tasks, Reports
+
+The Shipping page shows each board's shipped tickets and daily counts adjusted for Dependabot pull requests.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-19-a-board-shipping-overview-f93657/)
+
+## AI edits keep description formatting
+
+September 19, 2026 | AI
+
+AI Chat description edits preserve headings, paragraphs, lists, and bold text.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-19-ai-edits-keep-description-formatting-a46aae/)
+
+## Bot activity shows the bot's name
+
+September 19, 2026 | CLI, Tasks
+
+Bot changes are attributed to the bot, not the account owner. CLI activity history shows the same identity.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-19-bot-activity-shows-the-bot-s-name-ab70e0/)
+
+## Clearer comment boundaries in light mode
+
+September 19, 2026 | Mobile, Tasks, Appearance
+
+Comments have a subtle outline in the light theme, making adjacent comments easier to distinguish on phone and desktop.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-19-clearer-comment-boundaries-in-light-mode-280eec/)
+
+## Flat Slack settings on mobile
+
+September 19, 2026 | Mobile, Slack, Settings
+
+The Default project dropdown in mobile Slack settings now matches the other controls without mismatched shadows.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-19-flat-slack-settings-on-mobile-1ca5cc/)
+
+## More reliable weekly scans
+
+September 19, 2026 | Agents, Settings, Infrastructure
+
+Failed weekly Strix scans retry through the corrected proxy and runner. The subscription proxy no longer repeats tool calls across runs.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-19-more-reliable-weekly-scans-bd1841/)
+
+## Read-only agent access for automation
+
+September 19, 2026 | Board, CLI, Tasks, Agents
+
+Board-scoped read-only agent tokens are available for CI and other automation.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-19-read-only-agent-access-for-automation-05cfa1/)
+
+## Run notes and budgets in agent rooms
+
+September 19, 2026 | Board, Tasks, Agents
+
+Board agent rooms show ticket-run notes and a daily budget in the shared conversation.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-19-run-notes-and-budgets-in-agent-rooms-0f5032/)
+
+## Team-specific agent management keys
+
+September 19, 2026 | Agents, Settings
+
+Management keys show only the selected team's agents and stop working when access is lost.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-19-team-specific-agent-management-keys-827407/)
+
+## Weekly scans retry without duplicate calls
+
+September 19, 2026 | Agents, Settings, Infrastructure
+
+Strix scan failures now retry correctly, and the subscription proxy avoids repeating tool calls across runs.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-19-weekly-scans-retry-without-duplicate-calls-88d560/)
+
+## Agent Chat follows new messages
+
+September 10, 2026 | Agents
+
+Agent Chat scrolls to new messages and queued or typing indicators as they arrive.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-10-agent-chat-follows-new-messages-98881e/)
+
+## Mention an agent in AI Chat
+
+September 10, 2026 | AI, Agents
+
+Mention a fleet agent in the chat input to send your message to that agent instead of the AI assistant.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-10-mention-an-agent-in-ai-chat-31aa45/)
+
+## Read agent status in the chat sidebar
+
+September 10, 2026 | Agents, Appearance
+
+The sidebar shows words such as Active, Idle, and Out of tokens instead of a static green dot.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-10-read-agent-status-in-the-chat-sidebar-80f8f5/)
+
+## Show the Inbox removal control only when needed
+
+September 10, 2026 | Board, Mobile, Tasks, Inbox
+
+The mobile board shows the remove-from-Inbox control only for tasks that are actually in your Inbox.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-10-show-the-inbox-removal-control-only-when-needed-94852b/)
+
+## Agent mentions reach workers
+
+September 9, 2026 | Agents, Inbox
+
+Mentioning an agent in production triggers a notification for its worker.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-agent-mentions-reach-workers-5b4e19/)
+
+## Avoid duplicate assignments
+
+September 9, 2026 | Tasks
+
+Assigning the same person again returns an already-assigned result without creating another assignment.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-avoid-duplicate-assignments-0321fc/)
+
+## Budgets follow subscription capacity
+
+September 9, 2026 | Settings
+
+Agent budgets use fair allocation, idle parking, and protection against overruns relative to the subscription.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-budgets-follow-subscription-capacity-522c00/)
+
+## Clean up agent run records after restarts
+
+September 9, 2026 | Agents, Infrastructure
+
+The fleet ledger closes leftover run records after worker restarts.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-clean-up-agent-run-records-after-restarts-2f02d1/)
+
+## CLI label additions keep existing labels
+
+September 9, 2026 | CLI, Tasks
+
+Adding labels through the CLI preserves all labels already on the task.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-cli-label-additions-keep-existing-labels-883490/)
+
+## Excluded tasks stay excluded from agent pickup
+
+September 9, 2026 | Tasks, Agents
+
+Direct mentions no longer let agents pick up tasks with excluded labels.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-excluded-tasks-stay-excluded-from-agent-pickup-58de1c/)
+
+## Fewer false review warnings for dependency updates
+
+September 9, 2026 | Tasks
+
+Lockfile-only pull requests no longer flag unchanged files as concerns.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-fewer-false-review-warnings-for-dependency-updates-7e7dce/)
+
+## Give GLM completions more idle time
+
+September 9, 2026 | AI
+
+The idle timeout is now 30 minutes instead of five, allowing longer completions without interruption.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-give-glm-completions-more-idle-time-304a9f/)
+
+## GLM fallback receives its credentials
+
+September 9, 2026 | AI, Infrastructure
+
+Switching to OpenRouter after a GLM quota limit no longer fails because credentials are missing.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-glm-fallback-receives-its-credentials-d2b8bc/)
+
+## Keep credentials available for GLM lanes
+
+September 9, 2026 | AI
+
+The GLM environment retains its OpenRouter key so lane quotas work correctly.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-keep-credentials-available-for-glm-lanes-8fc07e/)
+
+## Keyboard shortcuts for Agent Chat
+
+September 9, 2026 | Board, Search, Tasks, Agents, Appearance
+
+Agent Chat adds shortcuts for switching agents, searching tasks, sending messages, opening links, and focusing input. Agent bubbles use the theme's primary color.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-keyboard-shortcuts-for-agent-chat-08c1c7/)
+
+## Only selected cards have dark-theme borders
+
+September 9, 2026 | Board, Appearance
+
+On dark themes, only the selected Kanban card shows a border. Other cards render transparently.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-only-selected-cards-have-dark-theme-borders-7b9082/)
+
+## QA agents require browser evidence
+
+September 9, 2026 | Agents, Infrastructure
+
+QA checks require evidence from the web path, using screenshots for UI changes and redacted browser requests for routes.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-qa-agents-require-browser-evidence-750dce/)
+
+## Reliable CLI paging on large boards
+
+September 9, 2026 | Board, CLI, Tasks
+
+Paging through large board task lists no longer crashes. Errors are shown clearly instead of silently stopping.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-reliable-cli-paging-on-large-boards-f6168f/)
+
+## Reliable managed agent deletion
+
+September 9, 2026 | Agents
+
+Deleting managed agents no longer fails with transaction errors. Cleanup checks verify that the fleet can reclaim resources.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-reliable-managed-agent-deletion-2a7e57/)
+
+## Stopped QA workers stay stopped
+
+September 9, 2026 | Agents, Infrastructure
+
+Sol QA workers can be stopped reliably after outside intervention, without the watchdog restarting them.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-stopped-qa-workers-stay-stopped-4df346/)
+
+## Task moves work again in production
+
+September 9, 2026 | Tasks, Infrastructure
+
+Task moves now succeed and reload correctly after the faulty loading check was rolled back.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-task-moves-work-again-in-production-a24c08/)
+
+## Track agent token spending per launch
+
+September 9, 2026 | Tasks, Agents, Infrastructure
+
+A per-launch ledger and budget limits provide cost-per-ticket reporting.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-track-agent-token-spending-per-launch-1f1c25/)
+
+## Use a fallback when GLM usage is limited
+
+September 9, 2026 | AI
+
+OpenRouter fallback launches remain available while the z.ai usage limit is enforced.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-09-use-a-fallback-when-glm-usage-is-limited-1b0a2d/)
+
+## Agent status stays visible during process exits
+
+September 8, 2026 | Board, Agents
+
+The Agents dashboard handles processes disappearing during a status scan instead of going blank.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-08-agent-status-stays-visible-during-process-exits-71a149/)
+
+## Excluded tasks stay excluded from agent pickup
+
+September 8, 2026 | Tasks, Agents
+
+Direct mentions no longer let agents pick up tasks with excluded labels.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-08-excluded-tasks-stay-excluded-from-agent-pickup-58de1c/)
+
+## Give GLM completions more idle time
+
+September 8, 2026 | AI
+
+The idle timeout is now 30 minutes instead of five, allowing longer completions without interruption.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-08-give-glm-completions-more-idle-time-304a9f/)
+
+## GLM fallback receives its credentials
+
+September 8, 2026 | AI, Infrastructure
+
+Switching to OpenRouter after a GLM quota limit no longer fails because credentials are missing.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-08-glm-fallback-receives-its-credentials-d2b8bc/)
+
+## Grouped agent mentions on boards
+
+September 8, 2026 | Board, Agents
+
+Matching board agents are grouped alphabetically in mention suggestions, including groups with more than five agents.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-08-grouped-agent-mentions-on-boards-13f2c9/)
+
+## Keep credentials available for GLM lanes
+
+September 8, 2026 | AI
+
+The GLM environment retains its OpenRouter key so lane quotas work correctly.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-08-keep-credentials-available-for-glm-lanes-8fc07e/)
+
+## Clearer active tabs in light mode
+
+September 7, 2026 | Board, Inbox, Appearance
+
+Active Inbox, notification, and saved-view tabs use stronger bolding in the light theme.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-07-clearer-active-tabs-in-light-mode-732bc1/)
+
+## Select multiple Inbox rows
+
+September 7, 2026 | Board, Inbox
+
+Shift+E supports bulk archiving in Inbox while preserving saved views.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-07-select-multiple-inbox-rows-44261e/)
+
+## Select multiple table rows
+
+September 7, 2026 | Board
+
+Table View supports row selection for bulk actions, with saved views and sorting reflected in the visible rows.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-07-select-multiple-table-rows-377215/)
+
+## A concrete Agent SDK getting-started example
+
+September 6, 2026 | Agents
+
+The hello-world example runs in under 30 minutes and includes a working in-memory delivery scheduler.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-06-a-concrete-agent-sdk-getting-started-example-6624c3/)
+
+## A TypeScript Agent SDK
+
+September 6, 2026 | Agents, API
+
+The Agent SDK includes a webhook handler, run helpers, and ready-made templates.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-06-a-typescript-agent-sdk-d272f6/)
+
+## New feature flags start with Owner and QA
+
+September 6, 2026 | Settings
+
+New flags default to Owner and QA visibility rather than Only me.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-06-new-feature-flags-start-with-owner-and-qa-9e81cd/)
+
+## Queue messages while an agent works
+
+September 6, 2026 | Agents
+
+Agent Chat supports queueing messages while the agent is working.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-06-queue-messages-while-an-agent-works-3ab7e3/)
+
+## Recover stuck Agent Chat threads
+
+September 6, 2026 | Agents
+
+Threads stuck on one turn restart automatically. A Stop button is available during work.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-06-recover-stuck-agent-chat-threads-c69eb3/)
+
+## Assign tasks through the CLI without a claim
+
+September 5, 2026 | CLI, Tasks
+
+CLI task assignment no longer requires a lease claim. Claiming remains an optional command.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-05-assign-tasks-through-the-cli-without-a-claim-bd9ebc/)
+
+## Esc returns safely from Pages
+
+September 5, 2026 | Pages
+
+Esc exits Pages through the Command Center's safe return path.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-05-esc-returns-safely-from-pages-e87064/)
+
+## Fewer background reads on mobile tasks
+
+September 5, 2026 | Mobile, Tasks
+
+Mobile task details send one background read instead of two and remain usable if the update times out.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-05-fewer-background-reads-on-mobile-tasks-8a2eab/)
+
+## Handle assignments without an agent ID
+
+September 5, 2026 | Tasks, Agents
+
+The assignment endpoint safely handles a missing agent ID.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-05-handle-assignments-without-an-agent-id-9e9a9c/)
+
+## Read structured agent activity through MCP
+
+September 5, 2026 | MCP, Agents, API
+
+The MCP activities endpoint returns thought, action, response, error, and input-request events.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-05-read-structured-agent-activity-through-mcp-c39ae1/)
+
+## Configure all advertised webhook events
+
+September 4, 2026 | CLI, API
+
+CLI webhook configuration accepts chat.message and all seven advertised events.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-04-configure-all-advertised-webhook-events-4a1c9e/)
+
+## Matching CLI comment and task options
+
+September 4, 2026 | CLI, Tasks
+
+The CLI adds matching options for comment add/list and task get/update.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-04-matching-cli-comment-and-task-options-d0a329/)
+
+## Mobile Agent Chat stays above the keyboard
+
+September 4, 2026 | Board, Mobile, Agents
+
+The mobile chat window remains fully visible above the keyboard on supported browsers.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-04-mobile-agent-chat-stays-above-the-keyboard-caf5f4/)
+
+## Advisory CLI release checks
+
+September 3, 2026 | CLI
+
+CLI release checks are advisory while trusted-version and parity validation remain in place. Failed npm version lookups are tolerated.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-03-advisory-cli-release-checks-b14b72/)
+
+## All Tasks works again on mobile
+
+September 3, 2026 | Mobile, Tasks
+
+The mobile All Tasks view loads correctly across views.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-03-all-tasks-works-again-on-mobile-90543c/)
+
+## Avoid unnecessary production rollbacks
+
+September 3, 2026 | Infrastructure
+
+Production auto-rollback no longer fires for the reported failing unit tests, which now pass.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-03-avoid-unnecessary-production-rollbacks-990ff7/)
+
+## Build agents with the TypeScript SDK
+
+September 3, 2026 | CLI, Agents, Infrastructure
+
+The Hypertask Agent SDK supports building autonomous agents with TypeScript.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-03-build-agents-with-the-typescript-sdk-40f056/)
+
+## Clearer errors when moving archived tasks
+
+September 3, 2026 | Tasks
+
+Archived task moves explain that archived tasks cannot change columns or assignees instead of showing a generic error.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-03-clearer-errors-when-moving-archived-tasks-b94733/)
+
+## Existing chats can still use turned-off agents
+
+September 3, 2026 | Agents
+
+Turning an agent off does not interrupt existing team chat sessions before the chat is closed.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-03-existing-chats-can-still-use-turned-off-agents-ff8e6b/)
+
+## Fewer repeated CLI Inbox requests
+
+September 3, 2026 | CLI, Inbox, API
+
+CLI Inbox loads avoid repeated notification and access calls.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-03-fewer-repeated-cli-inbox-requests-0814de/)
+
+## Keep agent pickup within its limits
+
+September 3, 2026 | Tasks, Agents
+
+Agent reconciliation respects excluded labels and limits each worker to two tickets.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-03-keep-agent-pickup-within-its-limits-97431c/)
+
+## Keep screenshot references in AI-written tasks
+
+September 3, 2026 | AI, Tasks
+
+The AI Task Writer preserves screenshot file references.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-03-keep-screenshot-references-in-ai-written-tasks-16eb69/)
+
+## Open the command palette from agent pages
+
+September 3, 2026 | Search, Agents, Pages
+
+Ctrl+K opens the command palette on Agents overview and Agent Chat pages.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-03-open-the-command-palette-from-agent-pages-e235ab/)
+
+## React to comments from CLI and API
+
+September 3, 2026 | CLI, Tasks, API
+
+Emoji reaction commands let you acknowledge comments through the CLI and API.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-03-react-to-comments-from-cli-and-api-9cf736/)
+
+## Restore the agent control poller's credentials
+
+September 3, 2026 | Agents, Infrastructure
+
+The agent control poller's AWS credentials were restored to its secure configuration file.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-03-restore-the-agent-control-poller-s-credentials-3ee06d/)
+
+## Workers can resume after a ticket moves
+
+September 3, 2026 | Tasks, Agents
+
+The worker resume process handles tickets moved from In Progress to Bugs.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-03-workers-can-resume-after-a-ticket-moves-dc0f7b/)
+
+## Check trusted CLI versions without blocking workers
+
+September 2, 2026 | CLI, Agents
+
+The parity check treats non-approved CLI versions as untrusted without blocking workers.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-02-check-trusted-cli-versions-without-blocking-workers-f18e86/)
+
+## Compact mobile undo notices
+
+September 2, 2026 | Mobile
+
+Mobile undo notices use a compact size and sit at the bottom of the screen.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-02-compact-mobile-undo-notices-f3f0ac/)
+
+## Consistent CLI parity checks
+
+September 2, 2026 | CLI
+
+CLI behavior checks are stable across the Node and Zig versions.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-02-consistent-cli-parity-checks-25a1fe/)
+
+## Dictate a task, then edit it
+
+September 2, 2026 | AI, Mobile, Tasks
+
+The mobile AI Task Writer supports starting with dictation and editing afterward.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-02-dictate-a-task-then-edit-it-493be6/)
+
+## Keep the comment composer within reach
+
+September 2, 2026 | Tasks
+
+The comment composer is pinned to the bottom of task details so it remains accessible while reading and posting.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-02-keep-the-comment-composer-within-reach-64ea57/)
+
+## Pick due dates safely on mobile
+
+September 2, 2026 | Mobile, Tasks
+
+Selecting a due date in the mobile new-task form no longer crashes.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-02-pick-due-dates-safely-on-mobile-d44205/)
+
+## Reliable agent polling in the CLI
+
+September 2, 2026 | CLI, Agents
+
+The Zig CLI's agent polling command no longer crashes at random.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-02-reliable-agent-polling-in-the-cli-8fc8f3/)
+
+## A floating mobile New Task button
+
+September 1, 2026 | Board, Mobile, Tasks, Inbox, Calendar
+
+Board, Calendar, and Inbox views have a floating button for creating tasks on mobile.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-01-a-floating-mobile-new-task-button-a58b11/)
+
+## Create mobile tasks from descriptions alone
+
+September 1, 2026 | Mobile, Tasks
+
+A task created from only a description now generates and saves its title on mobile.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-01-create-mobile-tasks-from-descriptions-alone-a6cf05/)
+
+## Unclipped mobile task actions
+
+September 1, 2026 | AI, Mobile, Tasks
+
+Ask AI moves to a floating button instead of a clipped right-edge stack. Opening chat no longer refocuses the composer.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-01-unclipped-mobile-task-actions-b644df/)
+
+## Visible mobile title-generation status
+
+September 1, 2026 | Mobile
+
+The status text shown while generating a task title stays fully visible on mobile.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-09-01-visible-mobile-title-generation-status-eef19f/)
+
+## A readable CLI command list
+
+August 31, 2026 | Tasks
+
+The capabilities command prints a Markdown command list when JSON output is not requested.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-a-readable-cli-command-list-b82dba/)
+
+## Blocked tasks stand out in Calendar
+
+August 31, 2026 | Board, Tasks, Calendar
+
+Blocked tasks have a red left edge in Month, Week, and Day views, matching the board view.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-blocked-tasks-stand-out-in-calendar-6c1fe6/)
+
+## Broader automated board checks
+
+August 31, 2026 | Board, Infrastructure
+
+Automated QA adds five board flows, repairs stale flows, and includes a nightly heartbeat watchdog.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-broader-automated-board-checks-984c01/)
+
+## Clearer mobile table scrolling
+
+August 31, 2026 | Board, Mobile, Tasks
+
+Mobile table scrolling lets ticket and title columns slide away, improving readability of other columns.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-clearer-mobile-table-scrolling-6455a1/)
+
+## CLI reads use local board data
+
+August 31, 2026 | CLI, API
+
+The native CLI reads local IndexedDB data rather than calling the API for every operation.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-cli-reads-use-local-board-data-3de10e/)
+
+## CLI tokens refresh before expiry
+
+August 31, 2026 | CLI
+
+Saved tokens refresh before expiring. Older tokens show their exact UTC expiry date.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-cli-tokens-refresh-before-expiry-da4e9b/)
+
+## Consistent board and Inbox text sizing
+
+August 31, 2026 | Board, Inbox, Appearance
+
+Sidebar board names and Inbox tabs use the documented 14px text size.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-consistent-board-and-inbox-text-sizing-483964/)
+
+## Consistent default-theme typography
+
+August 31, 2026 | Appearance
+
+IBM Plex Sans is confirmed across the default app themes.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-consistent-default-theme-typography-631b4b/)
+
+## Consistent ticket prefixes
+
+August 31, 2026 | Board, Tasks
+
+Ticket prefixes are generated consistently from board titles, avoiding collisions between identically named boards.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-consistent-ticket-prefixes-895524/)
+
+## Empty CLI configuration keeps saved settings
+
+August 31, 2026 | CLI, Settings
+
+An empty API URL setting no longer overwrites the CLI's saved configuration.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-empty-cli-configuration-keeps-saved-settings-0de6d2/)
+
+## Faster task creation in production
+
+August 31, 2026 | Tasks
+
+The reported task-creation time is below 1.5 seconds at the 75th percentile.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-faster-task-creation-in-production-49e295/)
+
+## Hidden navigation stays hidden on load
+
+August 31, 2026 | Tasks
+
+Turning off the navigation rail no longer causes it to flash briefly while the page loads.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-hidden-navigation-stays-hidden-on-load-bcd961/)
+
+## List the selected board's labels
+
+August 31, 2026 | Board, Tasks
+
+The CLI labels command returns labels for the requested board instead of a global project list.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-list-the-selected-board-s-labels-4c25bb/)
+
+## Local storage reads for the native CLI
+
+August 31, 2026 | CLI, API
+
+The native Zig CLI reads IndexedDB directly, reducing API calls for operations.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-local-storage-reads-for-the-native-cli-7a6897/)
+
+## Member removal requires a signed session
+
+August 31, 2026 | API
+
+The member removal endpoint rejects forged identity cookies before deleting a member.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-member-removal-requires-a-signed-session-0df747/)
+
+## Mobile All Tasks rows fit the screen
+
+August 31, 2026 | Mobile, Tasks
+
+All Tasks rows no longer clip past the right edge and use consistent side spacing.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-mobile-all-tasks-rows-fit-the-screen-472cca/)
+
+## npm installation fetches the native CLI
+
+August 31, 2026 | CLI
+
+The npm wrapper downloads the native CLI binary during installation.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-npm-installation-fetches-the-native-cli-7d33e9/)
+
+## One official native CLI
+
+August 31, 2026 | CLI
+
+The native Zig CLI became the sole official CLI, replacing the legacy Node version.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-one-official-native-cli-434b73/)
+
+## Ownership transfers require authentication
+
+August 31, 2026 | API
+
+The ownership transfer endpoint rejects logged-out requests before making changes.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-ownership-transfers-require-authentication-9ca551/)
+
+## Protect single-comment requests
+
+August 31, 2026 | Tasks, API
+
+Logged-out requests to read or update a single comment return a not-found response.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-protect-single-comment-requests-2fa04d/)
+
+## Read-only checks for six app views
+
+August 31, 2026 | Board, Search, Tasks, Inbox, Calendar
+
+Authenticated automated checks cover Inbox, Search, Calendar, All Tasks, Starred, and Board views.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-read-only-checks-for-six-app-views-4885d6/)
+
+## Readable CLI output with the human flag
+
+August 31, 2026 | Tasks
+
+The human-output flag prints readable labels, tables, or records instead of JSON.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-readable-cli-output-with-the-human-flag-b08777/)
+
+## Sign-in responses keep credentials private
+
+August 31, 2026 | API
+
+The sign-in email endpoint no longer exposes verification codes or sign-in tokens.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-sign-in-responses-keep-credentials-private-9d50b8/)
+
+## Stronger CLI behavior tests
+
+August 31, 2026 | CLI
+
+CLI tests compare returned data, authentication behavior, and failure cases rather than only exit codes.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-stronger-cli-behavior-tests-b0ee2c/)
+
+## Task search includes descriptions and links
+
+August 31, 2026 | Search, Tasks
+
+Search results return the task's canonical description and link field instead of an empty summary.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-task-search-includes-descriptions-and-links-d10d50/)
+
+## Unknown MCP routes require sign-in
+
+August 31, 2026 | MCP, API
+
+Unknown MCP API paths require authentication and return an unauthorized response to logged-out requests.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-unknown-mcp-routes-require-sign-in-0b9ea1/)
+
+## Verified CLI builds install automatically
+
+August 31, 2026 | CLI, Agents, Infrastructure
+
+Merged CLI builds install on the VPS fleet after successful build and verification.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-31-verified-cli-builds-install-automatically-a0b53f/)
+
+## A readable CLI command list
+
+August 30, 2026 | Tasks
+
+The capabilities command prints a Markdown command list when JSON output is not requested.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-a-readable-cli-command-list-b82dba/)
+
+## Blocked tasks stand out in Calendar
+
+August 30, 2026 | Board, Tasks, Calendar
+
+Blocked tasks have a red left edge in Month, Week, and Day views, matching the board view.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-blocked-tasks-stand-out-in-calendar-6c1fe6/)
+
+## Broader automated board checks
+
+August 30, 2026 | Board, Infrastructure
+
+Automated QA adds five board flows, repairs stale flows, and includes a nightly heartbeat watchdog.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-broader-automated-board-checks-984c01/)
+
+## CLI reads use local board data
+
+August 30, 2026 | CLI, API
+
+The native CLI reads local IndexedDB data rather than calling the API for every operation.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-cli-reads-use-local-board-data-3de10e/)
+
+## CLI tokens refresh before expiry
+
+August 30, 2026 | CLI
+
+Saved tokens refresh before expiring. Older tokens show their exact UTC expiry date.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-cli-tokens-refresh-before-expiry-da4e9b/)
+
+## Consistent board and Inbox text sizing
+
+August 30, 2026 | Board, Inbox, Appearance
+
+Sidebar board names and Inbox tabs use the documented 14px text size.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-consistent-board-and-inbox-text-sizing-483964/)
+
+## Consistent default-theme typography
+
+August 30, 2026 | Appearance
+
+IBM Plex Sans is confirmed across the default app themes.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-consistent-default-theme-typography-631b4b/)
+
+## Consistent ticket prefixes
+
+August 30, 2026 | Board, Tasks
+
+Ticket prefixes are generated consistently from board titles, avoiding collisions between identically named boards.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-consistent-ticket-prefixes-895524/)
+
+## Empty CLI configuration keeps saved settings
+
+August 30, 2026 | CLI, Settings
+
+An empty API URL setting no longer overwrites the CLI's saved configuration.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-empty-cli-configuration-keeps-saved-settings-0de6d2/)
+
+## Faster task creation in production
+
+August 30, 2026 | Tasks
+
+The reported task-creation time is below 1.5 seconds at the 75th percentile.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-faster-task-creation-in-production-49e295/)
+
+## Hidden navigation stays hidden on load
+
+August 30, 2026 | Tasks
+
+Turning off the navigation rail no longer causes it to flash briefly while the page loads.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-hidden-navigation-stays-hidden-on-load-bcd961/)
+
+## List the selected board's labels
+
+August 30, 2026 | Board, Tasks
+
+The CLI labels command returns labels for the requested board instead of a global project list.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-list-the-selected-board-s-labels-4c25bb/)
+
+## Local storage reads for the native CLI
+
+August 30, 2026 | CLI, API
+
+The native Zig CLI reads IndexedDB directly, reducing API calls for operations.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-local-storage-reads-for-the-native-cli-7a6897/)
+
+## Member removal requires a signed session
+
+August 30, 2026 | API
+
+The member removal endpoint rejects forged identity cookies before deleting a member.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-member-removal-requires-a-signed-session-0df747/)
+
+## Mobile All Tasks rows fit the screen
+
+August 30, 2026 | Mobile, Tasks
+
+All Tasks rows no longer clip past the right edge and use consistent side spacing.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-mobile-all-tasks-rows-fit-the-screen-472cca/)
+
+## npm installation fetches the native CLI
+
+August 30, 2026 | CLI
+
+The npm wrapper downloads the native CLI binary during installation.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-npm-installation-fetches-the-native-cli-7d33e9/)
+
+## One official native CLI
+
+August 30, 2026 | CLI
+
+The native Zig CLI became the sole official CLI, replacing the legacy Node version.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-one-official-native-cli-434b73/)
+
+## Ownership transfers require authentication
+
+August 30, 2026 | API
+
+The ownership transfer endpoint rejects logged-out requests before making changes.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-ownership-transfers-require-authentication-9ca551/)
+
+## Protect single-comment requests
+
+August 30, 2026 | Tasks, API
+
+Logged-out requests to read or update a single comment return a not-found response.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-protect-single-comment-requests-2fa04d/)
+
+## Read-only checks for six app views
+
+August 30, 2026 | Board, Search, Tasks, Inbox, Calendar
+
+Authenticated automated checks cover Inbox, Search, Calendar, All Tasks, Starred, and Board views.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-read-only-checks-for-six-app-views-4885d6/)
+
+## Readable CLI output with the human flag
+
+August 30, 2026 | Tasks
+
+The human-output flag prints readable labels, tables, or records instead of JSON.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-readable-cli-output-with-the-human-flag-b08777/)
+
+## Sign-in responses keep credentials private
+
+August 30, 2026 | API
+
+The sign-in email endpoint no longer exposes verification codes or sign-in tokens.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-sign-in-responses-keep-credentials-private-9d50b8/)
+
+## Stronger CLI behavior tests
+
+August 30, 2026 | CLI
+
+CLI tests compare returned data, authentication behavior, and failure cases rather than only exit codes.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-stronger-cli-behavior-tests-b0ee2c/)
+
+## Task search includes descriptions and links
+
+August 30, 2026 | Search, Tasks
+
+Search results return the task's canonical description and link field instead of an empty summary.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-task-search-includes-descriptions-and-links-d10d50/)
+
+## Unknown MCP routes require sign-in
+
+August 30, 2026 | MCP, API
+
+Unknown MCP API paths require authentication and return an unauthorized response to logged-out requests.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-unknown-mcp-routes-require-sign-in-0b9ea1/)
+
+## Verified CLI builds install automatically
+
+August 30, 2026 | CLI, Agents, Infrastructure
+
+Merged CLI builds install on the VPS fleet after successful build and verification.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-30-verified-cli-builds-install-automatically-a0b53f/)
+
+## Agents can assign themselves through the CLI
+
+August 29, 2026 | CLI, MCP, Agents
+
+The CLI self-assignment flag matches MCP's assign-self behavior.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-agents-can-assign-themselves-through-the-cli-d887a6/)
+
+## Archiving clears related Inbox rows
+
+August 29, 2026 | Inbox
+
+Archiving a notification immediately clears its related Inbox rows without a refresh.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-archiving-clears-related-inbox-rows-b075b1/)
+
+## Boards paint from saved local data
+
+August 29, 2026 | Board
+
+Boards render instantly from an IndexedDB snapshot, with access revocation checked in the background.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-boards-paint-from-saved-local-data-d90cbd/)
+
+## Build checks before staging merges
+
+August 29, 2026 | Infrastructure
+
+Staging merges require both test and Vercel build checks.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-build-checks-before-staging-merges-ff3fa6/)
+
+## Earlier local reads for mobile boards
+
+August 29, 2026 | Board, Mobile
+
+Mobile boards begin reading saved data during the first layout pass to reduce startup delay.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-earlier-local-reads-for-mobile-boards-9fee06/)
+
+## Less flicker during mobile column changes
+
+August 29, 2026 | Board, Mobile
+
+The fix addresses flickering while adding, tapping, or renaming mobile board columns.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-less-flicker-during-mobile-column-changes-3fad69/)
+
+## Mobile column updates without manual refresh
+
+August 29, 2026 | Board, Mobile
+
+The fix addresses newly created or renamed mobile board columns not appearing until a refresh.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-mobile-column-updates-without-manual-refresh-4fa44c/)
+
+## Mobile comment improvement completes
+
+August 29, 2026 | AI, Mobile, Tasks
+
+The mobile Improve with AI action now completes its single comment-improvement request.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-mobile-comment-improvement-completes-8737eb/)
+
+## Prompt chips for desktop AI writing
+
+August 29, 2026 | AI
+
+Desktop Write with AI adds prompt chips and draft highlighting.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-prompt-chips-for-desktop-ai-writing-5a3467/)
+
+## Queue follow-ups in AI Chat
+
+August 29, 2026 | AI
+
+AI Chat sends queued follow-ups after a turn finishes, with a visible queue and Stop/Send controls.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-queue-follow-ups-in-ai-chat-9c8d05/)
+
+## Read-only due dates no longer crash
+
+August 29, 2026 | Tasks
+
+Clicking a due date on a read-only task no longer crashes the app.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-read-only-due-dates-no-longer-crash-fa08a4/)
+
+## Release only the intended agent lease
+
+August 29, 2026 | Tasks
+
+Lease release checks the exact lease being deleted before continuing.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-release-only-the-intended-agent-lease-0b9f46/)
+
+## Reliable task creation with browser state
+
+August 29, 2026 | Tasks
+
+Task creation succeeds with the supplied fields even when browser state contains circular references.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-reliable-task-creation-with-browser-state-7fb6a8/)
+
+## Repeated CLI label flags are kept
+
+August 29, 2026 | CLI, Tasks
+
+Creating or updating a task with multiple label flags keeps every supplied label.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-repeated-cli-label-flags-are-kept-26a630/)
+
+## Resource limits for automated QA
+
+August 29, 2026 | AI, Agents, Infrastructure
+
+The AI-driven browser-test setup has limits for memory, CPU, time, and concurrent runs.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-resource-limits-for-automated-qa-d133c3/)
+
+## Review newly created tasks on mobile
+
+August 29, 2026 | Board, Mobile, Tasks
+
+Saving a new mobile task keeps it open for review instead of returning to the board.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-review-newly-created-tasks-on-mobile-278eeb/)
+
+## See agent run timelines
+
+August 29, 2026 | Agents, Pages
+
+Agent cards show the last three finished runs. Agent pages show full run history and step durations.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-see-agent-run-timelines-2f2c65/)
+
+## See the merge timer's heartbeat
+
+August 29, 2026 | Agents, Time
+
+Agent cards show a heartbeat line for the merge timer, with colors for timely, late, or missing data.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-see-the-merge-timer-s-heartbeat-891fb9/)
+
+## Spot blocked work on the Agents dashboard
+
+August 29, 2026 | Board, Agents
+
+Red card outlines and a blocked-summary widget highlight unresolved bottlenecks.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-spot-blocked-work-on-the-agents-dashboard-60ec1a/)
+
+## Undo restores Inbox notifications
+
+August 29, 2026 | Inbox
+
+Undoing an archive brings back the hidden Inbox notifications.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-29-undo-restores-inbox-notifications-b40c80/)
+
+## Agents can assign themselves through the CLI
+
+August 27, 2026 | CLI, MCP, Agents
+
+The CLI self-assignment flag matches MCP's assign-self behavior.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-agents-can-assign-themselves-through-the-cli-d887a6/)
+
+## Boards paint from saved local data
+
+August 27, 2026 | Board
+
+Boards render instantly from an IndexedDB snapshot, with access revocation checked in the background.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-boards-paint-from-saved-local-data-d90cbd/)
+
+## Build checks before staging merges
+
+August 27, 2026 | Infrastructure
+
+Staging merges require both test and Vercel build checks.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-build-checks-before-staging-merges-ff3fa6/)
+
+## Less flicker during mobile column changes
+
+August 27, 2026 | Board, Mobile
+
+The fix addresses flickering while adding, tapping, or renaming mobile board columns.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-less-flicker-during-mobile-column-changes-3fad69/)
+
+## Mobile column updates without manual refresh
+
+August 27, 2026 | Board, Mobile
+
+The fix addresses newly created or renamed mobile board columns not appearing until a refresh.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-mobile-column-updates-without-manual-refresh-4fa44c/)
+
+## Mobile comment improvement completes
+
+August 27, 2026 | AI, Mobile, Tasks
+
+The mobile Improve with AI action now completes its single comment-improvement request.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-mobile-comment-improvement-completes-8737eb/)
+
+## Prompt chips for desktop AI writing
+
+August 27, 2026 | AI
+
+Desktop Write with AI adds prompt chips and draft highlighting.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-prompt-chips-for-desktop-ai-writing-5a3467/)
+
+## Queue follow-ups in AI Chat
+
+August 27, 2026 | AI
+
+AI Chat sends queued follow-ups after a turn finishes, with a visible queue and Stop/Send controls.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-queue-follow-ups-in-ai-chat-9c8d05/)
+
+## Read-only due dates no longer crash
+
+August 27, 2026 | Tasks
+
+Clicking a due date on a read-only task no longer crashes the app.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-read-only-due-dates-no-longer-crash-fa08a4/)
+
+## Release only the intended agent lease
+
+August 27, 2026 | Tasks
+
+Lease release checks the exact lease being deleted before continuing.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-release-only-the-intended-agent-lease-0b9f46/)
+
+## Reliable task creation with browser state
+
+August 27, 2026 | Tasks
+
+Task creation succeeds with the supplied fields even when browser state contains circular references.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-reliable-task-creation-with-browser-state-7fb6a8/)
+
+## Repeated CLI label flags are kept
+
+August 27, 2026 | CLI, Tasks
+
+Creating or updating a task with multiple label flags keeps every supplied label.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-repeated-cli-label-flags-are-kept-26a630/)
+
+## Resource limits for automated QA
+
+August 27, 2026 | AI, Agents, Infrastructure
+
+The AI-driven browser-test setup has limits for memory, CPU, time, and concurrent runs.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-resource-limits-for-automated-qa-d133c3/)
+
+## Review newly created tasks on mobile
+
+August 27, 2026 | Board, Mobile, Tasks
+
+Saving a new mobile task keeps it open for review instead of returning to the board.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-review-newly-created-tasks-on-mobile-278eeb/)
+
+## See agent run timelines
+
+August 27, 2026 | Agents, Pages
+
+Agent cards show the last three finished runs. Agent pages show full run history and step durations.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-see-agent-run-timelines-2f2c65/)
+
+## See the merge timer's heartbeat
+
+August 27, 2026 | Agents, Time
+
+Agent cards show a heartbeat line for the merge timer, with colors for timely, late, or missing data.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-see-the-merge-timer-s-heartbeat-891fb9/)
+
+## Spot blocked work on the Agents dashboard
+
+August 27, 2026 | Board, Agents
+
+Red card outlines and a blocked-summary widget highlight unresolved bottlenecks.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-spot-blocked-work-on-the-agents-dashboard-60ec1a/)
+
+## Undo restores Inbox notifications
+
+August 27, 2026 | Inbox
+
+Undoing an archive brings back the hidden Inbox notifications.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-27-undo-restores-inbox-notifications-b40c80/)
+
+## Mobile comment improvement completes
+
+August 26, 2026 | AI, Mobile, Tasks
+
+The mobile Improve with AI action now completes its single comment-improvement request.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-26-mobile-comment-improvement-completes-8737eb/)
+
+## Queue follow-ups in AI Chat
+
+August 26, 2026 | AI
+
+AI Chat sends queued follow-ups after a turn finishes, with a visible queue and Stop/Send controls.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-26-queue-follow-ups-in-ai-chat-9c8d05/)
+
+## Read-only due dates no longer crash
+
+August 26, 2026 | Tasks
+
+Clicking a due date on a read-only task no longer crashes the app.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-26-read-only-due-dates-no-longer-crash-fa08a4/)
+
+## Release only the intended agent lease
+
+August 26, 2026 | Tasks
+
+Lease release checks the exact lease being deleted before continuing.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-26-release-only-the-intended-agent-lease-0b9f46/)
+
+## Reliable task creation with browser state
+
+August 26, 2026 | Tasks
+
+Task creation succeeds with the supplied fields even when browser state contains circular references.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-26-reliable-task-creation-with-browser-state-7fb6a8/)
+
+## Repeated CLI label flags are kept
+
+August 26, 2026 | CLI, Tasks
+
+Creating or updating a task with multiple label flags keeps every supplied label.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-26-repeated-cli-label-flags-are-kept-26a630/)
+
+## Resource limits for automated QA
+
+August 26, 2026 | AI, Agents, Infrastructure
+
+The AI-driven browser-test setup has limits for memory, CPU, time, and concurrent runs.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-26-resource-limits-for-automated-qa-d133c3/)
+
+## Review newly created tasks on mobile
+
+August 26, 2026 | Board, Mobile, Tasks
+
+Saving a new mobile task keeps it open for review instead of returning to the board.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-26-review-newly-created-tasks-on-mobile-278eeb/)
+
+## See agent run timelines
+
+August 26, 2026 | Agents, Pages
+
+Agent cards show the last three finished runs. Agent pages show full run history and step durations.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-26-see-agent-run-timelines-2f2c65/)
+
+## See the merge timer's heartbeat
+
+August 26, 2026 | Agents, Time
+
+Agent cards show a heartbeat line for the merge timer, with colors for timely, late, or missing data.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-26-see-the-merge-timer-s-heartbeat-891fb9/)
+
+## Spot blocked work on the Agents dashboard
+
+August 26, 2026 | Board, Agents
+
+Red card outlines and a blocked-summary widget highlight unresolved bottlenecks.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-26-spot-blocked-work-on-the-agents-dashboard-60ec1a/)
+
+## Database cost improvements still in progress
+
+August 25, 2026 | Tasks
+
+The archived announcement says the cause was confirmed but a fix decision was still pending. It was not announced as shipped.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-25-database-cost-improvements-still-in-progress-ad1058/)
+
+## Deferred agent auto-assignment fix
+
+August 25, 2026 | CLI, MCP, Tasks, Agents
+
+The archived announcement reports failed CLI/MCP agent handoffs. This item was deferred, not announced as shipped.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-25-deferred-agent-auto-assignment-fix-ce2252/)
+
+## Deferred archived-task reminder fix
+
+August 25, 2026 | Tasks, Inbox
+
+The archived announcement reports reminders disappearing without alerting the user. This item was deferred, not announced as shipped.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-25-deferred-archived-task-reminder-fix-765447/)
+
+## Deferred mirror build gating
+
+August 25, 2026 | Infrastructure
+
+The staging build check was in place, but mirror and cross-tenant checks were still unresolved. This item was deferred.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-25-deferred-mirror-build-gating-91ff0f/)
+
+## Deferred task move fix
+
+August 25, 2026 | Board, Tasks
+
+The archived announcement reports that board-name clicks failed to move tasks. This item was deferred, not announced as shipped.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-25-deferred-task-move-fix-8dd081/)
+
+## A full-height custom instructions view
+
+August 22, 2026 | Appearance, Settings
+
+Custom instructions fill the available page height and use the neutral settings theme while saving.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-22-a-full-height-custom-instructions-view-6b4321/)
+
+## A realtime monitoring page
+
+August 22, 2026 | AI
+
+The Realtime page shows people currently inside app.hypertask.ai.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-22-a-realtime-monitoring-page-2c6a76/)
+
+## Full-width desktop Pages
+
+August 22, 2026 | Pages
+
+Pages fill the desktop width after the navigation rail, with narrower gutters instead of the old fixed-width card.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-22-full-width-desktop-pages-9289a7/)
+
+## Older live updates cannot overwrite a new task
+
+August 22, 2026 | Tasks, Settings
+
+Realtime fetches check the subscription and task before applying results, preventing stale responses from overwriting a newly opened task.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-22-older-live-updates-cannot-overwrite-a-new-task-6c5b6c/)
+
+## Board creation reports rejected operations correctly
+
+August 21, 2026 | Board
+
+The Create board window no longer shows a false success when the operation was rejected.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-21-board-creation-reports-rejected-operations-correctly-b75ba0/)
+
+## Boards stay live after deployments
+
+August 21, 2026 | Board, Infrastructure
+
+Boards no longer force a reload after deployment, and live updates continue without manual refresh.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-21-boards-stay-live-after-deployments-feb8bd/)
+
+## Browser tabs show the board and view name
+
+August 21, 2026 | Board
+
+Board navigation uses the authorized board and saved-view name instead of a generic browser tab title.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-21-browser-tabs-show-the-board-and-view-name-7b9803/)
+
+## Live agent status on cards
+
+August 21, 2026 | Tasks, Agents
+
+Agents cards show live status and the active task name. Archive and delete actions are available for each agent.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-21-live-agent-status-on-cards-582480/)
+
+## Mute notifications per board
+
+August 21, 2026 | Board, Agents, Inbox
+
+Board muting stops ordinary notifications across Inbox, push, and email while preserving direct agent replies.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-21-mute-notifications-per-board-fda0ee/)
+
+## Recent activity orders the board switcher
+
+August 21, 2026 | Board, Tasks
+
+The current board appears first, followed by boards with recent task updates. Empty boards sort alphabetically at the end.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-21-recent-activity-orders-the-board-switcher-80baac/)
+
+## Reliable binary lookup for CLI reporting
+
+August 21, 2026 | CLI
+
+The CLI reporter uses absolute binary paths, avoiding launch failures in environments with limited PATH settings.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-21-reliable-binary-lookup-for-cli-reporting-7e6084/)
+
+## Reliable sign-in for large accounts
+
+August 21, 2026 | Tasks
+
+The sign-in cookie stays below the browser's size limit, improving login reliability for large accounts.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-21-reliable-sign-in-for-large-accounts-4bb710/)
+
+## Undo restores archived tasks to Todo
+
+August 21, 2026 | Tasks
+
+Undoing a task archive returns the task to Todo instead of leaving it archived.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-21-undo-restores-archived-tasks-to-todo-0630d1/)
+
+## New columns appear in every board view
+
+August 20, 2026 | Board
+
+Columns created with Add column are visible in all board views by default.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-20-new-columns-appear-in-every-board-view-241af5/)
+
+## Agents leave queued wireframes parked
+
+August 19, 2026 | Tasks, Agents
+
+Wireframe Ready is treated as a parked section so agents do not repeatedly pick up queued tickets.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-19-agents-leave-queued-wireframes-parked-dc44bc/)
+
+## Change one tag without extra AI confirmation
+
+August 19, 2026 | AI
+
+AI Chat no longer asks for confirmation when changing a single tag.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-19-change-one-tag-without-extra-ai-confirmation-6129c9/)
+
+## Clean stale provider cache files at run start
+
+August 19, 2026 | Infrastructure
+
+Agent runs remove provider cache files outside the resumable allowlist, avoiding stale credential buildup.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-19-clean-stale-provider-cache-files-at-run-start-622aaa/)
+
+## Mobile modals clear the Android status bar
+
+August 19, 2026 | Mobile
+
+The top row of mobile dialogs stays tappable below the Android status bar.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-19-mobile-modals-clear-the-android-status-bar-bfde78/)
+
+## New Task starts with a blank draft
+
+August 19, 2026 | Tasks
+
+The New Task window opens blank and discards its draft when closed.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-19-new-task-starts-with-a-blank-draft-39ee66/)
+
+## Saving a view keeps keyboard focus
+
+August 19, 2026 | Board
+
+Saving a view no longer sends focus to the last card in the active column.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-19-saving-a-view-keeps-keyboard-focus-c73aa6/)
+
+## Switching boards clears the new-task draft
+
+August 19, 2026 | Board, Tasks
+
+The task composer resets when you switch boards, preventing old content from reappearing in a new draft.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-19-switching-boards-clears-the-new-task-draft-936c7f/)
+
+## Board writes wait for the local snapshot
+
+August 18, 2026 | Board
+
+Authorized board writes wait until the board's local data snapshot has been published.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-18-board-writes-wait-for-the-local-snapshot-b0e9f8/)
+
+## Inbox loads before board prefetching
+
+August 18, 2026 | Board, Inbox
+
+Board prefetching waits until Inbox data is usable.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-18-inbox-loads-before-board-prefetching-e691cd/)
+
+## More complete board speed measurements
+
+August 18, 2026 | Board, Infrastructure
+
+Signed-in speed reporting includes complete board routes and identifies Board or Table as the starting view.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-18-more-complete-board-speed-measurements-7c454c/)
+
+## Rename agents from their detail page
+
+August 18, 2026 | Agents
+
+Saving a new agent name updates its readable page URL.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-18-rename-agents-from-their-detail-page-090948/)
+
+## Reuse fresh profiles during startup
+
+August 18, 2026 | Tasks
+
+Authentication reuses a cached user profile for up to five minutes, reducing repeated requests.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-18-reuse-fresh-profiles-during-startup-b9077b/)
+
+## Sort agents by recent activity
+
+August 18, 2026 | Board, Agents
+
+The Agents page sorts boards and agents by latest activity, with an option for a flat list without board headings.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-18-sort-agents-by-recent-activity-f47ff4/)
+
+## Task moves cancel active agent leases
+
+August 18, 2026 | Tasks, Agents
+
+Moving a task cancels its active agent lease and saves the move, preventing conflicts with automated updates.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-18-task-moves-cancel-active-agent-leases-439f60/)
+
+## Choose models for the destination board
+
+August 17, 2026 | Board, AI
+
+Quick-create respects the destination board's model options rather than limiting teams to Mini.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-17-choose-models-for-the-destination-board-f11f12/)
+
+## Open the correct saved view immediately
+
+August 17, 2026 | Board
+
+Board loading selects the right view from the start instead of briefly flashing a stale saved view.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-17-open-the-correct-saved-view-immediately-3f1f65/)
+
+## Clear undo timing
+
+August 15, 2026 | Tasks
+
+Undo notices disappear after five seconds, while Ctrl/Cmd+Z remains available for 15 seconds.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-15-clear-undo-timing-f40497/)
+
+## Faster mobile board startup
+
+August 15, 2026 | Board, Mobile
+
+Mobile boards avoid duplicate startup rendering work on cold loads.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-15-faster-mobile-board-startup-7674e8/)
+
+## Mobile Inbox tabs within thumb reach
+
+August 15, 2026 | Mobile, Inbox
+
+Inbox tabs move to the bottom thumb zone, and regular bottom navigation is hidden while Inbox is open.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-15-mobile-inbox-tabs-within-thumb-reach-2d3a69/)
+
+## Mobile task properties stay expanded
+
+August 15, 2026 | Mobile, Tasks
+
+The mobile New Task window keeps properties open instead of collapsing them under the description.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-15-mobile-task-properties-stay-expanded-2cad89/)
+
+## Reliable seats when people join together
+
+August 15, 2026 | Settings
+
+Team protections and daily reconciliation prevent seat loss from simultaneous joins.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-15-reliable-seats-when-people-join-together-e2d09c/)
+
+## Safely dismiss empty mention suggestions
+
+August 15, 2026 | Tasks
+
+Dismissing empty mention suggestions no longer crashes when the text selection is empty.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-15-safely-dismiss-empty-mention-suggestions-3d1f60/)
+
+## Aligned Inbox selection controls
+
+August 14, 2026 | Inbox
+
+The Select all checkbox sits next to the Today pill in Inbox.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-14-aligned-inbox-selection-controls-6dae3b/)
+
+## Broken shortcut tutorials are disabled
+
+August 14, 2026 | Board
+
+The app disables the reported broken keyboard-shortcut tutorials.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-14-broken-shortcut-tutorials-are-disabled-03e12e/)
+
+## Clear access errors when resetting views
+
+August 14, 2026 | Board
+
+Resetting a view without access returns a clear error instead of a server failure.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-14-clear-access-errors-when-resetting-views-9cb2de/)
+
+## Firefox cleanup errors stay out of the UI
+
+August 14, 2026 | Infrastructure
+
+The reported Firefox rendering-cleanup telemetry errors no longer appear to users.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-14-firefox-cleanup-errors-stay-out-of-the-ui-2d6934/)
+
+## Improve mobile comments in a focused sheet
+
+August 14, 2026 | AI, Mobile, Tasks
+
+Dictation stays the main comment action. Improve with AI opens a focused bottom sheet for refining text.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-14-improve-mobile-comments-in-a-focused-sheet-f1e1ec/)
+
+## Inbox actions in the command palette
+
+August 14, 2026 | Inbox
+
+Inbox Zero and Archive actions are available through Ctrl+K.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-14-inbox-actions-in-the-command-palette-8dad41/)
+
+## Mobile Inbox senders stay on one line
+
+August 14, 2026 | Mobile, Inbox
+
+Sender alignment no longer adds unintended indentation in the mobile Inbox.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-14-mobile-inbox-senders-stay-on-one-line-6b6a1d/)
+
+## More capabilities available through MCP
+
+August 14, 2026 | AI, CLI, MCP, API
+
+Five new tools and two extended tools bring MCP coverage to 81 of 96 core capabilities.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-14-more-capabilities-available-through-mcp-c2e965/)
+
+## More space for task properties
+
+August 14, 2026 | Tasks
+
+The task property rail uses the full viewport height, improving visibility of related tasks.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-14-more-space-for-task-properties-2edafc/)
+
+## Reliable board view resets
+
+August 14, 2026 | Board
+
+Resetting board views to their defaults no longer returns a server error.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-14-reliable-board-view-resets-c87355/)
+
+## See board details from the CLI
+
+August 14, 2026 | Board, CLI, Tasks
+
+The projects show command returns board metadata, ticket prefix, columns, labels, counts, and URL.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-14-see-board-details-from-the-cli-b6136c/)
+
+## Simpler theme choices in the command palette
+
+August 14, 2026 | Appearance
+
+The palette offers system-theme prediction and simpler choices, with safe handling of older theme identifiers.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-14-simpler-theme-choices-in-the-command-palette-0549ec/)
+
+## An overview of all your agents
+
+August 13, 2026 | Board, Agents, Pages
+
+The Agents dashboard has detail pages and status groupings for your agents.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-13-an-overview-of-all-your-agents-5b5e8d/)
+
+## Consistent modal header spacing
+
+August 13, 2026 | Tasks
+
+Shared modal headers use a 24px inset, and fixed-width separators stay within each dialog.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-13-consistent-modal-header-spacing-0f3afb/)
+
+## Consistent navigation key sequences
+
+August 13, 2026 | Inbox, Calendar
+
+Global G shortcuts run before view-specific handlers, so G then I opens Inbox and G then C opens Calendar reliably.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-13-consistent-navigation-key-sequences-f30bd4/)
+
+## Edit calendar view names clearly
+
+August 13, 2026 | Calendar
+
+Manage calendar views shows clear edit controls for your views. Teammate-owned views stay read-only.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-13-edit-calendar-view-names-clearly-b13a55/)
+
+## Fewer requests before a mobile board is usable
+
+August 13, 2026 | Board, Mobile, API
+
+Secondary requests wait until the board is ready, cutting the measured startup requests from 14 to five.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-13-fewer-requests-before-a-mobile-board-is-usable-406c63/)
+
+## Fresh credentials when restarting external agents
+
+August 13, 2026 | MCP, Agents, Infrastructure
+
+Turning external agents back on creates fresh MCP credentials and one-time copyable configurations.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-13-fresh-credentials-when-restarting-external-agents-389cba/)
+
+## Render the first mobile board column sooner
+
+August 13, 2026 | Board, Mobile
+
+Mobile boards initially render only the visible column. The recorded usable time improved by 11% to 3.22 seconds.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-13-render-the-first-mobile-board-column-sooner-126e97/)
+
+## Slash menus fit the desktop viewport
+
+August 13, 2026 | Tasks
+
+New-task slash menus use the larger space above or below the cursor to avoid clipping.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-13-slash-menus-fit-the-desktop-viewport-968586/)
+
+## Webhooks for agent mentions and assignments
+
+August 13, 2026 | Board, Tasks, Agents, API
+
+Agents can receive signed HTTPS events for mentions, assignments, and unassignments, with optional board filtering.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-13-webhooks-for-agent-mentions-and-assignments-cff6db/)
+
+## Clearer model plan requirements
+
+August 11, 2026 | AI, API, Settings
+
+Model guidance explains when access needs a paid plan or your own API key.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-11-clearer-model-plan-requirements-f2abb8/)
+
+## Hidden agent panels do not expose tokens
+
+August 11, 2026 | Agents
+
+Agent tokens are no longer rendered in hidden or collapsed connection panels.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-11-hidden-agent-panels-do-not-expose-tokens-d96cde/)
+
+## Jump between boards from any view
+
+August 11, 2026 | Board
+
+Alt+Number board shortcuts work globally when the navigation rail is enabled.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-11-jump-between-boards-from-any-view-8725c3/)
+
+## Mobile board columns scroll to every task
+
+August 11, 2026 | Board, Mobile, Tasks
+
+Split board columns scroll far enough to show all tasks on narrow screens.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-11-mobile-board-columns-scroll-to-every-task-51de6b/)
+
+## Public shares render rich content reliably
+
+August 11, 2026 | Tasks
+
+Rich HTML in public shares no longer causes the reported rendering mismatch errors.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-11-public-shares-render-rich-content-reliably-e98c2a/)
+
+## Reliable first draft autosave
+
+August 11, 2026 | Tasks
+
+Simultaneous first autosaves for a draft no longer produce a server error.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-11-reliable-first-draft-autosave-f01d53/)
+
+## Safe rank updates when tasks are deleted
+
+August 11, 2026 | Tasks
+
+Rank resets no longer return a server error when a task is deleted at the same time.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-11-safe-rank-updates-when-tasks-are-deleted-2f193f/)
+
+## Shared local data for Board and Table
+
+August 11, 2026 | Board, AI
+
+Signed-in Board and Table views use synchronized local data by default, staying in sync without manual refresh.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-11-shared-local-data-for-board-and-table-63f4d2/)
+
+## Hidden agent panels do not expose tokens
+
+August 10, 2026 | Agents
+
+Agent tokens are no longer rendered in hidden or collapsed connection panels.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-10-hidden-agent-panels-do-not-expose-tokens-d96cde/)
+
+## Larger mobile Task Writer actions
+
+August 10, 2026 | Mobile, Tasks
+
+Send and Resend buttons are 44px tall, making them easier to use and reducing duplicate submissions.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-10-larger-mobile-task-writer-actions-0f9a37/)
+
+## Mobile board columns scroll to every task
+
+August 10, 2026 | Board, Mobile, Tasks
+
+Split board columns scroll far enough to show all tasks on narrow screens.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-10-mobile-board-columns-scroll-to-every-task-51de6b/)
+
+## Public shares render rich content reliably
+
+August 10, 2026 | Tasks
+
+Rich HTML in public shares no longer causes the reported rendering mismatch errors.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-10-public-shares-render-rich-content-reliably-e98c2a/)
+
+## Reliable first draft autosave
+
+August 10, 2026 | Tasks
+
+Simultaneous first autosaves for a draft no longer produce a server error.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-10-reliable-first-draft-autosave-f01d53/)
+
+## AI routing follows the team's plan
+
+August 9, 2026 | AI, Settings, Infrastructure
+
+Free and BYOK teams share an allowed route, while paid, legacy, and comped teams use dedicated credentials.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-09-ai-routing-follows-the-team-s-plan-d1e333/)
+
+## Aligned new-task assignee fields
+
+August 9, 2026 | Tasks
+
+The assignee field uses the same label/value layout as other rows, whether filled or empty.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-09-aligned-new-task-assignee-fields-c0aff8/)
+
+## An eligible default model for Free and BYOK teams
+
+August 9, 2026 | AI, Settings
+
+Eligible teams default to Luna Standard rather than premium Luna, avoiding silent model-selection failures.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-09-an-eligible-default-model-for-free-and-byok-teams-189527/)
+
+## Android boards show cached task details
+
+August 9, 2026 | Board, Mobile, Tasks
+
+Android Native Board v0.12 displays saved task metadata without another network request while retaining full-column layouts.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-09-android-boards-show-cached-task-details-2fbbe7/)
+
+## Correct manual deployment paths
+
+August 9, 2026 | Infrastructure
+
+Manual Linux and Windows deployments use the corrected Wrangler v4 object paths and account lookup.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-09-correct-manual-deployment-paths-6f1f39/)
+
+## Expired sessions ask you to sign in again
+
+August 9, 2026 | Board, Appearance
+
+Stale sessions prompt a new login instead of silently emptying the board sidebar.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-09-expired-sessions-ask-you-to-sign-in-again-654e21/)
+
+## Included AI access for Free and BYOK teams
+
+August 9, 2026 | AI, Settings
+
+Free and BYOK subscribers receive AI through their included allowance rather than being denied access.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-09-included-ai-access-for-free-and-byok-teams-1a370c/)
+
+## Initials for people and agents without photos
+
+August 9, 2026 | Mobile, Agents
+
+Default icons use two-letter initials, sized for phone and desktop and aware of Unicode character clusters.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-09-initials-for-people-and-agents-without-photos-c73cac/)
+
+## Keep task names visible while scrolling tables
+
+August 9, 2026 | Board, Tasks
+
+Table View freezes Ticket and Title columns during horizontal scrolling.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-09-keep-task-names-visible-while-scrolling-tables-228d41/)
+
+## More readable table column labels
+
+August 9, 2026 | Board, Tasks
+
+Table headings keep a minimum gap between column labels and drag handles.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-09-more-readable-table-column-labels-5b72ff/)
+
+## Native Android sign-in for AI tools
+
+August 9, 2026 | AI, Mobile, Tasks, API
+
+Android AI Chat streaming and Task Writer accept native OAuth tokens, while web cookies remain the first choice.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-09-native-android-sign-in-for-ai-tools-fb77a1/)
+
+## Pause and resume running timers
+
+August 9, 2026 | Time
+
+The running-timers overview can pause a timer and continue it without resetting its time.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-09-pause-and-resume-running-timers-f28a43/)
+
+## Separate managed keys for internal teams
+
+August 9, 2026 | Settings, Infrastructure
+
+Internal and custom-deal teams use dedicated managed credentials, separate from customer BYOK subscriptions.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-09-separate-managed-keys-for-internal-teams-dcb8d3/)
+
+## Standard app navigation in time reports
+
+August 9, 2026 | Board, Search, AI, Inbox, Appearance, Time, Calendar, Reports
+
+Time reports include the navigation rail for Board, Calendar, Inbox, AI, and Search.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-09-standard-app-navigation-in-time-reports-9963dc/)
+
+## Table filter and timer fixes
+
+August 9, 2026 | Time
+
+Four reported defects in table filters and timers now behave as expected.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-09-table-filter-and-timer-fixes-496ad0/)
+
+## A clearer mobile AI Task Writer
+
+August 8, 2026 | AI, Mobile, Tasks
+
+The waveform is full-width, dictation autosaves, and narrow screens have a clean action row.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-08-a-clearer-mobile-ai-task-writer-30b071/)
+
+## Board creation stops waiting after 45 seconds
+
+August 8, 2026 | Board, AI
+
+A timeout prevents the Create board window from remaining stuck when AI generation hangs.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-08-board-creation-stops-waiting-after-45-seconds-fdd0a8/)
+
+## The newest comment stays expanded
+
+August 8, 2026 | Tasks
+
+The newest task comment is expanded by default, avoiding a completely collapsed conversation.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-08-the-newest-comment-stays-expanded-505ec2/)
+
+## Undo returns to task details
+
+August 8, 2026 | Tasks
+
+Undoing an archive from task details takes you back to that task's detail page.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-08-undo-returns-to-task-details-af790d/)
+
+## Active teams appear first in the sidebar
+
+August 7, 2026 | Board, Appearance
+
+Boards are grouped by team, with teams ordered by their most recent board opens.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-active-teams-appear-first-in-the-sidebar-68d574/)
+
+## Agent assignees work in board filters
+
+August 7, 2026 | Board, Tasks, Agents
+
+Board view filters accept agent IDs so filtering by an agent assignee works reliably.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-agent-assignees-work-in-board-filters-b59cc6/)
+
+## Agent team documentation
+
+August 7, 2026 | Board, Agents
+
+Documentation covers the product board's agent lanes, interaction rules, and daily Board Maintainer runbook.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-agent-team-documentation-ab08e9/)
+
+## AI Chat understands My Tasks
+
+August 7, 2026 | AI, Tasks
+
+AI Chat can use your personal workload in My Tasks when answering questions.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-ai-chat-understands-my-tasks-12a9e5/)
+
+## AI task updates stay on the correct board
+
+August 7, 2026 | AI, Tasks
+
+AI Chat writes check the board scope before updating a task.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-ai-task-updates-stay-on-the-correct-board-4022cf/)
+
+## Clear errors for unknown CLI labels
+
+August 7, 2026 | CLI, Tasks
+
+Task creation and updates reject unknown labels with a list of valid choices. JSON task details include labels.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-clear-errors-for-unknown-cli-labels-619849/)
+
+## Clearer table column separators
+
+August 7, 2026 | Board
+
+Table column edges have visible separators, with stronger lines when hovering over headers.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-clearer-table-column-separators-52e5a8/)
+
+## Create an AI-written task with Ctrl+J
+
+August 7, 2026 | Board, AI, Tasks
+
+On desktop boards, Ctrl+J opens a new task with AI Task Writer ready for text generation.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-create-an-ai-written-task-with-ctrl-j-384f85/)
+
+## Create CLI tasks with longer HTML descriptions
+
+August 7, 2026 | CLI, Tasks
+
+CLI task creation handles longer descriptions containing quotes and repeated HTML tags.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-create-cli-tasks-with-longer-html-descriptions-33a7f4/)
+
+## Filter board views by agent assignee
+
+August 7, 2026 | Board, Tasks, Agents
+
+Assignee filters accept agent IDs, letting saved views reliably show agent-assigned tasks.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-filter-board-views-by-agent-assignee-c064c1/)
+
+## Full task details from ticket-number lookups
+
+August 7, 2026 | CLI, MCP, Tasks
+
+CLI and MCP ticket-number lookups return complete task details instead of an empty body.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-full-task-details-from-ticket-number-lookups-2ca646/)
+
+## Keep embeds in task descriptions
+
+August 7, 2026 | Tasks, API
+
+YouTube, Loom, Vimeo, and Figma embeds are preserved from the editor and retained in API responses.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-keep-embeds-in-task-descriptions-e63ede/)
+
+## Label removals appear in activity history
+
+August 7, 2026 | Tasks
+
+Removing task labels now creates activity records so the change leaves a trace.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-label-removals-appear-in-activity-history-57b239/)
+
+## Mobile New Task fits narrow screens
+
+August 7, 2026 | AI, Mobile, Tasks
+
+The mobile composer stays within the screen, includes dictation, and keeps save/create actions reachable by swiping.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-mobile-new-task-fits-narrow-screens-abaacc/)
+
+## Move table tasks by dragging rows
+
+August 7, 2026 | Board, Tasks
+
+Drag a Table View row onto a column card to move the task to that column.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-move-table-tasks-by-dragging-rows-9997dc/)
+
+## Reliable new-agent token creation
+
+August 7, 2026 | Agents
+
+The new-agent command no longer crashes on an unescaped quote. Tokens are created and saved reliably.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-reliable-new-agent-token-creation-afc9cb/)
+
+## Search works on demo boards
+
+August 7, 2026 | Board, Search
+
+Demo board searches now return results instead of always showing No results found.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-search-works-on-demo-boards-327dca/)
+
+## See the CLI's active agent identity
+
+August 7, 2026 | CLI, Agents
+
+CLI status and JSON output show the acting agent identity and that its saved token does not expire.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-see-the-cli-s-active-agent-identity-01cba6/)
+
+## Unassign tasks after an agent is revoked
+
+August 7, 2026 | Tasks, Agents
+
+Tasks can be unassigned even if their creator or assigned agent has been revoked.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-unassign-tasks-after-an-agent-is-revoked-68493d/)
+
+## Understandable AI validation errors
+
+August 7, 2026 | AI
+
+AI Chat shows validation errors in English instead of exposing framework errors.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-07-understandable-ai-validation-errors-a7fbef/)
+
+## Active teams appear first in the sidebar
+
+August 6, 2026 | Board, Appearance
+
+Boards are grouped by team, with teams ordered by their most recent board opens.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-06-active-teams-appear-first-in-the-sidebar-68d574/)
+
+## AI Chat understands My Tasks
+
+August 6, 2026 | AI, Tasks
+
+AI Chat can use your personal workload in My Tasks when answering questions.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-06-ai-chat-understands-my-tasks-12a9e5/)
+
+## AI task updates stay on the correct board
+
+August 6, 2026 | AI, Tasks
+
+AI Chat writes check the board scope before updating a task.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-06-ai-task-updates-stay-on-the-correct-board-4022cf/)
+
+## CLI status identifies the acting agent
+
+August 6, 2026 | CLI, Agents
+
+Status and JSON output display the saved agent identity and its non-expiring token status.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-06-cli-status-identifies-the-acting-agent-2c71a9/)
+
+## Mobile New Task fits narrow screens
+
+August 6, 2026 | AI, Mobile, Tasks
+
+The mobile composer stays within the screen, includes dictation, and keeps save/create actions reachable by swiping.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-06-mobile-new-task-fits-narrow-screens-abaacc/)
+
+## Search works on demo boards
+
+August 6, 2026 | Board, Search
+
+Demo board searches now return results instead of always showing No results found.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-06-search-works-on-demo-boards-327dca/)
+
+## Table columns have visible boundaries
+
+August 6, 2026 | Board
+
+Column separators become stronger on header hover, making the table easier to read.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-06-table-columns-have-visible-boundaries-73530e/)
+
+## Unassign tasks linked to revoked agents
+
+August 6, 2026 | Tasks, Agents
+
+A revoked creator or assignee no longer prevents removing a task assignment.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-06-unassign-tasks-linked-to-revoked-agents-40c8f3/)
+
+## Agent notifications in demo boards
+
+August 5, 2026 | Board, AI, Agents, Inbox
+
+Guest demo boards start with four HyperAI agent notifications and expose the Important tab.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-05-agent-notifications-in-demo-boards-845b33/)
+
+## Consistent guest board theming
+
+August 5, 2026 | Board, Appearance
+
+The guest board header and expanded navigation rail use the inverse theme.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-05-consistent-guest-board-theming-b4adcf/)
+
+## Demo sign-in leaves existing accounts unchanged
+
+August 5, 2026 | Tasks
+
+Guest content is seeded only into brand-new empty accounts. Guest rows expire after 24 hours.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-05-demo-sign-in-leaves-existing-accounts-unchanged-b0036d/)
+
+## Full-width sidebar rows are clickable
+
+August 5, 2026 | Search, Appearance
+
+Expanded sidebar rows, including Chat and Search, respond across their entire width.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-05-full-width-sidebar-rows-are-clickable-5f3ddc/)
+
+## Graphite is the default dark theme
+
+August 5, 2026 | Appearance
+
+The dark theme uses the graphite visual style by default.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-05-graphite-is-the-default-dark-theme-5c0b94/)
+
+## Help chat answers CLI and MCP questions
+
+August 5, 2026 | AI, CLI, MCP
+
+Help-site AI Chat uses Gemini Flash Lite through the AI Gateway and draws answers from all documentation sections.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-05-help-chat-answers-cli-and-mcp-questions-021e98/)
+
+## Keep seeded tasks during CLI board creation
+
+August 5, 2026 | Board, CLI, MCP, Tasks
+
+CLI/MCP creation for newly seeded guest boards keeps seed tasks instead of creating a replacement board.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-05-keep-seeded-tasks-during-cli-board-creation-34635f/)
+
+## Mobile sharing stays on task details
+
+August 5, 2026 | Mobile, Tasks
+
+The share sheet no longer follows you away from the task, and header buttons respond across their full tap areas.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-05-mobile-sharing-stays-on-task-details-5d2c81/)
+
+## Porcelain is the default light theme
+
+August 5, 2026 | Appearance
+
+The light theme uses the porcelain visual style by default.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-05-porcelain-is-the-default-light-theme-88a30f/)
+
+## Refreshed marketing and help styling
+
+August 5, 2026 | Appearance
+
+Homepage, login, docs, and help surfaces share a refined wordmark, rounded buttons, and a screen-recording hero video.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-05-refreshed-marketing-and-help-styling-539a86/)
+
+## Reorder built-in view tabs
+
+August 5, 2026 | Tasks, Agents
+
+Built-in views such as Overdue and My Tasks can be dragged anywhere in the view bar and managed like ordinary views.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-05-reorder-built-in-view-tabs-b63625/)
+
+## See who is blocking a task
+
+August 5, 2026 | Board
+
+Kanban cards show the blocker's avatar and name in a red chip, with a red left accent.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-05-see-who-is-blocking-a-task-77d408/)
+
+## Simpler AI Chat input icons
+
+August 5, 2026 | Board, AI
+
+The model selector and board scope use plain icons. The send button uses the general arrow style instead of purple.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-05-simpler-ai-chat-input-icons-4be911/)
+
+## Simpler theme names
+
+August 5, 2026 | Tasks, Appearance
+
+Light and Dark theme names no longer include the New label.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-05-simpler-theme-names-b67610/)
+
+## Agent mentions notify people
+
+August 4, 2026 | Tasks, Agents, Inbox
+
+Agent comments create Inbox notifications for mentioned users, including the agent's owner.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-agent-mentions-notify-people-3cb83f/)
+
+## Board columns fill available height
+
+August 4, 2026 | Board
+
+Hiding quick tips lets board columns expand to the full container height.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-board-columns-fill-available-height-3e02ca/)
+
+## Builds complete without hanging
+
+August 4, 2026 | Infrastructure
+
+The reported build hang has been fixed so deployments finish within a stable window.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-builds-complete-without-hanging-92213d/)
+
+## Consistent ticket ID typography
+
+August 4, 2026 | Board, Tasks, Appearance
+
+Ticket IDs in task properties use the same font as other values and remain muted on board cards.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-consistent-ticket-id-typography-d89d28/)
+
+## Custom fields guidance is live
+
+August 4, 2026 | Board, Agents, API
+
+The Custom fields page and in-app help cover creation, task values, table controls, ranking, and agent/API examples.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-custom-fields-guidance-is-live-7f558c/)
+
+## Date groups in My Tasks
+
+August 4, 2026 | Board, Tasks
+
+My Tasks groups work into Today, Upcoming, and Later, with consistent keyboard navigation.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-date-groups-in-my-tasks-0d482a/)
+
+## Dictation releases the mobile microphone
+
+August 4, 2026 | AI, Mobile
+
+Stopping mobile recording closes its audio session so other apps can use the microphone.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-dictation-releases-the-mobile-microphone-137256/)
+
+## Edit and delete time entries through MCP and CLI
+
+August 4, 2026 | CLI, MCP, API, Time
+
+MCP and CLI can update existing time entries or delete them by entry ID. Manual time logging remains CLI-only.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-edit-and-delete-time-entries-through-mcp-and-cli-872e42/)
+
+## Emoji pickers match the current theme
+
+August 4, 2026 | Appearance
+
+Emoji picker panels and inputs use the appropriate colors for AMOLED, Dark Grey, and Light themes.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-emoji-pickers-match-the-current-theme-e2fef9/)
+
+## Filter tasks by who is blocking them
+
+August 4, 2026 | Board, Tasks
+
+The board filter picker can show tasks blocked by a specific person or anyone.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-filter-tasks-by-who-is-blocking-them-b30b9c/)
+
+## Free setup credit allowances
+
+August 4, 2026 | Mobile, Settings
+
+Free setup provides the recorded web/desktop and mobile credit allowances, with higher tiers tied to proven adoption or contact.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-free-setup-credit-allowances-762ee5/)
+
+## Getting-started actions in Ctrl+K
+
+August 4, 2026 | Board, AI, CLI, MCP, Tasks
+
+First-time users get quick actions for tasks, AI writing, invitations, boards, and columns in the command palette.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-getting-started-actions-in-ctrl-k-78fc22/)
+
+## Live Inbox notifications across tools
+
+August 4, 2026 | AI, CLI, MCP, Inbox
+
+Inbox changes update in real time across the app, CLI, MCP, manifest, and AI Chat.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-live-inbox-notifications-across-tools-f03252/)
+
+## More predictable production build times
+
+August 4, 2026 | Agents, Infrastructure
+
+Production builds no longer hang. Recorded deployment times were about 4.4 minutes at the median and 4.8 minutes at the slowest.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-more-predictable-production-build-times-f360aa/)
+
+## No extra outline inside description editors
+
+August 4, 2026 | Tasks, Appearance
+
+Dark Grey and AMOLED editors show only the outer card border, without an extra inner outline.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-no-extra-outline-inside-description-editors-a8174a/)
+
+## Open AI Task Writer with Ctrl+J
+
+August 4, 2026 | Board, AI, Tasks
+
+Ctrl+J on a board quickly creates a task with AI Task Writer open.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-open-ai-task-writer-with-ctrl-j-30e693/)
+
+## Open Latest Updates from anywhere
+
+August 4, 2026 | Tasks
+
+Latest Updates is available through the command palette on any route.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-open-latest-updates-from-anywhere-23dd56/)
+
+## Platform credits at signup
+
+August 4, 2026 | Mobile, Settings
+
+The archived announcement describes platform-specific signup credits that scale with verified use or contact.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-platform-credits-at-signup-286863/)
+
+## Save and reuse task templates
+
+August 4, 2026 | Board, Tasks
+
+Save a task as a template through the command palette, then reuse its title, description, priority, size, and labels from a board.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-save-and-reuse-task-templates-4cccce/)
+
+## See AI metadata changes on tasks
+
+August 4, 2026 | AI, Tasks, Agents, Inbox
+
+Visible AI changes to priority, assignments, labels, dates, and related tasks appear on cards, task details, and notifications.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-see-ai-metadata-changes-on-tasks-72e4e5/)
+
+## Set and clear task start dates
+
+August 4, 2026 | Tasks
+
+Task details offer natural-language start-date presets and clearing. Start dates affect My Tasks ordering.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-set-and-clear-task-start-dates-8bfd40/)
+
+## Sidebar expansion leaves task navigation clear
+
+August 4, 2026 | Tasks, Appearance
+
+The expanded sidebar no longer overlaps task up/down navigation or other fixed controls.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-sidebar-expansion-leaves-task-navigation-clear-fc5705/)
+
+## Swipe through unread mobile Inbox cards
+
+August 4, 2026 | Mobile, Inbox
+
+Open the unread card stack through Ctrl+K, then swipe or use arrows. Undo and bulk archive on exit are available.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-swipe-through-unread-mobile-inbox-cards-be4b16/)
+
+## Three owned boards on the Free plan
+
+August 4, 2026 | Board, AI, CLI, MCP
+
+Free web users can own up to three boards across all creation tools and see upgrade prompts at the limit.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-three-owned-boards-on-the-free-plan-1280a4/)
+
+## Updated AMOLED styling
+
+August 4, 2026 | Board, Tasks, Appearance
+
+AMOLED v2 uses IBM Plex, near-black layers, compact cards, and muted board ticket IDs. Core theme accents are updated.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-04-updated-amoled-styling-be88ba/)
+
+## A board switcher at the top of the rail
+
+August 3, 2026 | Board, Inbox
+
+The left rail starts with the Ctrl+B board palette, and Inbox joins the view icons.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-03-a-board-switcher-at-the-top-of-the-rail-781b55/)
+
+## A wider, persistent sidebar
+
+August 3, 2026 | Board, Tasks, Appearance
+
+Logged-in users can expand the sidebar to 130px with labels. Its state is remembered, and tooltips show actual shortcuts.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-03-a-wider-persistent-sidebar-69a364/)
+
+## Date presets and clickable time totals
+
+August 3, 2026 | Time, Reports
+
+Time reports offer preset or custom date ranges. Click a duration to open the time-log window.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-03-date-presets-and-clickable-time-totals-c0b546/)
+
+## Dictation no longer crashes headless Chrome
+
+August 3, 2026 | AI
+
+The reported microphone voice-detection error no longer crashes the app in headless Chrome.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-03-dictation-no-longer-crashes-headless-chrome-e19d01/)
+
+## Finer sidebar and table borders
+
+August 3, 2026 | Appearance
+
+Subtle sidebar lines and refined table row borders improve visual separation.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-03-finer-sidebar-and-table-borders-3e2228/)
+
+## Graphite and porcelain follow system themes
+
+August 3, 2026 | Appearance
+
+Graphite and porcelain become system-theme defaults, and the graphite sidebar outline is removed.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-03-graphite-and-porcelain-follow-system-themes-0b7e1d/)
+
+## Inbox cards fit around quick tips
+
+August 3, 2026 | Inbox
+
+Inbox cards sit at the bottom when tips are off and rise with the tips bar, without the old empty gap.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-03-inbox-cards-fit-around-quick-tips-e3c543/)
+
+## Keep guest boards when signing in
+
+August 3, 2026 | Board
+
+Signing in transfers the guest team, boards, and memberships to the new account while retaining cleanup compatibility.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-03-keep-guest-boards-when-signing-in-c73924/)
+
+## Mentions come first in Inbox rows
+
+August 3, 2026 | Tasks, Inbox
+
+Mention rows show the sender and mention snippet before ticket details, tags, and date.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-03-mentions-come-first-in-inbox-rows-9c38ac/)
+
+## Project pages handle missing board IDs
+
+August 3, 2026 | Board, Pages
+
+Project pages no longer crash when there is no board ID.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-03-project-pages-handle-missing-board-ids-b812e7/)
+
+## Refined inactive tabs and AMOLED surfaces
+
+August 3, 2026 | Tasks, Inbox
+
+Inactive tabs use 90% opacity. AMOLED navigation and Inbox backgrounds stay pure black with fine borders.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-03-refined-inactive-tabs-and-amoled-surfaces-2dd85a/)
+
+## Separate hours and minutes in time reports
+
+August 3, 2026 | Time, Reports
+
+Time entry forms use separate Hours and Minutes fields and accept split input.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-03-separate-hours-and-minutes-in-time-reports-6b39e7/)
+
+## Try AI task creation during guest onboarding
+
+August 3, 2026 | Board, AI, Tasks
+
+Guest onboarding creates a demo board and opens AI Task Writer with a prompt.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-03-try-ai-task-creation-during-guest-onboarding-8d2ad0/)
+
+## Two refined light and dark themes
+
+August 3, 2026 | Appearance
+
+New Light and Dark themes introduce refined accents and more consistent app styling.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-08-03-two-refined-light-and-dark-themes-215111/)
+
+## Focus docked AI Chat with Ctrl+Q
+
+July 19, 2026 | Board, AI
+
+Ctrl+Q focuses the docked AI chat input on Chat and boards, including the reported docked or closed-panel cases.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-07-19-focus-docked-ai-chat-with-ctrl-q-0b3af3/)
+
+## Readable age indicators on light themes
+
+July 19, 2026 | Appearance
+
+Age indicators use amber or red on light and paper themes instead of yellow on white.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-07-19-readable-age-indicators-on-light-themes-033308/)
+
+## Timer controls from the navigation rail
+
+July 19, 2026 | Board, Tasks, Time
+
+An optional rail icon opens running timers on boards with active tracking. Alt+T starts or stops a task timer.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-07-19-timer-controls-from-the-navigation-rail-b9b979/)
+
+## Agent writes show the agent as author
+
+May 29, 2026 | Tasks, Agents, Inbox
+
+Tasks and comments made with agent bearer tokens are attributed to the agent rather than its human owner.
+
+[Read more](https://docs.hypertask.ai/changelog/2026-05-29-agent-writes-show-the-agent-as-author-5b0895/)
+
+## Compact modal headers by default
+
+August 2, 2016 | Pages
+
+Most dialogs use compact header, input, and row sizes, with an opt-in for legacy sizing.
+
+[Read more](https://docs.hypertask.ai/changelog/2016-08-02-compact-modal-headers-by-default-f247d6/)
+
+## Consistent two-digit hours
+
+August 2, 2016 | Tasks
+
+The hour picker shows times such as 09:00 rather than 9:00.
+
+[Read more](https://docs.hypertask.ai/changelog/2016-08-02-consistent-two-digit-hours-d22170/)
+
+## Ctrl+B opens the board palette everywhere
+
+August 2, 2016 | Board
+
+The board switcher shortcut opens the palette consistently from any route.
+
+[Read more](https://docs.hypertask.ai/changelog/2016-08-02-ctrl-b-opens-the-board-palette-everywhere-1dd12f/)
+
+## Expand the sidebar with remembered state
+
+August 2, 2016 | Tasks, Appearance
+
+Logged-in users can expand the rail to 130px with labels and Favorites. It starts collapsed and remembers changes.
+
+[Read more](https://docs.hypertask.ai/changelog/2016-08-02-expand-the-sidebar-with-remembered-state-27be15/)
+
+## Old timer links still work
+
+August 2, 2016 | Time
+
+The legacy timers path redirects to the Time page with the running-timers option enabled.
+
+[Read more](https://docs.hypertask.ai/changelog/2016-08-02-old-timer-links-still-work-7f32ca/)
+
+## Playback migration remains in progress
+
+August 2, 2016 | Tasks
+
+The archived update says User AV2 was temporarily disabled while playback issues were investigated and a migration continued.
+
+[Read more](https://docs.hypertask.ai/changelog/2016-08-02-playback-migration-remains-in-progress-a49185/)
+
+## Select multiple containers reliably
+
+August 2, 2016 | Tasks
+
+The container picker supports multiple values and marks invalid input when submission errors occur.
+
+[Read more](https://docs.hypertask.ai/changelog/2016-08-02-select-multiple-containers-reliably-7ae529/)
+
+## The timer rail item reflects the active page
+
+August 2, 2016 | Time
+
+The Timers navigation item is highlighted when the Time page is open.
+
+[Read more](https://docs.hypertask.ai/changelog/2016-08-02-the-timer-rail-item-reflects-the-active-page-c1c923/)
+
+## Time tooltips show the last tracked duration
+
+August 2, 2016 | Time
+
+The tooltip keeps the last tracked duration correct even while another timer is being edited.
+
+[Read more](https://docs.hypertask.ai/changelog/2016-08-02-time-tooltips-show-the-last-tracked-duration-7c3d2a/)

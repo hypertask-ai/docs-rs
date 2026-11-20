@@ -12,6 +12,7 @@ import {
   readerCopyPrompts,
 } from "../../site/scripts/reader-body-flags.ts";
 import { prepareReaderSiteInputs } from "../../site/scripts/reader-site-inputs.ts";
+import { isDocsPageRoute } from "../../site/src/docs-page-routes.ts";
 import {
   docsHeaderAnchors,
   docsHeaderLinkedPaths,
@@ -54,9 +55,14 @@ it.layer(ReaderParityFixture.layer)((test) => {
         .map((page) => page.path)
         .filter(isAllStarsProfilePath);
 
+      const docs = inputs.pages
+        .map((page) => page.path)
+        .filter(isDocsPageRoute);
+
       expect(allStars).toContain("/all-stars/devinjameson");
+      expect(docs.length).toBeGreaterThan(0);
       expect(flags.map((page) => page.page.path).toSorted()).toEqual(
-        [...readerBodyRoutePaths, ...allStars].toSorted()
+        [...readerBodyRoutePaths, ...allStars, ...docs].toSorted()
       );
     })
   );
