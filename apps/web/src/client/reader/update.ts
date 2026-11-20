@@ -171,11 +171,6 @@ export const update = (
       SelectedDocsSearch: ({ index }) => ({
         model: modifyFields(model, { docsSearchSelected: () => index }),
       }),
-      ShowedMoreDocsSearchResults: () => ({
-        model: modifyFields(model, {
-          docsSearchShown: (shown) => shown + 5,
-        }),
-      }),
       SubmittedDocsSearch: () => {
         const match = selectedResult(model);
 
@@ -219,7 +214,6 @@ export const update = (
                 : DocsSearchState.Loading({ query }),
             docsSearchQuery: () => value,
             docsSearchSelected: () => 0,
-            docsSearchShown: () => 5,
           }),
         };
       },

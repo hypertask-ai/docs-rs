@@ -45,8 +45,6 @@ export const docsHeaderTabAnchors = (
     text: tab.label,
   }));
 
-export const docsSearchControlLabel = "Search docs";
-
 export const docsHeaderLinkedPaths: readonly string[] = [
   homeRouter(),
   ...docsHeaderLinks.map((link) => link.path),

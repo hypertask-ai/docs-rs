@@ -162,31 +162,32 @@ const scoreOf = (
   return score;
 };
 
-const excerptAround = (
-  text: string,
-  extensions: readonly string[],
-  length = 220
-): string => {
-  const pattern = /[\p{L}\p{N}_]+/gu;
+const excerptWindow = 20;
 
-  for (const match of text.matchAll(pattern)) {
-    if (match.index === undefined) {
-      continue;
-    }
+const matchedWordIndex = (
+  words: readonly string[],
+  extensions: readonly string[]
+): number =>
+  words.findIndex((word) => {
+    const [stem] = word.toLowerCase().match(/[\p{L}\p{N}_]+/u) ?? [];
 
-    if (!extensions.includes(stemWord(match[0]))) {
-      continue;
-    }
+    return stem !== undefined && extensions.includes(stemWord(stem));
+  });
 
-    const start = Math.max(0, match.index - Math.floor(length / 3));
-    const excerpt = text.slice(start, start + length).trim();
+const excerptAround = (text: string, extensions: readonly string[]): string => {
+  const words = text.split(/\s+/u).filter((word) => word !== "");
+  const index = matchedWordIndex(words, extensions);
 
-    return `${start > 0 ? "…" : ""}${excerpt}${
-      start + length < text.length ? "…" : ""
-    }`;
+  if (index === -1) {
+    return words.slice(0, excerptWindow).join(" ");
   }
 
-  return text.slice(0, length).trim();
+  return words
+    .slice(
+      Math.max(0, index - excerptWindow),
+      Math.min(words.length, index + excerptWindow)
+    )
+    .join(" ");
 };
 
 const hitOf = (
@@ -196,10 +197,17 @@ const hitOf = (
   excerpt: excerptAround(page.body, extensions),
   routePath: page.routePath,
   sections: page.sections
-    .filter((section) => section.text !== "")
+    .filter(
+      (section) =>
+        section.text !== "" &&
+        matchedWordIndex(
+          section.text.split(/\s+/u).filter((word) => word !== ""),
+          extensions
+        ) !== -1
+    )
     .map((section) => ({
       anchor: section.anchor,
-      excerpt: excerptAround(section.text, extensions, 160),
+      excerpt: excerptAround(section.text, extensions),
       title: section.title,
     })),
   title: page.title,

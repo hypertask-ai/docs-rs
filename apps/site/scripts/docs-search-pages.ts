@@ -1,9 +1,8 @@
 import { Effect, FileSystem, Option, Path } from "effect";
 import type { PlatformError } from "effect";
 
+import { docsContentDirectory } from "./docs-content.ts";
 import type { DocsPageSource } from "./docs-search-index.ts";
-
-export const docsContentDirectory = "apps/site/content/docs";
 
 const frontmatterPattern = /^---\r?\n(?<frontmatter>[\s\S]*?)\r?\n---\r?\n?/u;
 
@@ -16,7 +15,7 @@ const routePathOf = (file: string): string => {
     return "/";
   }
 
-  return `/${withoutExtension.replace(/\/index$/u, "")}`;
+  return `/${withoutExtension.replace(/\/index$/u, "")}/`;
 };
 
 export const docsPageSource = (

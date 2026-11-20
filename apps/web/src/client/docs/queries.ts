@@ -29,7 +29,7 @@ const make = Effect.gen(function* makeDocumentQueries() {
 
   const docs = yield* Cache.make({
     capacity: Number.POSITIVE_INFINITY,
-    lookup: (query: string) => client.searchDocs({ limit: 10, query }),
+    lookup: (query: string) => client.searchDocs({ limit: 20, query }),
     timeToLive: "30 seconds",
   });
 

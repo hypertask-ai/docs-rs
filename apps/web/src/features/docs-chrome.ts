@@ -47,7 +47,7 @@ const copyLabel = CopyStatus.match({
 });
 
 const searchIcon = <Message>(h: HtmlBuilder<Message>) =>
-  docsSearchIcon(h, "docs-search-icon", 16);
+  docsSearchIcon(h, "docs-search-icon", 14);
 
 const copyIcon = <Message>(h: HtmlBuilder<Message>) =>
   h.svg(

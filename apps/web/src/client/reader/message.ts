@@ -24,7 +24,6 @@ export const Message = defineMessageUnion({
   MovedDocsSearchSelection: { offset: Schema.Finite },
   PressedDocsSearchShortcut: {},
   SelectedDocsSearch: { index: Schema.Finite },
-  ShowedMoreDocsSearchResults: {},
   SubmittedDocsSearch: {},
   SucceededCopyPage: {},
   SucceededCopyReaderText: { id: Schema.String },

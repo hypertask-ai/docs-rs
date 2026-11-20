@@ -651,10 +651,6 @@ body > .docs-layout {
   display: none;
 }
 
-.docs-search-field::-webkit-search-cancel-button {
-  display: none;
-}
-
 .docs-group {
   margin: 0;
   padding: 0;
@@ -686,7 +682,6 @@ button.docs-action {
 .docs-search-icon {
   display: block;
   flex-shrink: 0;
-  margin-right: 8px;
 }
 
 @media (min-width: 50rem) {

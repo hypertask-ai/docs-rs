@@ -5,6 +5,7 @@ import { renderToString } from "foldkit/experimental/server";
 
 import {
   docsHeaderAnchorItems,
+  docsHeaderButtonItems,
   docsHeaderImageItems,
 } from "../../site/test/docs-header-items.ts";
 import { init } from "../src/client/reader/init.js";
@@ -13,35 +14,35 @@ import type { ReaderPageFlags } from "../src/client/reader/model.js";
 import { view } from "../src/features/reader.js";
 import { readerFlagsFixture } from "./reader-fixture.js";
 
-const headerRow = { help: 2, logo: 0, openApp: 3, search: 1, tabs: 4 };
+const headerRow = { help: 1, logo: 0, openApp: 2, tabs: 3 };
 
 const tabRows = [
   {
-    index: 4,
+    index: 3,
     label: "Getting started",
     path: "/getting-started/introduction/",
     previous: "Open app",
   },
   {
-    index: 5,
+    index: 4,
     label: "Web App",
     path: "/features/boards/",
     previous: "Getting started",
   },
   {
-    index: 6,
+    index: 5,
     label: "MCP for AI agents",
     path: "/mcp/overview/",
     previous: "Web App",
   },
   {
-    index: 7,
+    index: 6,
     label: "CLI reference",
     path: "/cli/reference/",
     previous: "MCP for AI agents",
   },
   {
-    index: 8,
+    index: 7,
     label: "Changelog",
     path: "/changelog/",
     previous: "CLI reference",
@@ -79,6 +80,7 @@ const docsHeader = (path: string) =>
 
     return {
       anchors: docsHeaderAnchorItems(rendered.html),
+      buttons: docsHeaderButtonItems(rendered.html),
       images: docsHeaderImageItems(rendered.html),
     };
   }).pipe(Effect.provide(NodeServices.layer));
@@ -107,19 +109,23 @@ it.effect(
 );
 
 it.effect(
-  "DocsHeaderRow 2: the search control names itself for screen readers and keeps the Control K shortcut",
+  "DocsHeaderRow 2: the search control is the button that opens the dialog, and it keeps the Control K shortcut",
   () =>
     Effect.gen(function* searchRow() {
-      const { anchors } = yield* docsHeader("/");
+      const { anchors, buttons } = yield* docsHeader("/");
 
-      const search = anchors[headerRow.search];
+      const search = buttons[0];
 
-      expect(search?.attributes.href).toBe("/search");
       expect(search?.attributes["aria-label"]).toBe("Search docs");
       expect(search?.attributes["aria-keyshortcuts"]).toBe("Control+K");
-      expect(search?.parts).toEqual(["Search docs", "Ctrl K"]);
-      expect(search?.attributes.target).toBeUndefined();
-      expect(search?.attributes.rel).toBeUndefined();
+      expect(search?.attributes.command).toBe("show-modal");
+      expect(search?.attributes.commandfor).toBe("docs-search");
+      expect(search?.attributes.href).toBeUndefined();
+      expect(search?.parts).toEqual(["Search docs", "CtrlK"]);
+      expect(buttons).toHaveLength(1);
+      expect(
+        anchors.filter((anchor) => anchor.attributes.href === "/search")
+      ).toEqual([]);
     })
 );
 

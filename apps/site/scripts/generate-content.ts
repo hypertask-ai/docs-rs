@@ -54,6 +54,7 @@ import {
 import { markdownDiscoveryLinks } from "../src/content-links.ts";
 import { docsPageMarkdown, docsPageTitle } from "../src/docs-export.ts";
 import { docsPageRoutes, isDocsPageRoute } from "../src/docs-page-routes.ts";
+import { docsSearchIndexPath } from "../src/docs-search-index-path.ts";
 import { tokenmaxxTitle } from "../src/house-ad-copy.ts";
 import {
   addInboundCounts,
@@ -3887,7 +3888,7 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
 
   const contentData = [
     {
-      path: "/_content/docs-search.json",
+      path: docsSearchIndexPath,
       value: docsSearchIndex,
     },
     {

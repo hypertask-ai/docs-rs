@@ -92,7 +92,6 @@ export const Model = Schema.Struct({
   docsSearch: DocsSearchState,
   docsSearchQuery: Schema.String,
   docsSearchSelected: Schema.Finite,
-  docsSearchShown: Schema.Finite,
 });
 
 export type ReaderModel = typeof Model.Type;
@@ -104,7 +103,6 @@ export const initialModel = (flags: ReaderPageFlags): ReaderModel => ({
   docsSearch: DocsSearchState.Idle(),
   docsSearchQuery: "",
   docsSearchSelected: 0,
-  docsSearchShown: 5,
 });
 
 export const docsSearchMatchesOf = (model: ReaderModel) =>
