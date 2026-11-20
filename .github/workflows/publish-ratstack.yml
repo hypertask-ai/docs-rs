@@ -1,0 +1,69 @@
+name: Publish docs at ratstack
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-docs-ratstack
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: ratstack-publish
+    timeout-minutes: 45
+    env:
+      SITE_BASE_PATH: /ratstack
+    steps:
+      - name: Require the Cloudflare secrets
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          missing=""
+          if [ -z "${CLOUDFLARE_API_TOKEN}" ]; then
+            missing="CLOUDFLARE_API_TOKEN"
+          fi
+          if [ -z "${CLOUDFLARE_ACCOUNT_ID}" ]; then
+            missing="${missing:+$missing, }CLOUDFLARE_ACCOUNT_ID"
+          fi
+          if [ -n "$missing" ]; then
+            printf 'Missing environment secret: %s. This job cannot reach Cloudflare without it. Fix: add %s under Settings, Environments, ratstack-publish, Environment secrets in this repository.\n' "$missing" "$missing" >&2
+            exit 1
+          fi
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - name: Use Node.js 24.18.0
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
+        with:
+          node-version: 24.18.0
+      - name: Enable corepack pnpm
+        run: corepack enable && corepack prepare pnpm@11.3.0 --activate
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Fetch pinned source objects
+        run: pnpm sources:fetch
+      - name: Build the site the template's way
+        run: pnpm turbo run build --concurrency=2
+      - name: Audit the built site for addresses outside the base path
+        run: node apps/site/scripts/ratstack-publish-check.ts audit
+      - name: Record the old site before the deploy
+        run: node apps/site/scripts/ratstack-publish-check.ts record "$RUNNER_TEMP/old-docs-site.json"
+      - name: Compare the built home page with the old docs home page
+        run: node apps/site/scripts/ratstack-publish-check.ts gate
+      - name: Deploy the docs Worker and its one route
+        working-directory: apps/infra
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm exec -- alchemy deploy --config alchemy.docs-ratstack.ts --stage docs-ratstack --env-file ../../packages/deploy/empty.env --yes
+      - name: Smoke check the deployed address and the old site
+        run: node apps/site/scripts/ratstack-publish-check.ts verify "$RUNNER_TEMP/old-docs-site.json"

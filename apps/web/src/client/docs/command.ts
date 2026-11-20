@@ -4,6 +4,7 @@ import { Command } from "foldkit";
 import { load, pushUrl, replaceUrl } from "foldkit/navigation";
 import { fromString } from "foldkit/url";
 
+import { withSiteBasePath } from "../../site-base.js";
 import { Message } from "./message.js";
 import { DocumentQueries } from "./queries.js";
 
@@ -40,7 +41,7 @@ export const ReadDoc = Command.define("ReadDoc", {
 export const Navigate = Command.define("Navigate", {
   args: { url: Schema.String },
   execute: ({ url }) =>
-    pushUrl(url).pipe(
+    pushUrl(withSiteBasePath(url)).pipe(
       Effect.andThen(
         Effect.sync(() => {
           window.scrollTo(0, 0);
@@ -64,7 +65,9 @@ export const ReadLocation = Command.define("ReadLocation", {
 export const ReplaceUrl = Command.define("ReplaceUrl", {
   args: { url: Schema.String },
   execute: ({ url }) =>
-    replaceUrl(url).pipe(Effect.as(Message.CompletedNavigate())),
+    replaceUrl(withSiteBasePath(url)).pipe(
+      Effect.as(Message.CompletedNavigate())
+    ),
   messages: [Message.CompletedNavigate],
 });
 
