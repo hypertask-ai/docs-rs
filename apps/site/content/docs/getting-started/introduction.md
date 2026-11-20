@@ -1,0 +1,167 @@
+---
+description: AI-native project management for teams and AI agents — manage tasks, collaborate in real-time, and connect AI agents with MCP, CLI, and REST APIs.
+title: What is Hypertask?
+---
+
+# What is Hypertask?
+
+<CardGrid>
+  <Card title="AI-native collaboration" icon="🤖">
+    Built with agents first. Hypertask comes with an intelligent co-worker that can read your board, create tasks, and respond to comments—all via Chat, CLI, MCP, or REST.
+  </Card>
+  <Card title="Full control, no lock-in" icon="🛡️">
+    Use built-in or programmatic auth. The CLI, MCP and REST APIs cover every piece of your workflow, so you own the experience.
+  </Card>
+  <Card title="Workspace-ready" icon="🏢">
+    Multi-tenant workspaces with optional boards per workspace, team invites, role-based permissions, and real-time collaboration for many teams.
+  </Card>
+  <Card title="Modern UX" icon="✨">
+    Clean Kanban boards, calendar views, a unified Inbox for mentions and updates, and a Theme picker supporting Light, Dark, AMOLED, and custom Paper theme.
+  </Card>
+</CardGrid>
+
+## Setup options
+
+Whether you prefer a browser UI, the command line, or integrating via code, there's a path that fits your workflow.
+
+<Tabs>
+<TabItem label="Browser">
+<p class="lead">Sign in with email on <code>app.hypertask.ai</code> to start collaborating immediately. Invite your team and start adding tasks, boards, and workflows.</p>
+</TabItem>
+<TabItem label="CLI">
+<p class="lead">Manage and create tasks from the terminal with the <code>hypertask</code> CLI. Install via your package manager, login, and start creating.</p>
+<Steps>
+<ol>
+<li>Install the CLI via npm or homebrew.</li>
+<li>Run <code>hypertask login</code> and follow the on-screen prompts.</li>
+<li>Use commands like <code>hypertask task create</code>, <code>hypertask task list</code>, and <code>hypertask comment add</code> from your shell.</li>
+</ol>
+</Steps>
+</TabItem>
+<TabItem label="MCP">
+<p class="lead">Connect Hypertask to your AI agents via the Model Context Protocol. The MCP server exposes tools for tasks, boards, chat, and more.</p>
+<Steps>
+<ol>
+<li>Add the Hypertask MCP endpoint to your LM Studio, Claude Desktop, or another MCP-compatible client.</li>
+<li>Authenticate with a Bearer token or session cookie.</li>
+<li>Use <code>hypertask_tasks</code> for task creation and assignment, and <code>hypertask_comments</code> for replies.</li>
+</ol>
+</Steps>
+</TabItem>
+<TabItem label="REST API">
+<p class="lead">Use our REST API to build integration or mobile apps. Seeds, boards, views, tasks, comments, and more are all reachable via simple HTTP requests.</p>
+<Steps>
+<ol>
+<li>Get an API key from the Settings sidebar in the app.</li>
+<li>Add <code>Authorization: Bearer &lt;key&gt;</code> headers to your requests.</li>
+<li>Use endpoints like <code>GET /boards</code>, <code>POST /tasks</code>, <code>POST /messages/chat</code>, and more.</li>
+</ol>
+</Steps>
+</TabItem>
+</Tabs>
+
+## Core concepts
+
+Here's a quick overview of the key concepts you'll use in Hypertask.
+
+| Concept | Description |
+| --- | --- |
+| **Workspace** | The top-level container for your organization. Board owners can choose whether a board belongs to one workspace or automatically inherits from the owner. |
+| **Board** | A flexible surface for organizing work: Kanban columns, tables, lists, or calendars. Boards contain sections, views, and tasks. |
+| **Section** | A column on a Kanban board with tasks that share a common state or trigger. Sections support drag-to-reorder. |
+| **View** | A custom perspective on a board—filtering, sorting, grouping, or hiding tasks. Views can be pinned, hidden, or deleted as needed. |
+| **Task** | A unit of work with a title, description, assignee, tags, subtasks, and relations with other tasks and issues. |
+| **Chat** | An in-app AI assistant that understands your context—tasks, boards, messages, and more. You can create and edit saved GPTs, speed up writing, and control agents and time tracking. |
+| **Inbox** | A unified feed of mentions, important items, reactions, and updates across your boards. Unread items are highlighted and accessible via keyboard navigation. |
+| **Agents** | Autonomous AI agents that can pull context from your board, create and update tasks, respond to comments, run schedules, and interact with your workspace via tools. |
+
+<Aside type="note">
+It's Email-native, but not Firebase-dependent. Hypertask uses Better Auth and your own SMTP for signing in, with Firebase kept exclusively for push notifications. You can also integrate via CLI, MCP, or REST without going through the app UI at all.
+</Aside>
+
+## Getting started
+
+<Steps>
+<ol>
+<li>Create an account or sign in with email/app password at <a href="https://app.hypertask.ai">app.hypertask.ai</a>.</li>
+<li>Request a new sign-in link if your browser session expires or is shared; links are single-use, so each click gives you a fresh sign-in.</li>
+<li>Request a new verification link when creating a new account; never reuse old verification emails.</li>
+<li>Set your preferred theme using the <kbd>Ctrl+K</kbd> command palette or the Theme picker in Settings (Light, Dark, System, AMOLED, Paper).</li>
+<li><strong>For email signups:</strong> You land directly on a board and receive a welcome email containing install steps for Claude Code / Cursor MCP along with a link to your board.</li>
+<li>Invite teammates to your workspace and create your first board (Kanban, Table, List, or Calendar).</li>
+<li>Start adding tasks, tagging them for organization, and assigning them.</li>
+<li>Use <kbd>Ctrl+K</kbd> to access the command palette for quick navigation and actions.</li>
+<li>Chat with the AI assistant to create tasks, summarize boards, or brainstorm without leaving the page.</li>
+<li>Optional: install the CLI or set up an MCP agent for programmatic control over your tasks.</li>
+</ol>
+</Steps>
+
+## Keyboard shortcuts
+
+Hypertask has a rich set of keyboard shortcuts across surfaces. Press <kbd>Ctrl+K</kbd> to open the command palette and search for shortcuts by name.
+
+<Aside>
+Depending on your OS, <kbd>Ctrl</kbd> is <kbd>Control</kbd> on Windows/Linux and ⌘ on macOS.
+</Aside>
+
+<code>Ctrl+K</code> — Open command palette for shortcuts and actions.
+
+<code>Ctrl+G</code> — Navigate surfaces (Inbox → Boards → My Tasks → Chat), as needed.
+
+### Live shortcuts
+
+The command palette shows all shortcuts relevant to your current context, such as boards, tasks, inbox, and chat. Hover over a shortcut to see its location (modal, board surface, or button).
+
+### Keyboard hints in the UI
+
+The header's **Login** button shows a "Press L to log in" tooltip when you hover over it or focus it with the keyboard. This hint highlights the visual keycap style for improved discoverability and accessibility.
+
+## Onboarding
+
+First-time users see an <strong>Onboarding Tour</strong> when they sign in. You can replay it at any time by pressing <kbd>Ctrl+K</kbd>, searching for "Onboarding tour", and selecting the replay option.
+
+The tour walks you through connecting AI, creating your first board, and using key features. Invited teammates see a trimmed version that skips heavy setup but still introduces essential workflows.
+
+## Security, auth, and permissions
+
+Hypertask uses server-side authentication and ensures that other users' data never leaks into your boards or views. Here are some key principles:
+
+- <strong>Email sign-in & Better Auth</strong>: Sign in is handled server-side. Email login takes you directly to your board; magic-links and sign-out remain functional.
+- <strong>Firebase for push only</strong>: Firebase Auth is not used for login or signup. Firebase is strictly for FCM push notifications.
+- <strong>Route cleanup</strong>: Dead authentication routes that no longer exist (e.g. old signup or password reset paths) return 404, and CORS carve-outs are removed for production security.
+- <strong>Session integrity via signed ht_session cookies</strong>: API routes validate signed <code>ht_session</code> cookies alongside <code>nookies_user</code>, ensuring that forging cookies cannot be used for cookie spoofing.
+- <strong>PostHog cross-domain visitor identity</strong>: Signin and load attribution between <code>hypertask.ai</code> and <code>app.hypertask.ai</code> use signed ht_session cookies, avoiding client-side cookie dependency.
+- <strong>Strict account linking</strong>: Linking a Google login to an unverified local account is blocked, ensuring verified local accounts are not orphaned.
+- <strong>Multi-tenant isolation</strong>: By design, boards, views, and tasks belong to the user. Archive and other features show only your data unless explicitly shared.
+- <strong>Single-use login and verification links</strong>: When you request a new sign-in link or account verification email, the link is valid for one use only. Attempting to reuse a link shows an "invalid or expired" message and does not grant a session.
+- <strong>Board-level access for files</strong>: Only people who can see a ticket can download its attachments. Access is scoped to the task: observers outside the ticket cannot reach files and previews, even if they can view the board.
+
+<Aside type="tip">
+For finer-grained security, you can use the REST API to enforce claims, tokens, and additional checks for your integrations.
+</Aside>
+
+## Frequently asked questions
+
+<details>
+<summary>Is Hypertask free?</summary>
+
+The Free plan includes unlimited members and unlimited open tickets. You can own up to 3 boards. Archived boards are not counted. A paid or comped plan has no board limit. See [Billing & Seat Management](/features/billing/) for details.
+</details>
+
+<details>
+<summary>Can I export my tasks?</summary>
+
+Yes. Export options include CSV, JSON, and integrations with IDEs, build tools, and CI/CD pipelines using the CLI and REST API.
+</details>
+
+<details>
+<summary>Is there a mobile app?</summary>
+
+Yes. Android has an official app, and iPhone and other phones install the web app with Add to Home Screen. See [Mobile and desktop apps](/getting-started/apps/).
+</details>
+
+<details>
+<summary>Is there a desktop app for Windows or Mac?</summary>
+
+Use the web app in a browser, or install it as an app. There is no signed desktop download. See [Mobile and desktop apps](/getting-started/apps/).
+</details>

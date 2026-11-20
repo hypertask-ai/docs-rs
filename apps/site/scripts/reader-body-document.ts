@@ -28,6 +28,40 @@ export const readerNewsTitle = (html: string) => {
   return link === undefined ? undefined : DomUtils.textContent(link);
 };
 
+const tocDepths = new Set(["h2", "h3"]);
+
+export const readerTocAnchors = (
+  html: string
+): readonly { readonly id: string; readonly text: string }[] => {
+  const document = parseDocument(html);
+  const main = DomUtils.getElementsByTagName("main", document.children).at(0);
+  const anchors: { id: string; text: string }[] = [];
+
+  if (main === undefined) {
+    return anchors;
+  }
+
+  const visit = (node: (typeof main.children)[number]): void => {
+    if (node.type === ElementType.Tag && tocDepths.has(node.name)) {
+      const { id } = node.attribs;
+
+      if (id !== undefined) {
+        anchors.push({ id, text: DomUtils.textContent(node).trim() });
+      }
+    }
+
+    for (const child of "children" in node ? node.children : []) {
+      visit(child);
+    }
+  };
+
+  for (const child of main.children) {
+    visit(child);
+  }
+
+  return anchors;
+};
+
 const ReaderBody = Schema.Struct({
   breadcrumb: Schema.optional(ReaderBreadcrumb),
   heading: Schema.String,

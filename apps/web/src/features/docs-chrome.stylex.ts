@@ -120,6 +120,7 @@ export const docsChrome = stylex.create({
     color: docs.textStrong,
     display: "flex",
     fontSize: docs.fontSizeSmall,
+    fontWeight: 500,
     height: "36px",
     padding: "0 18px",
     textDecoration: "none",

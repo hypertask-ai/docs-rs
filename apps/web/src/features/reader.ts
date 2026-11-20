@@ -390,12 +390,12 @@ const readerDocument = (
                     h.Class("docs-main"),
                   ],
                   [
-                    agentPointer(model, h),
+                    ...(group === undefined ? [agentPointer(model, h)] : []),
                     ...Option.match(model.newsTitle, {
                       onNone: () => [],
                       onSome: (title) => [readerNewsCallout(title, h)],
                     }),
-                    ...breadcrumbView(model, h),
+                    ...(group === undefined ? breadcrumbView(model, h) : []),
                     ...bodyView(model, h),
                     ...bibliographyView(model, h),
                     ...readerReferences(model, h),
