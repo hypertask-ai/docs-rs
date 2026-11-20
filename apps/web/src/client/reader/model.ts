@@ -85,6 +85,10 @@ export const DocsSearchState = defineTaggedUnion({
 
 export type DocsSearchStateType = typeof DocsSearchState.Type;
 
+export const MobileNav = Schema.Struct({ open: Schema.Boolean });
+
+export const MobileToc = Schema.Struct({ open: Schema.Boolean });
+
 export const Model = Schema.Struct({
   ...ReaderFlags.fields,
   clipboardAccess: ClipboardAccess,
@@ -92,6 +96,9 @@ export const Model = Schema.Struct({
   docsSearch: DocsSearchState,
   docsSearchQuery: Schema.String,
   docsSearchSelected: Schema.Finite,
+  mobileNav: MobileNav,
+  mobileToc: MobileToc,
+  readingAnchorId: Schema.OptionFromOptional(Schema.String),
 });
 
 export type ReaderModel = typeof Model.Type;
@@ -103,6 +110,9 @@ export const initialModel = (flags: ReaderPageFlags): ReaderModel => ({
   docsSearch: DocsSearchState.Idle(),
   docsSearchQuery: "",
   docsSearchSelected: 0,
+  mobileNav: { open: false },
+  mobileToc: { open: false },
+  readingAnchorId: Option.none(),
 });
 
 export const docsSearchMatchesOf = (model: ReaderModel) =>
@@ -131,3 +141,19 @@ export const findCopyPrompt = (
   model: Pick<ReaderModel, "copyPrompts">,
   id: string
 ) => Array.findFirst(model.copyPrompts, (prompt) => prompt.id === id);
+
+export const currentAnchorText = (
+  model: Pick<ReaderModel, "readingAnchorId" | "references">
+): string =>
+  Option.match(model.readingAnchorId, {
+    onNone: () => "",
+    onSome: (id) =>
+      Option.match(model.references, {
+        onNone: () => "",
+        onSome: (references) =>
+          Option.match(
+            Array.findFirst(references.anchors, (anchor) => anchor.id === id),
+            { onNone: () => "", onSome: (anchor) => anchor.text }
+          ),
+      }),
+  });

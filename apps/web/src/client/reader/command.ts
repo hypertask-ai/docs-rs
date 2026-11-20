@@ -1,5 +1,5 @@
 import { Effect, Schema } from "effect";
-import { Command } from "foldkit";
+import { Command, Dom } from "foldkit";
 import { pushUrl } from "foldkit/navigation";
 
 import { DocumentQueries } from "../docs/queries.js";
@@ -10,6 +10,16 @@ class ClipboardFailure extends Schema.TaggedError<
   ClipboardFailure,
   { readonly brand: unique symbol }
 >()("ClipboardFailure", { cause: Schema.Unknown }) {}
+
+export const MoveFocus = Command.define("MoveFocus", {
+  args: { selector: Schema.String },
+  execute: ({ selector }) =>
+    Dom.focus(selector).pipe(
+      Effect.ignore,
+      Effect.as(Message.CompletedMoveFocus())
+    ),
+  messages: [Message.CompletedMoveFocus],
+});
 
 export const DetectClipboard = Command.define("DetectClipboard", {
   execute: Effect.sync(() =>
