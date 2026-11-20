@@ -268,19 +268,19 @@ export const finalizeReader = Effect.fn("reader.finalize")(
 
     yield* fs.writeFileString(
       `${clientDirectory}/_redirects`,
-      docsRedirectsFile(addresses)
+      docsRedirectsFile(addresses, siteBasePath)
     );
 
     const origin = pages[0]?.origin;
 
     if (origin !== undefined) {
       yield* fs.writeFileString(
-        `${clientDirectory}${docsSitemapIndexPath}`,
-        docsSitemapIndexXml(origin)
+        `${clientDirectory}${addSiteBasePath(siteBasePath, docsSitemapIndexPath)}`,
+        docsSitemapIndexXml(origin, siteBasePath)
       );
       yield* fs.writeFileString(
-        `${clientDirectory}${docsSitemapPath}`,
-        docsSitemapXml(origin, addresses)
+        `${clientDirectory}${addSiteBasePath(siteBasePath, docsSitemapPath)}`,
+        docsSitemapXml(origin, addresses, siteBasePath)
       );
     }
 
