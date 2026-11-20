@@ -8,15 +8,17 @@ import { Cache, Context, Effect, Layer } from "effect";
 import { FetchHttpClient } from "effect/http";
 import { RpcClient, RpcSerialization } from "effect/rpc";
 
+import { withSiteBasePath } from "../../site-base.js";
+
 const { group } = toRpcGroup([
   searchContract,
   searchDocsContract,
   readContract,
 ]);
 
-const protocol = RpcClient.layerProtocolHttp({ url: "/rpc" }).pipe(
-  Layer.provide([FetchHttpClient.layer, RpcSerialization.layerJson])
-);
+const protocol = RpcClient.layerProtocolHttp({
+  url: withSiteBasePath("/rpc"),
+}).pipe(Layer.provide([FetchHttpClient.layer, RpcSerialization.layerJson]));
 
 const make = Effect.gen(function* makeDocumentQueries() {
   const client = yield* RpcClient.make(group).pipe(Effect.provide(protocol));

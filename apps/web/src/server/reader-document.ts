@@ -3,13 +3,15 @@ import * as Server from "foldkit/experimental/server";
 
 import type { ReaderPageFlags } from "../client/reader/model.js";
 import { readerMetadataHead } from "../reader-metadata.js";
+import { addSiteBasePath } from "../site-base-path.js";
 
 const ReaderDocumentHead = Schema.Struct({ readerHead: Schema.String });
 
-const iconHead = [
-  '<link rel="icon" type="image/svg+xml" href="/favicon.svg">',
-  '<link rel="icon" type="image/png" href="/glyph-white.png">',
-].join("\n");
+const iconHeadFor = (basePath: string) =>
+  [
+    `<link rel="icon" type="image/svg+xml" href="${addSiteBasePath(basePath, "/favicon.svg")}">`,
+    `<link rel="icon" type="image/png" href="${addSiteBasePath(basePath, "/glyph-white.png")}">`,
+  ].join("\n");
 
 const companyHead = [
   `<script src="https://cdn.usefathom.com/script.js" data-site="SSBYTYUQ" defer></script>`,
@@ -18,13 +20,14 @@ const companyHead = [
 
 export const withReaderHead = (
   application: Server.RenderedApplication,
-  page: ReaderPageFlags
+  page: ReaderPageFlags,
+  basePath = ""
 ) => ({
   ...application,
-  readerHead: readerMetadataHead(page.page.metadata, page.origin),
+  readerHead: `${iconHeadFor(basePath)}\n${companyHead}\n${readerMetadataHead(page.page.metadata, page.origin, basePath)}`,
 });
 
 export const renderDocument: Server.DocumentRenderer = (application, assets) =>
   Server.renderDocument(application, assets, {
-    head: `${iconHead}\n${companyHead}\n${Schema.decodeUnknownSync(ReaderDocumentHead)(application).readerHead}`,
+    head: Schema.decodeUnknownSync(ReaderDocumentHead)(application).readerHead,
   });
