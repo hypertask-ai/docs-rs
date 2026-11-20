@@ -148,26 +148,38 @@ it("keeps the canonical on the old public address and marks a prefixed page noin
 });
 
 const make = Effect.gen(function* readerSiteBaseFixture() {
-  const home = yield* readerHomeFlags(origin).pipe(
-    Effect.flatMap(Schema.decodeUnknownEffect(ReaderFlags))
-  );
-
   const bodies = yield* readerBodyFlags(origin);
 
-  const deep = yield* Option.match(
-    Option.fromNullishOr(
-      bodies.find((page) => page.page.path === "/AGENTS.md")
-    ),
+  const homeCandidate = yield* readerHomeFlags(origin);
+
+  const home = yield* Option.match(
+    homeCandidate === null
+      ? Option.fromNullishOr(bodies.find((page) => page.page.path === "/"))
+      : Option.some(homeCandidate),
     {
       onNone: () =>
         Effect.die(
           new Error(
-            "The reader build has no /AGENTS.md page, so the site base path has no deep page to check"
+            "The reader build has no home page flags, so the site base path test has no home page to check"
           )
         ),
-      onSome: Effect.succeed,
+      onSome: (flags) => Schema.decodeUnknownEffect(ReaderFlags)(flags),
     }
   );
+
+  const deepPage =
+    bodies.find((page) => page.page.path === "/getting-started/introduction/") ??
+    bodies.find((page) => page.page.path === "/AGENTS.md");
+
+  const deep = yield* Option.match(Option.fromNullishOr(deepPage), {
+    onNone: () =>
+      Effect.die(
+        new Error(
+          "The reader build has no deep docs page, so the site base path has no deep page to check"
+        )
+      ),
+    onSome: Effect.succeed,
+  });
 
   return { deep, home };
 });
