@@ -57,9 +57,8 @@ export const docsSearch = stylex.create({
     "::placeholder": { opacity: 0.2 },
     ":focus": { borderColor: docs.accent },
     ":focus-visible": {
-      outlineColor: docs.textStrong,
-      outlineOffset: "-1px",
-      outlineStyle: "solid",
+      outlineOffset: 0,
+      outlineStyle: "auto",
       outlineWidth: "1px",
     },
     appearance: "none",

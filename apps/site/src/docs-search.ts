@@ -164,7 +164,7 @@ const scoreOf = (
 
 const excerptWordsBefore = 6;
 
-const excerptWordsAfter = 6;
+const excerptWordsAfter = 5;
 
 const wordPattern = /[\p{L}\p{N}_]+/u;
 
