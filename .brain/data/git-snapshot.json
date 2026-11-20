@@ -198,7 +198,7 @@
     "apps/web/src/features/reader-subview-types.ts": "d1bfe47eef3a5b67e70e1a51f34fdf285db1b9dae99b69e9e4ac7669f110df73",
     "apps/web/src/features/reader-subviews-client.ts": "b1a098c8549d42bb5bbaa083cf3eb2dd6a0b951e273a2c1d9f0f204f30986347",
     "apps/web/src/features/reader.ts": "58138f4aef24304c7bcc802d2d2eac7626172a7338f0873cd5eb4b82b3832206",
-    "apps/web/src/server/reader-subviews-preload.ts": "e933e3e345a550da35f6c17722ec27236235ee5c58ea0b7b92e0247bfd437d26",
+    "apps/web/src/server/reader-subviews-preload.ts": "6d33a6158423494d4951a233688817b8e8a28d6d484dfbb8103661bc32dd4f31",
     "apps/web/src/server/render-reader.ts": "828f6de9a1d35f8001a708a981b8db8b77031f9ac2e909e8ab838ec6c6bab1da",
     "apps/web/test/all-stars.seam.test.ts": "75458169eb0f5f16cbf53d79daaea71c84c5616f6cb20b163f308a711c46e603",
     "apps/web/test/docs-head.test.ts": "49e6bebea1a395144b48596021bb3a16aa12c97c9131a8b6ceaf064b8603e8e5",

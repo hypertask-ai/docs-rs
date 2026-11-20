@@ -3,43 +3,43 @@ import { Effect, Option } from "effect";
 import type { ReaderPageFlags } from "../client/reader/model.js";
 import type { ReaderSubviewViews } from "../features/reader-subview-types.js";
 
-type MutableSubviewViews = {
-  [K in keyof ReaderSubviewViews]?: ReaderSubviewViews[K];
-};
-
 export const loadReaderSubviewViews = (flags: ReaderPageFlags) =>
   Effect.gen(function* load() {
-    const subviews: MutableSubviewViews = {};
+    const cafe = Option.isSome(flags.cafe)
+      ? {
+          cafe: (yield* Effect.promise(
+            () => import("../features/cafe/index.js")
+          )).view,
+        }
+      : {};
 
-    if (Option.isSome(flags.cafe)) {
-      const cafe = yield* Effect.promise(
-        () => import("../features/cafe/index.js")
-      );
+    const docs = Option.isSome(flags.docs)
+      ? {
+          docs: (yield* Effect.promise(() => import("../features/app.js")))
+            .view,
+        }
+      : {};
 
-      subviews.cafe = cafe.view;
-    }
+    const motion = Option.isSome(flags.motion)
+      ? {
+          motion: (yield* Effect.promise(
+            () => import("../features/motion/index.js")
+          )).view,
+        }
+      : {};
 
-    if (Option.isSome(flags.docs)) {
-      const docs = yield* Effect.promise(() => import("../features/app.js"));
+    const tube = Option.isSome(flags.tube)
+      ? {
+          tube: (yield* Effect.promise(
+            () => import("../features/tube/index.js")
+          )).view,
+        }
+      : {};
 
-      subviews.docs = docs.view;
-    }
-
-    if (Option.isSome(flags.motion)) {
-      const motion = yield* Effect.promise(
-        () => import("../features/motion/index.js")
-      );
-
-      subviews.motion = motion.view;
-    }
-
-    if (Option.isSome(flags.tube)) {
-      const tube = yield* Effect.promise(
-        () => import("../features/tube/index.js")
-      );
-
-      subviews.tube = tube.view;
-    }
-
-    return subviews;
+    return {
+      ...cafe,
+      ...docs,
+      ...motion,
+      ...tube,
+    } as Partial<ReaderSubviewViews>;
   });
