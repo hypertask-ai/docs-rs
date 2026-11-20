@@ -1,0 +1,38 @@
+{
+  "kind": "hidden-from-sidebar",
+  "path": "/features/reports/",
+  "title": "Reports",
+  "contents": [
+    {
+      "href": "#_top",
+      "text": "Overview"
+    },
+    {
+      "href": "#review-board-velocity",
+      "text": "Review board velocity"
+    },
+    {
+      "href": "#create-a-saved-report",
+      "text": "Create a saved report"
+    },
+    {
+      "href": "#cli",
+      "text": "CLI"
+    },
+    {
+      "href": "#mcp",
+      "text": "MCP"
+    },
+    {
+      "href": "#status-updates",
+      "text": "Status updates"
+    },
+    {
+      "href": "#best-practices",
+      "text": "Best practices"
+    }
+  ],
+  "pagination": [],
+  "footerText": "© 2026 Hypertask Lab Ltd.",
+  "url": "https://docs.hypertask.ai/features/reports/"
+}

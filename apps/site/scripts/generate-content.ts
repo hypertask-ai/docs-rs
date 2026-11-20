@@ -52,7 +52,8 @@ import {
   contentPagePath,
 } from "../src/content-data.ts";
 import { markdownDiscoveryLinks } from "../src/content-links.ts";
-import { docsPageMarkdown, isDocsRoute } from "../src/docs-export.ts";
+import { docsPageMarkdown, docsPageTitle } from "../src/docs-export.ts";
+import { docsPageRoutes, isDocsPageRoute } from "../src/docs-page-routes.ts";
 import { tokenmaxxTitle } from "../src/house-ad-copy.ts";
 import {
   addInboundCounts,
@@ -127,6 +128,7 @@ import { lawSpecs } from "./content-specs.ts";
 import type { SourceSpec } from "./content-specs.ts";
 import { dailyLogMarkdown, historyArgs } from "./daily-log.ts";
 import { referenceBodies, writeDocFences } from "./doc-fences.ts";
+import { readDocsPageSpecs } from "./docs-content.ts";
 import { renderCopyPrompt, renderDocumentShell } from "./document-html.ts";
 import { emitAssets } from "./emit-assets.ts";
 import { openGitSnapshot } from "./git-snapshot.ts";
@@ -242,9 +244,11 @@ interface DocumentProps {
   readonly breadcrumbName?: string;
   readonly contentDates?: ReturnType<typeof contentDates>;
   readonly description: string;
+  readonly jsonLd?: boolean;
   readonly ogImageUrl: string;
   readonly origin: string;
   readonly path: string;
+  readonly repeatedTitle?: boolean;
   readonly title: string;
 }
 
@@ -315,6 +319,58 @@ const stableHeadingIds = (): ((tree: HastNode) => void) => (tree) => {
 
   visit(tree);
 };
+
+const docsHeadingSlug = (value: string) =>
+  value
+    .toLowerCase()
+    .trim()
+    .replaceAll(/[^\p{L}\p{N}\p{M}_\s-]/gu, "")
+    .replaceAll(/\s/gu, "-");
+
+const docsHeadingIds = (): ((tree: HastNode) => void) => (tree) => {
+  const used = new Set<string>();
+
+  const reserve = (node: HastNode): void => {
+    const id = node.properties?.id;
+
+    if (Predicate.isString(id)) {
+      used.add(id);
+    }
+
+    for (const child of node.children ?? []) {
+      reserve(child);
+    }
+  };
+
+  reserve(tree);
+
+  const visit = (node: HastNode): void => {
+    if (node.tagName !== undefined && /^h[1-6]$/u.test(node.tagName)) {
+      const base = docsHeadingSlug(nodeText(node)) || "section";
+      let id = base;
+      let suffix = 1;
+
+      while (used.has(id)) {
+        id = `${base}-${suffix}`;
+        suffix += 1;
+      }
+
+      used.add(id);
+      node.properties = { ...node.properties, id };
+    }
+
+    for (const child of node.children ?? []) {
+      visit(child);
+    }
+  };
+
+  visit(tree);
+};
+
+const withoutTemplateHome = <A extends { readonly routePath: `/${string}` }>(
+  hasDocsHome: boolean,
+  page: A
+): readonly A[] => (hasDocsHome ? [] : [page]);
 
 const referenceSource = (route: string) =>
   `<LinkedFrom page="${escapeHtml(route)}" />\n\n<UnlinkedMentions page="${escapeHtml(route)}" />`;
@@ -537,7 +593,8 @@ const compileMarkdownBody = Effect.fn("compileMarkdownBody")(
     targets: ReadonlyMap<string, string> = emptyTargets,
     loreTerms: readonly LoreTermTarget[] = [],
     routePath: string = sourcePath,
-    registry: ComponentRegistry = defaultGraphRegistry
+    registry: ComponentRegistry = defaultGraphRegistry,
+    options: { readonly docsPage?: boolean } = {}
   ): Effect.fn.Return<
     {
       readonly bodyHtml: string;
@@ -564,13 +621,21 @@ const compileMarkdownBody = Effect.fn("compileMarkdownBody")(
             createComponentRegistry({
               ...defaultGraphRegistry,
               Code: registry.Code ?? codeComponent(new Map()),
-            })
+            }),
+            options
           )
         : undefined;
 
     const linkedLoreRoutes = new Set<string>();
     const linkedLoreTerms = new Map<string, string>();
     const unlinkedProse: UnlinkedProse[] = [];
+    const docsPage = options.docsPage === true;
+    const codeTargets = docsPage ? emptyTargets : targets;
+    const terms = docsPage ? [] : loreTerms;
+
+    const highlight = docsPage
+      ? (code: string) => highlighter.render(code, "text")
+      : highlighter.render;
 
     const renderPrompt = source.includes("<CopyPrompt")
       ? renderPromptHtml
@@ -585,19 +650,20 @@ const compileMarkdownBody = Effect.fn("compileMarkdownBody")(
           : buildError("markdown html", sourcePath, cause),
       try: () =>
         renderMarkdownHtml(htmlSource, {
-          highlight: highlighter.render,
+          highlight,
+          rawHtmlParagraphs: !docsPage,
           rehypePlugins: [
             ...(["/lore/", "/systems/", "/skills/"].some((prefix) =>
               routePath.startsWith(prefix)
             )
               ? [paragraphAnchors(htmlSource)]
               : []),
-            stableHeadingIds,
+            docsPage ? docsHeadingIds : stableHeadingIds,
             responsiveTables,
-            linkCodeSpans(targets),
-            linkStackEntities,
+            linkCodeSpans(codeTargets),
+            ...(docsPage ? [] : [linkStackEntities]),
             linkLoreTerms(
-              loreTerms,
+              terms,
               routePath,
               linkedLoreRoutes,
               12,
@@ -606,6 +672,7 @@ const compileMarkdownBody = Effect.fn("compileMarkdownBody")(
             collectUnlinkedProse(unlinkedProse),
             dropOffSiteImages,
           ],
+          smartypants: !docsPage,
           sourcePath,
         }),
     });
@@ -674,7 +741,7 @@ const renderDocument = Effect.fn("renderDocument")(function* renderDocument(
 
   const document = `<!doctype html>
 <html lang="en">
-<head>${rendered.head}${props.noindex === true ? "" : structuredData({ dates: props.contentDates ?? {}, description: props.description, origin: props.origin, path: props.path, title: props.breadcrumbName ?? props.title })}</head>
+<head>${rendered.head}${props.noindex === true || props.jsonLd === false ? "" : structuredData({ dates: props.contentDates ?? {}, description: props.description, origin: props.origin, path: props.path, title: props.breadcrumbName ?? props.title })}</head>
 <body>${props.path === "/tokenmaxx" ? "" : `<!-- ${agentPointerHtml} -->`}${rendered.body}</body>
 </html>`;
 
@@ -695,12 +762,14 @@ const renderDocument = Effect.fn("renderDocument")(function* renderDocument(
     });
   }
 
-  yield* Effect.try({
-    catch: (cause) => buildError("document title", sourcePath, cause),
-    try: () => {
-      assertDocumentTitle(document, sourcePath);
-    },
-  });
+  if (props.repeatedTitle !== true) {
+    yield* Effect.try({
+      catch: (cause) => buildError("document title", sourcePath, cause),
+      try: () => {
+        assertDocumentTitle(document, sourcePath);
+      },
+    });
+  }
 
   return document;
 });
@@ -1240,8 +1309,11 @@ const program = Effect.gen(function* generateContent() {
     "",
   ].join("\n");
 
+  const docsSpecs = yield* readDocsPageSpecs;
+  const hasDocsHome = docsSpecs.some((spec) => spec.routePath === "/");
+
   const lawTexts: readonly PublicSpec[] = yield* Effect.forEach(
-    lawSpecs,
+    [...lawSpecs, ...docsSpecs],
     (spec) =>
       readText(spec.sourcePath).pipe(
         Effect.map((source) =>
@@ -1832,7 +1904,8 @@ const program = Effect.gen(function* generateContent() {
             targets,
             loreTermIndex,
             spec.routePath,
-            graphRegistry
+            graphRegistry,
+            { docsPage: isDocsPageRoute(spec.routePath) }
           );
 
         return {
@@ -1841,7 +1914,7 @@ const program = Effect.gen(function* generateContent() {
           linkedLoreTerms,
           spec: {
             ...spec,
-            text: isDocsRoute(spec.routePath)
+            text: isDocsPageRoute(spec.routePath)
               ? spec.text
               : appendLoreMarkdown(spec.text, linkedLoreRoutes),
           },
@@ -2415,6 +2488,7 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
   const llmsLoreLinks = loreMarkdownLinks(llmsBody.linkedLoreRoutes);
 
   const knownRoutes = new Set([
+    ...docsPageRoutes,
     tokenmaxxRoutePath,
     "/lore/cartridges/snes-sfam-cartridges.jpg",
     ...infrastructureImages.map((image) => image.path),
@@ -2876,12 +2950,14 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
       route: "/llms-full.txt",
       title: "Full agent guide",
     },
-    ...lawBodies.map(({ spec, bodyHtml }) => ({
-      bodyHtml,
-      description: spec.description,
-      route: spec.routePath,
-      title: spec.title,
-    })),
+    ...lawBodies
+      .filter(({ spec }) => !isDocsPageRoute(spec.routePath))
+      .map(({ spec, bodyHtml }) => ({
+        bodyHtml,
+        description: spec.description,
+        route: spec.routePath,
+        title: spec.title,
+      })),
     ...skillBodies.map(({ skill, bodyHtml }) => ({
       bodyHtml,
       description: skill.description,
@@ -2903,11 +2979,13 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
       route: trapRoutePath,
       title: noVerifyMetadata.title,
     },
-    ...lawBodies.map(({ spec, unlinkedProse }) => ({
-      prose: unlinkedProse,
-      route: spec.routePath,
-      title: spec.title,
-    })),
+    ...lawBodies
+      .filter(({ spec }) => !isDocsPageRoute(spec.routePath))
+      .map(({ spec, unlinkedProse }) => ({
+        prose: unlinkedProse,
+        route: spec.routePath,
+        title: spec.title,
+      })),
     ...skillBodies.map(({ skill, unlinkedProse }) => ({
       prose: unlinkedProse,
       route: skill.routePath,
@@ -2955,7 +3033,10 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
       {
         bodyHtml: addInboundCounts(bodyHtml, metadata.path, backlinkIndex),
         discoveryLinks: markdownDiscoveryLinks(metadata.path),
-        newsCalloutHtml: hasNewsCallout(metadata.path) ? newsCalloutHtml : "",
+        newsCalloutHtml:
+          hasNewsCallout(metadata.path) && !isDocsPageRoute(metadata.path)
+            ? newsCalloutHtml
+            : "",
         ogImageUrl: `${originToken}${ogImagePath(metadata.path)}?v=${contentVersion}`,
         origin: originToken,
         stylesheet,
@@ -3009,7 +3090,9 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
   };
 
   const lawBodiesWithFooters = lawBodies.map(({ bodyHtml, spec }) => ({
-    bodyHtml: `${bodyHtml}${pageFooterHtml(spec.routePath, spec.sourcePath)}`,
+    bodyHtml: isDocsPageRoute(spec.routePath)
+      ? bodyHtml
+      : `${bodyHtml}${pageFooterHtml(spec.routePath, spec.sourcePath)}`,
     spec,
   }));
 
@@ -3196,11 +3279,11 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
       routePath: page.routePath,
       title: page.title,
     })),
-    {
+    ...withoutTemplateHome(hasDocsHome, {
       description: tagline,
       routePath: "/",
       title: "ratstack.sh",
-    },
+    }),
     {
       description: noVerifyMetadata.description,
       routePath: trapRoutePath,
@@ -3273,22 +3356,32 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
     lawBodiesWithFooters,
     ({ bodyHtml, spec }) =>
       Effect.gen(function* renderPublic() {
+        const docsPage = isDocsPageRoute(spec.routePath);
+
         const documentHtml = yield* makeDocument(
-          bodyHtml,
+          docsPage
+            ? `<h1 id="_top">${escapeHtml(spec.title)}</h1>${bodyHtml}`
+            : bodyHtml,
           {
-            breadcrumbHref: "/",
-            breadcrumbLabel: "source files",
-            breadcrumbName: spec.title,
+            ...(docsPage
+              ? {
+                  breadcrumbName: spec.title,
+                  jsonLd: false,
+                  repeatedTitle: true,
+                }
+              : {
+                  breadcrumbHref: "/",
+                  breadcrumbLabel: "source files",
+                  breadcrumbName: spec.title,
+                }),
             contentDates: contentDates(spec.rawText, spec.sourcePath),
             description: spec.description,
             path: spec.routePath,
-            title: pageTitle(spec.title),
+            title: docsPage ? docsPageTitle(spec.title) : pageTitle(spec.title),
           },
           spec.sourcePath,
           contentVersion
         );
-
-        const docsPage = isDocsRoute(spec.routePath);
 
         const bodyMarkdown = docsPage
           ? spec.text
@@ -3935,11 +4028,11 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
         routePath: "/search",
         text: searchPageText,
       },
-      {
+      ...withoutTemplateHome(hasDocsHome, {
         documentHtml: homeDocumentHtml,
         routePath: "/",
         text: `${homeMarkdownTemplate}${pageFooterMarkdown("/")}`,
-      },
+      }),
       {
         documentHtml: loreIndexDocumentHtml,
         routePath: "/lore",

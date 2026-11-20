@@ -2,6 +2,10 @@ import { addSiteBasePath } from "./site-base-path.js";
 
 export const docsHtmlHandling = "force-trailing-slash" as const;
 
+export const docsPublishHost = "docs.hypertask.ai";
+
+export const docsPublishZoneName = "hypertask.ai";
+
 export const docsSitemapIndexPath = "/sitemap-index.xml";
 
 export const docsSitemapPath = "/sitemap-0.xml";

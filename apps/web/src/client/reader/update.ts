@@ -13,6 +13,7 @@ import * as Tube from "../tube/index.js";
 import {
   CopyPageMarkdown,
   CopyReaderText,
+  MoveFocus,
   WaitBeforeCopyReset,
 } from "./command.js";
 import { Message } from "./message.js";
@@ -31,6 +32,12 @@ const withCopyStatus = (
   id: string,
   status: typeof CopyStatus.Type
 ) => modifyFields(model, { copyStatuses: Record.set(id, status) });
+
+const withMobileNav = (model: ReaderModel, open: boolean) =>
+  modifyFields(model, { mobileNav: () => ({ open }) });
+
+const withMobileToc = (model: ReaderModel, open: boolean) =>
+  modifyFields(model, { mobileToc: () => ({ open }) });
 
 const isCopyInFlight = CopyStatus.isAnyOf(["Copying", "Copied"]);
 
@@ -103,9 +110,22 @@ export const update = (
               model: withCopyStatus(model, pageCopyId, CopyStatus.Copying()),
             }
           : { model },
+      ClickedMobileNavToggle: () => ({
+        model: withMobileNav(model, !model.mobileNav.open),
+      }),
+      ClickedMobileTocLink: () => ({
+        model: withMobileToc(model, false),
+      }),
+      ClickedMobileTocToggle: () => ({
+        model: withMobileToc(model, !model.mobileToc.open),
+      }),
+      ClickedOutsideMobileToc: () => ({
+        model: withMobileToc(model, false),
+      }),
       CompletedDetectClipboard: ({ access }) => ({
         model: modifyFields(model, { clipboardAccess: () => access }),
       }),
+      CompletedMoveFocus: () => ({ model }),
       CompletedWaitBeforeCopyReset: ({ id }) => ({
         model: CopyStatus.guards.Copied(copyStatusOf(model, id))
           ? withCopyStatus(model, id, CopyStatus.Idle())
@@ -127,6 +147,23 @@ export const update = (
         foldMotion(model, motionMessage),
       GotTubeMessage: ({ message: tubeMessage }) =>
         foldTube(model, tubeMessage),
+      MeasuredReadingAnchor: ({ id }) => ({
+        model: modifyFields(model, { readingAnchorId: () => id }),
+      }),
+      PressedEscapeInMobileNav: () =>
+        model.mobileNav.open
+          ? {
+              commands: [MoveFocus({ selector: "#docs-menu-button" })],
+              model: withMobileNav(model, false),
+            }
+          : { model },
+      PressedEscapeInMobileToc: () =>
+        model.mobileToc.open
+          ? {
+              commands: [MoveFocus({ selector: "#docs-mobile-toc-summary" })],
+              model: withMobileToc(model, false),
+            }
+          : { model },
       SucceededCopyPage: () => ({
         commands: [WaitBeforeCopyReset({ id: pageCopyId })],
         model: withCopyStatus(model, pageCopyId, CopyStatus.Copied()),

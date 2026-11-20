@@ -27,6 +27,28 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Lint every workflow file with actionlint
+        run: |
+          set -euo pipefail
+          version=1.7.7
+          case "$(uname -m)" in
+            x86_64)
+              asset="actionlint_${version}_linux_amd64.tar.gz"
+              sha256=023070a287cd8cccd71515fedc843f1985bf96c436b7effaecce67290e7e0757
+              ;;
+            aarch64|arm64)
+              asset="actionlint_${version}_linux_arm64.tar.gz"
+              sha256=401942f9c24ed71e4fe71b76c7d638f66d8633575c4016efd2977ce7c28317d0
+              ;;
+            *)
+              printf 'No actionlint %s build is pinned for %s. Fix: add that release asset and its checksum to this step.\n' "$version" "$(uname -m)" >&2
+              exit 1
+              ;;
+          esac
+          curl --silent --show-error --fail --location --output "$RUNNER_TEMP/$asset" "https://github.com/rhysd/actionlint/releases/download/v${version}/${asset}"
+          printf '%s  %s\n' "$sha256" "$RUNNER_TEMP/$asset" | sha256sum --check --strict
+          tar --extract --gzip --file "$RUNNER_TEMP/$asset" --directory "$RUNNER_TEMP" actionlint
+          "$RUNNER_TEMP/actionlint" -no-color .github/workflows/*.yml
       - name: Use Node.js 24.18.0
         uses: actions/setup-node@v4
         with:

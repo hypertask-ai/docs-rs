@@ -3,6 +3,8 @@ import { Data, Schema } from "effect";
 export const ReaderTag = Schema.Literals([
   "a",
   "abbr",
+  "article",
+  "aside",
   "blockquote",
   "br",
   "caption",
@@ -62,6 +64,7 @@ export const ReaderAttributeName = Schema.Literals([
   "aria-hidden",
   "class",
   "colspan",
+  "data-ask-help",
   "data-label",
   "data-line",
   "data-tier",

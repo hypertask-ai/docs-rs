@@ -1,14 +1,14 @@
 import { expect, it } from "vitest";
 
 import {
-  homeDocumentHtml,
   homeMarkdownTemplate,
+  learnModeDocumentHtml,
   tokenmaxxDocumentHtml,
   tokenmaxxMarkdown,
 } from "./generated-content.js";
 
 it.each([
-  ["home", homeDocumentHtml, 4],
+  ["learn mode", learnModeDocumentHtml, 1],
   ["tokenmaxx", tokenmaxxDocumentHtml, 1],
 ])(
   "%s gives every copy control a visible label and live status",

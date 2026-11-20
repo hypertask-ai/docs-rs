@@ -1,3 +1,5 @@
+import { isDocsPageRoute } from "../../site/src/docs-page-routes.js";
+
 export const readerRoutePaths: readonly string[] = [
   "/",
   "/lore/services-capture-dependencies",
@@ -31,7 +33,9 @@ export const isAllStarsProfilePath = (path: string) =>
   /^\/all-stars\/[a-z0-9](?:[a-z0-9-]{0,38})$/u.test(path);
 
 export const isReaderBodyRoutePath = (path: string) =>
-  readerBodyRoutePaths.includes(path) || isAllStarsProfilePath(path);
+  readerBodyRoutePaths.includes(path) ||
+  isAllStarsProfilePath(path) ||
+  isDocsPageRoute(path);
 
 export const isWorkerFirstReaderRoute = (path: string) =>
   path === "/prompts" || path.startsWith("/prompts/");

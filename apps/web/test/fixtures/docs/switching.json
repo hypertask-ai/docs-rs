@@ -1,0 +1,68 @@
+{
+  "routePath": "/getting-started/switching",
+  "titleTag": "Switching from Trello, Jira, or Asana | Hypertask Docs",
+  "description": "Switching from Trello, Jira, Asana, or Linear. Hypertask has no task import. Create tasks with an agent over MCP or the CLI.",
+  "headings": [
+    {
+      "level": 1,
+      "text": "Switching from Trello, Jira, or Asana"
+    },
+    {
+      "level": 2,
+      "text": "Importing tasks"
+    },
+    {
+      "level": 2,
+      "text": "How Hypertask differs"
+    }
+  ],
+  "links": [
+    {
+      "href": "/features/skills/",
+      "text": "AI skills"
+    },
+    {
+      "href": "/mcp/overview/",
+      "text": "MCP"
+    },
+    {
+      "href": "/cli/reference/",
+      "text": "CLI"
+    },
+    {
+      "href": "/cli/commands/#hypertask-task-create",
+      "text": "hypertask task create"
+    },
+    {
+      "href": "/api/tools-reference/#hypertask_tasks",
+      "text": "hypertask_tasks"
+    },
+    {
+      "href": "/mcp/workflows/",
+      "text": "Agent workflows"
+    },
+    {
+      "href": "/features/search-screen/",
+      "text": "search screen"
+    },
+    {
+      "href": "/features/keyboard-shortcuts/",
+      "text": "keyboard shortcuts"
+    },
+    {
+      "href": "/mcp/workflows/",
+      "text": "pick up board work"
+    },
+    {
+      "href": "/features/byok/",
+      "text": "Bring Your Own Key"
+    },
+    {
+      "href": "/features/ai-features/#included-ai-allowance",
+      "text": "Included AI"
+    }
+  ],
+  "images": [],
+  "tabLabels": [],
+  "text": "Switching from Trello, Jira, or Asana Switching from Trello, Jira, or Asana usually starts with two questions: whether existing tasks can move over, and how Hypertask differs from Linear or Jira. Importing tasks Hypertask has no task import. There is no one-click import from Trello, Jira, Asana, or Linear. The import routes in the product import AI skills, not tasks. Export a CSV from the old tool. Connect an agent over MCP or the CLI, and ask it to create the tasks from that file. CLI: hypertask task create creates one task. It needs a project id and a title. MCP: hypertask_tasks with action create creates one task the same way. Agent workflows describe how an agent lists board work and creates tasks. How Hypertask differs Keyboard-first UI. The search screen is a keyboard-first way to find tasks, and the app publishes its keyboard shortcuts. AI agents. Agents pick up board work over MCP and the CLI. BYOK plan. Bring Your Own Key uses your own model keys. Included AI describes the Free, Pro, and BYOK allowances."
+}

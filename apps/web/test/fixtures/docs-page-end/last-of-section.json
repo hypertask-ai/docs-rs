@@ -1,0 +1,27 @@
+{
+  "kind": "last-of-section",
+  "path": "/getting-started/contact-support/",
+  "title": "Get help",
+  "contents": [
+    {
+      "href": "#_top",
+      "text": "Overview"
+    }
+  ],
+  "pagination": [
+    {
+      "href": "/getting-started/apps/",
+      "label": "Mobile and desktop apps",
+      "rel": "prev",
+      "text": "Previous"
+    },
+    {
+      "href": "/features/ai-features/",
+      "label": "AI features",
+      "rel": "next",
+      "text": "Next"
+    }
+  ],
+  "footerText": "© 2026 Hypertask Lab Ltd.",
+  "url": "https://docs.hypertask.ai/getting-started/contact-support/"
+}
