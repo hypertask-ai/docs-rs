@@ -115,5 +115,7 @@ it("names every broken file in the build failure message", () => {
 
   expect(fenceMessage(error.message)).toBeDefined();
   expect(error.message).toContain(valid.file);
-  expect(error.message).toContain("pnpm --filter @hypertask-docs/site generate");
+  expect(error.message).toContain(
+    "pnpm --filter @hypertask-docs/site generate"
+  );
 });
