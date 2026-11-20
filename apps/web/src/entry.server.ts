@@ -10,7 +10,7 @@ import {
   ReaderErrorPage,
   readerErrorPath,
 } from "../../site/src/reader-error-page.js";
-import { findPage } from "./client/reader-pages.js";
+import { findPage, pagePaths } from "./client/reader-pages.js";
 import { init } from "./client/reader/init.js";
 import { ReaderFlags } from "./client/reader/model.js";
 import { docsNotFoundPage, docsRedirectFor } from "./docs-addresses.js";
@@ -25,8 +25,16 @@ import {
   WebsiteBindings,
   websiteTelemetry,
 } from "./server/website-bindings.js";
+import {
+  isSiteBasePathSet,
+  isWithinSiteBasePath,
+  siteBasePath,
+  siteRobotsTag,
+  withSiteBasePath,
+  withoutSiteBasePath,
+} from "./site-base.js";
 
-export { pagePaths as prerenderPaths } from "./client/reader-pages.js";
+export const prerenderPaths = pagePaths.map(withSiteBasePath);
 
 export { renderDocument } from "./server/reader-document.js";
 
@@ -54,6 +62,10 @@ const previewHeaders = Effect.fn("reader.previewHeaders")(
 
       headers.set("X-Robots-Tag", "noindex");
       headers.set("X-Preview-Commit", commit);
+    }
+
+    if (isSiteBasePathSet) {
+      headers.set("X-Robots-Tag", siteRobotsTag);
     }
 
     return headers;
@@ -115,31 +127,72 @@ const renderErrorRoute = Effect.fn("reader.renderErrorRoute")(
 
     const headers = yield* previewHeaders(request);
 
-    return Rendered(withReaderHead(application, flags), {
+    return Rendered(withReaderHead(application, flags, siteBasePath), {
       headers,
       status: errorPage.value.code,
     });
   }
 );
 
+const refusedReaderPage = (pathname: string) => {
+  if (!isWithinSiteBasePath(pathname)) {
+    return Option.some(
+      new Response(`This address serves the site under ${siteBasePath}`, {
+        status: 404,
+      })
+    );
+  }
+
+  const route = withoutSiteBasePath(pathname);
+
+  return route === "/__rat" || route.startsWith("/__rat/")
+    ? Option.some(new Response("Not found", { status: 404 }))
+    : Option.none<Response>();
+};
+
+const readerRobots = (request: Request, route: string) =>
+  isSiteBasePathSet && route === "/robots.txt"
+    ? Option.some(
+        new Response(
+          request.method === "HEAD" ? null : "User-agent: *\nDisallow: /\n",
+          {
+            headers: { "Content-Type": "text/plain; charset=utf-8" },
+            status: 200,
+          }
+        )
+      )
+    : Option.none<Response>();
+
+const forwardedReaderRequest = (
+  request: Request,
+  route: string,
+  search: string
+) =>
+  isSiteBasePathSet
+    ? new Request(new URL(`${route}${search}`, request.url), request)
+    : request;
+
 export const renderReaderPage = Effect.fn("reader.renderPage")(
   function* renderReaderPage(request: Request) {
-    const { pathname } = new URL(request.url);
+    const { pathname, search } = new URL(request.url);
+    const refused = refusedReaderPage(pathname);
 
-    if (pathname === "/__rat" || pathname.startsWith("/__rat/")) {
+    if (Option.isSome(refused)) {
+      return yield* responded(request, refused.value);
+    }
+
+    const route = withoutSiteBasePath(pathname);
+
+    if (route === "/rpc" || route.startsWith("/rpc/")) {
+      const bindings = yield* WebsiteBindings;
+
       return yield* responded(
         request,
-        new Response("Not found", { status: 404 })
+        yield* bindings.forward(forwardedReaderRequest(request, route, search))
       );
     }
 
-    if (pathname === "/rpc" || pathname.startsWith("/rpc/")) {
-      const bindings = yield* WebsiteBindings;
-
-      return yield* responded(request, yield* bindings.forward(request));
-    }
-
-    if (pathname === readerErrorPath) {
+    if (route === readerErrorPath) {
       return yield* renderErrorRoute(request);
     }
 
@@ -153,20 +206,26 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
       );
     }
 
-    const redirect = docsRedirectFor(pathname);
+    const robots = readerRobots(request, route);
+
+    if (Option.isSome(robots)) {
+      return yield* responded(request, robots.value);
+    }
+
+    const redirect = docsRedirectFor(route);
 
     if (redirect !== undefined) {
       return yield* responded(
         request,
         new Response(null, {
-          headers: { location: redirect.destination },
+          headers: { location: withSiteBasePath(redirect.destination) },
           status: redirect.status,
         })
       );
     }
 
-    const route = pathname === "/" ? pathname : pathname.replace(/\/$/u, "");
-    const found = yield* findPage(route);
+    const routePath = route === "/" ? route : route.replace(/\/$/u, "");
+    const found = yield* findPage(routePath);
 
     if (Option.isNone(found)) {
       const notFound = docsNotFoundPage(pathname);
@@ -184,7 +243,7 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
     }
 
     const page = found.value;
-    const promptRoute = isWorkerFirstReaderRoute(route);
+    const promptRoute = isWorkerFirstReaderRoute(routePath);
     const prerender = new URL(request.url).origin === readerPrerenderOrigin;
 
     if (
@@ -221,7 +280,7 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
     }
 
     return Rendered(
-      withReaderHead(application, page),
+      withReaderHead(application, page, siteBasePath),
       prerender
         ? { status: page.page.status }
         : { headers, status: page.page.status }

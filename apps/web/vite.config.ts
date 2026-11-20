@@ -8,9 +8,11 @@ import { readerFinalizationPlugin } from "./reader-finalization.js";
 import { readerPagesPlugin } from "./reader-pages.js";
 import { readerPrerenderOrigin } from "./src/server/prerender-origin.js";
 import type { BackendFetch } from "./src/server/rpc.js";
+import { normalizeSiteBasePath } from "./src/site-base-path.js";
 import { stylexPlugin } from "./stylex.js";
 
 export default defineConfig({
+  base: normalizeSiteBasePath(process.env.SITE_BASE_PATH) || "/",
   build: {
     rolldownOptions: { external: [/^cloudflare:/u] },
   },

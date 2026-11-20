@@ -11,7 +11,7 @@ import {
   docsPageTitleFromDocumentTitle,
 } from "../src/docs-head.js";
 import type { DocsHead } from "../src/docs-head.js";
-import { view } from "../src/features/reader.js";
+import { view, viewAt } from "../src/features/reader.js";
 import { escapeAttribute } from "../src/reader-metadata.js";
 import {
   renderDocument,
@@ -249,6 +249,20 @@ const builtDocument = (flags: ReaderPageFlags) =>
     });
   });
 
+const mountedDocument = (flags: ReaderPageFlags, basePath: string) =>
+  Effect.gen(function* mountedReaderDocument() {
+    const rendered = yield* renderToString(
+      { Flags: ReaderFlags, init, view: viewAt(basePath) },
+      { flags, isHydratable: false }
+    );
+
+    return renderDocument(withReaderHead(rendered, flags, basePath), {
+      entryScript: "/assets/reader.js",
+      modulePreloads: [],
+      stylesheets: [],
+    });
+  });
+
 const parsedDocument = (html: string): Document =>
   new DOMParser().parseFromString(html, "text/html");
 
@@ -429,5 +443,51 @@ it.effect(
       expect(
         parsed.head.querySelectorAll('script[type="application/ld+json"]')
       ).toHaveLength(2);
+    })
+);
+
+it.effect(
+  "keeps the docs head under the site base path, with prefixed links and noindex",
+  () =>
+    Effect.gen(function* mountedDocsHead() {
+      const basePath = "/ratstack";
+
+      const flags = flagsFor({
+        canonicalPath: "/changelog",
+        description: "New features, improvements, and fixes in Hypertask.",
+        jsonLd: "none",
+        ogImagePath: "/og/changelog.png",
+        path: "/changelog/",
+        robots: "index",
+        status: 200,
+        title: "Changelog | Hypertask Docs",
+      });
+
+      const parsed = parsedDocument(yield* mountedDocument(flags, basePath));
+
+      expect(parsed.title).toBe("Changelog | Hypertask Docs");
+      expect(
+        [...parsed.head.querySelectorAll('link[rel="canonical"]')].map(
+          (element) => element.getAttribute("href")
+        )
+      ).toStrictEqual([`${origin}/changelog/`]);
+      expect(contents(parsed, 'meta[name="robots"]')).toStrictEqual([
+        "noindex, nofollow",
+      ]);
+      expect(
+        [...parsed.head.querySelectorAll("link[rel='sitemap']")].map(
+          (element) => element.getAttribute("href")
+        )
+      ).toStrictEqual([`${basePath}/sitemap-index.xml`]);
+      expect(
+        [...parsed.head.querySelectorAll("link[rel='shortcut icon']")].map(
+          (element) => element.getAttribute("href")
+        )
+      ).toStrictEqual([`${basePath}/glyph-white.png`]);
+      expect(
+        [...parsed.head.querySelectorAll("link[rel='alternate']")].map(
+          (element) => element.getAttribute("href")
+        )
+      ).toStrictEqual([`${basePath}/changelog.xml`]);
     })
 );

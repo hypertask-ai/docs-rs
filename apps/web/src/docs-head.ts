@@ -1,8 +1,14 @@
 import { Option } from "effect";
 
+import {
+  docsBareAddress,
+  docsSitemapIndexPath,
+  docsTrailingSlashAddress,
+} from "./docs-addresses.js";
 import { searchCopy } from "./features/docs-copy.js";
 import { docsHeaderTabs } from "./features/docs-sidebar.js";
 import { escapeAttribute } from "./reader-metadata.js";
+import { addSiteBasePath } from "./site-base-path.js";
 
 export const docsSiteName = "Hypertask Docs";
 
@@ -12,8 +18,6 @@ export const docsPageTitle = (title: string): string =>
   `${title}${docsTitleSuffix}`;
 
 export const docsLocale = "en";
-
-export const docsSitemapPath = "/sitemap-index.xml";
 
 export const docsFaviconHref = "/glyph-white.png";
 
@@ -56,9 +60,6 @@ export interface DocsPageRoute {
   readonly status: number;
 }
 
-const barePath = (path: string): string =>
-  path === "/" ? path : path.replace(/\/+$/u, "");
-
 export const docsPageKind = ({
   path,
   status,
@@ -71,7 +72,7 @@ export const docsPageKind = ({
     return undefined;
   }
 
-  const route = barePath(path);
+  const route = docsBareAddress(path);
 
   if (route === "/search") {
     return "search";
@@ -93,6 +94,7 @@ export const docsPageKind = ({
 };
 
 export interface DocsHeadInput extends DocsPageRoute {
+  readonly basePath?: string;
   readonly description: string | undefined;
   readonly noindex: boolean;
   readonly origin: string;
@@ -111,9 +113,6 @@ const notFoundPageTitle = "404";
 
 const emptyToUndefined = (value: string | undefined): string | undefined =>
   value === undefined || value === "" ? undefined : value;
-
-const trailingSlash = (path: string): string =>
-  path.endsWith("/") ? path : `${path}/`;
 
 const nameTag = (name: string, content: string): string =>
   `<meta name="${escapeAttribute(name)}" content="${escapeAttribute(content)}">`;
@@ -142,7 +141,7 @@ const kindCanonicalPath = (
     return docsNotFoundPath;
   }
 
-  return trailingSlash(kind === "search" ? "/search" : input.path);
+  return docsTrailingSlashAddress(kind === "search" ? "/search" : input.path);
 };
 
 const kindDescription = (
@@ -158,13 +157,16 @@ const headFor = (input: DocsHeadInput, kind: DocsPageKind): DocsHead => {
   const canonical = `${input.origin}${kindCanonicalPath(input, kind)}`;
   const description = kindDescription(input, kind);
   const changelog = kind === "changelog-entry" || kind === "changelog-index";
-  const noindex = input.noindex || kind === "search";
+  const basePath = input.basePath ?? "";
+  const mounted = basePath !== "";
+  const noindex = mounted || input.noindex || kind === "search";
+  const robotsContent = mounted ? "noindex, nofollow" : "noindex";
 
   const tags = [
-    ...(noindex ? [nameTag("robots", "noindex")] : []),
+    ...(noindex ? [nameTag("robots", robotsContent)] : []),
     linkTag([
       ["rel", "sitemap"],
-      ["href", docsSitemapPath],
+      ["href", addSiteBasePath(basePath, docsSitemapIndexPath)],
     ]),
     ...(changelog
       ? [
@@ -172,13 +174,13 @@ const headFor = (input: DocsHeadInput, kind: DocsPageKind): DocsHead => {
             ["rel", "alternate"],
             ["type", docsChangelogFeed.type],
             ["title", docsChangelogFeed.title],
-            ["href", docsChangelogFeed.href],
+            ["href", addSiteBasePath(basePath, docsChangelogFeed.href)],
           ]),
         ]
       : []),
     linkTag([
       ["rel", "shortcut icon"],
-      ["href", docsFaviconHref],
+      ["href", addSiteBasePath(basePath, docsFaviconHref)],
       ["type", docsFaviconType],
     ]),
     propertyTag("og:title", pageTitle),
