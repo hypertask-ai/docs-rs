@@ -1,3 +1,5 @@
+import { addSiteBasePath } from "./site-base-path.js";
+
 export const docsHtmlHandling = "force-trailing-slash" as const;
 
 export const docsPublishHost = "docs.hypertask.ai";
@@ -107,18 +109,26 @@ export const docsNotFoundPage = (pathname: string) => ({
 });
 
 export const docsSitemapIndexXml = (
-  origin: string
+  origin: string,
+  basePath = ""
 ) => `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap><loc>${origin}${docsSitemapPath}</loc></sitemap>
+  <sitemap><loc>${origin}${addSiteBasePath(basePath, docsSitemapPath)}</loc></sitemap>
 </sitemapindex>
 `;
 
 export const docsSitemapXml = (
   origin: string,
-  pagePaths: readonly string[]
+  pagePaths: readonly string[],
+  basePath = ""
 ) => {
-  const addresses = [...new Set(pagePaths.map(docsTrailingSlashAddress))]
+  const addresses = [
+    ...new Set(
+      pagePaths.map((path) =>
+        docsTrailingSlashAddress(addSiteBasePath(basePath, path))
+      )
+    ),
+  ]
     .toSorted()
     .map((path) => `  <url><loc>${origin}${path}</loc></url>`)
     .join("\n");
@@ -130,31 +140,47 @@ ${addresses}
 `;
 };
 
-const redirectLine = ({ destination, source, status }: DocsRedirect) =>
-  `${source} ${destination} ${status}`;
+const redirectLine = (
+  { destination, source, status }: DocsRedirect,
+  basePath: string
+) =>
+  `${addSiteBasePath(basePath, source)} ${addSiteBasePath(basePath, destination)} ${status}`;
 
 export const docsRedirectLines = (
-  pagePaths: readonly string[]
+  pagePaths: readonly string[],
+  basePath = ""
 ): readonly string[] => {
   const legacySources = new Set(
     docsRedirects.map((rule) => docsBareAddress(rule.source))
   );
 
   const legacy = docsRedirects.flatMap((rule) => [
-    redirectLine(rule),
-    redirectLine({ ...rule, source: docsTrailingSlashAddress(rule.source) }),
+    redirectLine(rule, basePath),
+    redirectLine(
+      { ...rule, source: docsTrailingSlashAddress(rule.source) },
+      basePath
+    ),
   ]);
 
-  const slash = [...docsPageSet(pagePaths)]
-    .toSorted()
-    .flatMap((source) =>
-      source === "/" || legacySources.has(source)
-        ? []
-        : [`${source} ${docsTrailingSlashAddress(source)} 308`]
-    );
+  const slash = [...docsPageSet(pagePaths)].toSorted().flatMap((source) =>
+    source === "/" || legacySources.has(source)
+      ? []
+      : [
+          redirectLine(
+            {
+              destination: docsTrailingSlashAddress(source),
+              source,
+              status: 308,
+            },
+            basePath
+          ),
+        ]
+  );
 
   return [...legacy, ...slash];
 };
 
-export const docsRedirectsFile = (pagePaths: readonly string[]) =>
-  `${docsRedirectLines(pagePaths).join("\n")}\n`;
+export const docsRedirectsFile = (
+  pagePaths: readonly string[],
+  basePath = ""
+) => `${docsRedirectLines(pagePaths, basePath).join("\n")}\n`;
