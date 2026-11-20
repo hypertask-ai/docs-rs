@@ -22,11 +22,6 @@ const robotsMeta = (basePath: string, robots: "index" | "noindex") => {
   return robots === "noindex" ? [nameMeta("robots", "noindex")] : [];
 };
 
-const iconLinks = (basePath: string) => [
-  `<link rel="icon" type="image/svg+xml" href="${escapeAttribute(addSiteBasePath(basePath, "/favicon.svg"))}">`,
-  `<link rel="icon" type="image/png" href="${escapeAttribute(addSiteBasePath(basePath, "/glyph-white.png"))}">`,
-];
-
 export const readerMetadataHead = (
   metadata: ReaderPageMetadata,
   origin: string,
@@ -96,7 +91,6 @@ export const readerMetadataHead = (
   };
 
   return [
-    ...iconLinks(basePath),
     nameMeta("description", metadata.description),
     ...robotsMeta(basePath, metadata.robots),
     propertyMeta("og:type", "website"),

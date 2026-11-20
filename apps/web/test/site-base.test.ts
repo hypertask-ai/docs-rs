@@ -312,7 +312,7 @@ it.layer(NodeServices.layer)((test) => {
         const fs = yield* FileSystem.FileSystem;
         const path = yield* Path.Path;
         const root = path.resolve(import.meta.dirname, "..");
-        const client = yield* fs.makeTempDirectoryScoped();
+        const client = yield* fs.makeTempDirectory();
 
         yield* copyPublicIcons(root, client, "/ratstack");
 
@@ -321,13 +321,13 @@ it.layer(NodeServices.layer)((test) => {
           expect(yield* fs.exists(`${client}${icon}`)).toBe(false);
         }
 
-        const atOriginRoot = yield* fs.makeTempDirectoryScoped();
-
-        yield* copyPublicIcons(root, atOriginRoot, "");
+        yield* copyPublicIcons(root, client, "");
 
         for (const icon of publicIcons) {
-          expect(yield* fs.exists(`${atOriginRoot}${icon}`)).toBe(false);
+          expect(yield* fs.exists(`${client}${icon}`)).toBe(false);
         }
+
+        yield* fs.remove(client, { recursive: true });
       })
   );
 
