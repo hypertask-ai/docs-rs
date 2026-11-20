@@ -169,15 +169,50 @@ const badges = (body: string) =>
 const htmlAttributes = (body: string) =>
   body.replaceAll(/\bclassName=/gu, "class=");
 
-const singleLineComponents = (body: string) =>
-  body.replaceAll(
-    /<(?<name>[A-Z]\w*)\s*\n(?<attributes>(?:\s+[\w-]+="[^"]*"\s*\n)+)\s*\/>/gu,
-    (_match, name: string, attributes: string) =>
-      `<${name} ${attributes
-        .trim()
-        .split(/\s*\n\s*/u)
-        .join(" ")} />`
-  );
+const openingTagLine = /^<[A-Z]\w*$/u;
+
+const attributeLine = /^[\w-]+="[^"]*"$/u;
+
+const singleLineComponents = (body: string) => {
+  const lines = body.split("\n");
+  const joined: string[] = [];
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index] ?? "";
+    const opening = openingTagLine.exec(line.trim());
+
+    if (opening === null) {
+      joined.push(line);
+
+      continue;
+    }
+
+    let end = index + 1;
+    const attributes: string[] = [];
+    let attribute = (lines[end] ?? "").trim();
+
+    while (end < lines.length && attributeLine.test(attribute)) {
+      attributes.push(attribute);
+      end += 1;
+      attribute = (lines[end] ?? "").trim();
+    }
+
+    if (
+      attributes.length === 0 ||
+      end >= lines.length ||
+      (lines[end] ?? "").trim() !== "/>"
+    ) {
+      joined.push(line);
+
+      continue;
+    }
+
+    joined.push(`${opening[0]} ${attributes.join(" ")} />`);
+    index = end;
+  }
+
+  return joined.join("\n");
+};
 
 const mdxComments = (body: string) =>
   body.replaceAll(/\{\/\*[\s\S]*?\*\/\}/gu, "");
