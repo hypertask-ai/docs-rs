@@ -214,7 +214,7 @@
     "apps/web/test/reader.scene.test.ts": "fdfd0de6dd1812ce5591db072547d28020580be5106b5f47325adeae6e322171",
     "apps/web/test/site-base.test.ts": "68ef39f84370a4a7b78d1063e2cf204a2cac1dc60379b7809c61cbe1f266167d",
     "apps/web/test/tube.seam.test.ts": "c3193d9c2e20aa917a6f8cb2c393562b232d9c874a8b4b67113675f34eece7d5",
-    "apps/web/vitest.config.ts": "c0a89a9a4afe4a1f982089c31da80748dd08742686e302e3753585c3f5c2424f",
+    "apps/web/vitest.config.ts": "53f90111817357964fb88fa51c38d30f9a22c349d3a87c9695e166bff45405ed",
     "packages/basin/src/index.ts": "0b4046c42bb7285c36c87130644e71b1a6b3f067f799d7f2acdc2d3bfdcbb09b",
     "packages/capability/src/sandbox-subprocess.ts": "2ac3d1402460b5f5d9d0c08e6200034b592517fb4edfd6216d13adcb799caa25",
     "packages/capability/src/to-code-mode.ts": "49da4420eec142a5c37105c7243cca2594d6b3d0ef56ea78c36ee5366f83ffe6",
