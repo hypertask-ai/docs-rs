@@ -114,7 +114,7 @@ it.effect(
     Effect.gen(function* searchRow() {
       const { anchors, buttons } = yield* docsHeader("/");
 
-      const search = buttons[0];
+      const [search] = buttons;
 
       expect(search?.attributes["aria-label"]).toBe("Search docs");
       expect(search?.attributes["aria-keyshortcuts"]).toBe("Control+K");

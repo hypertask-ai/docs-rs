@@ -21,7 +21,7 @@ export const docsSearchExcerptParts = (
 
   const parts: DocsSearchExcerptPart[] = [];
 
-  for (const word of excerpt.split(/(\s+)/u)) {
+  for (const word of excerpt.split(/(?<gap>\s+)/u)) {
     if (word === "") {
       continue;
     }

@@ -164,12 +164,14 @@ const scoreOf = (
 
 const excerptWindow = 20;
 
+const wordPattern = /[\p{L}\p{N}_]+/u;
+
 const matchedWordIndex = (
   words: readonly string[],
   extensions: readonly string[]
 ): number =>
   words.findIndex((word) => {
-    const [stem] = word.toLowerCase().match(/[\p{L}\p{N}_]+/u) ?? [];
+    const stem = wordPattern.exec(word.toLowerCase())?.[0];
 
     return stem !== undefined && extensions.includes(stemWord(stem));
   });

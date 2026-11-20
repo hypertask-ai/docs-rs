@@ -10,8 +10,8 @@ export const docsSearch = stylex.create({
   clear: {
     alignItems: "center",
     backgroundColor: "transparent",
-    borderStyle: "none",
     borderRadius: "8px",
+    borderStyle: "none",
     color: docs.accent,
     cursor: "pointer",
     display: "flex",
@@ -168,18 +168,6 @@ export const docsSearch = stylex.create({
     fontWeight: 600,
     textDecoration: "none",
   },
-  results: {
-    listStyle: "none",
-    margin: 0,
-    padding: 0,
-  },
-  resultsArea: {
-    flexBasis: "0%",
-    flexGrow: 1000,
-    flexShrink: 1,
-    marginBlockStart: "16px",
-    minWidth: "min(320px, 100%)",
-  },
   resultTitle: {
     display: "block",
     fontFamily: docs.fontSans,
@@ -192,6 +180,18 @@ export const docsSearch = stylex.create({
   },
   resultTitleSelected: {
     backgroundColor: docs.surface,
+  },
+  results: {
+    listStyle: "none",
+    margin: 0,
+    padding: 0,
+  },
+  resultsArea: {
+    flexBasis: "0%",
+    flexGrow: 1000,
+    flexShrink: 1,
+    marginBlockStart: "16px",
+    minWidth: "min(320px, 100%)",
   },
   row: {
     ":focus-within": {
@@ -254,6 +254,13 @@ export const docsSearch = stylex.create({
     fontWeight: 600,
     textDecoration: "none",
   },
+  sectionTitle: {
+    display: "inline-block",
+    fontFamily: docs.fontSans,
+    fontSize: "16.8px",
+    fontWeight: 700,
+    margin: 0,
+  },
   treeLine: {
     backgroundColor: treeGrey,
     bottom: 0,
@@ -273,12 +280,5 @@ export const docsSearch = stylex.create({
     position: "absolute",
     top: "12px",
     width: "12px",
-  },
-  sectionTitle: {
-    display: "inline-block",
-    fontFamily: docs.fontSans,
-    fontSize: "16.8px",
-    fontWeight: 700,
-    margin: 0,
   },
 });
