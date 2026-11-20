@@ -152,10 +152,15 @@ const make = Effect.gen(function* readerSiteBaseFixture() {
 
   const homeCandidate = yield* readerHomeFlags(origin);
 
-  const home = yield* Option.match(
+  const decodedHome =
     homeCandidate === null
-      ? Option.fromNullishOr(bodies.find((page) => page.page.path === "/"))
-      : Option.some(homeCandidate),
+      ? undefined
+      : yield* Schema.decodeUnknownEffect(ReaderFlags)(homeCandidate);
+
+  const home = yield* Option.match(
+    Option.fromNullishOr(
+      decodedHome ?? bodies.find((page) => page.page.path === "/")
+    ),
     {
       onNone: () =>
         Effect.die(
@@ -163,7 +168,7 @@ const make = Effect.gen(function* readerSiteBaseFixture() {
             "The reader build has no home page flags, so the site base path test has no home page to check"
           )
         ),
-      onSome: (flags) => Schema.decodeUnknownEffect(ReaderFlags)(flags),
+      onSome: Effect.succeed,
     }
   );
 
