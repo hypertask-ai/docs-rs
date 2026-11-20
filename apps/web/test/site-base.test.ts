@@ -168,8 +168,9 @@ const make = Effect.gen(function* readerSiteBaseFixture() {
   );
 
   const deepPage =
-    bodies.find((page) => page.page.path === "/getting-started/introduction/") ??
-    bodies.find((page) => page.page.path === "/AGENTS.md");
+    bodies.find(
+      (page) => page.page.path === "/getting-started/introduction/"
+    ) ?? bodies.find((page) => page.page.path === "/AGENTS.md");
 
   const deep = yield* Option.match(Option.fromNullishOr(deepPage), {
     onNone: () =>
