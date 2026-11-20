@@ -15,8 +15,7 @@ import {
 import type { ReaderModel } from "../client/reader/model.js";
 import { docsHead, docsPageTitleFromDocumentTitle } from "../docs-head.js";
 import { siteBasePath, siteBuilder } from "../site-base.js";
-import { view as docsView } from "./app.js";
-import * as CafeView from "./cafe/index.js";
+import { readerSubviewView } from "./reader-subviews.js";
 import {
   docsActions,
   docsBreadcrumb,
@@ -32,7 +31,6 @@ import { docsChrome } from "./docs-chrome.stylex.js";
 import { docsPagination } from "./docs-page-end.js";
 import { docsHasContentsList } from "./docs-page-order.js";
 import { docsGroupForPath, docsPageMarkdownPath } from "./docs-sidebar.js";
-import * as MotionView from "./motion/index.js";
 import { readerFooter, readerNewsCallout } from "./reader-chrome.js";
 import { readerCopyIcon } from "./reader-copy-icon.js";
 import { renderReaderBlock } from "./reader-document.js";
@@ -53,8 +51,6 @@ import {
   systemsRouter,
   tokenmaxxRouter,
 } from "./site-route.js";
-import * as TubeView from "./tube/index.js";
-
 const copyStatusText = CopyStatus.match({
   Copied: () => "Copied ✓",
   Copying: () => "",
@@ -267,7 +263,7 @@ const bodyView = (model: ReaderModel, h: HtmlBuilder<ReaderMessage>) => [
         model: cafe,
         slotId: "cafe",
         toParentMessage: (message) => Message.GotCafeMessage({ message }),
-        view: CafeView.view,
+        view: readerSubviewView("cafe"),
       }),
     ],
   }),
@@ -278,7 +274,7 @@ const bodyView = (model: ReaderModel, h: HtmlBuilder<ReaderMessage>) => [
         model: docs,
         slotId: "docs",
         toParentMessage: (message) => Message.GotDocsMessage({ message }),
-        view: docsView,
+        view: readerSubviewView("docs"),
       }),
     ],
   }),
@@ -289,7 +285,7 @@ const bodyView = (model: ReaderModel, h: HtmlBuilder<ReaderMessage>) => [
         model: motion,
         slotId: "motion",
         toParentMessage: (message) => Message.GotMotionMessage({ message }),
-        view: MotionView.view,
+        view: readerSubviewView("motion"),
       }),
     ],
   }),
@@ -300,7 +296,7 @@ const bodyView = (model: ReaderModel, h: HtmlBuilder<ReaderMessage>) => [
         model: tube,
         slotId: "tube",
         toParentMessage: (message) => Message.GotTubeMessage({ message }),
-        view: TubeView.view,
+        view: readerSubviewView("tube"),
       }),
     ],
   }),

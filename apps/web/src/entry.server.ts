@@ -1,9 +1,5 @@
 import { Effect, Layer, Option, Schema } from "effect";
-import {
-  Rendered,
-  Responded,
-  renderToString,
-} from "foldkit/experimental/server";
+import { Rendered, Responded } from "foldkit/experimental/server";
 import { readerErrorTemplate } from "virtual:reader-error";
 
 import {
@@ -11,10 +7,8 @@ import {
   readerErrorPath,
 } from "../../site/src/reader-error-page.js";
 import { findPage, pagePaths } from "./client/reader-pages.js";
-import { init } from "./client/reader/init.js";
-import { ReaderFlags } from "./client/reader/model.js";
 import { docsNotFoundPage, docsRedirectFor } from "./docs-addresses.js";
-import { view } from "./features/reader.js";
+import { renderReaderToString } from "./server/render-reader.js";
 import { isWorkerFirstReaderRoute } from "./reader-routes.js";
 import { readerPrerenderOrigin } from "./server/prerender-origin.js";
 import { withReaderHead } from "./server/reader-document.js";
@@ -120,10 +114,7 @@ const renderErrorRoute = Effect.fn("reader.renderErrorRoute")(
 
     const flags = readerErrorFlags(errorTemplate, errorPage.value);
 
-    const application = yield* renderToString(
-      { Flags: ReaderFlags, init, view },
-      { flags }
-    );
+    const application = yield* renderReaderToString(flags);
 
     const headers = yield* previewHeaders(request);
 
@@ -231,10 +222,7 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
       const notFound = docsNotFoundPage(pathname);
       const flags = readerErrorFlags(errorTemplate, notFound);
 
-      const application = yield* renderToString(
-        { Flags: ReaderFlags, init, view },
-        { flags }
-      );
+      const application = yield* renderReaderToString(flags);
 
       return Rendered(withReaderHead(application, flags), {
         headers: yield* previewHeaders(request),
@@ -268,10 +256,7 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
       );
     }
 
-    const application = yield* renderToString(
-      { Flags: ReaderFlags, init, view },
-      { flags: page }
-    );
+    const application = yield* renderReaderToString(page);
 
     const headers = yield* previewHeaders(request);
 
