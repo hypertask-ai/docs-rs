@@ -81,7 +81,6 @@ it("the publish stack refuses DnsRecord, WorkerRoute and extra resources", () =>
   ).toBe(true);
   expect(
     docsRatstackResourcesAllowed({
-      ...allowed,
       Website: allowed.Website,
     })
   ).toBe(false);
