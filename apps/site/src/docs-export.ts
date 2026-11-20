@@ -36,6 +36,9 @@ const pageUrl = (origin: string, routePath: string): string =>
 const listedInLlms = (routePath: string): boolean =>
   routePath !== "/" && !routePath.startsWith("/changelog");
 
+export const docsPageTitle = (title: string): string =>
+  `${title} | Hypertask Docs`;
+
 export const isDocsRoute = (routePath: string): boolean =>
   routePath === "/connect-an-agent" ||
   docsSections.some((section) => routePath.startsWith(`/${section.prefix}`));

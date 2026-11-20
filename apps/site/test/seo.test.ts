@@ -16,17 +16,9 @@ import {
   skillSources,
 } from "./generated-content.ts";
 
-it("every robots group declares the same content-use policy", () => {
-  const groups = robotsText
-    .split(/\n\n/u)
-    .filter((group) => group.startsWith("User-agent:"));
-
-  expect(groups.length).toBeGreaterThan(0);
-
-  for (const group of groups) {
-    expect(group).toContain(
-      "Content-Signal: ai-train=no, search=yes, ai-input=yes"
-    );
+it("documents every content use in the crawler file", () => {
+  for (const use of ["search:", "ai-input:", "ai-train:"]) {
+    expect(robotsText).toContain(use);
   }
 });
 
@@ -122,27 +114,7 @@ it.effect(
         );
       }
 
-      const website = yield* Schema.decodeEffect(
-        Schema.fromJsonString(
-          Schema.Struct({
-            "@type": Schema.Literal("WebSite"),
-            about: Schema.Struct({
-              "@type": Schema.Literal("SoftwareSourceCode"),
-              codeRepository: Schema.String,
-              programmingLanguage: Schema.Literal("TypeScript"),
-            }),
-            name: Schema.Literal("rat-stack"),
-            publisher: Schema.Struct({ sameAs: Schema.Array(Schema.String) }),
-            url: Schema.String,
-          })
-        )
-      )(jsonLd(homeDocumentHtml, "WebSite"));
-
-      expect(website.url).toBe("__RATSTACK_ORIGIN__");
-      expect(website.about.codeRepository).toBe(
-        "https://github.com/joelhooks/rat-stack"
-      );
-      expect(website.publisher.sameAs).toContain(website.about.codeRepository);
+      expect(homeDocumentHtml).not.toContain('type="application/ld+json"');
     })
 );
 

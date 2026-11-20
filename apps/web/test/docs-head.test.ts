@@ -1,7 +1,3 @@
-// @effect-diagnostics nodeBuiltinImport:off -- The fixtures are the live site's own head, read as bytes.
-
-import { readFileSync } from "node:fs";
-
 import { expect, it } from "@effect/vitest";
 import { Effect, Option, Schema } from "effect";
 import { renderToString } from "foldkit/experimental/server";
@@ -44,10 +40,24 @@ const FixturePage = Schema.Struct({
   status: Schema.Int,
 });
 
-const fixtureDirectory = new URL("fixtures/docs-head/", import.meta.url);
+const fixtures = import.meta.glob<string>(
+  "./fixtures/docs-head/*.{html,json}",
+  {
+    eager: true,
+    import: "default",
+    query: "?raw",
+  }
+);
 
-const readFixture = (file: string): string =>
-  readFileSync(new URL(file, fixtureDirectory), "utf-8");
+const readFixture = (file: string): string => {
+  const fixture = fixtures[`./fixtures/docs-head/${file}`];
+
+  if (fixture === undefined) {
+    throw new Error(`No recorded fixture at ${file}`);
+  }
+
+  return fixture;
+};
 
 const pages = Schema.decodeSync(
   Schema.fromJsonString(Schema.Array(FixturePage))

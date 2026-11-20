@@ -1,0 +1,60 @@
+{
+  "routePath": "/getting-started/apps",
+  "titleTag": "Mobile and desktop apps | Hypertask Docs",
+  "description": "How to use Hypertask on Android and iPhone, and what to use on Windows and Mac.",
+  "headings": [
+    {
+      "level": 1,
+      "text": "Mobile and desktop apps"
+    },
+    {
+      "level": 2,
+      "text": "Is there a mobile app?"
+    },
+    {
+      "level": 3,
+      "text": "Android"
+    },
+    {
+      "level": 3,
+      "text": "iPhone and other phones"
+    },
+    {
+      "level": 2,
+      "text": "Is there a desktop app for Windows or Mac?"
+    }
+  ],
+  "links": [
+    {
+      "href": "https://app.hypertask.ai",
+      "text": "app.hypertask.ai"
+    },
+    {
+      "href": "https://app.hypertask.ai",
+      "text": "app.hypertask.ai"
+    },
+    {
+      "href": "https://github.com/hypertask-ai/android/releases",
+      "text": "Android releases page"
+    },
+    {
+      "href": "https://app.hypertask.ai",
+      "text": "app.hypertask.ai"
+    },
+    {
+      "href": "https://app.hypertask.ai/manifest.webmanifest",
+      "text": "app.hypertask.ai/manifest.webmanifest"
+    },
+    {
+      "href": "https://app.hypertask.ai",
+      "text": "app.hypertask.ai"
+    },
+    {
+      "href": "https://github.com/hypertask-ai/hypertask-desktop",
+      "text": "hypertask-desktop"
+    }
+  ],
+  "images": [],
+  "tabLabels": [],
+  "text": "Mobile and desktop apps Hypertask on a phone is the web app at app.hypertask.ai, installed on the device. On a computer, use that same site in a browser, or install it from the browser. Is there a mobile app? Android The official Android app is a Trusted Web Activity wrapper of app.hypertask.ai. It opens the web app with its own launcher icon, splash screen, and push notifications. The project README says to download the APK from the Android releases page. Note That releases page is the download location. If no APK is listed there yet, install the web app with Add to Home Screen until a release is published. iPhone and other phones Install the web app with Add to Home Screen. On an iPhone, open app.hypertask.ai in Safari, tap Share, then Add to Home Screen. On other phones, use the browser's Add to Home Screen or Install command. The site publishes a web app manifest named Hypertask with display set to standalone, so the home-screen icon opens Hypertask without the browser toolbar. The live manifest is app.hypertask.ai/manifest.webmanifest. Is there a desktop app for Windows or Mac? Use the web app in a browser. Chrome and Edge can also install app.hypertask.ai as an app from the address bar. That installed window is the same web app. No signed desktop download Hypertask does not publish a signed desktop installer for Windows or Mac. hypertask-desktop is an early-pilot native client written in Rust with GPUI. It covers Inbox, Board, and Task detail, and you build it from source. The repository has no GitHub release and no signed download."
+}
