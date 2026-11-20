@@ -64,7 +64,7 @@ const make = Effect.gen(function* docsParityFixture() {
 class DocsParityFixture extends Context.Service<
   DocsParityFixture,
   Effect.Success<typeof make>
->()("@rat-stack/web/test/DocsParityFixture") {
+>()("@hypertask-docs/web/test/DocsParityFixture") {
   static readonly layer = Layer.effect(DocsParityFixture, make).pipe(
     Layer.provide(NodeServices.layer)
   );

@@ -1,6 +1,6 @@
 import { expect, it } from "@effect/vitest";
-import { changelogFormatViolations } from "@rat-stack/core/changelog";
-import type { ChangelogSource } from "@rat-stack/core/changelog";
+import { changelogFormatViolations } from "@hypertask-docs/core/changelog";
+import type { ChangelogSource } from "@hypertask-docs/core/changelog";
 
 import { fenceMessage } from "../../../packages/core/test/fixtures/fence-message.ts";
 import { ChangelogFormatError } from "../scripts/changelog-content.ts";
@@ -115,5 +115,5 @@ it("names every broken file in the build failure message", () => {
 
   expect(fenceMessage(error.message)).toBeDefined();
   expect(error.message).toContain(valid.file);
-  expect(error.message).toContain("pnpm --filter @rat-stack/site generate");
+  expect(error.message).toContain("pnpm --filter @hypertask-docs/site generate");
 });
