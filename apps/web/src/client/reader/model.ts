@@ -111,17 +111,17 @@ export const findCopyPrompt = (
 ) => Array.findFirst(model.copyPrompts, (prompt) => prompt.id === id);
 
 export const currentAnchorText = (
-  model: Pick<ReaderModel, "heading" | "readingAnchorId" | "references">
+  model: Pick<ReaderModel, "readingAnchorId" | "references">
 ): string =>
   Option.match(model.readingAnchorId, {
-    onNone: () => model.heading,
+    onNone: () => "",
     onSome: (id) =>
       Option.match(model.references, {
-        onNone: () => model.heading,
+        onNone: () => "",
         onSome: (references) =>
           Option.match(
             Array.findFirst(references.anchors, (anchor) => anchor.id === id),
-            { onNone: () => model.heading, onSome: (anchor) => anchor.text }
+            { onNone: () => "", onSome: (anchor) => anchor.text }
           ),
       }),
   });

@@ -392,7 +392,7 @@ export const view = (
           () => Message.ClickedMobileNavToggle(),
           h
         ),
-        mobileToc,
+        ...(mobileToc === null ? [] : [mobileToc]),
         ...(group === undefined
           ? []
           : [docsBreadcrumb(model.page.path, model.heading, h)]),

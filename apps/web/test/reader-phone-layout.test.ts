@@ -38,6 +38,7 @@ const docsPage = initialModel({
   },
   references: Option.some({
     anchors: [
+      { id: "_top", text: "Overview" },
       { id: "choose-your-interface", text: "Choose your interface" },
       { id: "install-the-cli", text: "Install the CLI" },
     ],
@@ -90,21 +91,27 @@ it("escape inside the open drawer shuts it and puts focus back on the menu butto
   );
 });
 
-it("the phone contents bar starts shut, opens from its summary, and names the page heading first", () => {
-  const headingRow = within(
-    mobileToc,
-    role("link", { name: "What is Hypertask?" })
-  );
+it("the phone contents bar starts shut, opens from its summary, and shows the first page row", () => {
+  const overviewRow = within(mobileToc, role("link", { name: "Overview" }));
 
   scene(
     { update, view },
     given(docsPage),
     expect(mobileToc).toHaveAttr("open", "false"),
-    expect(mobileTocCurrent).toHaveText("What is Hypertask?"),
-    expect(headingRow).toHaveAttr("href", "#_top"),
-    expect(headingRow).toHaveAttr("aria-current", "true"),
+    expect(mobileTocCurrent).toHaveText(""),
+    expect(overviewRow).toHaveAttr("href", "#_top"),
+    expect(overviewRow).not.toHaveAttr("aria-current"),
     click(mobileTocToggle),
     expect(mobileToc).toHaveAttr("open", "true"),
+    Command.expectNone()
+  );
+});
+
+it("the phone contents bar stays away from a page that carries no contents", () => {
+  scene(
+    { update, view },
+    given(initialModel({ ...readerFlagsFixture, references: Option.none() })),
+    expect(mobileToc).toBeAbsent(),
     Command.expectNone()
   );
 });
@@ -160,7 +167,7 @@ it("the phone contents bar shows the section being read and marks its row", () =
     ).toHaveAttr("aria-current", "true"),
     expect(
       within(mobileToc, role("link", { name: "Choose your interface" }))
-    ).toHaveAttr("aria-current", "false"),
+    ).not.toHaveAttr("aria-current"),
     Command.expectNone()
   );
 });
@@ -172,6 +179,42 @@ it("the phone breadcrumb names the section and the page", () => {
     expect(selector(".docs-breadcrumb")).toContainText("Getting started"),
     expect(selector(".docs-breadcrumb")).toContainText("What is Hypertask?"),
     expect(selector(".docs-breadcrumb")).toContainText("\u203A"),
+    Command.expectNone()
+  );
+});
+
+it("the phone breadcrumb names the home page the way the old page does", () => {
+  scene(
+    { update, view },
+    given(
+      initialModel({
+        ...readerFlagsFixture,
+        bodyNodes: Option.none(),
+        copyPrompts: [],
+        heading: "Hypertask documentation",
+        page: {
+          ...readerFlagsFixture.page,
+          metadata: {
+            ...readerFlagsFixture.page.metadata,
+            canonicalPath: "/",
+            title: "Hypertask documentation",
+          },
+          path: "/",
+        },
+        references: Option.some({
+          anchors: [
+            { id: "_top", text: "Overview" },
+            { id: "choose-your-interface", text: "Choose your interface" },
+          ],
+          backlinks: [],
+          inboundCounts: {},
+        }),
+      })
+    ),
+    expect(selector(".docs-breadcrumb")).toContainText("Overview"),
+    expect(selector(".docs-breadcrumb")).not.toContainText(
+      "Hypertask documentation"
+    ),
     Command.expectNone()
   );
 });

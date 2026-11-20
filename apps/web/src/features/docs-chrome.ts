@@ -312,7 +312,7 @@ export const docsBreadcrumb = <Message>(
       " ",
       h.span([h.AriaHidden(true)], ["\u203A"]),
       " ",
-      h.span([], [title]),
+      h.span([], [path === "/" ? "Overview" : title]),
     ]
   );
 
@@ -336,99 +336,91 @@ const tocCaret = <Message>(h: HtmlBuilder<Message>) =>
   );
 
 export const docsMobileToc = <Message>(
-  model: Pick<
-    ReaderModel,
-    "heading" | "mobileToc" | "readingAnchorId" | "references"
-  >,
+  model: Pick<ReaderModel, "mobileToc" | "readingAnchorId" | "references">,
   options: {
     readonly onEscape: () => Message;
     readonly onSelect: () => Message;
     readonly onToggle: () => Message;
   },
   h: HtmlBuilder<Message>
-): Html => {
-  const anchors = [
-    { id: TOP_ANCHOR_ID, text: model.heading },
-    ...Option.match(model.references, {
-      onNone: () => [],
-      onSome: (references) => references.anchors,
-    }),
-  ];
+): Html | null =>
+  Option.match(model.references, {
+    onNone: () => null,
+    onSome: (references) => {
+      const currentId = Option.getOrElse(model.readingAnchorId, () => "");
 
-  const currentId = Option.getOrElse(
-    model.readingAnchorId,
-    () => TOP_ANCHOR_ID
-  );
-
-  return h.div(
-    [h.Class("docs-toc-slot")],
-    [
-      h.nav(
-        [h.AriaLabelledBy("docs-mobile-toc-summary"), h.Class("docs-toc-bar")],
+      return h.div(
+        [h.Class("docs-toc-slot")],
         [
-          h.details(
+          h.nav(
             [
-              h.Id("docs-mobile-toc"),
-              h.Class("docs-mobile-toc"),
-              h.Open(model.mobileToc.open),
-              h.OnKeyDownPreventDefault((key) =>
-                key === "Escape"
-                  ? Option.some(options.onEscape())
-                  : Option.none()
-              ),
+              h.AriaLabelledBy("docs-mobile-toc-summary"),
+              h.Class("docs-toc-bar"),
             ],
             [
-              h.summary(
+              h.details(
                 [
-                  h.Id("docs-mobile-toc-summary"),
-                  h.Class("docs-mobile-toc-summary"),
-                  h.OnClick(options.onToggle()),
+                  h.Id("docs-mobile-toc"),
+                  h.Class("docs-mobile-toc"),
+                  h.Open(model.mobileToc.open),
+                  h.OnKeyDownPreventDefault((key) =>
+                    key === "Escape"
+                      ? Option.some(options.onEscape())
+                      : Option.none()
+                  ),
                 ],
                 [
-                  h.span(
-                    [h.Class("docs-mobile-toc-toggle")],
-                    ["On this page", tocCaret(h)]
+                  h.summary(
+                    [
+                      h.Id("docs-mobile-toc-summary"),
+                      h.Class("docs-mobile-toc-summary"),
+                      h.OnClick(options.onToggle()),
+                    ],
+                    [
+                      h.span(
+                        [h.Class("docs-mobile-toc-toggle")],
+                        ["On this page", tocCaret(h)]
+                      ),
+                      h.span(
+                        [h.Class("docs-mobile-toc-current")],
+                        [currentAnchorText(model)]
+                      ),
+                    ]
                   ),
-                  h.span(
-                    [h.Class("docs-mobile-toc-current")],
-                    [currentAnchorText(model)]
-                  ),
-                ]
-              ),
-              h.div(
-                [h.Class("docs-mobile-toc-dropdown")],
-                [
-                  h.ul(
-                    [h.Class("docs-mobile-toc-list")],
-                    anchors.map((anchor) =>
-                      h.li(
-                        [h.Key(anchor.id)],
-                        [
-                          h.a(
+                  h.div(
+                    [h.Class("docs-mobile-toc-dropdown")],
+                    [
+                      h.ul(
+                        [h.Class("docs-mobile-toc-list")],
+                        references.anchors.map((anchor) =>
+                          h.li(
+                            [h.Key(anchor.id)],
                             [
-                              h.Href(`#${anchor.id}`),
-                              h.Class("docs-mobile-toc-link"),
-                              h.Attribute(
-                                "aria-current",
-                                anchor.id === currentId ? "true" : "false"
+                              h.a(
+                                [
+                                  h.Href(`#${anchor.id}`),
+                                  h.Class("docs-mobile-toc-link"),
+                                  ...(anchor.id === currentId
+                                    ? [h.Attribute("aria-current", "true")]
+                                    : []),
+                                  h.OnClick(options.onSelect()),
+                                ],
+                                [anchor.text]
                               ),
-                              h.OnClick(options.onSelect()),
-                            ],
-                            [anchor.text]
-                          ),
-                        ]
-                      )
-                    )
+                            ]
+                          )
+                        )
+                      ),
+                    ]
                   ),
                 ]
               ),
             ]
           ),
         ]
-      ),
-    ]
-  );
-};
+      );
+    },
+  });
 
 export const docsToc = <Message>(
   anchors: readonly { readonly id: string; readonly text: string }[],
