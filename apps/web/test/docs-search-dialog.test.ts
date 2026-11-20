@@ -1,5 +1,5 @@
 import { it } from "@effect/vitest";
-import { expect, given, role, scene, title } from "foldkit/scene";
+import { expect, given, role, scene, selector } from "foldkit/scene";
 
 import { update } from "../src/client/reader/update.js";
 import { view } from "../src/features/reader.js";
@@ -18,8 +18,14 @@ it("opens the docs search dialog on a page without the docs browser", () => {
       "docs-search"
     ),
     expect(role("dialog", { name: "Search docs" })).toExist(),
-    expect(title("Search docs")).toHaveAttr("placeholder", "Search docs"),
-    expect(role("textbox", { name: "Search docs" })).toHaveAttr("type", "text"),
+    expect(selector('[role="search"]')).toHaveAttr(
+      "aria-label",
+      "Search this site"
+    ),
+    expect(role("textbox", { name: "Search docs" })).toHaveAttr(
+      "placeholder",
+      "Search docs"
+    ),
     expect(role("button", { name: "Clear" })).toBeAbsent(),
     expect(role("button", { name: "Cancel" })).toExist()
   );
