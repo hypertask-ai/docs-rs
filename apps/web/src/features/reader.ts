@@ -18,10 +18,14 @@ import { view as docsView } from "./app.js";
 import * as CafeView from "./cafe/index.js";
 import {
   docsActions,
+  docsBreadcrumb,
   docsFooterNote,
   docsHeader,
+  docsMenuButton,
+  docsMobileToc,
   docsSidebar,
   docsToc,
+  TOP_ANCHOR_ID,
 } from "./docs-chrome.js";
 import { docsChrome } from "./docs-chrome.stylex.js";
 import { docsGroupForPath, docsPageMarkdownPath } from "./docs-sidebar.js";
@@ -358,14 +362,41 @@ const readerDocument = (
     onSome: (references) => docsToc(references.anchors, h),
   });
 
+  const mobileToc = docsMobileToc(
+    model,
+    {
+      onEscape: () => Message.PressedEscapeInMobileToc(),
+      onSelect: () => Message.ClickedMobileTocLink(),
+      onToggle: () => Message.ClickedMobileTocToggle(),
+    },
+    h
+  );
+
   const shellClass = `${stylex.props(readerStyles.shell).className ?? ""} docs-layout`;
   const kickerClass = `${stylex.props(docsChrome.kicker).className ?? ""} docs-kicker`;
 
   return {
     body: h.div(
-      [h.Class(shellClass)],
+      [
+        h.Class(shellClass),
+        h.DataAttribute("mobile-nav", model.mobileNav.open ? "open" : "closed"),
+        h.OnKeyDownPreventDefault((key) =>
+          key === "Escape" && model.mobileNav.open
+            ? Option.some(Message.PressedEscapeInMobileNav())
+            : Option.none()
+        ),
+      ],
       [
         docsHeader(model.page.path, h),
+        docsMenuButton(
+          model.mobileNav.open,
+          () => Message.ClickedMobileNavToggle(),
+          h
+        ),
+        ...(mobileToc === null ? [] : [mobileToc]),
+        ...(group === undefined
+          ? []
+          : [docsBreadcrumb(model.page.path, model.heading, h)]),
         h.div(
           [h.Class("docs-body")],
           [
@@ -386,6 +417,7 @@ const readerDocument = (
                   : [h.div([h.Class(kickerClass)], [group.label])]),
                 h.main(
                   [
+                    h.Id(TOP_ANCHOR_ID),
                     h.DataAttribute("path", model.page.path),
                     h.Class("docs-main"),
                   ],
