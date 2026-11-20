@@ -185,7 +185,7 @@
     "apps/site/src/worker.ts": "69262a8e780ca05ff3384905f56c2c91bcfa9139127f593b74c8d9093ce78bdf",
     "apps/web/src/client/docs/command.ts": "858fb626d70610cf8ccb47a28128734aebe2845376941a78a94dcc6349c19275",
     "apps/web/src/client/docs/message.ts": "d345b21c25b00dcccd44f172a9d7487f265b932c285729da37eb6686ef20eeb0",
-    "apps/web/src/client/docs/queries.ts": "4735ec6564826fdbb2bb83ba7b852f63141b9e7448a552669fe8795c8b8fdf90",
+    "apps/web/src/client/docs/queries.ts": "5b3604ce6b088ae5ffec819bc68b1ccc040b4e65192c5eb17d340495beecdd5f",
     "apps/web/src/dev/backend.ts": "49c825053fcccdc9fd8422cf581274a399ce632fb31554afb3b5d644af812918",
     "apps/web/src/features/app.ts": "3bebe36f98d6306069f3d3c2614c118d23b0523069e918c5b6f3391503982409",
     "apps/web/test/reader.scene.test.ts": "d31452a85c9e17d1dc438f24059d31e71a784b9c8d64b38cc896c13107e97824",
