@@ -10,7 +10,6 @@ export default defineConfig({
         extends: true,
         test: {
           environment: "jsdom",
-          setupFiles: ["test/setup-reader-subviews.ts"],
           include: [
             "test/app.test.ts",
             "test/docs-head.test.ts",
@@ -24,7 +23,6 @@ export default defineConfig({
         extends: true,
         test: {
           environment: "node",
-          setupFiles: ["test/setup-reader-subviews.ts"],
           exclude: [
             "test/app.test.ts",
             "test/docs-head.test.ts",

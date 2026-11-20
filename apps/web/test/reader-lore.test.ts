@@ -16,7 +16,7 @@ import {
 } from "../../site/test/reader-docs-header.ts";
 import { init } from "../src/client/reader/init.js";
 import { ReaderFlags } from "../src/client/reader/model.js";
-import { view } from "../src/features/reader.js";
+import { view } from "../src/features/reader-subviews-client.js";
 import { normalizedNodes } from "./reader-node-normalize.js";
 
 const loreShardCount = 8;

@@ -18,7 +18,7 @@ import {
 import { Message } from "../src/client/reader/message.js";
 import { ClipboardAccess } from "../src/client/reader/model.js";
 import { update } from "../src/client/reader/update.js";
-import { view } from "../src/features/reader.js";
+import { view } from "../src/features/reader-subviews-client.js";
 import { promptFixture, readerModelFixture } from "./reader-fixture.js";
 
 const { id, label, text: promptText } = promptFixture;

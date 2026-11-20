@@ -15,7 +15,11 @@ import {
 import type { ReaderModel } from "../client/reader/model.js";
 import { docsHead, docsPageTitleFromDocumentTitle } from "../docs-head.js";
 import { siteBasePath, siteBuilder } from "../site-base.js";
-import { readerSubviewView } from "./reader-subviews.js";
+import type {
+  ReaderSubviewKey,
+  ReaderSubviewResolver,
+  ReaderSubviewViews,
+} from "./reader-subview-types.js";
 import {
   docsActions,
   docsBreadcrumb,
@@ -51,6 +55,7 @@ import {
   systemsRouter,
   tokenmaxxRouter,
 } from "./site-route.js";
+
 const copyStatusText = CopyStatus.match({
   Copied: () => "Copied ✓",
   Copying: () => "",
@@ -246,7 +251,11 @@ const breadcrumbView = (
         ),
       ];
 
-const bodyView = (model: ReaderModel, h: HtmlBuilder<ReaderMessage>) => [
+const bodyView = (
+  model: ReaderModel,
+  h: HtmlBuilder<ReaderMessage>,
+  subview: ReaderSubviewResolver
+) => [
   ...Option.match(model.bodyNodes, {
     onNone: () => [h.h1([], [model.heading])],
     onSome: (nodes) =>
@@ -263,7 +272,7 @@ const bodyView = (model: ReaderModel, h: HtmlBuilder<ReaderMessage>) => [
         model: cafe,
         slotId: "cafe",
         toParentMessage: (message) => Message.GotCafeMessage({ message }),
-        view: readerSubviewView("cafe"),
+        view: subview("cafe"),
       }),
     ],
   }),
@@ -274,7 +283,7 @@ const bodyView = (model: ReaderModel, h: HtmlBuilder<ReaderMessage>) => [
         model: docs,
         slotId: "docs",
         toParentMessage: (message) => Message.GotDocsMessage({ message }),
-        view: readerSubviewView("docs"),
+        view: subview("docs"),
       }),
     ],
   }),
@@ -285,7 +294,7 @@ const bodyView = (model: ReaderModel, h: HtmlBuilder<ReaderMessage>) => [
         model: motion,
         slotId: "motion",
         toParentMessage: (message) => Message.GotMotionMessage({ message }),
-        view: readerSubviewView("motion"),
+        view: subview("motion"),
       }),
     ],
   }),
@@ -296,7 +305,7 @@ const bodyView = (model: ReaderModel, h: HtmlBuilder<ReaderMessage>) => [
         model: tube,
         slotId: "tube",
         toParentMessage: (message) => Message.GotTubeMessage({ message }),
-        view: readerSubviewView("tube"),
+        view: subview("tube"),
       }),
     ],
   }),
@@ -352,7 +361,8 @@ const bibliographyView = (
 
 const readerDocument = (
   model: ReaderModel,
-  h: HtmlBuilder<ReaderMessage>
+  h: HtmlBuilder<ReaderMessage>,
+  subview: ReaderSubviewResolver
 ): Document => {
   const group = docsGroupForPath(model.page.path);
 
@@ -430,7 +440,7 @@ const readerDocument = (
                     onSome: (title) => [readerNewsCallout(title, h)],
                   }),
                   ...(group === undefined ? breadcrumbView(model, h) : []),
-                  ...bodyView(model, h),
+                  ...bodyView(model, h, subview),
                   ...bibliographyView(model, h),
                   ...readerReferences(model, h),
                 ]
@@ -472,9 +482,24 @@ const readerDocument = (
   });
 };
 
-export const viewAt =
-  (basePath: string) =>
-  (model: ReaderModel, h: HtmlBuilder<ReaderMessage>): Document =>
-    readerDocument(model, siteBuilder(basePath, h));
+const makeSubviewResolver = (
+  subviews: Partial<ReaderSubviewViews>
+): ReaderSubviewResolver => {
+  return <K extends ReaderSubviewKey>(key: K) => {
+    const candidate = subviews[key];
 
-export const view = viewAt(siteBasePath);
+    if (candidate === undefined) {
+      throw new Error(`Reader subview ${String(key)} is not available`);
+    }
+
+    return candidate;
+  };
+};
+
+export const makeViewAt =
+  (subviews: Partial<ReaderSubviewViews>, basePath: string) =>
+  (model: ReaderModel, h: HtmlBuilder<ReaderMessage>): Document =>
+    readerDocument(model, siteBuilder(basePath, h), makeSubviewResolver(subviews));
+
+export const makeView = (subviews: Partial<ReaderSubviewViews>) =>
+  makeViewAt(subviews, siteBasePath);

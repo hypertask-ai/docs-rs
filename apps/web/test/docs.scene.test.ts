@@ -19,7 +19,7 @@ import { Message } from "../src/client/docs/message.js";
 import { Message as ReaderMessage } from "../src/client/reader/message.js";
 import { update as readerUpdate } from "../src/client/reader/update.js";
 import { update, view } from "../src/features/app.js";
-import { view as readerView } from "../src/features/reader.js";
+import { view as readerView } from "../src/features/reader-subviews-client.js";
 import { docsHome, docsResult, searchPage } from "./docs-fixture.js";
 
 const searchBox = role("textbox", { name: "Search the docs" });
