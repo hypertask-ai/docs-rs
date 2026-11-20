@@ -1,5 +1,5 @@
-import { gateOutcome } from "@rat-stack/check-harness";
-import type { Verdict } from "@rat-stack/check-harness";
+import { gateOutcome } from "@hypertask-docs/check-harness";
+import type { Verdict } from "@hypertask-docs/check-harness";
 import { Effect, Option, Schema } from "effect";
 
 import { DeployStepError } from "./contracts.js";

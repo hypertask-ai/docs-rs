@@ -1,15 +1,19 @@
 import { NodeHttpServer, NodeServices } from "@effect/platform-node";
 import { describe, expect, it } from "@effect/vitest";
-import { CafeDirectory, FileInspector, PromptLibrary } from "@rat-stack/core";
-import { CafeData } from "@rat-stack/core/contracts";
-import { Flags, eventFlags } from "@rat-stack/core/flags";
+import {
+  CafeDirectory,
+  FileInspector,
+  PromptLibrary,
+} from "@hypertask-docs/core";
+import { CafeData } from "@hypertask-docs/core/contracts";
+import { Flags, eventFlags } from "@hypertask-docs/core/flags";
 import {
   ActorLog,
   CallLog,
   OutcomeSchema,
   devtoolsLayer,
-} from "@rat-stack/devtools";
-import { Learner } from "@rat-stack/learn";
+} from "@hypertask-docs/devtools";
+import { Learner } from "@hypertask-docs/learn";
 import { Effect, FileSystem, Layer, Path, Schema } from "effect";
 import { HttpClient, HttpRouter, HttpServer } from "effect/http";
 import { HttpApiClient } from "effect/http-api";

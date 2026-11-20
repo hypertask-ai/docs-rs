@@ -2,13 +2,13 @@ import {
   ContactRefSchema,
   IntakeObjectSchema,
   IntakeVerbSchema,
-} from "@rat-stack/core/intake";
+} from "@hypertask-docs/core/intake";
 import type {
   ContactRef,
   IntakeContact,
   IntakeStatement,
-} from "@rat-stack/core/intake";
-import { RequestGeoSchema } from "@rat-stack/core/request-geo";
+} from "@hypertask-docs/core/intake";
+import { RequestGeoSchema } from "@hypertask-docs/core/request-geo";
 import { Schema } from "effect";
 
 export const INTAKE_TABLE = "intake_raw";

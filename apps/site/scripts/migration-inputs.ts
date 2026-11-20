@@ -1,5 +1,5 @@
-import { Drift, prepareCode } from "@rat-stack/code-snippets";
-import { shikiLayer } from "@rat-stack/code-snippets/shiki";
+import { Drift, prepareCode } from "@hypertask-docs/code-snippets";
+import { shikiLayer } from "@hypertask-docs/code-snippets/shiki";
 import { Effect, FileSystem, Layer, Schema } from "effect";
 
 import { collectBuildFences } from "./code-inputs.ts";

@@ -1,8 +1,8 @@
-import { ExecuteError } from "@rat-stack/capability";
-import { toRpcGroup } from "@rat-stack/capability/rpc-group";
-import { gateOutcome, runCheck } from "@rat-stack/check-harness";
-import type { Verdict } from "@rat-stack/check-harness";
-import { searchContract } from "@rat-stack/core/contracts";
+import { ExecuteError } from "@hypertask-docs/capability";
+import { toRpcGroup } from "@hypertask-docs/capability/rpc-group";
+import { gateOutcome, runCheck } from "@hypertask-docs/check-harness";
+import type { Verdict } from "@hypertask-docs/check-harness";
+import { searchContract } from "@hypertask-docs/core/contracts";
 import { Clock, Config, DateTime, Effect, Layer, Option, Schema } from "effect";
 import * as HttpClient from "effect/http/HttpClient";
 import * as HttpClientRequest from "effect/http/HttpClientRequest";

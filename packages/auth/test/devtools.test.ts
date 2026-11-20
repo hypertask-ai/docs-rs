@@ -1,8 +1,8 @@
 import { describe, expect, it } from "@effect/vitest";
-import { defineContract, implement } from "@rat-stack/capability";
-import { PersonIdSchema } from "@rat-stack/database";
-import { CallLog, devtools, devtoolsLayer } from "@rat-stack/devtools";
-import type { InvokeResult } from "@rat-stack/devtools";
+import { defineContract, implement } from "@hypertask-docs/capability";
+import { PersonIdSchema } from "@hypertask-docs/database";
+import { CallLog, devtools, devtoolsLayer } from "@hypertask-docs/devtools";
+import type { InvokeResult } from "@hypertask-docs/devtools";
 import { RuntimeContext } from "alchemy";
 import { Effect, Layer, Schema } from "effect";
 

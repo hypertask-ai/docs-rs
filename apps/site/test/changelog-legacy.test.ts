@@ -6,7 +6,7 @@ import { expect, it } from "@effect/vitest";
 import {
   announcementKeys,
   parseLegacyChangelog,
-} from "@rat-stack/core/changelog";
+} from "@hypertask-docs/core/changelog";
 import { Effect, FileSystem, Schema } from "effect";
 
 const repository = new URL("../../../", import.meta.url);

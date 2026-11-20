@@ -3,8 +3,8 @@ import {
   ContactRefSchema,
   IntakeEvents,
   QuestionIdSchema,
-} from "@rat-stack/core/intake";
-import type { IntakeStatement, QuestionId } from "@rat-stack/core/intake";
+} from "@hypertask-docs/core/intake";
+import type { IntakeStatement, QuestionId } from "@hypertask-docs/core/intake";
 import { Effect, Layer, Schema } from "effect";
 import * as Arbitrary from "effect/Arbitrary";
 

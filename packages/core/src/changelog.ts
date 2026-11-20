@@ -1,4 +1,4 @@
-import { defineContract } from "@rat-stack/capability/contract";
+import { defineContract } from "@hypertask-docs/capability/contract";
 import { DateTime, Option, Schema } from "effect";
 
 import { AssetReadError } from "./asset-read-error.js";

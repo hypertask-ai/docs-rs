@@ -1,8 +1,8 @@
 import * as Cloudflare from "@alchemy.run/cloudflare";
-import { d1AuthLayer } from "@rat-stack/auth/d1";
-import { FeedbackIdentity } from "@rat-stack/auth/feedback";
-import { AuthService } from "@rat-stack/auth/service";
-import { DatabaseVendor } from "@rat-stack/database";
+import { d1AuthLayer } from "@hypertask-docs/auth/d1";
+import { FeedbackIdentity } from "@hypertask-docs/auth/feedback";
+import { AuthService } from "@hypertask-docs/auth/service";
+import { DatabaseVendor } from "@hypertask-docs/database";
 import { Data, Effect, Layer } from "effect";
 import { HttpRouter } from "effect/http";
 

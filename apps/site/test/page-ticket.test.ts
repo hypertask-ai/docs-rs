@@ -1,6 +1,6 @@
 import { expect, it } from "@effect/vitest";
-import { IntakeTicket, PAGE_TICKET_SOURCE } from "@rat-stack/core/intake";
-import { PAGE_TICKET_PLACEHOLDER } from "@rat-stack/intake-live";
+import { IntakeTicket, PAGE_TICKET_SOURCE } from "@hypertask-docs/core/intake";
+import { PAGE_TICKET_PLACEHOLDER } from "@hypertask-docs/intake-live";
 import { Context, Effect, Layer, Option, Ref } from "effect";
 import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/http";
 

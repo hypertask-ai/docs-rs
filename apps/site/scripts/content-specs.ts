@@ -11,20 +11,20 @@ export const lawSpecs: readonly SourceSpec[] = [
       "What you may change, which commands to run, and which changes need approval.",
     routePath: "/AGENTS.md",
     sourcePath: "AGENTS.md",
-    title: "Agent rules for rat-stack (AGENTS.md)",
+    title: "Agent rules for the docs project (AGENTS.md)",
   },
   {
-    description: "What this starter is for and what a useful copy should keep.",
+    description: "What the docs must keep through the move, and what changes.",
     routePath: "/VISION.md",
     sourcePath: "VISION.md",
-    title: "Purpose and boundaries of rat-stack (VISION.md)",
+    title: "Purpose and boundaries of the docs project (VISION.md)",
   },
   {
     description:
-      "What is in the repo, how the example works, and how to run it.",
+      "What is in the repo, how the reader and the Worker fit, and how to run it.",
     routePath: "/README.md",
     sourcePath: "README.md",
-    title: "Build and run rat-stack (README.md)",
+    title: "Build and run the docs project (README.md)",
   },
   {
     description:

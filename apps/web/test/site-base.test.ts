@@ -193,7 +193,7 @@ const make = Effect.gen(function* readerSiteBaseFixture() {
 class ReaderSiteBaseFixture extends Context.Service<
   ReaderSiteBaseFixture,
   Effect.Success<typeof make>
->()("@rat-stack/web/test/ReaderSiteBaseFixture") {
+>()("@hypertask-docs/web/test/ReaderSiteBaseFixture") {
   static readonly layer = Layer.effect(ReaderSiteBaseFixture, make).pipe(
     Layer.provide(NodeServices.layer)
   );

@@ -4,8 +4,8 @@ import {
   isExpired,
   TICKET_TTL_MILLIS,
   TicketSourceSchema,
-} from "@rat-stack/core/intake";
-import type { TicketSource } from "@rat-stack/core/intake";
+} from "@hypertask-docs/core/intake";
+import type { TicketSource } from "@hypertask-docs/core/intake";
 import { Clock, Effect, Layer, Option, Redacted, Result, Schema } from "effect";
 import { Base64Url } from "effect/encoding";
 

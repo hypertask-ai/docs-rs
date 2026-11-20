@@ -4,8 +4,8 @@ import {
   IntakeEvents,
   IntakeEventsTest,
   IntakeEventsUnavailable,
-} from "@rat-stack/core/intake";
-import type { ContactRef, IntakeStatement } from "@rat-stack/core/intake";
+} from "@hypertask-docs/core/intake";
+import type { ContactRef, IntakeStatement } from "@hypertask-docs/core/intake";
 import {
   Context,
   Effect,

@@ -1,11 +1,11 @@
-import type { IntakeEvents } from "@rat-stack/core/intake";
-import type { SubscriberIntake } from "@rat-stack/core/interest";
+import type { IntakeEvents } from "@hypertask-docs/core/intake";
+import type { SubscriberIntake } from "@hypertask-docs/core/interest";
 import {
   IntakeSweep,
   JoinContactStore,
   JoinDeliveryDeadline,
   SWEEP_CONCURRENCY,
-} from "@rat-stack/core/join-interest";
+} from "@hypertask-docs/core/join-interest";
 import { Context, Duration, Effect, Layer, Option } from "effect";
 
 import type { AgentSignupOptions } from "./join-layer.js";

@@ -3,18 +3,18 @@ import {
   Flags,
   eventsEnabled,
   eventsIdentityMode,
-} from "@rat-stack/core/flags";
-import { InterestMode, InterestTokens } from "@rat-stack/core/interest";
-import type { InterestDirectory } from "@rat-stack/core/interest";
+} from "@hypertask-docs/core/flags";
+import { InterestMode, InterestTokens } from "@hypertask-docs/core/interest";
+import type { InterestDirectory } from "@hypertask-docs/core/interest";
 import {
   IntakeApplications,
   IntakeErasure,
   IntakeRedeliver,
-} from "@rat-stack/core/join-interest";
-import type { RequestCaptureSettings } from "@rat-stack/core/request-capture";
-import { webCryptoLayer } from "@rat-stack/core/web-crypto";
-import { intakeLiveLayer, intakeInstance } from "@rat-stack/intake-live";
-import { subscriberDeliveryLayer } from "@rat-stack/subscriber-delivery";
+} from "@hypertask-docs/core/join-interest";
+import type { RequestCaptureSettings } from "@hypertask-docs/core/request-capture";
+import { webCryptoLayer } from "@hypertask-docs/core/web-crypto";
+import { intakeLiveLayer, intakeInstance } from "@hypertask-docs/intake-live";
+import { subscriberDeliveryLayer } from "@hypertask-docs/subscriber-delivery";
 import { Stage } from "alchemy";
 import { Duration, Schema } from "effect";
 import * as Config from "effect/Config";
