@@ -12,6 +12,7 @@ export const docsComponentNames: ReadonlySet<string> = new Set([
   "CopyPrompt",
   "Diagram",
   "HumanOnly",
+  "LinkCard",
   "Sources",
   "Steps",
   "TabItem",
@@ -131,11 +132,27 @@ const decodeFrontmatter = (source: string): typeof DocsFrontmatter.Type => {
   );
 };
 
-const stripModuleScope = (body: string) =>
-  body
-    .split("\n")
-    .filter((line) => !/^(?:import|export)\s/u.test(line))
-    .join("\n");
+const stripModuleScope = (body: string) => {
+  const lines: string[] = [];
+  let inFence = false;
+
+  for (const line of body.split("\n")) {
+    if (/^\s*(?:```|~~~)/u.test(line)) {
+      inFence = !inFence;
+      lines.push(line);
+
+      continue;
+    }
+
+    if (!inFence && /^(?:import|export)\s/u.test(line)) {
+      continue;
+    }
+
+    lines.push(line);
+  }
+
+  return lines.join("\n");
+};
 
 const linkButtons = (body: string) =>
   body.replaceAll(
@@ -148,6 +165,54 @@ const badges = (body: string) =>
     /<Badge\b[^>]*\btext="(?<text>[^"]*)"[^>]*\/>/gu,
     (_match, text: string) => text
   );
+
+const htmlAttributes = (body: string) =>
+  body.replaceAll(/\bclassName=/gu, "class=");
+
+const openingTagLine = /^<[A-Z]\w*$/u;
+
+const attributeLine = /^[\w-]+="[^"]*"$/u;
+
+const singleLineComponents = (body: string) => {
+  const lines = body.split("\n");
+  const joined: string[] = [];
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index] ?? "";
+    const opening = openingTagLine.exec(line.trim());
+
+    if (opening === null) {
+      joined.push(line);
+
+      continue;
+    }
+
+    let end = index + 1;
+    const attributes: string[] = [];
+    let attribute = (lines[end] ?? "").trim();
+
+    while (end < lines.length && attributeLine.test(attribute)) {
+      attributes.push(attribute);
+      end += 1;
+      attribute = (lines[end] ?? "").trim();
+    }
+
+    if (
+      attributes.length === 0 ||
+      end >= lines.length ||
+      (lines[end] ?? "").trim() !== "/>"
+    ) {
+      joined.push(line);
+
+      continue;
+    }
+
+    joined.push(`${opening[0]} ${attributes.join(" ")} />`);
+    index = end;
+  }
+
+  return joined.join("\n");
+};
 
 const mdxComments = (body: string) =>
   body.replaceAll(/\{\/\*[\s\S]*?\*\/\}/gu, "");
@@ -192,7 +257,11 @@ export const convertDocsPage = (
       : stringifyYaml({ description: parsed.description, title });
 
   const body = tidy(
-    mdxComments(badges(linkButtons(stripModuleScope(rawBody))))
+    singleLineComponents(
+      mdxComments(
+        htmlAttributes(badges(linkButtons(stripModuleScope(rawBody))))
+      )
+    )
   );
 
   return {

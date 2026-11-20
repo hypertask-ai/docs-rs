@@ -1,5 +1,11 @@
 import * as HttpServerResponse from "effect/http/HttpServerResponse";
 
+import {
+  docsCacheControl,
+  docsErrorCacheControl,
+  docsHtmlContentType,
+} from "./docs-response-headers.js";
+
 const policy = (sources: {
   readonly base: string;
   readonly formAction: string;
@@ -69,7 +75,7 @@ export const securityHeaders = {
   "x-frame-options": "DENY",
 };
 
-export const htmlRevalidateEveryVisit = "no-cache";
+export const htmlRevalidateEveryVisit = docsCacheControl;
 
 export const secureResponse = (
   response: HttpServerResponse.HttpServerResponse,
@@ -79,8 +85,8 @@ export const secureResponse = (
 
   const secured = HttpServerResponse.setHeaders(response, securityHeaders).pipe(
     HttpServerResponse.setHeaders(
-      response.status >= 500
-        ? { "cache-control": "no-store" }
+      response.status >= 400
+        ? { "cache-control": docsErrorCacheControl }
         : response.headers
     )
   );
@@ -96,11 +102,12 @@ export const secureResponse = (
   return contentType.startsWith("text/html")
     ? HttpServerResponse.setHeaders(embeddable, {
         "cache-control":
-          response.status >= 500
-            ? "no-store"
+          response.status >= 400
+            ? docsErrorCacheControl
             : (response.headers["cache-control"] ?? htmlRevalidateEveryVisit),
         "content-security-policy":
           response.headers["content-security-policy"] ?? htmlPolicy,
+        "content-type": docsHtmlContentType,
       })
     : embeddable;
 };

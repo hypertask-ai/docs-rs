@@ -14,6 +14,7 @@ import {
   rpcContentDirectory,
   rpcProjection,
 } from "../../site/src/rpc-worker.js";
+import { docsHtmlHandling } from "../../web/src/docs-addresses.js";
 import previewDefinition, { previewProgram } from "../alchemy.preview.js";
 import { PreviewStage, previewResourcesAllowed } from "../src/preview.js";
 
@@ -43,7 +44,7 @@ it.effect.prop(
           expect(previewResourcesAllowed(stack.resources)).toBe(true);
           expect(stack.resources.Website?.Props).toMatchObject({
             assets: {
-              htmlHandling: "drop-trailing-slash",
+              htmlHandling: docsHtmlHandling,
               runWorkerFirst: [
                 "/rpc",
                 "/rpc/*",

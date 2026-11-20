@@ -1,3 +1,5 @@
+import { ChangelogEntry } from "@rat-stack/core/changelog";
+import type { ChangelogEntryValue } from "@rat-stack/core/changelog";
 import { CafeData, ResourceNotFound } from "@rat-stack/core/contracts";
 import { CardSchema } from "@rat-stack/core/learn";
 import type { Card } from "@rat-stack/core/learn";
@@ -22,6 +24,10 @@ import { AssetReadError } from "./static-assets-error.js";
 import { StaticAssets } from "./static-assets.js";
 
 interface ContentStoreService {
+  readonly changelog: Effect.Effect<
+    readonly ChangelogEntryValue[],
+    AssetReadError
+  >;
   readonly tokenmaxx: Effect.Effect<string, AssetReadError>;
   readonly cafe: Effect.Effect<typeof CafeData.Type, AssetReadError>;
   readonly learnDeck: Effect.Effect<readonly Card[], AssetReadError>;
@@ -117,6 +123,18 @@ const makeStore = Effect.fn("ContentStore.make")(function* makeStore(
     readData(assets, "/_content/catalog.json", ContentCatalog, generation)
   );
 
+  const changelog = yield* cacheCompletedData(
+    readData(
+      assets,
+      "/_content/changelog.json",
+      Schema.Struct({
+        entries: Schema.Array(ChangelogEntry),
+        version: Schema.Literal(1),
+      }),
+      generation
+    ).pipe(Effect.map((data) => data.entries))
+  );
+
   const tokenmaxx = yield* cacheCompletedData(
     readData(assets, "/_content/tokenmaxx.json", Schema.String, generation)
   );
@@ -149,6 +167,7 @@ const makeStore = Effect.fn("ContentStore.make")(function* makeStore(
   return {
     cafe,
     catalog,
+    changelog,
     graph,
     learnDeck,
     read: (id) =>

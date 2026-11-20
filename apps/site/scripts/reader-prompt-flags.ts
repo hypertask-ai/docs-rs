@@ -4,13 +4,11 @@ import {
   ReaderBlock,
   ReaderInline,
 } from "../../web/src/client/reader-document.ts";
-import { readerHomeFlags } from "./reader-home-flags.ts";
 import { prepareReaderSiteInputs } from "./reader-site-inputs.ts";
 
 export const readerPromptFlags = Effect.fn("readerPromptFlags")(
   function* readerPromptFlags(origin: string) {
     const inputs = yield* prepareReaderSiteInputs;
-    const base = yield* readerHomeFlags(origin);
     const indexPath = "/prompts";
     const index = inputs.pages.find((page) => page.path === indexPath);
 
@@ -21,10 +19,10 @@ export const readerPromptFlags = Effect.fn("readerPromptFlags")(
     }
 
     const common = {
-      ...base,
       bibliography: [],
       codeFences: [],
       copyPrompts: [],
+      origin,
       references: undefined,
       snippets: [],
       terms: [],

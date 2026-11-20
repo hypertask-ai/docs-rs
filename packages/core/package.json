@@ -79,6 +79,11 @@
       "import": "./dist/contracts.js",
       "default": "./dist/contracts.js"
     },
+    "./changelog": {
+      "types": "./src/changelog.ts",
+      "import": "./dist/changelog.js",
+      "default": "./dist/changelog.js"
+    },
     "./intake": {
       "types": "./src/intake.ts",
       "import": "./dist/intake.js",

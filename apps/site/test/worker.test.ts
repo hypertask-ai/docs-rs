@@ -34,9 +34,9 @@ import {
   lawResources,
   loreResources,
   linkHeader,
+  llmsFullText,
   llmsText,
   ogImagePath,
-  markdownDocument,
   mcpVersionText,
   publicPaths,
   robotsText,
@@ -478,42 +478,31 @@ it.effect(
           "text/markdown"
         );
         expect(markdownResponse.headers.get("link")).toBe(linkHeader);
-        expect(markdown).toBe(markdownDocument("https://ratstack.sh"));
-        expect(markdown).toContain("an app and its cloud as one typed program");
-        expect(markdown).toContain("## Four ideas");
-        expect(markdown.indexOf("## Connect an agent")).toBeLessThan(
-          markdown.indexOf("## Four ideas")
+        expect(markdown).toContain("# Hypertask documentation");
+        expect(markdown).toContain(
+          "Learn how people and AI agents share one board, and how to connect yours."
         );
         expect(markdown).toContain(
-          "Read https://ratstack.sh/llms.txt and use rat-stack as the reference\n"
+          "Hypertask runs on **boards**, **tasks** and **comments**."
         );
-        expect(markdown).toContain(
-          "claude mcp add --transport http rat-stack https://ratstack.sh/mcp"
-        );
-        expect(markdown).toContain("│  defineContract");
-        expect(markdown).toContain("/.well-known/agent-skills/index.json");
-        expect(markdown).toContain("## Source files");
-        expect(markdown).toContain(
-          "[Agent rules for rat-stack (AGENTS.md)](/AGENTS.md)"
-        );
-        expect(markdown).toContain(
-          "[Purpose and boundaries of rat-stack (VISION.md)](/VISION.md)"
-        );
-        expect(markdown).toContain("## Connect an agent");
+        expect(markdown).toContain("## Choose your interface");
+        expect(markdown).toContain("npm install -g @hypertask/hypertask");
+        expect(markdown).not.toContain("import { Aside }");
         expect(html).toContain(
-          "<title>Rat Stack: an app and its cloud as one typed program</title>"
+          "<title>Hypertask documentation | Hypertask Docs</title>"
         );
-        expect(html).toContain('<h1 id="rat-stack">Rat Stack</h1>');
+        expect(html).toContain('<h1 id="_top">Hypertask documentation</h1>');
         expect(html.match(/🐀/gu)).toHaveLength(1);
         expect(html.match(/<h1\b/gu)).toHaveLength(1);
         expect(html).toContain("<strong>🐀 Rat Stack</strong>");
         expect(skillHtml).toContain("<strong>🐀 Rat Stack</strong>");
         expect(skillHtml.match(/<h1\b/gu)).toHaveLength(1);
-        expect(html).toContain("<pre><code>");
+        expect(html).toContain(
+          "<pre><code>npm install -g @hypertask/hypertask</code></pre>"
+        );
+        expect(html).not.toContain("catppuccin-latte");
         expect(skillHtml).toContain('<pre class="shiki catppuccin-latte"');
         expect(skillHtml).not.toContain('<link rel="stylesheet"');
-        expect(html).toContain("│  defineContract");
-        expect(html).toContain('class="copy-label">Copy prompt</span>');
         expect(markdown).not.toContain("Copy prompt");
         expect(markdown).not.toContain("<button");
         expect(markdown).not.toContain("<CopyPrompt");
@@ -705,15 +694,9 @@ it.effect(
 
         const pageHtml = loreSource?.documentHtml ?? "";
 
-        const llms = yield* responseText(
-          handler,
-          new Request("http://localhost/llms.txt")
-        );
+        const llms = llmsText("https://ratstack.sh");
 
-        const llmsFull = yield* responseText(
-          handler,
-          new Request("http://localhost/llms-full.txt")
-        );
+        const llmsFull = llmsFullText("https://ratstack.sh");
 
         const sitemap = yield* responseText(
           handler,
@@ -824,10 +807,7 @@ it.effect(
           lawSources.find((source) => source.routePath === "/debt.md")
             ?.documentHtml ?? "";
 
-        const fullText = yield* responseText(
-          handler,
-          new Request("http://localhost/llms-full.txt")
-        );
+        const fullText = llmsFullText("https://ratstack.sh");
 
         const imageResponse = yield* Effect.promise(
           handler.bind(
@@ -1157,8 +1137,8 @@ it.effect(
 
           expect(cachedMarkdown.headers.get("x-ratstack-cache")).toBe("MISS");
           expect(cachedMarkdownBody).toBe(markdownBody);
-          expect(markdownResponse.headers.get("cache-control")).toContain(
-            "s-maxage=31536000"
+          expect(markdownResponse.headers.get("cache-control")).toBe(
+            "public, max-age=0, must-revalidate"
           );
           expect(markdownResponse.headers.get("vary")).toBe("Accept");
           expect(etag).toMatch(/^W\//u);
@@ -1172,8 +1152,8 @@ it.effect(
           expect(mcp.headers.get("x-fence")).toBe("electrified");
           expect(favicon.headers.get("x-ratstack-cache")).toBe("MISS");
           expect(favicon.headers.get("x-fence")).toBe("electrified");
-          expect(favicon.headers.get("cache-control")).toContain(
-            "s-maxage=31536000"
+          expect(favicon.headers.get("cache-control")).toBe(
+            "public, max-age=0, must-revalidate"
           );
           expect(cache.matchKeys).toHaveLength(0);
           expect(cache.putKeys).toHaveLength(0);
@@ -1325,9 +1305,16 @@ it.effect("serves agent indexes, cards, sitemap, and robots policy", () =>
       );
 
       const llmsBody = yield* Effect.promise(llms.text.bind(llms));
-      expect(llmsBody).toBe(llmsText("https://ratstack.sh"));
-      expect(llmsBody).toMatch(/^# ratstack\.sh\n\n> .+\n/u);
-      expect(llmsBody).toContain("## Connect with MCP");
+      const templateLlms = llmsText("https://ratstack.sh");
+      expect(llmsBody).toMatch(/^# Hypertask\n\n> .+\n/u);
+      expect(llmsBody).toContain("## Start here");
+      expect(llmsBody).toContain(
+        "[Connect a new agent](https://ratstack.sh/connect-an-agent/)"
+      );
+      expect(llmsBody).toContain(
+        "[What is Hypertask?](https://ratstack.sh/getting-started/introduction/)"
+      );
+      expect(templateLlms).toContain("## Connect with MCP");
 
       for (const route of [
         "/AGENTS.md",
@@ -1371,18 +1358,19 @@ it.effect("serves agent indexes, cards, sitemap, and robots policy", () =>
         );
       }
 
-      expect(llmsBody).toContain("Protocol 2026-07-28 is stateless");
-      expect(llmsBody).toContain("no `initialize` handshake");
-      expect(llmsBody).toContain("Mcp-Method: tools/list");
-      expect(llmsBody).toContain("params._meta");
-      expect(llmsBody).toContain("## Run code");
-      expect(llmsBody).toContain('"result":2');
-      expect(llmsBody).toContain(
+      expect(templateLlms).toContain("Protocol 2026-07-28 is stateless");
+      expect(templateLlms).toContain("no `initialize` handshake");
+      expect(templateLlms).toContain("Mcp-Method: tools/list");
+      expect(templateLlms).toContain("params._meta");
+      expect(templateLlms).toContain("## Run code");
+      expect(templateLlms).toContain('"result":2');
+      expect(templateLlms).toContain(
         "6 calls per IP and 300 total calls per 60 seconds"
       );
       expect(yield* Effect.promise(robots.text.bind(robots))).toBe(robotsText);
-      expect(robotsText).toContain(
-        "Content-Signal: ai-train=no, search=yes, ai-input=yes"
+      expect(robots.status).toBe(200);
+      expect(robots.headers.get("content-type")).toBe(
+        "text/plain; charset=utf-8"
       );
       expect(index.headers.get("access-control-allow-origin")).toBe("*");
       expect(index.headers.get("content-type")).toContain("application/json");
@@ -2148,7 +2136,7 @@ it.effect(
         expect(news).toContain("## How this list is sorted");
         expect(directory).toContain("# CAFE directory");
 
-        for (const route of ["/news", "/directory", "/llms.txt"]) {
+        for (const route of ["/news", "/directory"]) {
           const agentView = yield* responseText(
             handler,
             new Request(`http://localhost${route}`, {
@@ -2168,7 +2156,7 @@ it.effect(
 );
 
 it.effect(
-  "serves every all-stars profile as Markdown, in llms.txt and in the feed from the people capabilities",
+  "serves every all-stars profile as Markdown and in the feed from the people capabilities",
   () =>
     withHandler((handler) =>
       Effect.gen(function* testAllStarsSurfaces() {
@@ -2176,11 +2164,6 @@ it.effect(
           yield* readJson(
             yield* postJson(handler, "/api/listPeople", { limit: 100 })
           )
-        );
-
-        const llms = yield* responseText(
-          handler,
-          new Request("http://localhost/llms.txt")
         );
 
         const feed = yield* responseText(
@@ -2201,7 +2184,6 @@ it.effect(
             "sam-goodwin",
           ])
         );
-        expect(llms).toContain("/all-stars)");
         expect(index).toContain("# CAFE all stars");
         expect(index).toContain("To be removed from this page");
 
@@ -2241,7 +2223,6 @@ it.effect(
 
           expect(avatar.status).toBe(200);
           expect(avatar.headers.get("content-type")).toMatch(/^image\//u);
-          expect(llms).toContain(`${person.route})`);
           expect(index).toContain(`(${person.route})`);
           expect(feed).toContain(`${person.route}"/>`);
         }

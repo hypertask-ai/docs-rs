@@ -27,6 +27,7 @@ import {
   stripHtmlComments,
   visitContentNodes,
 } from "../scripts/svx-ast.ts";
+import { isDocsPageRoute } from "../src/docs-page-routes.ts";
 import { llmsFullText, llmsText } from "./content-fixture.js";
 import {
   authMarkdown,
@@ -110,14 +111,42 @@ const markdownPages = [
   { routePath: "/llms.txt", text: llmsText("https://ratstack.sh") },
 ];
 
-it.effect.each(markdownPages)(
-  "$routePath has exactly one registry pointer under its H1",
-  (page) =>
+it.effect(
+  "reads an indented block component body as markdown instead of a code block",
+  () =>
     Effect.sync(() => {
-      expect(() => {
-        assertAgentPointerLayout(page.text, page.routePath);
-      }, page.routePath).not.toThrow();
+      const markdown = renderSvxMarkdown(
+        [
+          "<CardGrid>",
+          '  <Card title="Workspace-ready">',
+          "    Multi-tenant workspaces with optional boards per workspace.",
+          "  </Card>",
+          "</CardGrid>",
+        ].join("\n"),
+        "human"
+      );
+
+      const html = renderMarkdownHtml(markdown, { sourcePath: "cards.svx" });
+
+      expect(html).toContain('<article class="docs-card">');
+      expect(html).toContain(
+        '<span class="docs-card-icon" aria-hidden="true"></span>'
+      );
+      expect(html).toContain(
+        "<p>Multi-tenant workspaces with optional boards per workspace.</p>"
+      );
+      expect(html).not.toContain("<pre>");
     })
+);
+
+it.effect.each(
+  markdownPages.filter((page) => !isDocsPageRoute(page.routePath))
+)("$routePath has exactly one registry pointer under its H1", (page) =>
+  Effect.sync(() => {
+    expect(() => {
+      assertAgentPointerLayout(page.text, page.routePath);
+    }, page.routePath).not.toThrow();
+  })
 );
 
 it.effect("agent page rendering refuses missing and duplicate pointers", () =>
