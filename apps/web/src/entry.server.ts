@@ -13,6 +13,7 @@ import {
 import { findPage, pagePaths } from "./client/reader-pages.js";
 import { init } from "./client/reader/init.js";
 import { ReaderFlags } from "./client/reader/model.js";
+import { docsNotFoundPage, docsRedirectFor } from "./docs-addresses.js";
 import { view } from "./features/reader.js";
 import { isWorkerFirstReaderRoute } from "./reader-routes.js";
 import { readerPrerenderOrigin } from "./server/prerender-origin.js";
@@ -212,15 +213,33 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
     }
 
     const routePath = route === "/" ? route : route.replace(/\/$/u, "");
+    const redirect = docsRedirectFor(routePath);
+
+    if (redirect !== undefined) {
+      return yield* responded(
+        request,
+        new Response(null, {
+          headers: { location: withSiteBasePath(redirect.destination) },
+          status: redirect.status,
+        })
+      );
+    }
+
     const found = yield* findPage(routePath);
 
     if (Option.isNone(found)) {
-      return yield* responded(
-        request,
-        new Response("This route is outside the reader preview slice", {
-          status: 404,
-        })
+      const notFound = docsNotFoundPage(pathname);
+      const flags = readerErrorFlags(errorTemplate, notFound);
+
+      const application = yield* renderToString(
+        { Flags: ReaderFlags, init, view },
+        { flags }
       );
+
+      return Rendered(withReaderHead(application, flags), {
+        headers: yield* previewHeaders(request),
+        status: notFound.code,
+      });
     }
 
     const page = found.value;

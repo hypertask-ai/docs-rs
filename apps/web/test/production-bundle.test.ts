@@ -83,6 +83,21 @@ const build = (nodeEnv: "development" | "production") => {
       readFileSync(path.join(webRoot, "dist/reader-pages.json"), "utf-8")
     );
 
+    expect(readFileSync(path.join(outDir, "_redirects"), "utf-8")).toContain(
+      "/features/desktop /getting-started/apps/ 308"
+    );
+
+    const sitemap = readFileSync(path.join(outDir, "sitemap-0.xml"), "utf-8");
+
+    expect(
+      [...sitemap.matchAll(/<loc>(?<location>[^<]+)<\/loc>/gu)].map(
+        (match) => match.groups?.location
+      )
+    ).toHaveLength(preparedPages.length);
+    expect(
+      readFileSync(path.join(outDir, "sitemap-index.xml"), "utf-8")
+    ).toContain("/sitemap-0.xml</loc>");
+
     for (const image of manifest.images.filter((asset) =>
       preparedPages.some(
         (page) =>

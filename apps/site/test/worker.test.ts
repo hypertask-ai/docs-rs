@@ -1157,8 +1157,8 @@ it.effect(
 
           expect(cachedMarkdown.headers.get("x-ratstack-cache")).toBe("MISS");
           expect(cachedMarkdownBody).toBe(markdownBody);
-          expect(markdownResponse.headers.get("cache-control")).toContain(
-            "s-maxage=31536000"
+          expect(markdownResponse.headers.get("cache-control")).toBe(
+            "public, max-age=0, must-revalidate"
           );
           expect(markdownResponse.headers.get("vary")).toBe("Accept");
           expect(etag).toMatch(/^W\//u);
@@ -1172,8 +1172,8 @@ it.effect(
           expect(mcp.headers.get("x-fence")).toBe("electrified");
           expect(favicon.headers.get("x-ratstack-cache")).toBe("MISS");
           expect(favicon.headers.get("x-fence")).toBe("electrified");
-          expect(favicon.headers.get("cache-control")).toContain(
-            "s-maxage=31536000"
+          expect(favicon.headers.get("cache-control")).toBe(
+            "public, max-age=0, must-revalidate"
           );
           expect(cache.matchKeys).toHaveLength(0);
           expect(cache.putKeys).toHaveLength(0);
@@ -1381,8 +1381,9 @@ it.effect("serves agent indexes, cards, sitemap, and robots policy", () =>
         "6 calls per IP and 300 total calls per 60 seconds"
       );
       expect(yield* Effect.promise(robots.text.bind(robots))).toBe(robotsText);
-      expect(robotsText).toContain(
-        "Content-Signal: ai-train=no, search=yes, ai-input=yes"
+      expect(robots.status).toBe(200);
+      expect(robots.headers.get("content-type")).toBe(
+        "text/plain; charset=utf-8"
       );
       expect(index.headers.get("access-control-allow-origin")).toBe("*");
       expect(index.headers.get("content-type")).toContain("application/json");

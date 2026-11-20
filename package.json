@@ -26,6 +26,7 @@
     "deploy:preview": "bash scripts/deploy-preview.sh deploy",
     "deploy:preview:destroy": "bash scripts/deploy-preview.sh destroy",
     "deploy:rollback": "node scripts/deploy-build.ts && APP_ENV=production pnpm exec varlock run -- sh -c 'cd apps/infra && exec node --import ./node_modules/alchemy/bin/register-oxc.js ../../packages/deploy/dist/cli.js \"$@\"' deploy deployRollback",
+    "docs:header-parity": "node scripts/docs-header-parity.ts",
     "state:copy": "node scripts/deploy-build.ts && APP_ENV=production pnpm exec varlock run -- sh -c 'cd apps/infra && exec node --import ./node_modules/alchemy/bin/register-oxc.js ../../packages/deploy/dist/cli.js \"$@\"' deploy stateCopy",
     "infra:deploy": "pnpm --filter @rat-stack/infra deploy",
     "infra:destroy": "pnpm --filter @rat-stack/infra destroy",
@@ -48,6 +49,7 @@
     "tokenmaxx:sync": "node scripts/tokenmaxx-sync.ts",
     "cafe:import": "node scripts/cafe-import.ts",
     "content:migrate": "node apps/site/scripts/migrate-content.ts",
+    "docs:convert": "node apps/site/scripts/convert-docs-content.ts",
     "find-peers": "node scripts/find-peers.ts"
   },
   "devDependencies": {

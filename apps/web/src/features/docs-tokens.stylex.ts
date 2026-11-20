@@ -1,0 +1,28 @@
+import * as stylex from "@stylexjs/stylex";
+
+export const docs = stylex.defineVars({
+  accent: "#d97757",
+  accentHigh: "#f4d3c8",
+  accentLow: "#2a1c16",
+  bg: "#0a0a0b",
+  border: "#303036",
+  contentWidth: "45rem",
+  fontMono: "'IBM Plex Mono', monospace",
+  fontSans: "'IBM Plex Sans', sans-serif",
+  fontSerif: "'Newsreader', serif",
+  fontSize: "16px",
+  fontSizeSmall: "14px",
+  hairline: "#222226",
+  lineHeight: "26px",
+  navHeight: "7.5rem",
+  navPadX: "2rem",
+  radiusCard: "14px",
+  radiusControl: "10px",
+  radiusSmall: "6px",
+  sidebarWidth: "17.5rem",
+  surface: "#111113",
+  text: "#a1a1aa",
+  textMuted: "#8e8e97",
+  textStrong: "#f4f4f7",
+  tocWidth: "264px",
+});
