@@ -56,6 +56,12 @@ export const docsSearch = stylex.create({
   field: {
     "::placeholder": { opacity: 0.2 },
     ":focus": { borderColor: docs.accent },
+    ":focus-visible": {
+      outlineColor: docs.textStrong,
+      outlineOffset: "-1px",
+      outlineStyle: "solid",
+      outlineWidth: "1px",
+    },
     appearance: "none",
     backgroundColor: docs.bg,
     borderColor: docs.hairline,
@@ -121,6 +127,7 @@ export const docsSearch = stylex.create({
     borderRadius: "0.5rem",
     borderStyle: "solid",
     borderWidth: "1px",
+    boxSizing: "border-box",
     marginBlockEnd: 0,
     marginBlockStart: "4rem",
     marginInline: "auto",
@@ -129,13 +136,14 @@ export const docsSearch = stylex.create({
     minHeight: "15rem",
     overflowY: "auto",
     overscrollBehavior: "contain",
-    padding: "1.5rem",
+    padding: 0,
     width: "90%",
   },
   panelFrame: {
     display: "flex",
     flexDirection: "column",
     gap: "1rem",
+    padding: "1.5rem",
     position: "relative",
   },
   result: {

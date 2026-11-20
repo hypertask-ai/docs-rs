@@ -162,7 +162,9 @@ const scoreOf = (
   return score;
 };
 
-const excerptWindow = 20;
+const excerptWordsBefore = 6;
+
+const excerptWordsAfter = 6;
 
 const wordPattern = /[\p{L}\p{N}_]+/u;
 
@@ -181,13 +183,13 @@ const excerptAround = (text: string, extensions: readonly string[]): string => {
   const index = matchedWordIndex(words, extensions);
 
   if (index === -1) {
-    return words.slice(0, excerptWindow).join(" ");
+    return words.slice(0, excerptWordsBefore + excerptWordsAfter).join(" ");
   }
 
   return words
     .slice(
-      Math.max(0, index - excerptWindow),
-      Math.min(words.length, index + excerptWindow)
+      Math.max(0, index - excerptWordsBefore),
+      Math.min(words.length, index + excerptWordsAfter + 1)
     )
     .join(" ");
 };
@@ -207,11 +209,19 @@ const hitOf = (
           extensions
         ) !== -1
     )
-    .map((section) => ({
-      anchor: section.anchor,
-      excerpt: excerptAround(section.text, extensions),
-      title: section.title,
-    })),
+    .map((section) =>
+      section.title === ""
+        ? {
+            anchor: "_top",
+            excerpt: excerptAround(section.text, extensions),
+            title: page.title,
+          }
+        : {
+            anchor: section.anchor,
+            excerpt: excerptAround(section.text, extensions),
+            title: section.title,
+          }
+    ),
   title: page.title,
 });
 

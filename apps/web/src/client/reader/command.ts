@@ -112,11 +112,17 @@ const docsSearchDialog = () => {
   return element instanceof HTMLDialogElement ? element : undefined;
 };
 
-export const OpenDocsSearchDialog = Command.define("OpenDocsSearchDialog", {
+export const ToggleDocsSearchDialog = Command.define("ToggleDocsSearchDialog", {
   execute: Effect.sync(() => {
     const dialog = docsSearchDialog();
 
-    if (dialog !== undefined && !dialog.open) {
+    if (dialog === undefined) {
+      return Message.CompletedDocsSearchNavigation();
+    }
+
+    if (dialog.open) {
+      dialog.close();
+    } else {
       dialog.showModal();
     }
 

@@ -223,7 +223,7 @@ export const docsSearchDialog = (
             ],
             ["Cancel"]
           ),
-          h.form(
+          h.div(
             [
               h.Role("search"),
               h.AriaLabel("Search this site"),
@@ -236,7 +236,6 @@ export const docsSearchDialog = (
                   docsSearchIcon(h, className(docsSearch.fieldIcon), 15),
                   h.input([
                     h.Class(className(docsSearch.field)),
-                    h.Type("text"),
                     h.AriaLabel("Search docs"),
                     h.Attribute("title", "Search docs"),
                     h.Value(model.docsSearchQuery),

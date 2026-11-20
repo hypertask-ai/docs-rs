@@ -14,9 +14,9 @@ import {
   CopyPageMarkdown,
   CopyReaderText,
   MoveFocus,
-  OpenDocsSearchDialog,
   OpenDocsSearchResult,
   QueryDocsSearch,
+  ToggleDocsSearchDialog,
   WaitBeforeCopyReset,
 } from "./command.js";
 import { Message } from "./message.js";
@@ -188,7 +188,7 @@ export const update = (
             };
       },
       PressedDocsSearchShortcut: () => ({
-        commands: [OpenDocsSearchDialog()],
+        commands: [ToggleDocsSearchDialog()],
         model: modifyFields(model, { docsSearchSelected: () => 0 }),
       }),
       PressedEscapeInMobileNav: () =>
