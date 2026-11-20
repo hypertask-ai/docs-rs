@@ -38,6 +38,7 @@ export const drovrConfirmLayer = (settings: ConfirmSettings) =>
         }
 
         let base = settings.base.value;
+
         while (base.endsWith("/")) {
           base = base.slice(0, -1);
         }
