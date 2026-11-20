@@ -2,7 +2,7 @@ import type {
   DocsSearchIndexData,
   DocsSearchPageData,
 } from "./docs-search-data.js";
-import { stemWord, tokenizeWords } from "./docs-search-tokens.js";
+import { stemWord } from "./docs-search-tokens.js";
 
 export interface DocsSearchHit {
   readonly excerpt: string;
@@ -162,6 +162,8 @@ const scoreOf = (
   return score;
 };
 
+const queryWord = /[\p{L}\p{N}]/u;
+
 const excerptWordsBefore = 6;
 
 const excerptWordsAfter = 5;
@@ -232,9 +234,11 @@ export const searchDocsIndex = (
 ): DocsSearchResults => {
   const limit = Math.max(1, Math.min(20, Math.trunc(requestedLimit)));
 
-  const terms = [
-    ...new Set(tokenizeWords(query).map((token) => stemWord(token.word))),
-  ].filter((term) => term !== "");
+  const terms = query
+    .toLowerCase()
+    .split(/\s+/u)
+    .filter((term) => queryWord.test(term))
+    .map((term) => stemWord(term));
 
   if (terms.length === 0 || index.pages.length === 0) {
     return { matches: [], total: 0 };

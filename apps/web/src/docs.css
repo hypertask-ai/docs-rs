@@ -1034,7 +1034,16 @@ button.docs-action {
     padding: 1rem;
   }
 
+  .docs-search-field {
+    width: calc(100% - 80px);
+  }
+
+  .docs-search-clear {
+    right: 80px;
+  }
+
   .docs-search-close {
-    display: block;
+    display: flex;
+    right: 16px;
   }
 }

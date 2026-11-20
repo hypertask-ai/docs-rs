@@ -24,11 +24,13 @@ export const docsSearch = stylex.create({
     width: "48px",
   },
   close: {
+    alignItems: "center",
     appearance: "none",
     backgroundColor: "transparent",
     borderStyle: "none",
     color: docs.accent,
     cursor: "pointer",
+    display: "flex",
     height: "51.2px",
     padding: "4px",
     position: "absolute",
