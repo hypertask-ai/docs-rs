@@ -658,6 +658,17 @@ body > .docs-layout {
   display: none;
 }
 
+.docs-search-field {
+  font:
+    400 16.8px "IBM Plex Sans",
+    sans-serif;
+}
+
+.docs-search-panel :focus-visible {
+  outline: 1px auto rgb(238, 238, 238);
+  outline-offset: 0;
+}
+
 .docs-group {
   margin: 0;
   padding: 0;

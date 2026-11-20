@@ -235,7 +235,7 @@ export const docsSearchDialog = (
                 [
                   docsSearchIcon(h, className(docsSearch.fieldIcon), 15),
                   h.input([
-                    h.Class(className(docsSearch.field)),
+                    h.Class(`${className(docsSearch.field)} docs-search-field`),
                     h.AriaLabel("Search docs"),
                     h.Attribute("title", "Search docs"),
                     h.Value(model.docsSearchQuery),

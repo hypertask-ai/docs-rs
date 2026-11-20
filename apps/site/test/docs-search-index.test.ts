@@ -9,6 +9,7 @@ import {
   buildDocsSearchPage,
 } from "../scripts/docs-search-index.ts";
 import { readDocsSearchPages } from "../scripts/docs-search-pages.js";
+import { stemWord } from "../src/docs-search-tokens.js";
 import { searchDocsIndex } from "../src/docs-search.js";
 
 const root = fileURLToPath(new URL("../../../", import.meta.url));
@@ -56,8 +57,8 @@ describe("docs search index", () => {
 
     expect(built.wordCount).toBe(6);
     expect(built.terms["ai-native"]).toBeUndefined();
-    expect(built.terms.ainative).toBeGreaterThan(0);
-    expect(built.terms.native).toBeGreaterThan(0);
+    expect(built.terms[stemWord("ainative")]).toBeGreaterThan(0);
+    expect(built.terms[stemWord("native")]).toBeGreaterThan(0);
   });
 
   it("declares the corpus size and average page length", () => {

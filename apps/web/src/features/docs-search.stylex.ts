@@ -56,11 +56,6 @@ export const docsSearch = stylex.create({
   field: {
     "::placeholder": { opacity: 0.2 },
     ":focus": { borderColor: docs.accent },
-    ":focus-visible": {
-      outlineOffset: 0,
-      outlineStyle: "auto",
-      outlineWidth: "1px",
-    },
     appearance: "none",
     backgroundColor: docs.bg,
     borderColor: docs.hairline,
@@ -70,9 +65,6 @@ export const docsSearch = stylex.create({
     boxSizing: "border-box",
     color: docs.textStrong,
     display: "flex",
-    fontFamily: docs.fontSans,
-    fontSize: "16.8px",
-    fontWeight: 400,
     height: "51.2px",
     paddingBlock: 0,
     paddingInlineEnd: "56px",
