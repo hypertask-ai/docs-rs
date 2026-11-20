@@ -36,6 +36,23 @@ const encodeFlags = Effect.forEach((page: ReaderPageFlags) =>
   Schema.encodeEffect(ReaderFlags)(page)
 );
 
+const optionalPage = <A>(page: A | null): readonly A[] =>
+  page === null ? [] : [page];
+
+const withPreviewRobots = (
+  page: ReaderPageFlags,
+  preview: boolean
+): ReaderPageFlags =>
+  preview
+    ? {
+        ...page,
+        page: {
+          ...page.page,
+          metadata: { ...page.page.metadata, robots: "noindex" },
+        },
+      }
+    : page;
+
 const readerPages = Effect.gen(function* readerPages() {
   const previewCommit = yield* Config.option(
     Config.schema(
@@ -82,6 +99,7 @@ const readerPages = Effect.gen(function* readerPages() {
   }
 
   const home = yield* readerHomeFlags(origin);
+
   const lore = yield* Effect.flatMap(readerLoreFlags(origin), encodeFlags);
   const prompts = yield* readerPromptFlags(origin);
   const learn = yield* readerLearnFlags(origin);
@@ -97,7 +115,7 @@ const readerPages = Effect.gen(function* readerPages() {
   const tube = yield* readerTubeFlags(origin);
 
   const pages = [
-    home,
+    ...optionalPage(home),
     ...lore,
     learn,
     ...prompts,
@@ -111,18 +129,11 @@ const readerPages = Effect.gen(function* readerPages() {
   const error = yield* readerErrorTemplate(origin);
 
   const decoded = yield* Effect.forEach((page: (typeof pages)[number]) =>
-    Schema.decodeUnknownEffect(ReaderFlags)({
-      ...page,
-      page: {
-        ...page.page,
-        metadata: {
-          ...page.page.metadata,
-          robots: Option.isSome(previewCommit)
-            ? "noindex"
-            : page.page.metadata.robots,
-        },
-      },
-    })
+    Schema.decodeUnknownEffect(ReaderFlags)(page).pipe(
+      Effect.map((decodedPage) =>
+        withPreviewRobots(decodedPage, Option.isSome(previewCommit))
+      )
+    )
   )(pages);
 
   return { error, pages: decoded };

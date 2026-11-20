@@ -126,6 +126,26 @@ const componentChildren = (input: ComponentInput): readonly RootContent[] =>
       )
     : input.children.children;
 
+const dedentComponentSource = (source: string): string => {
+  const lines = source.split("\n");
+
+  const indents = lines
+    .filter((line) => line.trim() !== "")
+    .map((line) => /^[ \t]*/u.exec(line)?.[0].length ?? 0);
+
+  if (indents.length === 0) {
+    return source;
+  }
+
+  const indent = Math.min(...indents);
+
+  return indent === 0
+    ? source
+    : lines
+        .map((line) => (line.trim() === "" ? line : line.slice(indent)))
+        .join("\n");
+};
+
 const phrasingTypes = new Set([
   "text",
   "inlineCode",
@@ -220,10 +240,18 @@ const coreComponents = {
       )(input.attributes);
 
       return [
-        html('<div class="docs-card">'),
-        ...(title === undefined ? [] : [html(`<h3>${escapeHtml(title)}</h3>`)]),
+        html('<article class="docs-card">'),
+        ...(title === undefined
+          ? []
+          : [
+              html(
+                `<p class="docs-card-title"><span class="docs-card-icon" aria-hidden="true"></span><span class="docs-card-title-text">${escapeHtml(title)}</span></p>`
+              ),
+            ]),
+        html('<div class="docs-card-body">'),
         ...componentChildren(input),
         html("</div>"),
+        html("</article>"),
       ];
     },
   },
@@ -340,6 +368,63 @@ const coreComponents = {
   HumanOnly: {
     agent: () => [],
     human: componentChildren,
+  },
+  LinkCard: {
+    agent(input): readonly RootContent[] {
+      const { description, href, title } = Schema.decodeUnknownSync(
+        Schema.Struct({
+          description: Schema.optional(Schema.String),
+          href: Schema.String,
+          title: Schema.String,
+        })
+      )(input.attributes);
+
+      const paragraphs: RootContent[] = [
+        {
+          children: [
+            {
+              children: [{ type: "text", value: title }],
+              type: "link",
+              url: href,
+            },
+          ],
+          type: "paragraph",
+        },
+      ];
+
+      if (description !== undefined) {
+        paragraphs.push({
+          children: [{ type: "text", value: description }],
+          type: "paragraph",
+        });
+      }
+
+      return paragraphs;
+    },
+    human(input) {
+      const { description, href, title } = Schema.decodeUnknownSync(
+        Schema.Struct({
+          description: Schema.optional(Schema.String),
+          href: Schema.String,
+          title: Schema.String,
+        })
+      )(input.attributes);
+
+      return [
+        html('<div class="docs-link-card">'),
+        html(
+          `<p class="docs-link-card-title"><a href="${escapeHtml(href)}">${escapeHtml(title)}</a></p>`
+        ),
+        ...(description === undefined
+          ? []
+          : [
+              html(
+                `<p class="docs-link-card-description">${escapeHtml(description)}</p>`
+              ),
+            ]),
+        html("</div>"),
+      ];
+    },
   },
   Sources: {
     agent(_input, context) {
@@ -869,7 +954,9 @@ export const transformComponentMarkdown = (
           value += source.slice(cursor, nested.start);
 
           const children = transformComponentMarkdown(
-            source.slice(nested.innerStart, nested.innerEnd),
+            dedentComponentSource(
+              source.slice(nested.innerStart, nested.innerEnd)
+            ),
             target,
             renderContext,
             registry
@@ -906,7 +993,7 @@ export const transformComponentMarkdown = (
       }
 
       const children = transformComponentMarkdown(
-        source.slice(range.innerStart, range.innerEnd),
+        dedentComponentSource(source.slice(range.innerStart, range.innerEnd)),
         target,
         renderContext,
         registry

@@ -130,7 +130,7 @@ it.effect(
               );
               expect(
                 yield* Effect.promise(response.text.bind(response))
-              ).toContain("Rat Stack");
+              ).toContain("Hypertask documentation");
             }
           }
 
