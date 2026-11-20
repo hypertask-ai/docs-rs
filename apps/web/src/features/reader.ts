@@ -15,8 +15,6 @@ import {
 import type { ReaderModel } from "../client/reader/model.js";
 import { docsHead, docsPageTitleFromDocumentTitle } from "../docs-head.js";
 import { siteBasePath, siteBuilder } from "../site-base.js";
-import { view as docsView } from "./app.js";
-import * as CafeView from "./cafe/index.js";
 import {
   docsActions,
   docsBreadcrumb,
@@ -32,13 +30,17 @@ import { docsChrome } from "./docs-chrome.stylex.js";
 import { docsPagination } from "./docs-page-end.js";
 import { docsHasContentsList } from "./docs-page-order.js";
 import { docsGroupForPath, docsPageMarkdownPath } from "./docs-sidebar.js";
-import * as MotionView from "./motion/index.js";
 import { readerFooter, readerNewsCallout } from "./reader-chrome.js";
 import { readerCopyIcon } from "./reader-copy-icon.js";
 import { renderReaderBlock } from "./reader-document.js";
 import type { SnippetReference } from "./reader-document.js";
 import { renderReaderNode } from "./reader-node.js";
 import { readerReferences } from "./reader-references.js";
+import type {
+  ReaderSubviewKey,
+  ReaderSubviewResolver,
+  ReaderSubviewViews,
+} from "./reader-subview-types.js";
 import { readerStyles } from "./reader.stylex.js";
 import {
   agentGuideRouter,
@@ -53,7 +55,6 @@ import {
   systemsRouter,
   tokenmaxxRouter,
 } from "./site-route.js";
-import * as TubeView from "./tube/index.js";
 
 const copyStatusText = CopyStatus.match({
   Copied: () => "Copied ✓",
@@ -250,7 +251,11 @@ const breadcrumbView = (
         ),
       ];
 
-const bodyView = (model: ReaderModel, h: HtmlBuilder<ReaderMessage>) => [
+const bodyView = (
+  model: ReaderModel,
+  h: HtmlBuilder<ReaderMessage>,
+  subview: ReaderSubviewResolver
+) => [
   ...Option.match(model.bodyNodes, {
     onNone: () => [h.h1([], [model.heading])],
     onSome: (nodes) =>
@@ -267,7 +272,7 @@ const bodyView = (model: ReaderModel, h: HtmlBuilder<ReaderMessage>) => [
         model: cafe,
         slotId: "cafe",
         toParentMessage: (message) => Message.GotCafeMessage({ message }),
-        view: CafeView.view,
+        view: subview("cafe"),
       }),
     ],
   }),
@@ -278,7 +283,7 @@ const bodyView = (model: ReaderModel, h: HtmlBuilder<ReaderMessage>) => [
         model: docs,
         slotId: "docs",
         toParentMessage: (message) => Message.GotDocsMessage({ message }),
-        view: docsView,
+        view: subview("docs"),
       }),
     ],
   }),
@@ -289,7 +294,7 @@ const bodyView = (model: ReaderModel, h: HtmlBuilder<ReaderMessage>) => [
         model: motion,
         slotId: "motion",
         toParentMessage: (message) => Message.GotMotionMessage({ message }),
-        view: MotionView.view,
+        view: subview("motion"),
       }),
     ],
   }),
@@ -300,7 +305,7 @@ const bodyView = (model: ReaderModel, h: HtmlBuilder<ReaderMessage>) => [
         model: tube,
         slotId: "tube",
         toParentMessage: (message) => Message.GotTubeMessage({ message }),
-        view: TubeView.view,
+        view: subview("tube"),
       }),
     ],
   }),
@@ -356,7 +361,8 @@ const bibliographyView = (
 
 const readerDocument = (
   model: ReaderModel,
-  h: HtmlBuilder<ReaderMessage>
+  h: HtmlBuilder<ReaderMessage>,
+  subview: ReaderSubviewResolver
 ): Document => {
   const group = docsGroupForPath(model.page.path);
 
@@ -434,7 +440,7 @@ const readerDocument = (
                     onSome: (title) => [readerNewsCallout(title, h)],
                   }),
                   ...(group === undefined ? breadcrumbView(model, h) : []),
-                  ...bodyView(model, h),
+                  ...bodyView(model, h, subview),
                   ...bibliographyView(model, h),
                   ...readerReferences(model, h),
                 ]
@@ -476,9 +482,26 @@ const readerDocument = (
   });
 };
 
-export const viewAt =
-  (basePath: string) =>
-  (model: ReaderModel, h: HtmlBuilder<ReaderMessage>): Document =>
-    readerDocument(model, siteBuilder(basePath, h));
+const buildSubviewResolver =
+  (subviews: Partial<ReaderSubviewViews>): ReaderSubviewResolver =>
+  <K extends ReaderSubviewKey>(key: K) => {
+    const candidate = subviews[key];
 
-export const view = viewAt(siteBasePath);
+    if (candidate === undefined) {
+      throw new Error(`Reader subview ${key} is not available`);
+    }
+
+    return candidate;
+  };
+
+export const buildReaderViewAt =
+  (subviews: Partial<ReaderSubviewViews>, basePath: string) =>
+  (model: ReaderModel, h: HtmlBuilder<ReaderMessage>): Document =>
+    readerDocument(
+      model,
+      siteBuilder(basePath, h),
+      buildSubviewResolver(subviews)
+    );
+
+export const buildReaderView = (subviews: Partial<ReaderSubviewViews>) =>
+  buildReaderViewAt(subviews, siteBasePath);

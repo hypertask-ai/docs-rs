@@ -17,7 +17,7 @@ import { readerHomeFlags } from "../../site/scripts/reader-home-flags.ts";
 import { init } from "../src/client/reader/init.js";
 import { ReaderFlags } from "../src/client/reader/model.js";
 import type { ReaderPageFlags } from "../src/client/reader/model.js";
-import { view, viewAt } from "../src/features/reader.js";
+import { view, viewAt } from "../src/features/reader-subviews-client.js";
 import { readerMetadataHead } from "../src/reader-metadata.js";
 import {
   renderDocument,

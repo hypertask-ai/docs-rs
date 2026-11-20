@@ -19,7 +19,7 @@ import { Message } from "../src/client/reader/message.js";
 import { initialModel } from "../src/client/reader/model.js";
 import { update } from "../src/client/reader/update.js";
 import { currentHeadingId } from "../src/features/docs-reading-position.js";
-import { view } from "../src/features/reader.js";
+import { view } from "../src/features/reader-subviews-client.js";
 import { readerFlagsFixture } from "./reader-fixture.js";
 
 const docsPage = initialModel({

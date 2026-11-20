@@ -18,7 +18,7 @@ import {
 } from "../../site/test/reader-semantics.ts";
 import { init } from "../src/client/reader/init.js";
 import { ReaderFlags } from "../src/client/reader/model.js";
-import { view } from "../src/features/reader.js";
+import { view } from "../src/features/reader-subviews-client.js";
 
 it.effect(
   "ReaderSiteParity preserves every systems and skills main, table and deep link",

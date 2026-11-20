@@ -2,11 +2,11 @@ import { Runtime } from "foldkit";
 
 import { installOverlay } from "#devtools-overlay";
 
-import { view } from "../features/reader.js";
+import { view } from "../features/reader-subviews-client.js";
 import { bindDocsContents } from "./docs-toc.js";
 import { DocumentQueries } from "./docs/queries.js";
 import { bindHelpChat } from "./help-chat.js";
-import { browserInit } from "./reader/init.js";
+import { browserInit } from "./reader/browser-init.js";
 import { Message } from "./reader/message.js";
 import { Model, ReaderFlags } from "./reader/model.js";
 import { subscriptions } from "./reader/subscriptions.js";
