@@ -113,6 +113,12 @@ const sectionView = (
       ),
     ],
     [
+      h.span([
+        h.Class(
+          className(docsSearch.treeLine, last ? docsSearch.treeLineLast : false)
+        ),
+      ]),
+      h.span([h.Class(className(docsSearch.treeTick))]),
       h.p(
         [h.Class(className(docsSearch.sectionTitle))],
         [
