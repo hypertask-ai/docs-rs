@@ -115,7 +115,17 @@ jobs:
 
       - name: Build this pull request's site the way the publish workflow builds it
         if: steps.target.outputs.go == 'yes'
-        run: pnpm turbo run build --concurrency=2
+        run: |
+          set -euo pipefail
+          pnpm turbo run build --concurrency=2 --force
+          if [ ! -f apps/web/dist/client/ratstack/index.html ]; then
+            echo "::error::The build wrote no home page at apps/web/dist/client/ratstack/index.html, so the restored or built output is not a build of this site under SITE_BASE_PATH=$SITE_BASE_PATH. Fix: read the build output above and check that apps/web/vite.config.ts reads SITE_BASE_PATH."
+            exit 1
+          fi
+          if ! grep -q 'X-Robots-Tag: noindex' apps/web/dist/client/_headers; then
+            echo "::error::The build wrote no noindex rule into apps/web/dist/client/_headers, so this is not a build of the site under SITE_BASE_PATH=$SITE_BASE_PATH. Fix: rebuild with SITE_BASE_PATH set and check apps/web/scripts/reader-build.ts."
+            exit 1
+          fi
 
       - name: Serve the built site on the runner
         if: steps.target.outputs.go == 'yes'
