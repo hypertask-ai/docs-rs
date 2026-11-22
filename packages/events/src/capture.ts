@@ -1,7 +1,7 @@
-import { EventSink, RawEventSchema } from "@rat-stack/core/event-sink";
-import type { RequestCaptureSettings } from "@rat-stack/core/request-capture";
-import { isGeoLabel } from "@rat-stack/core/request-geo";
-import { webCryptoLayer } from "@rat-stack/core/web-crypto";
+import { EventSink, RawEventSchema } from "@hypertask-docs/core/event-sink";
+import type { RequestCaptureSettings } from "@hypertask-docs/core/request-capture";
+import { isGeoLabel } from "@hypertask-docs/core/request-geo";
+import { webCryptoLayer } from "@hypertask-docs/core/web-crypto";
 import { Clock, DateTime, Effect, Schema } from "effect";
 import type { Context } from "effect";
 import * as SecureRandom from "effect/crypto/SecureRandom";

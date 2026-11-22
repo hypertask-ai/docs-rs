@@ -9,8 +9,8 @@ const nativeProbe = String.raw`
 import { Effect, Layer } from "effect";
 import { HttpClient, HttpClientRequest, HttpClientResponse } from "effect/http";
 import { RpcClient, RpcSerialization } from "effect/rpc";
-import { toRpcGroup } from "@rat-stack/capability/rpc-group";
-import { searchContract, readContract } from "@rat-stack/core/contracts";
+import { toRpcGroup } from "@hypertask-docs/capability/rpc-group";
+import { searchContract, readContract } from "@hypertask-docs/core/contracts";
 
 export default {
   async test(_controller, env) {

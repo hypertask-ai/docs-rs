@@ -8,11 +8,11 @@ import {
   legacyChangelogPaths,
   parseLegacyChangelog,
   sortChangelog,
-} from "@rat-stack/core/changelog";
+} from "@hypertask-docs/core/changelog";
 import type {
   ChangelogEntryValue,
   ChangelogSource,
-} from "@rat-stack/core/changelog";
+} from "@hypertask-docs/core/changelog";
 import { Effect, FileSystem, Path, Schema } from "effect";
 import { parse as parseYaml } from "yaml";
 
@@ -43,7 +43,7 @@ export class ChangelogFormatError extends Schema.TaggedError<
     return `${[
       `The changelog content breaks its format in ${count} ${count === 1 ? "place" : "places"}.`,
       "Readers and outside writers need the same fields and file names.",
-      "Fix: repair every file listed below, then rerun `pnpm --filter @rat-stack/site generate`.",
+      "Fix: repair every file listed below, then rerun `pnpm --filter @hypertask-docs/site generate`.",
     ].join(" ")}\n${this.violations
       .map(
         ({ file, fix, what, why }) => `${file}: ${what} ${why} Remedy: ${fix}`

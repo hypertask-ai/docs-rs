@@ -1,5 +1,5 @@
 {
-  "name": "@rat-stack/crash",
+  "name": "@hypertask-docs/crash",
   "version": "0.1.0",
   "private": true,
   "files": [
@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@alchemy.run/cloudflare": "2.0.0-beta.85",
-    "@rat-stack/core": "workspace:*",
+    "@hypertask-docs/core": "workspace:*",
     "alchemy": "2.0.0-beta.85",
     "effect": "4.1.2"
   },

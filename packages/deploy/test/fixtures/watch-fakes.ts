@@ -1,4 +1,4 @@
-import type { Verdict } from "@rat-stack/check-harness";
+import type { Verdict } from "@hypertask-docs/check-harness";
 import { Effect, Layer } from "effect";
 
 import type { DeployRunner } from "../../src/deploy-runner.js";

@@ -1,12 +1,12 @@
-import { toHttpApi } from "@rat-stack/capability/http-api";
-import { CafeDirectory } from "@rat-stack/core/cafe-directory";
-import { AssetReadError } from "@rat-stack/core/contracts";
-import type { ResourceNotFound } from "@rat-stack/core/contracts";
-import { Flags } from "@rat-stack/core/flags";
-import { IntakeTicket } from "@rat-stack/core/intake";
-import type { InterestTokens } from "@rat-stack/core/interest";
-import { webCryptoLayer } from "@rat-stack/core/web-crypto";
-import { Learner } from "@rat-stack/learn/learner";
+import { toHttpApi } from "@hypertask-docs/capability/http-api";
+import { CafeDirectory } from "@hypertask-docs/core/cafe-directory";
+import { AssetReadError } from "@hypertask-docs/core/contracts";
+import type { ResourceNotFound } from "@hypertask-docs/core/contracts";
+import { Flags } from "@hypertask-docs/core/flags";
+import { IntakeTicket } from "@hypertask-docs/core/intake";
+import type { InterestTokens } from "@hypertask-docs/core/interest";
+import { webCryptoLayer } from "@hypertask-docs/core/web-crypto";
+import { Learner } from "@hypertask-docs/learn/learner";
 import * as AlchemyHttp from "alchemy/Http";
 import {
   Cause,

@@ -1,13 +1,13 @@
-import { Auth } from "@rat-stack/auth";
+import { Auth } from "@hypertask-docs/auth";
 import {
   ratTestPerson,
   runAsPerson,
   testPersonLayer,
-} from "@rat-stack/auth/devtools";
-import type { AnyCapability } from "@rat-stack/capability";
-import { toRpc } from "@rat-stack/capability/rpc";
-import { toToolkit } from "@rat-stack/capability/toolkit";
-import { devtools, devtoolsLayer } from "@rat-stack/devtools";
+} from "@hypertask-docs/auth/devtools";
+import type { AnyCapability } from "@hypertask-docs/capability";
+import { toRpc } from "@hypertask-docs/capability/rpc";
+import { toToolkit } from "@hypertask-docs/capability/toolkit";
+import { devtools, devtoolsLayer } from "@hypertask-docs/devtools";
 import { RuntimeContext } from "alchemy";
 import { McpProtocol, McpServer } from "effect/ai";
 import * as Config from "effect/Config";

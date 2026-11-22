@@ -1,4 +1,4 @@
-import { Approval } from "@rat-stack/capability/approval";
+import { Approval } from "@hypertask-docs/capability/approval";
 import { AuthProviders } from "alchemy";
 import * as Alchemist from "alchemy/Alchemist";
 import { collectAuthProviders } from "alchemy/Alchemist/AuthRegistry";

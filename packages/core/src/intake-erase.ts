@@ -1,6 +1,6 @@
-import { CallWatch } from "@rat-stack/capability/call-watch";
-import { defineContract } from "@rat-stack/capability/contract";
-import { implement } from "@rat-stack/capability/implement";
+import { CallWatch } from "@hypertask-docs/capability/call-watch";
+import { defineContract } from "@hypertask-docs/capability/contract";
+import { implement } from "@hypertask-docs/capability/implement";
 import { Context, Effect, Layer, Logger, Schedule, Schema } from "effect";
 
 import { IntakeApplicationsUnavailable } from "./intake-applications-unavailable.js";
@@ -75,7 +75,7 @@ export class IntakeErasure extends Context.Service<
       submissionIds: readonly string[]
     ) => Effect.Effect<IntakeEraseCounts, IntakeApplicationsUnavailable>;
   }
->()("@rat-stack/core/IntakeErasure") {
+>()("@hypertask-docs/core/IntakeErasure") {
   static readonly layer = Layer.effect(
     this,
     Effect.gen(function* makeIntakeErasure() {

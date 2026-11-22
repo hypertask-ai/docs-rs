@@ -15,4 +15,4 @@ export class LearnerPreferences extends Context.Service<
       change: LearnPreferencesChange
     ) => Effect.Effect<LearnPreferences, LearnerProgressError>;
   }
->()("@rat-stack/core/LearnerPreferences") {}
+>()("@hypertask-docs/core/LearnerPreferences") {}

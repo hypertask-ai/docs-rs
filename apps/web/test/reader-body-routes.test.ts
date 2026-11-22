@@ -20,7 +20,7 @@ import {
 } from "../../site/test/reader-docs-header.ts";
 import { init } from "../src/client/reader/init.js";
 import { ReaderFlags } from "../src/client/reader/model.js";
-import { view } from "../src/features/reader.js";
+import { view } from "../src/features/reader-subviews-client.js";
 import {
   isAllStarsProfilePath,
   readerBodyRoutePaths,
@@ -37,7 +37,7 @@ const make = Effect.gen(function* readerParityFixture() {
 class ReaderParityFixture extends Context.Service<
   ReaderParityFixture,
   Effect.Success<typeof make>
->()("@rat-stack/web/test/ReaderParityFixture") {
+>()("@hypertask-docs/web/test/ReaderParityFixture") {
   static readonly layer = Layer.effect(ReaderParityFixture, make).pipe(
     Layer.provide(NodeServices.layer)
   );

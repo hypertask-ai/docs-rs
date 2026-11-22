@@ -1,6 +1,9 @@
-import { CafeDirectory, listPeople } from "@rat-stack/core/cafe-directory";
-import { profileForNewsRow } from "@rat-stack/core/cafe-people";
-import { selectCafeNews, sortCafeProjects } from "@rat-stack/core/contracts";
+import { CafeDirectory, listPeople } from "@hypertask-docs/core/cafe-directory";
+import { profileForNewsRow } from "@hypertask-docs/core/cafe-people";
+import {
+  selectCafeNews,
+  sortCafeProjects,
+} from "@hypertask-docs/core/contracts";
 import { Effect, Option } from "effect";
 
 import { Model } from "../../web/src/client/cafe/model.ts";

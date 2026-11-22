@@ -1,4 +1,4 @@
-import { implement } from "@rat-stack/capability/implement";
+import { implement } from "@hypertask-docs/capability/implement";
 import {
   changelogJsonFeedContract,
   changelogJsonText,
@@ -6,8 +6,8 @@ import {
   changelogMarkdownText,
   changelogRssFeedContract,
   changelogRssText,
-} from "@rat-stack/core/changelog";
-import type { ChangelogEntryValue } from "@rat-stack/core/changelog";
+} from "@hypertask-docs/core/changelog";
+import type { ChangelogEntryValue } from "@hypertask-docs/core/changelog";
 import { Effect } from "effect";
 
 import { ContentStore } from "../content-store.js";

@@ -1,5 +1,9 @@
-import { CodeBuildFailed } from "@rat-stack/code-snippets";
-import type { CodeFence, CodeSnippet, Token } from "@rat-stack/code-snippets";
+import { CodeBuildFailed } from "@hypertask-docs/code-snippets";
+import type {
+  CodeFence,
+  CodeSnippet,
+  Token,
+} from "@hypertask-docs/code-snippets";
 import type { RootContent } from "mdast";
 
 import type { ComponentDefinition } from "./component-registry.ts";

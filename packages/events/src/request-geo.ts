@@ -1,5 +1,5 @@
-import { RequestGeoSchema, isGeoLabel } from "@rat-stack/core/request-geo";
-import type { RequestGeo } from "@rat-stack/core/request-geo";
+import { RequestGeoSchema, isGeoLabel } from "@hypertask-docs/core/request-geo";
+import type { RequestGeo } from "@hypertask-docs/core/request-geo";
 import { Option, Predicate, Schema } from "effect";
 import type * as HttpServerRequest from "effect/http/HttpServerRequest";
 

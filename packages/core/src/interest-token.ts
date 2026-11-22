@@ -40,7 +40,7 @@ export class InterestTokens extends Context.Service<
       now: number
     ) => Effect.Effect<InterestClaims, InvalidInterestToken>;
   }
->()("@rat-stack/core/InterestTokens") {
+>()("@hypertask-docs/core/InterestTokens") {
   static readonly layer = (secret: Redacted.Redacted) =>
     Layer.effect(
       this,

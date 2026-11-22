@@ -3,8 +3,8 @@ import {
   FlagAtomicityRequired,
   FlagLedger,
   FlagTarget,
-} from "@rat-stack/core/flag-control";
-import { defineFlag } from "@rat-stack/core/flags";
+} from "@hypertask-docs/core/flag-control";
+import { defineFlag } from "@hypertask-docs/core/flags";
 import {
   Cause,
   Context,

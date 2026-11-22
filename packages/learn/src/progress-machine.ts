@@ -1,10 +1,10 @@
-import { watchActor } from "@rat-stack/capability/actor-watch";
+import { watchActor } from "@hypertask-docs/capability/actor-watch";
 import {
   ConceptProgressSchema,
   LearnEventSchema,
   LearnTimestampSchema,
-} from "@rat-stack/core/learn";
-import type { ConceptProgress, LearnEvent } from "@rat-stack/core/learn";
+} from "@hypertask-docs/core/learn";
+import type { ConceptProgress, LearnEvent } from "@hypertask-docs/core/learn";
 import {
   createEffectActor,
   createEffectLogic,

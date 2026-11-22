@@ -1,13 +1,13 @@
-import type { ContactRef } from "@rat-stack/core/intake";
+import type { ContactRef } from "@hypertask-docs/core/intake";
 import {
   IntakeApplications,
   IntakeApplicationsUnavailable,
   IntakeApplicationSchema,
   JoinContactStore,
-} from "@rat-stack/core/join-interest";
-import type { IntakeApplication } from "@rat-stack/core/join-interest";
-import { unsealApplication } from "@rat-stack/intake-live";
-import type { SealedRow } from "@rat-stack/intake-live";
+} from "@hypertask-docs/core/join-interest";
+import type { IntakeApplication } from "@hypertask-docs/core/join-interest";
+import { unsealApplication } from "@hypertask-docs/intake-live";
+import type { SealedRow } from "@hypertask-docs/intake-live";
 import { Effect, Layer, Logger, Schema } from "effect";
 
 export interface IntakeReadStub {
