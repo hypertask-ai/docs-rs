@@ -203,7 +203,8 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
       return yield* responded(request, robots.value);
     }
 
-    const redirect = docsRedirectFor(route);
+    const routePath = route === "/" ? route : route.replace(/\/$/u, "");
+    const redirect = docsRedirectFor(routePath);
 
     if (redirect !== undefined) {
       return yield* responded(
@@ -215,7 +216,6 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
       );
     }
 
-    const routePath = route === "/" ? route : route.replace(/\/$/u, "");
     const found = yield* findPage(routePath);
 
     if (Option.isNone(found)) {
@@ -224,7 +224,7 @@ export const renderReaderPage = Effect.fn("reader.renderPage")(
 
       const application = yield* renderReaderToString(flags);
 
-      return Rendered(withReaderHead(application, flags), {
+      return Rendered(withReaderHead(application, flags, siteBasePath), {
         headers: yield* previewHeaders(request),
         status: notFound.code,
       });

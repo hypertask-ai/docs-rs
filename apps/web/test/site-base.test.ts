@@ -14,9 +14,15 @@ import { inertHtml } from "foldkit/html";
 
 import { readerBodyFlags } from "../../site/scripts/reader-body-flags.ts";
 import { readerHomeFlags } from "../../site/scripts/reader-home-flags.ts";
+import { copyPublicIcons, publicIcons } from "../scripts/public-icons.ts";
 import { init } from "../src/client/reader/init.js";
 import { ReaderFlags } from "../src/client/reader/model.js";
 import type { ReaderPageFlags } from "../src/client/reader/model.js";
+import {
+  docsRedirectLines,
+  docsSitemapIndexXml,
+  docsSitemapXml,
+} from "../src/docs-addresses.js";
 import { view, viewAt } from "../src/features/reader-subviews-client.js";
 import { readerMetadataHead } from "../src/reader-metadata.js";
 import {
@@ -145,6 +151,44 @@ it("keeps the canonical on the old public address and marks a prefixed page noin
   expect(head).toContain(`${origin}/lore/example`);
   expect(head).toContain(`content="${origin}/ratstack/og/lore/example.png"`);
   expect(head).toContain('href="/ratstack/lore/example.md"');
+});
+
+it("mounts the redirects, the sitemap and its index under the site base path", () => {
+  const pages = ["/", "/getting-started/quickstart"];
+  const lines = docsRedirectLines(pages, "/ratstack");
+
+  expect(lines).toContain(
+    "/ratstack/features/desktop /ratstack/getting-started/apps/ 308"
+  );
+  expect(lines).toContain(
+    "/ratstack/getting-started/quickstart /ratstack/getting-started/quickstart/ 308"
+  );
+  expect(
+    lines.every((line) =>
+      line
+        .split(" ")
+        .slice(0, 2)
+        .every((address) => address.startsWith("/ratstack/"))
+    )
+  ).toBe(true);
+  expect(docsSitemapIndexXml(origin, "/ratstack")).toContain(
+    `<loc>${origin}/ratstack/sitemap-0.xml</loc>`
+  );
+  expect(docsSitemapXml(origin, pages, "/ratstack")).toContain(
+    `<loc>${origin}/ratstack/getting-started/quickstart/</loc>`
+  );
+});
+
+it("leaves the redirects and the sitemap alone when the site mounts at the origin root", () => {
+  const pages = ["/", "/getting-started/quickstart"];
+
+  expect(docsRedirectLines(pages, "")).toStrictEqual(docsRedirectLines(pages));
+  expect(docsSitemapXml(origin, pages, "")).toStrictEqual(
+    docsSitemapXml(origin, pages)
+  );
+  expect(docsSitemapIndexXml(origin, "")).toStrictEqual(
+    docsSitemapIndexXml(origin)
+  );
 });
 
 const make = Effect.gen(function* readerSiteBaseFixture() {
@@ -279,6 +323,32 @@ it.layer(ReaderSiteBaseFixture.layer)((test) => {
 });
 
 it.layer(NodeServices.layer)((test) => {
+  test.effect(
+    "copies the public icons under the site base path and nowhere else",
+    () =>
+      Effect.gen(function* mountedIcons() {
+        const fs = yield* FileSystem.FileSystem;
+        const path = yield* Path.Path;
+        const root = path.resolve(import.meta.dirname, "..");
+        const client = yield* fs.makeTempDirectory();
+
+        yield* copyPublicIcons(root, client, "/ratstack");
+
+        for (const icon of publicIcons) {
+          expect(yield* fs.exists(`${client}/ratstack${icon}`)).toBe(true);
+          expect(yield* fs.exists(`${client}${icon}`)).toBe(false);
+        }
+
+        yield* copyPublicIcons(root, client, "");
+
+        for (const icon of publicIcons) {
+          expect(yield* fs.exists(`${client}${icon}`)).toBe(false);
+        }
+
+        yield* fs.remove(client, { recursive: true });
+      })
+  );
+
   test.effect(
     "today's built home page and deep page carry no site base path",
     () =>
