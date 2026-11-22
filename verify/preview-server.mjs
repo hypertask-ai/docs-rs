@@ -7,14 +7,8 @@ import process from "node:process";
 
 /**
  * @typedef {{ headers: [string, string][], pattern: string }} HeaderRule
- */
-
-/**
  * @typedef {{ destination: string, source: string, status: number }} RedirectRule
- */
-
-/**
- * @typedef {{ directory?: boolean, file?: string }} Lookup
+ * @typedef {{ directory?: boolean, file?: string }} LookupResult
  */
 
 const root = path.resolve(process.env.PREVIEW_ROOT ?? "apps/web/dist/client");
@@ -28,6 +22,7 @@ const basePath = (process.env.SITE_BASE_PATH ?? "/ratstack").replace(
   ""
 );
 
+/** @type {Map<string, string>} */
 const contentTypes = new Map([
   [".avif", "image/avif"],
   [".css", "text/css; charset=utf-8"],
@@ -67,7 +62,6 @@ const readOptional = async (file) => {
 const parseHeaderRules = (text) => {
   /** @type {HeaderRule[]} */
   const rules = [];
-
   /** @type {HeaderRule | undefined} */
   let current;
 
@@ -112,19 +106,21 @@ const parseRedirectRules = (text) =>
       return [];
     }
 
-    const [source, destination, status] = line.split(/\s+/u);
+    const [source, destination, statusText] = line.split(/\s+/u);
 
     if (source === undefined || destination === undefined) {
       return [];
     }
 
-    return [{ destination, source, status: Number(status ?? "302") }];
+    return [{ destination, source, status: Number(statusText ?? "302") }];
   });
 
+/** @type {HeaderRule[]} */
 const headerRules = parseHeaderRules(
   await readOptional(path.join(root, "_headers"))
 );
 
+/** @type {RedirectRule[]} */
 const redirectRules = parseRedirectRules(
   await readOptional(path.join(root, "_redirects"))
 );
@@ -191,7 +187,7 @@ const candidatesFor = (pathname) => {
 
 /**
  * @param {string} candidate
- * @returns {string | undefined}
+ * @returns {string | null}
  */
 const safePath = (candidate) => {
   let decoded;
@@ -199,13 +195,13 @@ const safePath = (candidate) => {
   try {
     decoded = decodeURIComponent(candidate);
   } catch {
-    return;
+    return null;
   }
 
   const resolved = path.join(root, decoded);
 
   if (resolved !== root && !resolved.startsWith(`${root}${path.sep}`)) {
-    return;
+    return null;
   }
 
   return resolved;
@@ -213,32 +209,32 @@ const safePath = (candidate) => {
 
 /**
  * @param {string} file
- * @returns {Promise<import("node:fs").Stats | undefined>}
+ * @returns {Promise<import("node:fs").Stats | null>}
  */
 const infoAt = async (file) => {
   try {
     return await stat(file);
   } catch {
-    return;
+    return null;
   }
 };
 
 /**
  * @param {string} pathname
  * @param {string} candidate
- * @returns {Promise<Lookup | undefined>}
+ * @returns {Promise<LookupResult | null>}
  */
 const lookupCandidate = async (pathname, candidate) => {
   const resolved = safePath(candidate);
 
-  if (resolved === undefined) {
-    return;
+  if (resolved === null) {
+    return null;
   }
 
   const info = await infoAt(resolved);
 
-  if (info === undefined) {
-    return;
+  if (info === null) {
+    return null;
   }
 
   if (!info.isDirectory()) {
@@ -257,30 +253,34 @@ const lookupCandidate = async (pathname, candidate) => {
 
 /**
  * @param {string} pathname
- * @returns {Promise<Lookup | undefined>}
+ * @returns {Promise<LookupResult | null>}
  */
 const lookup = async (pathname) => {
   const [mounted, unmounted] = candidatesFor(pathname);
   const found = await lookupCandidate(pathname, mounted);
 
-  if (found !== undefined || unmounted === undefined) {
+  if (found !== null) {
     return found;
   }
 
-  return lookupCandidate(pathname, unmounted);
+  if (unmounted === undefined) {
+    return null;
+  }
+
+  return await lookupCandidate(pathname, unmounted);
 };
 
 /**
  * @param {import("node:http").ServerResponse} response
  * @param {number} status
  * @param {string} body
- * @param {Record<string, string>} [headers]
+ * @param {Record<string, string>} [extraHeaders]
  * @returns {void}
  */
-const sendText = (response, status, body, headers = {}) => {
+const sendText = (response, status, body, extraHeaders = {}) => {
   response.writeHead(status, {
     "Content-Type": "text/plain; charset=utf-8",
-    ...headers,
+    ...extraHeaders,
   });
   response.end(body);
 };
@@ -304,6 +304,7 @@ const respond = async (request, response) => {
     );
 
     const { pathname, search } = url;
+
     const redirect = redirectRules.find((rule) =>
       matchesPattern(rule.source, pathname)
     );
@@ -317,7 +318,7 @@ const respond = async (request, response) => {
 
     const found = await lookup(pathname);
 
-    if (found === undefined) {
+    if (found === null) {
       sendText(response, 404, "Not found.\n");
 
       return;
