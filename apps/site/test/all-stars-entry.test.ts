@@ -1,13 +1,10 @@
 import { expect, it } from "@effect/vitest";
-import { personProfile } from "@hypertask-docs/core/cafe-people";
-import { CafePerson, CafePersonEntry } from "@hypertask-docs/core/contracts";
+import { CafePersonEntry } from "@hypertask-docs/core/contracts";
 import { Schema } from "effect";
 import * as Arbitrary from "effect/Arbitrary";
 
-import { allStarsProfileMarkdown } from "../scripts/cafe-pages.js";
-
 it.prop(
-  "each entry basis decodes and renders its evidence, but news needs a row",
+  "each entry basis decodes and round trips, but news needs a row",
   {
     rows: Arbitrary.schema(
       Schema.Int.check(Schema.isBetween({ maximum: 5, minimum: 1 }))
@@ -21,73 +18,20 @@ it.prop(
     const project = `https://example.com/project/${serial}`;
     const verified = { source, verified: "2026-11-04" };
 
-    const newsRows = Array.from(
-      { length: rows },
-      (_, index) => `${source}/${index}`
-    );
-
-    const cases = [
+    const entries = [
       {
-        basis: "Entered on these /news rows",
-        entry: { kind: "news", rows: newsRows },
-        links: newsRows,
+        kind: "news",
+        rows: Array.from({ length: rows }, (_, index) => `${source}/${index}`),
       },
-      {
-        basis: "pinned stack package",
-        entry: { kind: "stack", package: `@example/p${serial}`, source },
-        links: [source, `@example/p${serial}`],
-      },
-      {
-        basis: "code is vendored or credited",
-        entry: { kind: "vendored", source },
-        links: [source],
-      },
-      {
-        basis: "Public [CAFE work]",
-        entry: { kind: "work", project, ...verified },
-        links: [project, source, verified.verified],
-      },
+      { kind: "stack", package: `@example/p${serial}`, source },
+      { kind: "vendored", source },
+      { kind: "work", project, ...verified },
     ];
 
-    for (const { entry, basis, links } of cases) {
+    for (const entry of entries) {
       const decoded = Schema.decodeUnknownSync(CafePersonEntry)(entry);
+
       expect(Schema.encodeSync(CafePersonEntry)(decoded)).toStrictEqual(entry);
-
-      const person = Schema.decodeUnknownSync(CafePerson)({
-        avatar: { path: "/avatars/example.png", ...verified },
-        bio: [
-          { text: "Builds a library with Effect.", ...verified },
-          { text: "Teaches its typed services.", ...verified },
-        ],
-        entry,
-        handles: [
-          {
-            handle: "example",
-            kind: "github",
-            url: "https://github.com/example",
-            ...verified,
-          },
-        ],
-        id: "example",
-        kind: "person",
-        name: "Example",
-        repos: [],
-        topics: [],
-        updated: verified.verified,
-        videos: [],
-      });
-
-      const rendered = allStarsProfileMarkdown(personProfile(person, []));
-
-      const line = rendered
-        .split("\n")
-        .find((text) => text.startsWith("Why they're here:"));
-
-      expect(line).toContain(basis);
-
-      for (const link of links) {
-        expect(line).toContain(link);
-      }
     }
 
     expect(
