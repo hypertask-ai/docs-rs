@@ -4,7 +4,7 @@ import {
   changelogJsonText,
   changelogMarkdownText,
   changelogRssText,
-} from "@rat-stack/core/changelog";
+} from "@hypertask-docs/core/changelog";
 import { Effect, FileSystem, Schema } from "effect";
 
 import { readChangelog } from "../scripts/changelog-content.ts";

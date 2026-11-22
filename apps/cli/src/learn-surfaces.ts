@@ -1,5 +1,5 @@
-import { toToolkit } from "@rat-stack/capability";
-import { localLearnCapabilities } from "@rat-stack/learn/local";
+import { toToolkit } from "@hypertask-docs/capability";
+import { localLearnCapabilities } from "@hypertask-docs/learn/local";
 import { Layer, Logger } from "effect";
 import { McpServer } from "effect/ai";
 

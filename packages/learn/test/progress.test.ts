@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
-import type { ConceptProgress, LearnEvent } from "@rat-stack/core/learn";
-import { ConceptProgressSchema, newConcept } from "@rat-stack/core/learn";
+import type { ConceptProgress, LearnEvent } from "@hypertask-docs/core/learn";
+import { ConceptProgressSchema, newConcept } from "@hypertask-docs/core/learn";
 import { createEffectActor, send, waitFor } from "@xstate/effect";
 import { Effect, Schema } from "effect";
 import * as Arbitrary from "effect/Arbitrary";

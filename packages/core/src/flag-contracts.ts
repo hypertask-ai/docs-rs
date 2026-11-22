@@ -1,4 +1,4 @@
-import { defineContract } from "@rat-stack/capability/contract";
+import { defineContract } from "@hypertask-docs/capability/contract";
 import { Schema } from "effect";
 
 import { FlagAtomicityRequired } from "./flag-atomicity-required.js";

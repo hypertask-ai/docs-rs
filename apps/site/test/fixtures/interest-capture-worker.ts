@@ -3,7 +3,7 @@ import {
   SubscriberConfirm,
   InterestMode,
   InterestTokens,
-} from "@rat-stack/core/interest";
+} from "@hypertask-docs/core/interest";
 import { Effect, Layer, Redacted } from "effect";
 import * as HttpRouter from "effect/http/HttpRouter";
 

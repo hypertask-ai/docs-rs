@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
-import { Approval } from "@rat-stack/capability/approval";
-import type { Verdict } from "@rat-stack/check-harness";
+import { Approval } from "@hypertask-docs/capability/approval";
+import type { Verdict } from "@hypertask-docs/check-harness";
 import {
   Clock,
   ConfigProvider,

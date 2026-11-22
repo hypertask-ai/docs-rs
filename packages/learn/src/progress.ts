@@ -3,8 +3,8 @@ import type {
   LearnDepth,
   LearnEvent,
   Progress,
-} from "@rat-stack/core/learn";
-import { newConcept } from "@rat-stack/core/learn";
+} from "@hypertask-docs/core/learn";
+import { newConcept } from "@hypertask-docs/core/learn";
 
 export const LONG_GAP_MS = 7 * 24 * 60 * 60 * 1000;
 

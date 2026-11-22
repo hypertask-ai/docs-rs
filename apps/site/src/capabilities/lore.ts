@@ -1,10 +1,10 @@
-import { implement } from "@rat-stack/capability/implement";
+import { implement } from "@hypertask-docs/capability/implement";
 import {
   backlinksContract,
   mentionsContract,
   neighborsContract,
   pathContract,
-} from "@rat-stack/core/contracts";
+} from "@hypertask-docs/core/contracts";
 import { Effect } from "effect";
 
 import { ContentStore } from "../content-store.js";

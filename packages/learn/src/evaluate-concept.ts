@@ -1,5 +1,5 @@
-import { watchActor } from "@rat-stack/capability/actor-watch";
-import type { ConceptProgress } from "@rat-stack/core/learn";
+import { watchActor } from "@hypertask-docs/capability/actor-watch";
+import type { ConceptProgress } from "@hypertask-docs/core/learn";
 import { createEffectActor, waitFor } from "@xstate/effect";
 import { Effect } from "effect";
 

@@ -1,6 +1,6 @@
-import { FlagExit, FlagThreshold } from "@rat-stack/core/flag-control";
-import { defineFlag } from "@rat-stack/core/flags";
-import type { Flag } from "@rat-stack/core/flags";
+import { FlagExit, FlagThreshold } from "@hypertask-docs/core/flag-control";
+import { defineFlag } from "@hypertask-docs/core/flags";
+import type { Flag } from "@hypertask-docs/core/flags";
 import { Schema } from "effect";
 
 export const binaryLadder = <const A>(off: A, on: A): Flag<A>["rungs"] => [

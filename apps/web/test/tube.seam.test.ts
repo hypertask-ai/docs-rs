@@ -9,7 +9,7 @@ import { tubePagePath } from "../../site/src/security.js";
 import { init } from "../src/client/reader/init.js";
 import { ReaderFlags } from "../src/client/reader/model.js";
 import { thumbnailUrl, tubeTiers } from "../src/client/tube/data.js";
-import { view } from "../src/features/reader.js";
+import { view } from "../src/features/reader-subviews-client.js";
 import { checkedLabel, tubeRoutePath } from "../src/features/tube/copy.js";
 import { isReaderRoutePath } from "../src/reader-routes.js";
 

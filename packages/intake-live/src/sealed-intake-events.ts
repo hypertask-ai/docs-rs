@@ -4,8 +4,8 @@ import {
   IntakeEventsUnavailable,
   IntakeObjectSchema,
   IntakeVerbSchema,
-} from "@rat-stack/core/intake";
-import type { ContactRef, IntakeStatement } from "@rat-stack/core/intake";
+} from "@hypertask-docs/core/intake";
+import type { ContactRef, IntakeStatement } from "@hypertask-docs/core/intake";
 import { Effect, Layer, Result, Schema } from "effect";
 import { Base64Url } from "effect/encoding";
 

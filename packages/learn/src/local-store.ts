@@ -1,4 +1,8 @@
-import type { LearnContext, LearnEvent, Progress } from "@rat-stack/core/learn";
+import type {
+  LearnContext,
+  LearnEvent,
+  Progress,
+} from "@hypertask-docs/core/learn";
 import {
   LearnerProgress,
   LearnerProgressError,
@@ -6,7 +10,7 @@ import {
   ConceptProgressRowSchema,
   LearnTaskSchema,
   emptyProgress,
-} from "@rat-stack/core/learn";
+} from "@hypertask-docs/core/learn";
 import {
   Config,
   Effect,

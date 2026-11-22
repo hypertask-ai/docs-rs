@@ -1,6 +1,6 @@
-import { eventFlags, eventsEnabled } from "@rat-stack/core/flags";
-import { cloudflareFlagsLayer } from "@rat-stack/flags/cloudflare";
-import { configFlagsLayer } from "@rat-stack/flags/config";
+import { eventFlags, eventsEnabled } from "@hypertask-docs/core/flags";
+import { cloudflareFlagsLayer } from "@hypertask-docs/flags/cloudflare";
+import { configFlagsLayer } from "@hypertask-docs/flags/config";
 import { Layer } from "effect";
 
 export const flagsLayer = configFlagsLayer(eventFlags);

@@ -1,4 +1,4 @@
-import { implement } from "@rat-stack/capability/implement";
+import { implement } from "@hypertask-docs/capability/implement";
 import { Effect, Schema } from "effect";
 
 import { getFlagContract, listFlagsContract } from "./flag-contracts.js";

@@ -1,4 +1,4 @@
-import { FlagStorageError } from "@rat-stack/core/flags";
+import { FlagStorageError } from "@hypertask-docs/core/flags";
 import { Effect, Predicate, Schema } from "effect";
 
 const bridgedCause =

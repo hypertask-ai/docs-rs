@@ -1,14 +1,14 @@
-import { defineContract } from "@rat-stack/capability/contract";
-import { toHttpApi } from "@rat-stack/capability/http-api";
-import { implement } from "@rat-stack/capability/implement";
+import { defineContract } from "@hypertask-docs/capability/contract";
+import { toHttpApi } from "@hypertask-docs/capability/http-api";
+import { implement } from "@hypertask-docs/capability/implement";
 import {
   FeedbackCredential,
   FeedbackDevice,
   FeedbackGrant,
   FeedbackRequest,
   LearnUnauthenticated,
-} from "@rat-stack/core/learn";
-import { FeedbackAuthor } from "@rat-stack/learn/feedback-author";
+} from "@hypertask-docs/core/learn";
+import { FeedbackAuthor } from "@hypertask-docs/learn/feedback-author";
 import { Schema } from "effect";
 
 const failure = LearnUnauthenticated.annotate({ httpApiStatus: 401 });

@@ -11,7 +11,7 @@ import {
 import { init } from "../src/client/reader/init.js";
 import { ReaderFlags } from "../src/client/reader/model.js";
 import type { ReaderPageFlags } from "../src/client/reader/model.js";
-import { view } from "../src/features/reader.js";
+import { view } from "../src/features/reader-subviews-client.js";
 import { readerFlagsFixture } from "./reader-fixture.js";
 
 const headerRow = { help: 1, logo: 0, openApp: 2, tabs: 3 };

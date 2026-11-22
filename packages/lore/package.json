@@ -1,5 +1,5 @@
 {
-  "name": "@rat-stack/lore",
+  "name": "@hypertask-docs/lore",
   "version": "0.1.0",
   "private": true,
   "files": [
@@ -30,7 +30,7 @@
     "pretest": "pnpm run --silent build"
   },
   "dependencies": {
-    "@rat-stack/core": "workspace:*",
+    "@hypertask-docs/core": "workspace:*",
     "effect": "4.1.2"
   },
   "devDependencies": {

@@ -3,7 +3,7 @@
 The Alchemy/workerd integration test measures the actual `serverBundle.files`, not Vite's intermediate entry:
 
 ```sh
-VITEST_MAX_WORKERS=4 pnpm --filter @rat-stack/infra exec vitest run test/website-build.test.ts
+VITEST_MAX_WORKERS=4 pnpm --filter @hypertask-docs/infra exec vitest run test/website-build.test.ts
 ```
 
 Two shrink-only ceilings **block** code growth: **1,600,000 entry bytes** and **4,500,000 non-content JavaScript bytes**. Lower them when code shrinks; never raise them to accept growth. Desk approved this round headroom over the measured 1,566,139 entry and 4,399,063 non-content bytes.

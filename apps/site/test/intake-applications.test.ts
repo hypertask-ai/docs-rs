@@ -1,27 +1,30 @@
 import { expect, it } from "@effect/vitest";
-import { CallWatch } from "@rat-stack/capability/call-watch";
+import { CallWatch } from "@hypertask-docs/capability/call-watch";
 import {
   ContactRefSchema,
   IntakeAnswersSchema,
   IntakeEvents,
   QuestionIdSchema,
-} from "@rat-stack/core/intake";
-import type { IntakeAnswers, IntakeStatement } from "@rat-stack/core/intake";
+} from "@hypertask-docs/core/intake";
+import type {
+  IntakeAnswers,
+  IntakeStatement,
+} from "@hypertask-docs/core/intake";
 import {
   InterestDirectory,
   InterestMode,
   InterestTokens,
   SubscriberConfirm,
-} from "@rat-stack/core/interest";
+} from "@hypertask-docs/core/interest";
 import {
   IntakeApplications,
   IntakeErasure,
   JoinContactStore,
-} from "@rat-stack/core/join-interest";
+} from "@hypertask-docs/core/join-interest";
 import {
   makeMemoryIntakeVault,
   sealedIntakeEventsLayer,
-} from "@rat-stack/intake-live";
+} from "@hypertask-docs/intake-live";
 import { Effect, Layer, Logger, Redacted, Ref, Schema, Tracer } from "effect";
 import * as Arbitrary from "effect/Arbitrary";
 import * as HttpRouter from "effect/http/HttpRouter";

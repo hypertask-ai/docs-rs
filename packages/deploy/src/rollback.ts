@@ -1,6 +1,6 @@
-import { watchActor } from "@rat-stack/capability/actor-watch";
-import { defineContract } from "@rat-stack/capability/contract";
-import { implement } from "@rat-stack/capability/implement";
+import { watchActor } from "@hypertask-docs/capability/actor-watch";
+import { defineContract } from "@hypertask-docs/capability/contract";
+import { implement } from "@hypertask-docs/capability/implement";
 import {
   createEffectActor,
   createEffectLogic,

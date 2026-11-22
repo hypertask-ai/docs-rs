@@ -1,9 +1,9 @@
-import { toRpcGroup } from "@rat-stack/capability/rpc-group";
+import { toRpcGroup } from "@hypertask-docs/capability/rpc-group";
 import {
   readContract,
   searchContract,
   searchDocsContract,
-} from "@rat-stack/core/contracts";
+} from "@hypertask-docs/core/contracts";
 import { Cache, Context, Effect, Layer } from "effect";
 import { FetchHttpClient } from "effect/http";
 import { RpcClient, RpcSerialization } from "effect/rpc";
@@ -50,6 +50,6 @@ const make = Effect.gen(function* makeDocumentQueries() {
 export class DocumentQueries extends Context.Service<
   DocumentQueries,
   Effect.Success<typeof make>
->()("@rat-stack/web/DocumentQueries", { make }) {
+>()("@hypertask-docs/web/DocumentQueries", { make }) {
   static readonly layer = Layer.effect(this, this.make);
 }
