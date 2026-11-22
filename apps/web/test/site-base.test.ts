@@ -219,7 +219,7 @@ const make = Effect.gen(function* readerSiteBaseFixture() {
   const deepPage =
     bodies.find(
       (page) => page.page.path === "/getting-started/introduction/"
-    ) ?? bodies.find((page) => page.page.path === "/AGENTS.md");
+    ) ?? bodies.find((page) => page.page.path === "/vendor/README.md");
 
   const deep = yield* Option.match(Option.fromNullishOr(deepPage), {
     onNone: () =>
@@ -358,7 +358,7 @@ it.layer(NodeServices.layer)((test) => {
 
         for (const page of [
           "dist/client/index.html",
-          "dist/client/AGENTS.md/index.html",
+          "dist/client/vendor/README.md/index.html",
         ]) {
           const html = yield* fs.readFileString(
             path.resolve(import.meta.dirname, "..", page)

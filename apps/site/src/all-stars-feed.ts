@@ -38,18 +38,7 @@ const entryXml = (entry: FeedEntry) =>
     "  </entry>",
   ].join("\n");
 
-const profileEntries = (
-  origin: string,
-  profile: CafeProfileValue
-): readonly FeedEntry[] => [
-  {
-    author: profile.name,
-    category: profile.kind,
-    date: profile.updated,
-    summary: profile.bio[0].text,
-    title: `${profile.name} on CAFE all stars`,
-    url: `${origin}${profile.route}`,
-  },
+const profileEntries = (profile: CafeProfileValue): readonly FeedEntry[] => [
   ...profile.newsRows.map((item) => ({
     author: profile.name,
     category: item.kind,
@@ -73,7 +62,7 @@ export const allStarsAtomFeed = (
   profiles: readonly CafeProfileValue[]
 ) => {
   const entries = profiles
-    .flatMap((profile) => profileEntries(origin, profile))
+    .flatMap((profile) => profileEntries(profile))
     .toSorted((left, right) => right.date.localeCompare(left.date));
 
   return `<?xml version="1.0" encoding="utf-8"?>

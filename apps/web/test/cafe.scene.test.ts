@@ -11,7 +11,7 @@ import { directoryHome, fullStack } from "./cafe-fixture.js";
 it("CAFE pages show the short prompt instead of the agent filing instructions", () => {
   for (const model of [
     directoryHome,
-    Model.News({ items: [], profiles: [], rankedAt: fullStack.date }),
+    Model.News({ items: [], rankedAt: fullStack.date }),
   ]) {
     scene(
       { update, view },
@@ -105,17 +105,18 @@ it("the all stars index shows one card per person, and channels under their own 
         ],
       })
     ),
-    expect(role("link", { name: "Ada" })).toHaveAttr("href", "/all-stars/ada"),
+    expect(role("heading", { name: "Ada" })).toExist(),
     expect(role("heading", { name: "People" })).toExist(),
     expect(role("heading", { name: "Channels" })).toExist(),
-    expect(role("link", { name: "Fold" })).toExist(),
+    expect(role("heading", { name: "Fold" })).toExist(),
+    expect(role("link", { name: "Ada" })).toBeAbsent(),
     expect(text("Ada builds CAFE things.")).toExist(),
     expect(role("link", { name: "ada/engine" })).toExist(),
     expect(role("link", { name: "open an issue" })).toExist()
   );
 });
 
-it("a news row whose author has a profile links to it", () => {
+it("a news row whose author has a profile names the author without a profile page", () => {
   const row = Schema.decodeSync(CafeStory)({
     author: { github: "ada", x: null },
     date: "2026-11-01",
@@ -132,13 +133,13 @@ it("a news row whose author has a profile links to it", () => {
     given(
       Model.News({
         items: [row],
-        profiles: [{ name: "Ada", route: "/all-stars/ada", url: row.url }],
         rankedAt: row.date,
       })
     ),
-    expect(role("link", { name: "Ada on all stars" })).toHaveAttr(
+    expect(role("link", { name: "Ada on all stars" })).toBeAbsent(),
+    expect(role("link", { name: "ada" })).toHaveAttr(
       "href",
-      "/all-stars/ada"
+      "https://github.com/ada"
     )
   );
 });

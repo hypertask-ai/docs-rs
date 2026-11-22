@@ -102,10 +102,7 @@ export const allStarsCopy = {
   heading: "CAFE all stars",
   intro:
     "People and channels with a /news row, pinned CAFE stack contributions, CAFE code rat-stack vendors or credits, or sourced public CAFE work. Every fact links to its source and the date we checked it.",
-  newsHeading: "On /news",
-  noNews: "No /news rows yet.",
   peopleHeading: "People",
-  profileLabel: "all stars profile",
 };
 
 export const allStarsTools =

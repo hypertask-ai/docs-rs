@@ -21,10 +21,7 @@ import {
 import { init } from "../src/client/reader/init.js";
 import { ReaderFlags } from "../src/client/reader/model.js";
 import { view } from "../src/features/reader-subviews-client.js";
-import {
-  isAllStarsProfilePath,
-  readerBodyRoutePaths,
-} from "../src/reader-routes.js";
+import { readerBodyRoutePaths } from "../src/reader-routes.js";
 import { normalizedNodes } from "./reader-node-normalize.js";
 
 const make = Effect.gen(function* readerParityFixture() {
@@ -51,18 +48,13 @@ it.layer(ReaderParityFixture.layer)((test) => {
     Effect.gen(function* bodyRouteCoverage() {
       const { flags, inputs } = yield* ReaderParityFixture;
 
-      const allStars = inputs.pages
-        .map((page) => page.path)
-        .filter(isAllStarsProfilePath);
-
       const docs = inputs.pages
         .map((page) => page.path)
         .filter(isDocsPageRoute);
 
-      expect(allStars).toContain("/all-stars/devinjameson");
       expect(docs.length).toBeGreaterThan(0);
       expect(flags.map((page) => page.page.path).toSorted()).toEqual(
-        [...readerBodyRoutePaths, ...allStars, ...docs].toSorted()
+        [...readerBodyRoutePaths, ...docs].toSorted()
       );
     })
   );

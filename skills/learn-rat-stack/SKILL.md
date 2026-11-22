@@ -169,8 +169,8 @@ curl --request POST 'https://ratstack.sh/api/execute' \
 
 ## Read before changing a piece
 
-1. Read [`AGENTS.md`](/AGENTS.md) for pins, boundaries, and [the fence](/lore/the-fence).
-2. Read [VISION.md](/VISION.md) for intent.
+1. Read [`AGENTS.md`](https://github.com/hypertask-ai/docs-rs/blob/main/AGENTS.md) for pins, boundaries, and [the fence](/lore/the-fence).
+2. Read [VISION.md](https://github.com/hypertask-ai/docs-rs/blob/main/VISION.md) for intent.
 3. Read the package you plan to change.
 4. Before Effect or XState work, read `node_modules/effect/AGENTS.md` and the pinned sources listed in repo law.
 

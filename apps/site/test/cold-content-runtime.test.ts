@@ -23,7 +23,7 @@ test.provider(
 
       const paths = [
         "/",
-        "/VISION.md",
+        "/vendor/README.md",
         "/sitemap.xml",
         "/log",
         "/lore/effect-basics",

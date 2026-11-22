@@ -1,4 +1,3 @@
-import { profileForNewsRow } from "@hypertask-docs/core/cafe-people";
 import {
   cafeDomain,
   cafeLetterInitial,
@@ -14,11 +13,8 @@ import type {
   CafeNewsItemValue,
   CafePeopleList,
   CafePersonSummary,
-  CafeProfileValue,
   CafeProjectValue,
 } from "@hypertask-docs/core/contracts";
-import { Option } from "effect";
-import { absurd } from "effect/Function";
 
 import {
   allStarsCopy,
@@ -78,31 +74,16 @@ const threadMarkdown = (item: CafeNewsItemValue) =>
       ]
     : [];
 
-const profileLink = (
-  people: readonly (typeof CafePersonSummary.Type)[],
-  item: CafeNewsItemValue
-) =>
-  Option.match(profileForNewsRow(people, item), {
-    onNone: () => "",
-    onSome: (person) => ` · [${allStarsCopy.profileLabel}](${person.route})`,
-  });
+const newsItemMarkdown = (item: CafeNewsItemValue, index: number) =>
+  [
+    `${index + 1}. [${newsKindLabels[item.kind]}] [${linkText(item.title)}](${item.url}) (${cafeDomain(item.url)})`,
+    ...(item.summary === null ? [] : [`   ${item.summary}`]),
+    `   ${item.date} by ${authorMarkdown(item.author, cafeDomain(item.url))}`,
+    ...threadMarkdown(item),
+  ].join("\n");
 
-const newsItemMarkdown =
-  (people: readonly (typeof CafePersonSummary.Type)[]) =>
-  (item: CafeNewsItemValue, index: number) =>
-    [
-      `${index + 1}. [${newsKindLabels[item.kind]}] [${linkText(item.title)}](${item.url}) (${cafeDomain(item.url)})`,
-      ...(item.summary === null ? [] : [`   ${item.summary}`]),
-      `   ${item.date} by ${authorMarkdown(item.author, cafeDomain(item.url))}${profileLink(people, item)}`,
-      ...threadMarkdown(item),
-    ].join("\n");
-
-export const cafeNewsMarkdown = (
-  data: CafeDataValue,
-  people: typeof CafePeopleList.Type
-) => {
+export const cafeNewsMarkdown = (data: CafeDataValue) => {
   const list = selectCafeNews(data, { limit: pageLimit, sort: "rank" });
-  const itemMarkdown = newsItemMarkdown(people.people);
 
   return [
     `# ${newsCopy.heading}`,
@@ -112,7 +93,7 @@ export const cafeNewsMarkdown = (
     `[${newsCopy.feedLabel}](/news.xml)`,
     "",
     list.items
-      .map((entry, index) => itemMarkdown(entry.item, index))
+      .map((entry, index) => newsItemMarkdown(entry.item, index))
       .join("\n\n"),
     "",
     `## ${newsCopy.sortHeading}`,
@@ -161,7 +142,7 @@ const sourced = (fact: {
 
 const summaryLine = (person: typeof CafePersonSummary.Type) =>
   [
-    `- [${linkText(person.name)}](${person.route}) \`${person.id}\`: ${person.summary.text} ${sourced(person.summary)}`,
+    `- ${linkText(person.name)} \`${person.id}\`: ${person.summary.text} ${sourced(person.summary)}`,
     `  Links: ${person.handles.map((handle) => `[${handleLabels[handle.kind]}](${handle.url})`).join(", ")}`,
     ...(person.repos.length === 0
       ? []
@@ -193,96 +174,3 @@ export const allStarsIndexMarkdown = (list: typeof CafePeopleList.Type) => {
     removalLine(null),
   ].join("\n");
 };
-
-const newsRowMarkdown = (item: CafeNewsItemValue) =>
-  `- ${item.date} [${newsKindLabels[item.kind]}] [${linkText(item.title)}](${item.url}) (${cafeDomain(item.url)})`;
-
-const entryBasisMarkdown = (entry: CafeProfileValue["entry"]) => {
-  switch (entry.kind) {
-    case "news": {
-      return `Entered on these /news rows: ${entry.rows.map((url, index) => `[${index + 1}](${url})`).join(", ")}`;
-    }
-
-    case "stack": {
-      return `Contributes to the pinned stack package [\`${entry.package}\`](${entry.source})`;
-    }
-
-    case "vendored": {
-      return `Their [code is vendored or credited](${entry.source}) in rat-stack`;
-    }
-
-    case "work": {
-      return `Public [CAFE work](${entry.project}), with [stack evidence](${entry.source}) (checked ${entry.verified})`;
-    }
-
-    default: {
-      return absurd<string>(entry);
-    }
-  }
-};
-
-export const allStarsProfileMarkdown = (profile: CafeProfileValue) =>
-  [
-    `# ${profile.name}`,
-    "",
-    `![${linkText(profile.name)}](${profile.avatar.path})`,
-    "",
-    `${profile.kind === "person" ? "Person" : "Channel"} · id \`${profile.id}\` · updated ${profile.updated} · [all stars](/all-stars)`,
-    "",
-    ...profile.handles.map(
-      (handle) =>
-        `- ${handleLabels[handle.kind]}: [${handle.kind === "x" ? "@" : ""}${linkText(handle.handle)}](${handle.url})`
-    ),
-    "",
-    "## Bio",
-    "",
-    ...profile.bio.map((fact) => `- ${fact.text} ${sourced(fact)}`),
-    "",
-    ...(profile.repos.length === 0
-      ? []
-      : [
-          "## Repos",
-          "",
-          ...profile.repos.map((repo) =>
-            [
-              `- [${repo.repo}](${repo.source}): ${repo.stars} stars${repo.description === null ? "" : `. ${repo.description}`} (checked ${repo.verified})`,
-              ...(repo.packages.length === 0
-                ? []
-                : [
-                    `  Packages: ${repo.packages.map((entry) => `[\`${entry.name}\`](${entry.source})`).join(", ")}`,
-                  ]),
-            ].join("\n")
-          ),
-          "",
-        ]),
-    ...(profile.topics.length === 0
-      ? []
-      : [
-          "## Topics",
-          "",
-          ...profile.topics.map(
-            (entry) => `- \`${entry.topic}\` ${sourced(entry)}`
-          ),
-          "",
-        ]),
-    ...(profile.videos.length === 0
-      ? []
-      : [
-          "## Videos",
-          "",
-          ...profile.videos.map(
-            (video) =>
-              `- ${video.date} [${linkText(video.title)}](${video.url})`
-          ),
-          "",
-        ]),
-    `## ${allStarsCopy.newsHeading}`,
-    "",
-    ...(profile.newsRows.length === 0
-      ? [allStarsCopy.noNews]
-      : profile.newsRows.map(newsRowMarkdown)),
-    "",
-    `Why they're here: ${entryBasisMarkdown(profile.entry)}. ${allStarsCopy.entryRule}`,
-    "",
-    removalLine(profile.id),
-  ].join("\n");
