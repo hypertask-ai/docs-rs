@@ -1,4 +1,4 @@
-import { DocsSearchOutput } from "@rat-stack/core/contracts";
+import { DocsSearchOutput } from "@hypertask-docs/core/contracts";
 import { Array, Option, Record, Schema } from "effect";
 import { defineTaggedUnion } from "foldkit/schema";
 

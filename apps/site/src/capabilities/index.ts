@@ -36,7 +36,7 @@ export {
   DocsSearchMatch,
   DocsSearchOutput,
   DocsSearchSection,
-} from "@rat-stack/core/contracts";
+} from "@hypertask-docs/core/contracts";
 
 export {
   BacklinksOutput,
