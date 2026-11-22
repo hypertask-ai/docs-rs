@@ -11,7 +11,7 @@ import {
   docsPageTitleFromDocumentTitle,
 } from "../src/docs-head.js";
 import type { DocsHead } from "../src/docs-head.js";
-import { view, viewAt } from "../src/features/reader.js";
+import { view, viewAt } from "../src/features/reader-subviews-client.js";
 import { escapeAttribute } from "../src/reader-metadata.js";
 import {
   renderDocument,

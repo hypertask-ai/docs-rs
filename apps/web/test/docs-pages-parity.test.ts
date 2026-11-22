@@ -15,7 +15,7 @@ import {
   docsHeaderTabs,
   docsSidebarGroups,
 } from "../src/features/docs-sidebar.js";
-import { view } from "../src/features/reader.js";
+import { view } from "../src/features/reader-subviews-client.js";
 
 const DocsPageFixtureSchema = Schema.Struct({
   cards: Schema.optional(

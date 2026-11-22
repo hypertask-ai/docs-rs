@@ -8,7 +8,7 @@ import { readerCafeFlags } from "../../site/scripts/reader-cafe-flags.ts";
 import { prepareReaderSiteInputs } from "../../site/scripts/reader-site-inputs.ts";
 import { init } from "../src/client/reader/init.js";
 import { ReaderFlags } from "../src/client/reader/model.js";
-import { view } from "../src/features/reader.js";
+import { view } from "../src/features/reader-subviews-client.js";
 
 const htmlText = (value: string) =>
   value
