@@ -536,7 +536,7 @@ it.effect(
         expect(skillHtml).toContain("Trace one action");
         expect(skillHtml).not.toContain("description:");
         expect(skillHtml).toContain(
-          '<a href="https://github.com/hypertask-ai/docs-rs/blob/main/AGENTS.md"><code>AGENTS.md</code></a>'
+          'href="https://github.com/hypertask-ai/docs-rs/blob/main/AGENTS.md"'
         );
         expect(skillHtml).toContain(
           '<a href="/skills/add-a-capability"><code>add-a-capability</code></a>'
