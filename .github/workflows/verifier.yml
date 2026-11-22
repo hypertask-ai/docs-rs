@@ -117,7 +117,7 @@ jobs:
         if: steps.target.outputs.go == 'yes'
         run: |
           set -euo pipefail
-          pnpm turbo run build --concurrency=2 --force
+          pnpm turbo run build --concurrency=2 --force --env-mode=loose
           if [ ! -f apps/web/dist/client/ratstack/index.html ]; then
             echo "::error::The build wrote no home page at apps/web/dist/client/ratstack/index.html, so the restored or built output is not a build of this site under SITE_BASE_PATH=$SITE_BASE_PATH. Fix: read the build output above and check that apps/web/vite.config.ts reads SITE_BASE_PATH."
             exit 1
