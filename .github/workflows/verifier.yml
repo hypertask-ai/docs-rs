@@ -123,7 +123,7 @@ jobs:
           set -euo pipefail
           nohup node "$GITHUB_WORKSPACE/verify/preview-server.mjs" > "$RUNNER_TEMP/preview.log" 2>&1 &
           echo "$!" > "$RUNNER_TEMP/preview.pid"
-          for attempt in $(seq 1 60); do
+          for attempt in $(seq 1 120); do
             status="$(curl --silent --output /dev/null --write-out '%{http_code}' --max-time 5 "$PREVIEW_URL" || true)"
             if [ "$status" = "200" ]; then
               printf 'The build of this pull request answers 200 at %s.\n' "$PREVIEW_URL"
@@ -132,7 +132,7 @@ jobs:
             fi
             sleep 2
           done
-          echo "::error::The local preview did not answer 200 at $PREVIEW_URL. The runner could not serve the site this pull request builds. Fix: read $RUNNER_TEMP/preview.log and the build step above."
+          echo "::error::The local preview did not answer 200 at $PREVIEW_URL after $attempt attempts. The runner could not serve the site this pull request builds. Fix: read $RUNNER_TEMP/preview.log and the build step above."
           sed -n '1,80p' "$RUNNER_TEMP/preview.log" || true
           exit 1
 
@@ -204,7 +204,7 @@ jobs:
           5. Keep what you used as evidence: the commands, the pages, the driver output and the screenshot file names.
 
           ## What this runner serves and what it cannot
-          The preview on this runner serves the built site's static output: the prerendered pages, the stylesheets, the scripts, the images, and the built `_headers` and `_redirects` rules. The addresses the deployed Worker answers dynamically are not in that output: the markdown copies at `<page>.md`, `llms.txt`, the sitemap and changelog feeds, and the `/rpc` content calls behind the search page. A 404 or a console error from one of those on $PREVIEW_URL is a limit of this runner, not a difference this pull request caused. Name it in a note and do not fail the change for it.
+          The preview on this runner serves the built site's static output: the prerendered pages, the stylesheets, the scripts, the images, and the built header and redirect rules. The addresses the deployed Worker answers dynamically are not in that output: the markdown copies at a page address plus .md, llms.txt, the sitemap and changelog feeds, and the /rpc content calls behind the search page. A 404 or a console error from one of those on $PREVIEW_URL is a limit of this runner, not a difference this pull request caused. Name it in a note and do not fail the change for it.
 
           ## What changed for a visitor
           Say plainly what a reader of the docs site sees differently on the build of this pull request at $SHA, compared with the live site at $LIVE_URL. If nothing a reader would notice changes in this pull request, say so and say why that is correct for this change.
