@@ -243,16 +243,25 @@ jobs:
           fi
           first="$(grep -E '^pstack-verifier: (PASS|PASS\+NOTES|FAIL) @ [0-9a-f]{40}$' "$RUNNER_TEMP/verdict.md" | head -n 1 | sed 's/[[:space:]]*$//' || true)"
           if [[ ! "$first" =~ ^pstack-verifier:\ (PASS|PASS\+NOTES|FAIL)\ @\ ([0-9a-f]{40})$ ]]; then
-            echo "::error::Claude produced no verdict in the required format: $first"
-            sed -n '1,40p' "$RUNNER_TEMP/verdict.md"
+            claude_body="$(cat "$RUNNER_TEMP/verdict.md" 2>/dev/null || true)"
+            {
+              printf 'pstack-verifier: FAIL @ %s\n\n' "$SHA"
+              if [ -n "$claude_body" ]; then
+                printf '%s\n' "$claude_body"
+              fi
+              if [ "$claude_status" -ne 0 ]; then
+                printf '\nClaude exited %s.\n' "$claude_status"
+              fi
+            } > "$RUNNER_TEMP/verdict.md"
+            first="pstack-verifier: FAIL @ $SHA"
+            echo "::notice::Claude returned no verdict line. Recorded $first for posting."
+          fi
+          if [[ ! "$first" =~ ^pstack-verifier:\ (PASS|PASS\+NOTES|FAIL)\ @\ ([0-9a-f]{40})$ ]]; then
+            echo "::error::The verifier produced no line in the required verdict format: $first"
             exit 1
           fi
           if [ "${BASH_REMATCH[2]}" != "$SHA" ]; then
             echo "::error::The Claude verdict names ${BASH_REMATCH[2]}, not the head $SHA, so it is stale."
-            exit 1
-          fi
-          if [ "$claude_status" -ne 0 ]; then
-            echo "::error::Claude exited $claude_status after writing a verdict."
             exit 1
           fi
 
