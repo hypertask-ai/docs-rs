@@ -1,0 +1,126 @@
+[
+  {
+    "description": "Agent cards show a heartbeat line for the merge timer, with colors for timely, late, or missing data.",
+    "file": "changelog-entry-2.html",
+    "kind": "changelog-entry",
+    "lang": "en",
+    "pageTitle": "See the merge timer's heartbeat",
+    "path": "/changelog/2026-08-29-see-the-merge-timer-s-heartbeat-891fb9/",
+    "status": 200
+  },
+  {
+    "description": "Selecting a whole column and pressing Ctrl+E now empties it immediately while the tickets archive in the background.",
+    "file": "changelog-entry.html",
+    "kind": "changelog-entry",
+    "lang": "en",
+    "pageTitle": "Bulk archive clears the column at once",
+    "path": "/changelog/2026-11-10-bulk-archive-clears-the-column-at-once-htpr-8928/",
+    "status": 200
+  },
+  {
+    "description": "New features, improvements, and fixes in Hypertask.",
+    "file": "changelog-index.html",
+    "kind": "changelog-index",
+    "lang": "en",
+    "pageTitle": "Changelog",
+    "path": "/changelog/",
+    "status": 200
+  },
+  {
+    "description": "Learn how people and AI agents share one board, and how to connect yours.",
+    "file": "home.html",
+    "kind": "home",
+    "lang": "en",
+    "pageTitle": "Hypertask documentation",
+    "path": "/",
+    "status": 200
+  },
+  {
+    "file": "search.html",
+    "kind": "not-found",
+    "lang": "en",
+    "pageTitle": "404",
+    "path": "/search",
+    "status": 404
+  },
+  {
+    "file": "not-found.html",
+    "kind": "not-found",
+    "lang": "en",
+    "pageTitle": "404",
+    "path": "/this-page-does-not-exist-htpr9328/",
+    "status": 404
+  },
+  {
+    "description": "Complete reference for Hypertask's public REST API endpoints.",
+    "file": "rest-api.html",
+    "kind": "page",
+    "lang": "en",
+    "pageTitle": "REST API",
+    "path": "/api/rest-api/",
+    "status": 200
+  },
+  {
+    "description": "Complete reference for the Hypertask CLI to manage tasks, projects, comments, and notifications from your terminal.",
+    "file": "cli-reference.html",
+    "kind": "page",
+    "lang": "en",
+    "pageTitle": "CLI Reference",
+    "path": "/cli/reference/",
+    "status": 200
+  },
+  {
+    "description": "Create a Hypertask agent, copy its token, give it board access and connect it with the CLI or MCP.",
+    "file": "connect-an-agent.html",
+    "kind": "page",
+    "lang": "en",
+    "pageTitle": "Connect a new agent",
+    "path": "/connect-an-agent/",
+    "status": 200
+  },
+  {
+    "description": "Add and manage seat licenses, view cost forecasts, and test billing flows safely.",
+    "file": "billing.html",
+    "kind": "page",
+    "lang": "en",
+    "pageTitle": "Billing & Seat Management",
+    "path": "/features/billing/",
+    "status": 200
+  },
+  {
+    "description": "Organize work with Kanban-style boards, customizable sections, and multiple views.",
+    "file": "boards.html",
+    "kind": "page",
+    "lang": "en",
+    "pageTitle": "Boards & Sections",
+    "path": "/features/boards/",
+    "status": 200
+  },
+  {
+    "description": "Add and manage your own API keys and providers directly in Hypertask.",
+    "file": "byok.html",
+    "kind": "page",
+    "lang": "en",
+    "pageTitle": "Bring Your Own Key (BYOK)",
+    "path": "/features/byok/",
+    "status": 200
+  },
+  {
+    "description": "AI-native project management for teams and AI agents — manage tasks, collaborate in real-time, and connect AI agents with MCP, CLI, and REST APIs.",
+    "file": "introduction.html",
+    "kind": "page",
+    "lang": "en",
+    "pageTitle": "What is Hypertask?",
+    "path": "/getting-started/introduction/",
+    "status": 200
+  },
+  {
+    "description": "Connect AI agents to Hypertask via the Model Context Protocol.",
+    "file": "mcp-overview.html",
+    "kind": "page",
+    "lang": "en",
+    "pageTitle": "MCP Integration",
+    "path": "/mcp/overview/",
+    "status": 200
+  }
+]

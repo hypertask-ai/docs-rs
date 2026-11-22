@@ -8,8 +8,8 @@ import {
   decodeCafeData,
   decodeCafeEntries,
   describeCafeDataError,
-} from "@rat-stack/core";
-import { CafeNewsItem, CafeProject } from "@rat-stack/core/contracts";
+} from "@hypertask-docs/core";
+import { CafeNewsItem, CafeProject } from "@hypertask-docs/core/contracts";
 import {
   Array,
   Console,

@@ -1,6 +1,6 @@
-import { d1AuthLayer } from "@rat-stack/auth/d1";
-import { FeedbackIdentity } from "@rat-stack/auth/feedback";
-import { AuthService as Auth } from "@rat-stack/auth/service";
+import { d1AuthLayer } from "@hypertask-docs/auth/d1";
+import { FeedbackIdentity } from "@hypertask-docs/auth/feedback";
+import { AuthService as Auth } from "@hypertask-docs/auth/service";
 import * as AlchemyHttp from "alchemy/Http";
 import * as Namespace from "alchemy/Namespace";
 import { CurrentRuntimeContext } from "alchemy/RuntimeContext";

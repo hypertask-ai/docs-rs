@@ -1,5 +1,5 @@
-import { implement } from "@rat-stack/capability/implement";
-import { searchContract } from "@rat-stack/core/contracts";
+import { implement } from "@hypertask-docs/capability/implement";
+import { searchContract } from "@hypertask-docs/core/contracts";
 import { Effect } from "effect";
 
 import { ContentStore } from "../content-store.js";

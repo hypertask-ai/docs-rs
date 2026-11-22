@@ -2,11 +2,19 @@ import { expect, it } from "@effect/vitest";
 import {
   IntakeApplications,
   intakeApplications,
-} from "@rat-stack/core/join-interest";
+} from "@hypertask-docs/core/join-interest";
 import { ConfigProvider, Effect, Layer, Logger, Tracer } from "effect";
 import { HttpClient, HttpClientResponse } from "effect/http";
 
 import { remoteIntakeApplicationsLayer } from "../src/intake.js";
+
+const credentialedOperatorUrl = () => {
+  const url = new URL("https://operator.example.test");
+  url.username = "user";
+  url.password = "password";
+
+  return url.href;
+};
 
 it.effect(
   "reads applications with environment authorization and historical lookup without telemetry",
@@ -129,7 +137,7 @@ it.effect(
           Response.json({ email: "synthetic@example.test" }),
         ],
         ["http://operator.example.test", Response.json([])],
-        ["https://user:password@operator.example.test", Response.json([])],
+        [credentialedOperatorUrl(), Response.json([])],
       ] as const) {
         const layer = remoteIntakeApplicationsLayer(baseUrl).pipe(
           Layer.provide(

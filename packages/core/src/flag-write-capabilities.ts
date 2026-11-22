@@ -1,5 +1,8 @@
-import { Approval } from "@rat-stack/capability/approval";
-import { aroundHandlers, implement } from "@rat-stack/capability/implement";
+import { Approval } from "@hypertask-docs/capability/approval";
+import {
+  aroundHandlers,
+  implement,
+} from "@hypertask-docs/capability/implement";
 import { Effect, Predicate } from "effect";
 
 import { auditFlagRun } from "./flag-audit.js";

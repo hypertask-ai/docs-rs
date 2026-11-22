@@ -8,9 +8,9 @@ import {
   FlagPreviousValue,
   FlagTarget,
   flagPartition,
-} from "@rat-stack/core/flag-control";
-import { FlagStorageError } from "@rat-stack/core/flags";
-import { flagValueKey } from "@rat-stack/flags/kv";
+} from "@hypertask-docs/core/flag-control";
+import { FlagStorageError } from "@hypertask-docs/core/flags";
+import { flagValueKey } from "@hypertask-docs/flags/kv";
 import { Effect, Option, Schema } from "effect";
 import * as Arbitrary from "effect/Arbitrary";
 import type { HttpClient } from "effect/http";

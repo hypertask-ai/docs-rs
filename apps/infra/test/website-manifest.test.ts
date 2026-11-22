@@ -74,7 +74,7 @@ for (const scenario of scenarios) {
         expect(error.path).toBe(manifestPath);
         expect(error.message).toContain(manifestPath);
         expect(error.message).toContain(
-          "pnpm --filter @rat-stack/site generate"
+          "pnpm --filter @hypertask-docs/site generate"
         );
         expect(error.message).toContain("pnpm build");
         expect(error.cause).toBeDefined();

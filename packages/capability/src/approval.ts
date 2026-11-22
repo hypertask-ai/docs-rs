@@ -13,7 +13,7 @@ export interface ApprovalService {
 }
 
 export class Approval extends Context.Service<Approval, ApprovalService>()(
-  "@rat-stack/capability/Approval"
+  "@hypertask-docs/capability/Approval"
 ) {
   static readonly denyAll = Layer.succeed(
     Approval,

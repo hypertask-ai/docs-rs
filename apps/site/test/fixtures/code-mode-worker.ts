@@ -4,11 +4,11 @@ import {
   ExecuteResult,
   ExecuteFailure,
   toExecuteCapability,
-} from "@rat-stack/capability/code-mode";
-import { defineContract } from "@rat-stack/capability/contract";
-import { toHttpApi } from "@rat-stack/capability/http-api";
-import { implement } from "@rat-stack/capability/implement";
-import { AssetReadError } from "@rat-stack/core/contracts";
+} from "@hypertask-docs/capability/code-mode";
+import { defineContract } from "@hypertask-docs/capability/contract";
+import { toHttpApi } from "@hypertask-docs/capability/http-api";
+import { implement } from "@hypertask-docs/capability/implement";
+import { AssetReadError } from "@hypertask-docs/core/contracts";
 import * as AlchemyHttp from "alchemy/Http";
 import { Effect, Layer, Schema } from "effect";
 import { HttpRouter } from "effect/http";

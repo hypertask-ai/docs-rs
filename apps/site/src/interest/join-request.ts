@@ -1,6 +1,9 @@
 import * as Cloudflare from "@alchemy.run/cloudflare";
-import { InterestTokens, normalizeClientIp } from "@rat-stack/core/interest";
-import { JoinRequest } from "@rat-stack/core/join-interest";
+import {
+  InterestTokens,
+  normalizeClientIp,
+} from "@hypertask-docs/core/interest";
+import { JoinRequest } from "@hypertask-docs/core/join-interest";
 import * as RuntimeContext from "alchemy/RuntimeContext";
 import { Context, Effect, Option } from "effect";
 import { HttpRouter, HttpServerRequest } from "effect/http";

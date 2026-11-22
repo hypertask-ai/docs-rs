@@ -1,6 +1,9 @@
 import { expect, it } from "@effect/vitest";
-import { SubscriberIntake } from "@rat-stack/core/interest";
-import type { IntakeRequest, IntakeResult } from "@rat-stack/core/interest";
+import { SubscriberIntake } from "@hypertask-docs/core/interest";
+import type {
+  IntakeRequest,
+  IntakeResult,
+} from "@hypertask-docs/core/interest";
 import { Effect, Fiber, Layer, Logger, Option, Redacted } from "effect";
 import { HttpClient, HttpClientResponse } from "effect/http";
 import { TestClock } from "effect/testing";

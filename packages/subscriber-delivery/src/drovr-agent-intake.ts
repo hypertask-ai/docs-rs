@@ -1,8 +1,8 @@
-import { SubscriberIntake } from "@rat-stack/core/interest";
+import { SubscriberIntake } from "@hypertask-docs/core/interest";
 import type {
   AgentIntakeRequest,
   IntakeResult,
-} from "@rat-stack/core/interest";
+} from "@hypertask-docs/core/interest";
 import { Effect, Layer, Option, Redacted, Schema } from "effect";
 import { HttpClient, HttpClientRequest } from "effect/http";
 

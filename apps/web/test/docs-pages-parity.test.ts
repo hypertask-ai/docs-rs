@@ -15,7 +15,7 @@ import {
   docsHeaderTabs,
   docsSidebarGroups,
 } from "../src/features/docs-sidebar.js";
-import { view } from "../src/features/reader.js";
+import { view } from "../src/features/reader-subviews-client.js";
 
 const DocsPageFixtureSchema = Schema.Struct({
   cards: Schema.optional(
@@ -64,7 +64,7 @@ const make = Effect.gen(function* docsParityFixture() {
 class DocsParityFixture extends Context.Service<
   DocsParityFixture,
   Effect.Success<typeof make>
->()("@rat-stack/web/test/DocsParityFixture") {
+>()("@hypertask-docs/web/test/DocsParityFixture") {
   static readonly layer = Layer.effect(DocsParityFixture, make).pipe(
     Layer.provide(NodeServices.layer)
   );

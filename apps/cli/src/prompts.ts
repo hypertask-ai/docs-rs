@@ -1,9 +1,9 @@
-import { PromptLibrary } from "@rat-stack/core";
+import { PromptLibrary } from "@hypertask-docs/core";
 import {
   AssetReadError,
   Prompt,
   UnknownPrompt,
-} from "@rat-stack/core/contracts";
+} from "@hypertask-docs/core/contracts";
 import { Effect, FileSystem, Layer, Path, Schema } from "effect";
 
 export const localPromptLibraryLayer = Layer.effect(

@@ -3,7 +3,7 @@ import {
   ratListActors,
   ratListCalls,
   ratListContracts,
-} from "@rat-stack/devtools/contracts";
+} from "@hypertask-docs/devtools/contracts";
 import * as stylex from "@stylexjs/stylex";
 import { Match, Option, Schema } from "effect";
 import type { Update } from "foldkit";

@@ -1,6 +1,6 @@
-import { Approval } from "@rat-stack/capability/approval";
-import { defineContract } from "@rat-stack/capability/contract";
-import { implement } from "@rat-stack/capability/implement";
+import { Approval } from "@hypertask-docs/capability/approval";
+import { defineContract } from "@hypertask-docs/capability/contract";
+import { implement } from "@hypertask-docs/capability/implement";
 import { Effect, Option, Runtime, Schema } from "effect";
 
 import { DeployReportSchema, deployReport } from "./contracts.js";

@@ -23,7 +23,7 @@ import {
   docsSitemapIndexXml,
   docsSitemapXml,
 } from "../src/docs-addresses.js";
-import { view, viewAt } from "../src/features/reader.js";
+import { view, viewAt } from "../src/features/reader-subviews-client.js";
 import { readerMetadataHead } from "../src/reader-metadata.js";
 import {
   renderDocument,
@@ -237,7 +237,7 @@ const make = Effect.gen(function* readerSiteBaseFixture() {
 class ReaderSiteBaseFixture extends Context.Service<
   ReaderSiteBaseFixture,
   Effect.Success<typeof make>
->()("@rat-stack/web/test/ReaderSiteBaseFixture") {
+>()("@hypertask-docs/web/test/ReaderSiteBaseFixture") {
   static readonly layer = Layer.effect(ReaderSiteBaseFixture, make).pipe(
     Layer.provide(NodeServices.layer)
   );

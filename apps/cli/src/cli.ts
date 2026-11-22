@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import { NodeRuntime, NodeServices } from "@effect/platform-node";
-import { Approval } from "@rat-stack/capability";
-import { FileInspector } from "@rat-stack/core";
-import { FlagActor } from "@rat-stack/core/flag-control";
-import { eventFlags, Flags } from "@rat-stack/core/flags";
+import { Approval } from "@hypertask-docs/capability";
+import { FileInspector } from "@hypertask-docs/core";
+import { FlagActor } from "@hypertask-docs/core/flag-control";
+import { eventFlags, Flags } from "@hypertask-docs/core/flags";
 import { Console, Effect, Layer } from "effect";
 
 import { localCafeDirectoryLayer } from "./cafe.js";

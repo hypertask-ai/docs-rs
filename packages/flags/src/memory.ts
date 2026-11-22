@@ -2,14 +2,18 @@ import {
   FlagJournal,
   flagPartition,
   validateFlagScope,
-} from "@rat-stack/core/flag-control";
-import type { FlagPosition } from "@rat-stack/core/flag-control";
+} from "@hypertask-docs/core/flag-control";
+import type { FlagPosition } from "@hypertask-docs/core/flag-control";
 import {
   FlagStateStore,
   flagLedgerEngine,
-} from "@rat-stack/core/flag-ledger-engine";
-import { Flags, decodeFlag, InvalidFlagValue } from "@rat-stack/core/flags";
-import type { Flag } from "@rat-stack/core/flags";
+} from "@hypertask-docs/core/flag-ledger-engine";
+import {
+  Flags,
+  decodeFlag,
+  InvalidFlagValue,
+} from "@hypertask-docs/core/flags";
+import type { Flag } from "@hypertask-docs/core/flags";
 import { Effect, Layer, Option, Ref, Schema } from "effect";
 
 import { evaluateFlag, FlagRule } from "./evaluate.js";

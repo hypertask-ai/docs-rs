@@ -1,5 +1,5 @@
 {
-  "name": "@rat-stack/infra",
+  "name": "@hypertask-docs/infra",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -12,7 +12,7 @@
     "plan": "alchemy plan",
     "deploy": "alchemy deploy",
     "destroy": "alchemy destroy",
-    "predev": "pnpm --filter @rat-stack/site generate",
+    "predev": "pnpm --filter @hypertask-docs/site generate",
     "dev": "alchemy dev",
     "logs": "alchemy logs"
   },
@@ -20,8 +20,8 @@
     "@alchemy.run/cloudflare": "2.0.0-beta.85",
     "@alchemy.run/drizzle": "2.0.0-beta.85",
     "@effect/platform-node": "4.1.2",
-    "@rat-stack/site": "workspace:*",
-    "@rat-stack/turbo-cache": "workspace:*",
+    "@hypertask-docs/site": "workspace:*",
+    "@hypertask-docs/turbo-cache": "workspace:*",
     "alchemy": "2.0.0-beta.85",
     "effect": "4.1.2"
   },

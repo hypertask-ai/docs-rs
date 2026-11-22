@@ -1,6 +1,6 @@
 import { expect, it } from "@effect/vitest";
-import { CallWatch } from "@rat-stack/capability/call-watch";
-import { IntakeErasure, intakeErase } from "@rat-stack/core/join-interest";
+import { CallWatch } from "@hypertask-docs/capability/call-watch";
+import { IntakeErasure, intakeErase } from "@hypertask-docs/core/join-interest";
 import { ConfigProvider, Effect, Layer, Logger, Match, Tracer } from "effect";
 import { HttpClient, HttpClientResponse } from "effect/http";
 
@@ -8,6 +8,14 @@ import {
   intakeEraseCommand,
   remoteIntakeErasureLayer,
 } from "../src/intake-erase.js";
+
+const credentialedOperatorUrl = () => {
+  const url = new URL("https://operator.example.test");
+  url.username = "user";
+  url.password = "password";
+
+  return url.href;
+};
 
 it.effect(
   "sends repeated submission ids to the private erase endpoint and returns only counts without telemetry",
@@ -127,7 +135,7 @@ it.effect(
           Response.json({ alreadyGone: 0, erased: 1, failed: 0, pending: 0 }),
         ],
         [
-          "https://user:password@operator.example.test",
+          credentialedOperatorUrl(),
           Response.json({ alreadyGone: 0, erased: 1, failed: 0, pending: 0 }),
         ],
       ] as const) {

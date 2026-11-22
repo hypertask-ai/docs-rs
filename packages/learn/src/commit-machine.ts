@@ -1,6 +1,9 @@
-import { watchActor } from "@rat-stack/capability/actor-watch";
-import { LearnEventSchema } from "@rat-stack/core/learn";
-import type { LearnEvent, LearnerProgressError } from "@rat-stack/core/learn";
+import { watchActor } from "@hypertask-docs/capability/actor-watch";
+import { LearnEventSchema } from "@hypertask-docs/core/learn";
+import type {
+  LearnEvent,
+  LearnerProgressError,
+} from "@hypertask-docs/core/learn";
 import {
   createEffectActor,
   createEffectLogic,

@@ -1,12 +1,10 @@
 import { NodeRuntime, NodeServices } from "@effect/platform-node";
 import { Console, Effect, FileSystem, Schema } from "effect";
-import { renderToString } from "foldkit/experimental/server";
 
 import { readerPrototypeFlags } from "../../site/scripts/reader-prototype-flags.ts";
-import { init } from "../src/client/reader/init.ts";
 import { ReaderFlags } from "../src/client/reader/model.ts";
 import { serviceCaptureDocument } from "../src/client/service-capture-document.ts";
-import { view } from "../src/features/reader.ts";
+import { renderReaderToString } from "../src/server/render-reader.ts";
 
 const program = Effect.gen(function* renderLorePrototype() {
   const fs = yield* FileSystem.FileSystem;
@@ -17,13 +15,7 @@ const program = Effect.gen(function* renderLorePrototype() {
     blocks: serviceCaptureDocument,
   });
 
-  const rendered = yield* renderToString(
-    { Flags: ReaderFlags, init, view },
-    {
-      flags,
-      isHydratable: false,
-    }
-  );
+  const rendered = yield* renderReaderToString(flags);
 
   yield* fs.writeFileString(
     "/tmp/foldkit-site-a-lore-prototype.html",
