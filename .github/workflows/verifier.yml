@@ -28,7 +28,10 @@ jobs:
       SERVER_URL: ${{ github.server_url }}
       RUN_ID: ${{ github.run_id }}
       LIVE_URL: https://docs.hypertask.ai
-      PREVIEW_URL: https://docs.hypertask.ai/ratstack/
+      SITE_BASE_PATH: /ratstack
+      PREVIEW_ROOT: apps/web/dist/client
+      PREVIEW_PORT: "4173"
+      PREVIEW_URL: http://127.0.0.1:4173/ratstack/
     steps:
       - name: Resolve the pull request, its parent commit and its head commit
         id: target
@@ -99,12 +102,39 @@ jobs:
         if: steps.target.outputs.go == 'yes'
         run: pnpm install --frozen-lockfile
 
+      - name: Fetch pinned source objects
+        if: steps.target.outputs.go == 'yes'
+        run: pnpm sources:fetch
+
       - name: Install Playwright Chromium for the verifier
         if: steps.target.outputs.go == 'yes'
         run: |
           set -euo pipefail
           pnpm exec playwright install --with-deps chromium
           mkdir -p "$RUNNER_TEMP/screens"
+
+      - name: Build this pull request's site the way the publish workflow builds it
+        if: steps.target.outputs.go == 'yes'
+        run: pnpm turbo run build --concurrency=2
+
+      - name: Serve the built site on the runner
+        if: steps.target.outputs.go == 'yes'
+        run: |
+          set -euo pipefail
+          nohup node "$GITHUB_WORKSPACE/verify/preview-server.mjs" > "$RUNNER_TEMP/preview.log" 2>&1 &
+          echo "$!" > "$RUNNER_TEMP/preview.pid"
+          for attempt in $(seq 1 60); do
+            status="$(curl --silent --output /dev/null --write-out '%{http_code}' --max-time 5 "$PREVIEW_URL" || true)"
+            if [ "$status" = "200" ]; then
+              printf 'The build of this pull request answers 200 at %s.\n' "$PREVIEW_URL"
+              printf 'preview: %s answers 200 from the local build of this pull request\n' "$PREVIEW_URL" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "::error::The local preview did not answer 200 at $PREVIEW_URL. The runner could not serve the site this pull request builds. Fix: read $RUNNER_TEMP/preview.log and the build step above."
+          sed -n '1,80p' "$RUNNER_TEMP/preview.log" || true
+          exit 1
 
       - name: Read the change under review from the checkout
         if: steps.target.outputs.go == 'yes'
@@ -143,7 +173,7 @@ jobs:
           diff_limit="$(jq -r '.limit' "$RUNNER_TEMP/diff.json")"
           {
             cat <<PROMPT
-          You are the independent verifier for a pull request in this repository. You did not write this change. Do not merge, do not push, and do not edit the checked-out repository. Judge the change against the published preview, leave your evidence, then stop.
+          You are the independent verifier for a pull request in this repository. You did not write this change. Do not merge, do not push, and do not edit the checked-out repository. Judge the change against this pull request's own build, served on this runner, leave your evidence, then stop.
 
           ## The goal
           This repository is the new docs.hypertask.ai, built on Rat Stack. The parent ticket is HTPR-9125. Every pull request here is one step of that move, and its title starts with the id of its own ticket. The rule the finished site must keep: the preview under $PREVIEW_URL looks and reads the same as $LIVE_URL. Same colours, same fonts, same sizes, same corners, same words, same page addresses and same links. Rat Stack's own look is not acceptable, a rewritten sentence is not acceptable, and a missing page is not acceptable.
@@ -159,7 +189,8 @@ jobs:
           - The pull request head $SHA is checked out at $GITHUB_WORKSPACE. That is the change under review.
           - The parent commit of the pull request is $BASE_SHA.
           - The live old site is $LIVE_URL.
-          - The published preview is $PREVIEW_URL. That is the site under test.
+          - The site under test is $PREVIEW_URL: this pull request's own head, built on this runner with SITE_BASE_PATH=/ratstack exactly as the publish workflow builds it, and served from that built output on 127.0.0.1. Nothing is deployed to Cloudflare and nothing had to be published first, so this address carries the change under review.
+          - Every preview address the skill writes as https://docs.hypertask.ai/ratstack/ is $PREVIEW_URL in this run. Put $PREVIEW_URL in place of that published origin in each command you copy.
           - Playwright with Chromium is installed from this checkout. Put evidence in $SCREENS_DIR.
           - Read and follow $GITHUB_WORKSPACE/.claude/skills/verify-docs-rs/SKILL.md. Use its doctor and drive commands, which call $GITHUB_WORKSPACE/verify/driver.mjs for page capture.
           - Feature recipes live under $GITHUB_WORKSPACE/.claude/skills/verify-docs-rs/features/. Read features/README.md, then drive the features this change touches.
@@ -167,13 +198,16 @@ jobs:
 
           ## What to do
           1. Read the pull request title and body, and name what it claims. Read the diff, then name what a reader would notice.
-          2. Run node $GITHUB_WORKSPACE/.claude/skills/verify-docs-rs/doctor.mjs with GH_TOKEN in the environment when needed. If $PREVIEW_URL answers anything other than 200, that is a real FAIL: a 404 there is a FAIL with that reason, not an error of this run. Record the status, the title and the reason, and keep going only to capture the visible difference.
+          2. Run node $GITHUB_WORKSPACE/.claude/skills/verify-docs-rs/doctor.mjs with GH_TOKEN in the environment when needed. The doctor's publish-run freshness check does not apply here, because this preview is the build on this runner and there may be no published preview to compare with; a note on that line is expected. If $PREVIEW_URL answers anything other than 200, that is a real FAIL: a 404 there is a FAIL with that reason, not an error of this run. Record the status, the title and the reason, and keep going only to capture the visible difference.
           3. Drive the live site and the preview the way a visitor would. Use drive.mjs diff, page, search and changelog from the skill for the addresses this change touches. Compare title, headings, text, navigation, links, styles, the phone layout at 390 pixels and the browser console.
           4. Take $LIVE_URL as the reference for look and content.
           5. Keep what you used as evidence: the commands, the pages, the driver output and the screenshot file names.
 
+          ## What this runner serves and what it cannot
+          The preview on this runner serves the built site's static output: the prerendered pages, the stylesheets, the scripts, the images, and the built `_headers` and `_redirects` rules. The addresses the deployed Worker answers dynamically are not in that output: the markdown copies at `<page>.md`, `llms.txt`, the sitemap and changelog feeds, and the `/rpc` content calls behind the search page. A 404 or a console error from one of those on $PREVIEW_URL is a limit of this runner, not a difference this pull request caused. Name it in a note and do not fail the change for it.
+
           ## What changed for a visitor
-          Say plainly what a reader of the docs site sees differently on the preview because of this pull request at $SHA. If nothing on the published preview would change for a visitor until this merges and publishes, say so and say why that is correct for this change.
+          Say plainly what a reader of the docs site sees differently on the build of this pull request at $SHA, compared with the live site at $LIVE_URL. If nothing a reader would notice changes in this pull request, say so and say why that is correct for this change.
 
           ## The verdict
           Your answer's first line must be exactly one of these three, whole, with nothing else on that line and nothing before it:
@@ -209,79 +243,56 @@ jobs:
             printf '~~~\n'
           } > "$RUNNER_TEMP/prompt.md"
 
-      - name: Verify with Codex
-        id: codex
+      - name: Install the Claude Code CLI
+        if: steps.target.outputs.go == 'yes'
+        run: |
+          set -euo pipefail
+          npm install --global --no-fund --no-audit --allow-scripts=@anthropic-ai/claude-code @anthropic-ai/claude-code@2.1.325
+          claude --version
+
+      - name: Verify with Claude
+        id: claude
         if: steps.target.outputs.go == 'yes'
         env:
-          CODEX_AUTH_JSON: ${{ secrets.CODEX_AUTH_JSON }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           GH_TOKEN: ${{ github.token }}
           SCREENS_DIR: ${{ runner.temp }}/screens
           SHA: ${{ steps.target.outputs.sha }}
         run: |
           set -euo pipefail
-          if [ -z "${CODEX_AUTH_JSON:-}" ]; then
-            echo "::error::CODEX_AUTH_JSON is not set. Add the repository secret with a Codex plan login file."
+          if [ -z "${CLAUDE_CODE_OAUTH_TOKEN:-}" ]; then
+            echo "::error::CLAUDE_CODE_OAUTH_TOKEN is not set."
             exit 1
           fi
-          npm install --global --no-fund --no-audit @openai/codex@0.169.0
-          codex_home="$(mktemp -d "$RUNNER_TEMP/codex-home.XXXXXX")"
-          chmod 700 "$codex_home"
-          (
-            umask 077
-            printf '%s' "$CODEX_AUTH_JSON" > "$codex_home/auth.json"
-          )
-          chmod 600 "$codex_home/auth.json"
-          printf 'CODEX_HOME=%s\n' "$codex_home" >> "$GITHUB_ENV"
-          auth_mode="$(jq -r '.auth_mode // "absent"' "$codex_home/auth.json" 2>/dev/null)" || auth_mode="unreadable"
-          if [ "$auth_mode" != "chatgpt" ]; then
-            echo "::error::CODEX_AUTH_JSON is not a Codex plan login file: its auth_mode is $auth_mode, not chatgpt. Nothing was printed from it, and the file is removed."
-            exit 1
-          fi
-          agent_path="$(dirname "$(command -v codex)"):$(dirname "$(command -v node)"):/usr/local/bin:/usr/bin:/bin"
-          codex_env=(
-            "HOME=$HOME"
-            "PATH=$agent_path"
-            "TERM=dumb"
-            "CODEX_HOME=$codex_home"
-            "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
-            "RUNNER_TEMP=$RUNNER_TEMP"
-            "SCREENS_DIR=$SCREENS_DIR"
-            "DOCS_VERIFY_EVIDENCE=$SCREENS_DIR"
-            "GH_TOKEN=$GH_TOKEN"
-            "LIVE_URL=$LIVE_URL"
-            "PREVIEW_URL=$PREVIEW_URL"
-            "LIVE_DOCS_URL=$LIVE_URL/"
-            "PREVIEW_DOCS_URL=$PREVIEW_URL"
-          )
-          env -i "${codex_env[@]}" \
-            codex exec \
-              --skip-git-repo-check \
-              --ephemeral \
-              --sandbox danger-full-access \
-              --cd "$GITHUB_WORKSPACE" \
-              --output-last-message "$RUNNER_TEMP/verdict.md" \
-              - < "$RUNNER_TEMP/prompt.md"
+          agent_path="$(dirname "$(command -v claude)"):$(dirname "$(command -v node)"):/usr/local/bin:/usr/bin:/bin"
+          set +e
+          env -i \
+            HOME="$HOME" \
+            PATH="$agent_path" \
+            TERM=dumb \
+            CLAUDE_CODE_OAUTH_TOKEN="$CLAUDE_CODE_OAUTH_TOKEN" \
+            GH_TOKEN="$GH_TOKEN" \
+            GITHUB_WORKSPACE="$GITHUB_WORKSPACE" \
+            RUNNER_TEMP="$RUNNER_TEMP" \
+            SCREENS_DIR="$SCREENS_DIR" \
+            DOCS_VERIFY_EVIDENCE="$SCREENS_DIR" \
+            LIVE_URL="$LIVE_URL" \
+            PREVIEW_URL="$PREVIEW_URL" \
+            LIVE_DOCS_URL="$LIVE_URL/" \
+            PREVIEW_DOCS_URL="$PREVIEW_URL" \
+            claude --print --dangerously-skip-permissions < "$RUNNER_TEMP/prompt.md" > "$RUNNER_TEMP/verdict.md"
+          claude_status=$?
+          set -e
           first="$(grep -E '^pstack-verifier: (PASS|PASS\+NOTES|FAIL) @ [0-9a-f]{40}$' "$RUNNER_TEMP/verdict.md" 2>/dev/null | head -n 1 | sed 's/[[:space:]]*$//' || true)"
-          if [[ ! "$first" =~ ^pstack-verifier:\ (PASS|PASS\+NOTES|FAIL)\ @\ ([0-9a-f]{40})$ ]]; then
-            echo "::error::Codex produced no verdict in the required format: $first"
-            sed -n '1,40p' "$RUNNER_TEMP/verdict.md" 2>/dev/null || true
-            exit 1
+          if [[ ! "$first" =~ ^pstack-verifier:\ (PASS|PASS\+NOTES|FAIL)\ @\ ([0-9a-f]{40})$ ]] || [ "${BASH_REMATCH[2]}" != "$SHA" ]; then
+            {
+              printf 'pstack-verifier: FAIL @ %s\n\n' "$SHA"
+              printf 'The verifier did not return a verdict line for this head. Claude exited %s.\n\n' "$claude_status"
+              sed -n '1,60p' "$RUNNER_TEMP/verdict.md" 2>/dev/null || true
+            } > "$RUNNER_TEMP/verdict-failed.md"
+            mv "$RUNNER_TEMP/verdict-failed.md" "$RUNNER_TEMP/verdict.md"
+            echo "::notice::Claude returned no verdict line for $SHA. Recording pstack-verifier: FAIL @ $SHA for posting."
           fi
-          if [ "${BASH_REMATCH[2]}" != "$SHA" ]; then
-            echo "::error::The Codex verdict names ${BASH_REMATCH[2]}, not the head $SHA."
-            exit 1
-          fi
-
-      - name: Remove the Codex login file
-        if: always()
-        run: |
-          set -euo pipefail
-          case "${CODEX_HOME:-}" in
-            "$RUNNER_TEMP"/codex-home.*)
-              rm -rf -- "$CODEX_HOME"
-              printf 'removed the temporary Codex login file\n'
-              ;;
-          esac
 
       - name: Post the verdict on the pull request
         id: verdict
@@ -290,11 +301,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           SHA: ${{ steps.target.outputs.sha }}
           PR: ${{ steps.target.outputs.number }}
-          CODEX_OUTCOME: ${{ steps.codex.outcome }}
+          CLAUDE_OUTCOME: ${{ steps.claude.outcome }}
         run: |
           set -euo pipefail
           if [ ! -s "$RUNNER_TEMP/verdict.md" ]; then
-            echo "::error::The verifier produced no verdict. Codex: ${CODEX_OUTCOME:-not run}."
+            echo "::error::The verifier produced no verdict. Claude: ${CLAUDE_OUTCOME:-not run}."
             exit 1
           fi
           first="$(grep -E '^pstack-verifier: (PASS|PASS\+NOTES|FAIL) @ [0-9a-f]{40}$' "$RUNNER_TEMP/verdict.md" | head -n 1 | sed 's/[[:space:]]*$//' || true)"
@@ -309,7 +320,7 @@ jobs:
             echo "::error::The verdict names $line_sha, not the head $SHA, so it is stale."
             exit 1
           fi
-          engine_note="codex"
+          engine_note="claude"
           diff_note="$(jq -r 'if .capped then "capped at \(.cappedBytes) bytes of \(.bytes) for the prompt, \(.files) files, the full diff is in the run artifacts" else "complete, \(.bytes) bytes, \(.files) files" end' "$RUNNER_TEMP/diff.json")"
           title="$(sed -n '1s/^Title: //p' "$RUNNER_TEMP/pr-meta.md")"
           ticket="$(printf '%s' "$title" | grep -o 'HTPR-[0-9]*' | head -n 1 || true)"
@@ -319,6 +330,7 @@ jobs:
             printf 'engine: %s\n' "$engine_note"
             printf 'run: %s/%s/actions/runs/%s\n' "$SERVER_URL" "$REPO" "$RUN_ID"
             printf 'preview: %s\n' "$PREVIEW_URL"
+            printf 'build: this pull request at %s, built on the runner with SITE_BASE_PATH=%s\n' "$SHA" "$SITE_BASE_PATH"
             printf 'diff: %s\n' "$diff_note"
             printf 'baseline: %s\n' "$LIVE_URL"
             printf 'ticket: %s\n\n' "$ticket"
@@ -341,6 +353,7 @@ jobs:
           name: pstack-verifier-evidence
           path: |
             ${{ runner.temp }}/screens
+            ${{ runner.temp }}/preview.log
             ${{ runner.temp }}/verdict.md
             ${{ runner.temp }}/prompt.md
             ${{ runner.temp }}/diff.json
@@ -348,6 +361,14 @@ jobs:
             ${{ runner.temp }}/pr.diff.capped
             ${{ runner.temp }}/pr-files.txt
           if-no-files-found: ignore
+
+      - name: Stop the preview server
+        if: always() && steps.target.outputs.go == 'yes'
+        run: |
+          set -euo pipefail
+          if [ -f "$RUNNER_TEMP/preview.pid" ]; then
+            kill "$(cat "$RUNNER_TEMP/preview.pid")" 2>/dev/null || true
+          fi
 
       - name: Fail the job when the verdict is FAIL
         if: steps.verdict.outputs.verdict == 'FAIL'
