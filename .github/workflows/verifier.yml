@@ -19,42 +19,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  engine:
-    name: Pick the verifier engine
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    outputs:
-      engine: ${{ steps.pick.outputs.engine }}
-      codex: ${{ steps.pick.outputs.codex }}
-      claude: ${{ steps.pick.outputs.claude }}
-    steps:
-      - name: Read which verifier setting exists
-        id: pick
-        env:
-          CODEX_AUTH_JSON: ${{ secrets.CODEX_AUTH_JSON }}
-          CODEX_VERIFIER_KEY: ${{ secrets.CODEX_VERIFIER_KEY }}
-          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-        run: |
-          set -euo pipefail
-          codex=no
-          claude=no
-          if [ -n "${CODEX_AUTH_JSON:-}" ] || [ -n "${CODEX_VERIFIER_KEY:-}" ]; then codex=yes; fi
-          if [ -n "${CLAUDE_CODE_OAUTH_TOKEN:-}" ]; then claude=yes; fi
-          if [ "$codex" = "no" ] && [ "$claude" = "no" ]; then
-            engine=none
-            echo "::notice title=Verifier skipped::skipped: no verifier setting. The pstack-verifier check stays neutrally skipped. Add the repository secret CODEX_AUTH_JSON with a Codex plan login file, or CODEX_VERIFIER_KEY with a Codex API key, or CLAUDE_CODE_OAUTH_TOKEN from the Claude plan."
-          elif [ "$codex" = "yes" ]; then
-            engine=codex
-          else
-            engine=claude
-          fi
-          printf 'engine=%s\ncodex=%s\nclaude=%s\n' "$engine" "$codex" "$claude" >> "$GITHUB_OUTPUT"
-          printf 'engine: %s\n' "$engine" >> "$GITHUB_STEP_SUMMARY"
-
   pstack-verifier:
     name: pstack-verifier
-    needs: engine
-    if: needs.engine.outputs.engine != 'none'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -477,21 +443,37 @@ jobs:
 
       - name: Verify with Codex
         id: codex
-        if: steps.target.outputs.go == 'yes' && needs.engine.outputs.codex == 'yes'
-        continue-on-error: true
+        if: steps.target.outputs.go == 'yes'
         env:
           CODEX_AUTH_JSON: ${{ secrets.CODEX_AUTH_JSON }}
-          CODEX_VERIFIER_KEY: ${{ secrets.CODEX_VERIFIER_KEY }}
           SCREENS_DIR: ${{ runner.temp }}/screens
           SHA: ${{ steps.target.outputs.sha }}
         run: |
           set -euo pipefail
+          if [ -z "${CODEX_AUTH_JSON:-}" ]; then
+            echo "::error::CODEX_AUTH_JSON is not set. Add the repository secret with a Codex plan login file."
+            exit 1
+          fi
           npm install --global --no-fund --no-audit @openai/codex@0.169.0
           agent_path="$(dirname "$(command -v codex)"):$(dirname "$(command -v node)"):/usr/local/bin:/usr/bin:/bin"
+          codex_home="$(mktemp -d "$RUNNER_TEMP/codex-home.XXXXXX")"
+          chmod 700 "$codex_home"
+          (
+            umask 077
+            printf '%s' "$CODEX_AUTH_JSON" > "$codex_home/auth.json"
+          )
+          chmod 600 "$codex_home/auth.json"
+          printf 'CODEX_HOME=%s\n' "$codex_home" >> "$GITHUB_ENV"
+          auth_mode="$(jq -r '.auth_mode // "absent"' "$codex_home/auth.json" 2>/dev/null)" || auth_mode="unreadable"
+          if [ "$auth_mode" != "chatgpt" ]; then
+            echo "::error::CODEX_AUTH_JSON is not a Codex plan login file: its auth_mode is $auth_mode, not chatgpt. Nothing was printed from it, and the file is removed."
+            exit 1
+          fi
           codex_env=(
             "HOME=$HOME"
             "PATH=$agent_path"
             "TERM=dumb"
+            "CODEX_HOME=$codex_home"
             "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
             "RUNNER_TEMP=$RUNNER_TEMP"
             "SCREENS_DIR=$SCREENS_DIR"
@@ -501,25 +483,6 @@ jobs:
             "BASE_DEV_URL=${BASE_DEV_URL:-}"
             "LIVE_URL=$LIVE_URL"
           )
-          if [ -n "${CODEX_AUTH_JSON:-}" ]; then
-            codex_home="$(mktemp -d "$RUNNER_TEMP/codex-home.XXXXXX")"
-            chmod 700 "$codex_home"
-            (
-              umask 077
-              printf '%s' "$CODEX_AUTH_JSON" > "$codex_home/auth.json"
-            )
-            chmod 600 "$codex_home/auth.json"
-            printf 'CODEX_HOME=%s\n' "$codex_home" >> "$GITHUB_ENV"
-            auth_mode="$(jq -r '.auth_mode // "absent"' "$codex_home/auth.json" 2>/dev/null)" || auth_mode="unreadable"
-            if [ "$auth_mode" != "chatgpt" ]; then
-              echo "::error::CODEX_AUTH_JSON is not a Codex plan login file: its auth_mode is $auth_mode, not chatgpt. Nothing was printed from it, and the file is removed."
-              exit 1
-            fi
-            codex_env+=("CODEX_HOME=$codex_home")
-          else
-            engine_token="$CODEX_VERIFIER_KEY"
-            codex_env+=("CODEX_API_KEY=$engine_token" "OPENAI_API_KEY=$engine_token")
-          fi
           env -i "${codex_env[@]}" \
             codex exec \
               --skip-git-repo-check \
@@ -530,12 +493,12 @@ jobs:
               - < "$RUNNER_TEMP/prompt.md"
           first="$(grep -E '^pstack-verifier: (PASS|PASS\+NOTES|FAIL) @ [0-9a-f]{40}$' "$RUNNER_TEMP/verdict.md" 2>/dev/null | head -n 1 | sed 's/[[:space:]]*$//' || true)"
           if [[ ! "$first" =~ ^pstack-verifier:\ (PASS|PASS\+NOTES|FAIL)\ @\ ([0-9a-f]{40})$ ]]; then
-            echo "::error::Codex produced no verdict in the required format, so the next configured engine stands in: $first"
+            echo "::error::Codex produced no verdict in the required format: $first"
             sed -n '1,40p' "$RUNNER_TEMP/verdict.md" 2>/dev/null || true
             exit 1
           fi
           if [ "${BASH_REMATCH[2]}" != "$SHA" ]; then
-            echo "::error::The Codex verdict names ${BASH_REMATCH[2]}, not the head $SHA, so the next configured engine stands in."
+            echo "::error::The Codex verdict names ${BASH_REMATCH[2]}, not the head $SHA."
             exit 1
           fi
 
@@ -550,43 +513,6 @@ jobs:
               ;;
           esac
 
-      - name: Verify with Claude when Codex is absent or refused
-        id: claude
-        if: steps.target.outputs.go == 'yes' && needs.engine.outputs.claude == 'yes' && (needs.engine.outputs.codex == 'no' || steps.codex.outcome == 'failure')
-        env:
-          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          SCREENS_DIR: ${{ runner.temp }}/screens
-          SHA: ${{ steps.target.outputs.sha }}
-        run: |
-          set -euo pipefail
-          npm install --global --no-fund --no-audit @anthropic-ai/claude-code@2.1.325
-          engine_token="$CLAUDE_CODE_OAUTH_TOKEN"
-          agent_path="$(dirname "$(command -v claude)"):$(dirname "$(command -v node)"):/usr/local/bin:/usr/bin:/bin"
-          env -i \
-            HOME="$HOME" \
-            PATH="$agent_path" \
-            TERM=dumb \
-            CLAUDE_CODE_OAUTH_TOKEN="$engine_token" \
-            GITHUB_WORKSPACE="$GITHUB_WORKSPACE" \
-            RUNNER_TEMP="$RUNNER_TEMP" \
-            SCREENS_DIR="$SCREENS_DIR" \
-            SITE_URL="$SITE_URL" \
-            BASE_URL="$BASE_URL" \
-            SITE_DEV_URL="${SITE_DEV_URL:-}" \
-            BASE_DEV_URL="${BASE_DEV_URL:-}" \
-            LIVE_URL="$LIVE_URL" \
-            claude --print --dangerously-skip-permissions < "$RUNNER_TEMP/prompt.md" > "$RUNNER_TEMP/verdict.md"
-          first="$(grep -E '^pstack-verifier: (PASS|PASS\+NOTES|FAIL) @ [0-9a-f]{40}$' "$RUNNER_TEMP/verdict.md" | head -n 1 | sed 's/[[:space:]]*$//' || true)"
-          if [[ ! "$first" =~ ^pstack-verifier:\ (PASS|PASS\+NOTES|FAIL)\ @\ ([0-9a-f]{40})$ ]]; then
-            echo "::error::Claude produced no verdict in the required format: $first"
-            sed -n '1,40p' "$RUNNER_TEMP/verdict.md"
-            exit 1
-          fi
-          if [ "${BASH_REMATCH[2]}" != "$SHA" ]; then
-            echo "::error::The Claude verdict names ${BASH_REMATCH[2]}, not the head $SHA, so it is stale."
-            exit 1
-          fi
-
       - name: Post the verdict on the pull request
         id: verdict
         if: steps.target.outputs.go == 'yes'
@@ -595,12 +521,10 @@ jobs:
           SHA: ${{ steps.target.outputs.sha }}
           PR: ${{ steps.target.outputs.number }}
           CODEX_OUTCOME: ${{ steps.codex.outcome }}
-          CLAUDE_OUTCOME: ${{ steps.claude.outcome }}
-          CODEX_CONFIGURED: ${{ needs.engine.outputs.codex }}
         run: |
           set -euo pipefail
           if [ ! -s "$RUNNER_TEMP/verdict.md" ]; then
-            echo "::error::The verifier produced no verdict. Codex: ${CODEX_OUTCOME:-not run}. Claude: ${CLAUDE_OUTCOME:-not run}."
+            echo "::error::The verifier produced no verdict. Codex: ${CODEX_OUTCOME:-not run}."
             exit 1
           fi
           first="$(grep -E '^pstack-verifier: (PASS|PASS\+NOTES|FAIL) @ [0-9a-f]{40}$' "$RUNNER_TEMP/verdict.md" | head -n 1 | sed 's/[[:space:]]*$//' || true)"
@@ -615,15 +539,7 @@ jobs:
             echo "::error::The verdict names $line_sha, not the head $SHA, so it is stale."
             exit 1
           fi
-          if [ "${CODEX_OUTCOME:-}" = "success" ]; then
-            engine_note="codex"
-          elif [ "${CLAUDE_OUTCOME:-}" = "success" ] && [ "${CODEX_CONFIGURED:-no}" = "no" ]; then
-            engine_note="claude, because no Codex setting exists"
-          elif [ "${CLAUDE_OUTCOME:-}" = "success" ]; then
-            engine_note="claude, after Codex was refused"
-          else
-            engine_note="unknown"
-          fi
+          engine_note="codex"
           diff_note="$(jq -r 'if .capped then "capped at \(.cappedBytes) bytes of \(.bytes) for the prompt, \(.files) files, the full diff is in the run artifacts" else "complete, \(.bytes) bytes, \(.files) files" end' "$RUNNER_TEMP/diff.json")"
           title="$(sed -n '1s/^Title: //p' "$RUNNER_TEMP/pr-meta.md")"
           ticket="$(printf '%s' "$title" | grep -o 'HTPR-[0-9]*' | head -n 1 || true)"
