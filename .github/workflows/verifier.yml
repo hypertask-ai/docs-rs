@@ -226,21 +226,21 @@ jobs:
           SHA: ${{ steps.target.outputs.sha }}
         run: |
           set -euo pipefail
-          agent_path="$(dirname "$(command -v claude)"):$(dirname "$(command -v node)"):/usr/local/bin:/usr/bin:/bin"
-          env -i \
-            HOME="$HOME" \
-            PATH="$agent_path" \
-            TERM=dumb \
-            CLAUDE_CODE_OAUTH_TOKEN="$CLAUDE_CODE_OAUTH_TOKEN" \
-            GH_TOKEN="$GH_TOKEN" \
-            GITHUB_WORKSPACE="$GITHUB_WORKSPACE" \
-            RUNNER_TEMP="$RUNNER_TEMP" \
-            SCREENS_DIR="$SCREENS_DIR" \
-            LIVE_URL="$LIVE_URL" \
-            PREVIEW_URL="$PREVIEW_URL" \
-            LIVE_DOCS_URL="$LIVE_URL/" \
-            PREVIEW_DOCS_URL="$PREVIEW_URL" \
-            claude --print --dangerously-skip-permissions < "$RUNNER_TEMP/prompt.md" > "$RUNNER_TEMP/verdict.md"
+          if [ -z "${CLAUDE_CODE_OAUTH_TOKEN:-}" ]; then
+            echo "::error::CLAUDE_CODE_OAUTH_TOKEN is not set."
+            exit 1
+          fi
+          export GH_TOKEN
+          export LIVE_DOCS_URL="$LIVE_URL/"
+          export PREVIEW_DOCS_URL="$PREVIEW_URL"
+          cd "$GITHUB_WORKSPACE"
+          set +e
+          claude --print --dangerously-skip-permissions < "$RUNNER_TEMP/prompt.md" > "$RUNNER_TEMP/verdict.md"
+          claude_status=$?
+          set -e
+          if [ "$claude_status" -ne 0 ]; then
+            sed -n '1,40p' "$RUNNER_TEMP/verdict.md" || true
+          fi
           first="$(grep -E '^pstack-verifier: (PASS|PASS\+NOTES|FAIL) @ [0-9a-f]{40}$' "$RUNNER_TEMP/verdict.md" | head -n 1 | sed 's/[[:space:]]*$//' || true)"
           if [[ ! "$first" =~ ^pstack-verifier:\ (PASS|PASS\+NOTES|FAIL)\ @\ ([0-9a-f]{40})$ ]]; then
             echo "::error::Claude produced no verdict in the required format: $first"
@@ -249,6 +249,10 @@ jobs:
           fi
           if [ "${BASH_REMATCH[2]}" != "$SHA" ]; then
             echo "::error::The Claude verdict names ${BASH_REMATCH[2]}, not the head $SHA, so it is stale."
+            exit 1
+          fi
+          if [ "$claude_status" -ne 0 ]; then
+            echo "::error::Claude exited $claude_status after writing a verdict."
             exit 1
           fi
 
