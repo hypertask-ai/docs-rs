@@ -5,16 +5,16 @@ This directory is the maintained source for verifying that the docs site this re
 ## Baseline preconditions
 
 - The live site answers `200 text/html` at `https://docs.hypertask.ai/` and is not `noindex`.
-- The preview answers `200 text/html` at `https://docs.hypertask.ai/ratstack/`, carries `noindex` in both the `X-Robots-Tag` header and the robots meta tag, and answers with `X-Content-Generation`.
+- The preview answers `200 text/html` at `$PREVIEW_URL`, carries `noindex` in both the `X-Robots-Tag` header and the robots meta tag, and answers with `X-Content-Generation`.
 - `node .claude/skills/verify-docs-rs/doctor.mjs` prints `doctor: PASS`.
 - One evidence folder per run, outside the clone: `RUN="${DOCS_VERIFY_EVIDENCE:-/tmp/docs-verify-evidence}/run-$(date -u +%Y%m%dT%H%M%SZ)"`.
 - Playwright 1.65.1 resolves from the checkout; the doctor prints the version it finds.
-- Nothing is started: the preview is published by GitHub and the live site is the reference.
+- The driver starts nothing: the pstack verifier serves its own build of the change under review at `$PREVIEW_URL`, and the live site is the reference.
 
 ## Driving conventions
 
 - Treat every command as literal. Keep quoted names, addresses and flags unchanged.
-- Addresses on the preview are the live address with `/ratstack` in front.
+- Addresses on the preview are the live address with `/ratstack` in front. The feature files spell the published preview as `https://docs.hypertask.ai/ratstack/`; in a verifier run that origin is `$PREVIEW_URL`.
 - `GET` only on both hosts. Never post, never send a chat message, never log in. The help chat launcher is an address to check, never a conversation to start.
 - Prefer the accessible names and stable handles this map names over class names or coordinates.
 - Capture the action and the resulting state, not only the final screen.
