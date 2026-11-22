@@ -5,9 +5,24 @@ import { createServer } from "node:http";
 import path from "node:path";
 import process from "node:process";
 
+/**
+ * @typedef {{ headers: [string, string][], pattern: string }} HeaderRule
+ */
+
+/**
+ * @typedef {{ destination: string, source: string, status: number }} RedirectRule
+ */
+
+/**
+ * @typedef {{ directory?: boolean, file?: string }} Lookup
+ */
+
 const root = path.resolve(process.env.PREVIEW_ROOT ?? "apps/web/dist/client");
+
 const port = Number(process.env.PREVIEW_PORT ?? "4173");
+
 const host = process.env.PREVIEW_HOST ?? "127.0.0.1";
+
 const basePath = (process.env.SITE_BASE_PATH ?? "/ratstack").replace(
   /\/+$/u,
   ""
@@ -33,16 +48,27 @@ const contentTypes = new Map([
   [".xml", "application/xml; charset=utf-8"],
 ]);
 
+/**
+ * @param {string} file
+ * @returns {Promise<string>}
+ */
 const readOptional = async (file) => {
   try {
-    return await readFile(file, "utf8");
+    return await readFile(file, "utf-8");
   } catch {
     return "";
   }
 };
 
+/**
+ * @param {string} text
+ * @returns {HeaderRule[]}
+ */
 const parseHeaderRules = (text) => {
+  /** @type {HeaderRule[]} */
   const rules = [];
+
+  /** @type {HeaderRule | undefined} */
   let current;
 
   for (const raw of text.split("\n")) {
@@ -74,6 +100,10 @@ const parseHeaderRules = (text) => {
   return rules;
 };
 
+/**
+ * @param {string} text
+ * @returns {RedirectRule[]}
+ */
 const parseRedirectRules = (text) =>
   text.split("\n").flatMap((raw) => {
     const line = raw.trim();
@@ -84,15 +114,11 @@ const parseRedirectRules = (text) =>
 
     const [source, destination, status] = line.split(/\s+/u);
 
-    return source === undefined || destination === undefined
-      ? []
-      : [
-          {
-            destination,
-            source,
-            status: Number(status ?? "302"),
-          },
-        ];
+    if (source === undefined || destination === undefined) {
+      return [];
+    }
+
+    return [{ destination, source, status: Number(status ?? "302") }];
   });
 
 const headerRules = parseHeaderRules(
@@ -103,7 +129,12 @@ const redirectRules = parseRedirectRules(
   await readOptional(path.join(root, "_redirects"))
 );
 
-function matchesPattern(pattern, pathname) {
+/**
+ * @param {string} pattern
+ * @param {string} pathname
+ * @returns {boolean}
+ */
+const matchesPattern = (pattern, pathname) => {
   if (pattern === "*" || pattern === "/*") {
     return true;
   }
@@ -113,9 +144,15 @@ function matchesPattern(pattern, pathname) {
   }
 
   return pathname === pattern;
-}
+};
 
+/**
+ * @param {string} pathname
+ * @param {string} file
+ * @returns {Record<string, string>}
+ */
 const headersFor = (pathname, file) => {
+  /** @type {Record<string, string>} */
   const headers = {
     "Content-Type":
       contentTypes.get(path.extname(file)) ?? "application/octet-stream",
@@ -134,75 +171,112 @@ const headersFor = (pathname, file) => {
   return headers;
 };
 
+/**
+ * @param {string} pathname
+ * @returns {[string, string | undefined]}
+ */
 const candidatesFor = (pathname) => {
-  const candidates = [pathname];
   const mounted =
     basePath !== "" &&
     (pathname === basePath || pathname.startsWith(`${basePath}/`));
 
-  if (mounted) {
-    const unmounted = pathname.slice(basePath.length);
-
-    candidates.push(unmounted === "" ? "/" : unmounted);
+  if (!mounted) {
+    return [pathname, undefined];
   }
 
-  return candidates;
+  const unmounted = pathname.slice(basePath.length);
+
+  return [pathname, unmounted === "" ? "/" : unmounted];
 };
 
+/**
+ * @param {string} candidate
+ * @returns {string | undefined}
+ */
 const safePath = (candidate) => {
   let decoded;
 
   try {
     decoded = decodeURIComponent(candidate);
   } catch {
-    return undefined;
+    return;
   }
 
   const resolved = path.join(root, decoded);
 
-  return resolved === root || resolved.startsWith(`${root}${path.sep}`)
-    ? resolved
-    : undefined;
+  if (resolved !== root && !resolved.startsWith(`${root}${path.sep}`)) {
+    return;
+  }
+
+  return resolved;
 };
 
+/**
+ * @param {string} file
+ * @returns {Promise<import("node:fs").Stats | undefined>}
+ */
 const infoAt = async (file) => {
   try {
     return await stat(file);
   } catch {
-    return undefined;
+    return;
   }
 };
 
+/**
+ * @param {string} pathname
+ * @param {string} candidate
+ * @returns {Promise<Lookup | undefined>}
+ */
+const lookupCandidate = async (pathname, candidate) => {
+  const resolved = safePath(candidate);
+
+  if (resolved === undefined) {
+    return;
+  }
+
+  const info = await infoAt(resolved);
+
+  if (info === undefined) {
+    return;
+  }
+
+  if (!info.isDirectory()) {
+    return { file: resolved };
+  }
+
+  const index = path.join(resolved, "index.html");
+  const indexInfo = await infoAt(index);
+
+  if (indexInfo?.isFile() !== true) {
+    return { directory: true };
+  }
+
+  return { directory: !pathname.endsWith("/"), file: index };
+};
+
+/**
+ * @param {string} pathname
+ * @returns {Promise<Lookup | undefined>}
+ */
 const lookup = async (pathname) => {
-  for (const candidate of candidatesFor(pathname)) {
-    const resolved = safePath(candidate);
+  const [mounted, unmounted] = candidatesFor(pathname);
+  const found = await lookupCandidate(pathname, mounted);
 
-    if (resolved === undefined) {
-      continue;
-    }
-
-    const info = await infoAt(resolved);
-
-    if (info === undefined) {
-      continue;
-    }
-
-    if (!info.isDirectory()) {
-      return { file: resolved };
-    }
-
-    const index = path.join(resolved, "index.html");
-
-    if ((await infoAt(index))?.isFile() !== true) {
-      return { directory: true };
-    }
-
-    return { directory: !pathname.endsWith("/"), file: index };
+  if (found !== undefined || unmounted === undefined) {
+    return found;
   }
 
-  return {};
+  return lookupCandidate(pathname, unmounted);
 };
 
+/**
+ * @param {import("node:http").ServerResponse} response
+ * @param {number} status
+ * @param {string} body
+ * @param {Record<string, string>} [headers]
+ * @returns {void}
+ */
 const sendText = (response, status, body, headers = {}) => {
   response.writeHead(status, {
     "Content-Type": "text/plain; charset=utf-8",
@@ -211,68 +285,88 @@ const sendText = (response, status, body, headers = {}) => {
   response.end(body);
 };
 
+/**
+ * @param {import("node:http").IncomingMessage} request
+ * @param {import("node:http").ServerResponse} response
+ * @returns {Promise<void>}
+ */
 const respond = async (request, response) => {
-  if (request.method !== "GET" && request.method !== "HEAD") {
-    sendText(response, 405, "Method not allowed\n", { Allow: "GET, HEAD" });
+  try {
+    if (request.method !== "GET" && request.method !== "HEAD") {
+      sendText(response, 405, "Method not allowed\n", { Allow: "GET, HEAD" });
 
-    return;
-  }
+      return;
+    }
 
-  const url = new URL(
-    request.url ?? "/",
-    `http://${request.headers.host ?? host}`
-  );
-  const { pathname, search } = url;
-  const redirect = redirectRules.find((rule) =>
-    matchesPattern(rule.source, pathname)
-  );
+    const url = new URL(
+      request.url ?? "/",
+      `http://${request.headers.host ?? host}`
+    );
 
-  if (redirect !== undefined) {
-    response.writeHead(redirect.status, { Location: redirect.destination });
-    response.end();
+    const { pathname, search } = url;
+    const redirect = redirectRules.find((rule) =>
+      matchesPattern(rule.source, pathname)
+    );
 
-    return;
-  }
+    if (redirect !== undefined) {
+      response.writeHead(redirect.status, { Location: redirect.destination });
+      response.end();
 
-  const found = await lookup(pathname);
+      return;
+    }
 
-  if (found.directory === true) {
-    response.writeHead(308, { Location: `${pathname}/${search}` });
-    response.end();
+    const found = await lookup(pathname);
 
-    return;
-  }
+    if (found === undefined) {
+      sendText(response, 404, "Not found.\n");
 
-  if (found.file === undefined) {
-    sendText(response, 404, "Not found.\n");
+      return;
+    }
 
-    return;
-  }
+    if (found.directory === true) {
+      response.writeHead(308, { Location: `${pathname}/${search}` });
+      response.end();
 
-  const headers = headersFor(pathname, found.file);
+      return;
+    }
 
-  if (request.method === "HEAD") {
+    if (found.file === undefined) {
+      sendText(response, 404, "Not found.\n");
+
+      return;
+    }
+
+    const headers = headersFor(pathname, found.file);
+
+    if (request.method === "HEAD") {
+      response.writeHead(200, headers);
+      response.end();
+
+      return;
+    }
+
     response.writeHead(200, headers);
-    response.end();
-
-    return;
+    createReadStream(found.file).pipe(response);
+  } catch (error) {
+    console.error(`${request.url ?? "/"}: ${String(error)}`);
+    sendText(response, 500, "Preview server error\n");
   }
+};
 
-  response.writeHead(200, headers);
-  createReadStream(found.file).pipe(response);
+/**
+ * @param {Error} error
+ * @returns {void}
+ */
+const reportServerError = (error) => {
+  console.error(`The preview server could not listen: ${String(error)}`);
+  process.exitCode = 1;
 };
 
 const server = createServer((request, response) => {
-  respond(request, response).catch((error) => {
-    console.error(`${request.url}: ${String(error)}`);
-    sendText(response, 500, "Preview server error\n");
-  });
+  void respond(request, response);
 });
 
-server.on("error", (error) => {
-  console.error(`The preview server could not listen: ${String(error)}`);
-  process.exitCode = 1;
-});
+server.on("error", reportServerError);
 
 server.listen(port, host, () => {
   console.log(`preview ready at http://${host}:${port}${basePath}/`);
