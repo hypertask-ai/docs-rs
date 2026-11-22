@@ -15,10 +15,14 @@ const auditedExtensions = [".css", ".html", ".js"] as const;
 
 const noindexHeader = "x-robots-tag";
 
-class RatstackPublishCheckError extends Schema.TaggedError<
+export class RatstackPublishCheckError extends Schema.TaggedError<
   RatstackPublishCheckError,
   { readonly brand: unique symbol }
->()("RatstackPublishCheckError", { reason: Schema.String }) {}
+>()("RatstackPublishCheckError", { reason: Schema.String }) {
+  override get message() {
+    return this.reason;
+  }
+}
 
 const OldSiteRecord = Schema.Struct({
   status: Schema.Finite,
@@ -97,31 +101,74 @@ const requireHomePageWords = Effect.fn(
   );
 });
 
-const sameSiteAddresses = (text: string): readonly string[] => {
-  const addresses: string[] = [];
+const addressAttributes = new Set([
+  "action",
+  "cite",
+  "data",
+  "formaction",
+  "href",
+  "manifest",
+  "poster",
+  "src",
+  "srcset",
+]);
 
-  for (const match of text.matchAll(/[=]"(?<value>\/[^"]*)"/gu)) {
-    for (const candidate of (match.groups?.value ?? "").split(",")) {
-      const address = candidate.trim().split(/\s+/u)[0] ?? "";
+const isSameSiteAddress = (address: string): boolean => address.startsWith("/");
 
-      if (address.startsWith("/")) {
-        addresses.push(address);
-      }
-    }
-  }
+const srcsetAddresses = (value: string): readonly string[] =>
+  value.split(",").flatMap((candidate) => {
+    const address = candidate.trim().split(/\s+/u)[0] ?? "";
 
-  for (const match of text.matchAll(/url\((?<value>[^)]*)\)/gu)) {
+    return isSameSiteAddress(address) ? [address] : [];
+  });
+
+const urlAddresses = (text: string): readonly string[] =>
+  [...text.matchAll(/url\((?<value>[^)]*)\)/gu)].flatMap((match) => {
     const address = (match.groups?.value ?? "")
       .trim()
       .replaceAll(/^["']|["']$/gu, "");
 
-    if (address.startsWith("/")) {
-      addresses.push(address);
-    }
+    return isSameSiteAddress(address) ? [address] : [];
+  });
+
+const attributeAddresses = (name: string, value: string): readonly string[] => {
+  if (name === "srcset") {
+    return srcsetAddresses(value);
   }
+
+  return [value].filter(isSameSiteAddress);
+};
+
+const htmlAddresses = (html: string): readonly string[] => {
+  const addresses: string[] = [];
+
+  const walk = (nodes: HtmlChildren): void => {
+    for (const node of nodes) {
+      if (!("attribs" in node)) {
+        continue;
+      }
+
+      for (const [name, value] of Object.entries(node.attribs)) {
+        if (name === "style") {
+          addresses.push(...urlAddresses(value));
+        }
+
+        if (addressAttributes.has(name)) {
+          addresses.push(...attributeAddresses(name, value));
+        }
+      }
+
+      walk(node.children);
+    }
+  };
+
+  walk(parseDocument(html).children);
 
   return addresses;
 };
+
+const sameSiteAddresses = (file: string, text: string): readonly string[] =>
+  file.endsWith(".html") ? htmlAddresses(text) : urlAddresses(text);
 
 const escapesSiteBasePath = (basePath: string, address: string): boolean => {
   const path = addressPath(address);
@@ -133,6 +180,44 @@ const escapesSiteBasePath = (basePath: string, address: string): boolean => {
     !path.startsWith(`${basePath}/`)
   );
 };
+
+export interface BuiltFile {
+  readonly file: string;
+  readonly text: string;
+}
+
+export const basePathEscapeFindings = (
+  basePath: string,
+  files: readonly BuiltFile[]
+): readonly string[] =>
+  [
+    ...new Set(
+      files.flatMap(({ file, text }) =>
+        sameSiteAddresses(file, text)
+          .filter((address) => escapesSiteBasePath(basePath, address))
+          .map((address) => `${file} points at ${address}`)
+      )
+    ),
+  ].toSorted();
+
+export const requireBasePathAddresses = Effect.fn(
+  "ratstackPublishCheck.requireBasePathAddresses"
+)(function* requireBasePathAddresses(
+  basePath: string,
+  files: readonly BuiltFile[]
+) {
+  const escapes = basePathEscapeFindings(basePath, files);
+
+  if (escapes.length > 0) {
+    return yield* new RatstackPublishCheckError({
+      reason: `Base path check for ${basePath} found these files and addresses outside it:\n${escapes.join("\n")}\nFix: write each address through addSiteBasePath in apps/web/src/site-base-path.ts so the page, stylesheet or script stays under ${basePath}.`,
+    });
+  }
+
+  return yield* Console.log(
+    `Base path audit passed: ${files.length} built files keep every same-site address under ${basePath}`
+  );
+});
 
 const builtFiles = Effect.fn("ratstackPublishCheck.builtFiles")(
   function* builtFiles(
@@ -178,29 +263,13 @@ const auditBuiltSite = Effect.gen(function* auditBuiltSite() {
   const path = yield* Path.Path;
   const root = path.resolve(import.meta.dirname, "../../..");
   const files = yield* builtFiles(root, builtSiteDirectory);
-  const failures: string[] = [];
+  const built: BuiltFile[] = [];
 
   for (const file of files) {
-    const text = yield* fs.readFileString(`${root}/${file}`);
-
-    for (const address of sameSiteAddresses(text)) {
-      if (escapesSiteBasePath(basePath, address)) {
-        failures.push(
-          `${file} points at ${address}, which is outside SITE_BASE_PATH (${basePath}), the only owner of the site's base path. Fix: write that address through addSiteBasePath in apps/web/src/site-base-path.ts so the page, stylesheet or script stays under the base path.`
-        );
-      }
-    }
+    built.push({ file, text: yield* fs.readFileString(`${root}/${file}`) });
   }
 
-  if (failures.length > 0) {
-    return yield* new RatstackPublishCheckError({
-      reason: `${failures.length} address(es) escape the base path.\n${failures.join("\n")}`,
-    });
-  }
-
-  yield* Console.log(
-    `Base path audit passed: ${files.length} built files keep every same-site address under ${basePath}`
-  );
+  yield* requireBasePathAddresses(basePath, built);
 
   return files.length;
 });
@@ -442,4 +511,6 @@ const program = Effect.gen(function* ratstackPublishCheck() {
   Effect.provide(Layer.mergeAll(NodeServices.layer, FetchHttpClient.layer))
 );
 
-NodeRuntime.runMain(program);
+if (import.meta.main) {
+  NodeRuntime.runMain(program);
+}

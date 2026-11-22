@@ -5,7 +5,7 @@ description: Prove that the docs site this repo publishes under /ratstack looks,
 
 # Verify docs-rs
 
-This is the scripted way to prove that the new docs site under `https://docs.hypertask.ai/ratstack/` matches the live docs site at `https://docs.hypertask.ai/`. It drives both hosts in headless Chromium with Playwright, compares what a visitor sees, and saves the evidence.
+This is the scripted way to prove that the new docs site at `$PREVIEW_URL` matches the live docs site at `https://docs.hypertask.ai/`. It drives both hosts in headless Chromium with Playwright, compares what a visitor sees, and saves the evidence.
 
 Drive one feature from the map at a time. `features/README.md` is the index.
 
@@ -13,14 +13,15 @@ Drive one feature from the map at a time. `features/README.md` is the index.
 
 ## Launch
 
-Nothing starts on this machine. There is no build and no dev server here. The instance under test is the published preview, and the old live site is the reference.
+The instance under test is the preview, and the old live site is the reference. The preview address comes from `PREVIEW_URL`: the doctor reads it, and `drive.mjs` takes it as an argument, so pass `$PREVIEW_URL` in place of the published origin the feature files spell.
 
-- The publish workflow is `.github/workflows/publish-ratstack.yml`. It runs on every push to `main`, builds the site with `SITE_BASE_PATH=/ratstack`, and deploys the docs Worker declared in `apps/infra/alchemy.docs-ratstack.ts`. That workflow lives on the publish branch until its slice lands; on `main` without it, nothing is published at `/ratstack`.
-- Ready means `https://docs.hypertask.ai/ratstack/` answers `200` with an `X-Content-Generation` header. Run the doctor before driving.
-- The preview is the current build when the newest successful publish run on `main` has no site change after it. `doctor.mjs` reads the run list with `gh run list --workflow=publish-ratstack.yml --branch=main --repo=hypertask-ai/docs-rs` and counts the commits on `origin/main` after that run's head that touch `.brain`, `apps/web`, `apps/site` and `packages`. Zero commits means the preview is current.
+The pstack verifier builds this checkout with `SITE_BASE_PATH=/ratstack` the way `.github/workflows/publish-ratstack.yml` builds it and serves the built output on `127.0.0.1`, so on the runner `$PREVIEW_URL` is that local build and nothing is published. The publish workflow itself runs on every push to `main` and deploys the docs Worker declared in `apps/infra/alchemy.docs-ratstack.ts`.
+
+- Ready means `$PREVIEW_URL` answers `200` with an `X-Content-Generation` header. Run the doctor before driving.
+- On the published host the preview is the current build when the newest successful publish run on `main` has no site change after it. `doctor.mjs` reads the run list with `gh run list --workflow=publish-ratstack.yml --branch=main --repo=hypertask-ai/docs-rs` and counts the commits on `origin/main` after that run's head that touch `.brain`, `apps/web`, `apps/site` and `packages`. Zero commits means the preview is current.
 - Record the `X-Content-Generation` value with every proof so two runs can be told apart.
 
-There is nothing to tear down after a run: the preview is hosted and the driver starts no server. The doctor fetches `origin/main` into the clone and writes nothing else.
+There is nothing to tear down after a run: the driver starts no server of its own, and the job that serves a local build stops it when it ends. The doctor fetches `origin/main` into the clone and writes nothing else.
 
 ## Doctor
 
@@ -34,13 +35,13 @@ It checks these and prints one line each:
 
 1. `playwright` resolves from this checkout, and it prints the version it found;
 2. the live site answers `200 text/html` and is not `noindex`;
-3. `https://docs.hypertask.ai/ratstack/` answers `200 text/html`;
+3. `$PREVIEW_URL` answers `200 text/html`;
 4. the preview carries `noindex` in both the `X-Robots-Tag` header and the `<meta name="robots">` tag, and answers with `X-Content-Generation`;
-5. the preview is the newest publish: the newest successful publish run on `main` has no site change after it.
+5. when `$PREVIEW_URL` is the published host, the preview is the newest publish: the newest successful publish run on `main` has no site change after it. A local build on the runner skips this, because the job that served it is the freshness check.
 
-`doctor: PASS` means drive. A `FAIL` line names the fix. A `SKIP` line means the check could not run, usually because the publish workflow is not on `main` yet; a skip does not pass the check.
+`doctor: PASS` means drive. A `FAIL` line names the fix. A `SKIP` line means the check could not run, usually because the publish workflow is not on `main` yet or because the preview is a local build; a skip does not pass the check.
 
-When the preview answers anything other than `200`, the site is not published yet. That is a real FAIL of the journey, never a reason to weaken it. Record the status, the title and the reason, and keep going only to capture the visible difference.
+When the preview answers anything other than `200` at an address the built site writes, that address is missing from the preview. That is a real FAIL of the journey, never a reason to weaken it. Record the status, the title and the reason, and keep going only to capture the visible difference.
 
 ## Drive
 
