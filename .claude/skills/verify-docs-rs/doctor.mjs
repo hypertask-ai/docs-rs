@@ -7,7 +7,10 @@ import process from "node:process";
 
 const liveUrl = process.env.LIVE_DOCS_URL ?? "https://docs.hypertask.ai/";
 const previewUrl =
-  process.env.PREVIEW_DOCS_URL ?? "https://docs.hypertask.ai/ratstack/";
+  process.env.PREVIEW_URL ??
+  process.env.PREVIEW_DOCS_URL ??
+  "https://docs.hypertask.ai/ratstack/";
+const publishedPreview = new URL(previewUrl).hostname.endsWith("hypertask.ai");
 const publishWorkflow = "publish-ratstack.yml";
 const publishRepo = "hypertask-ai/docs-rs";
 const siteInputs = [".brain", "apps/web", "apps/site", "packages"];
@@ -122,7 +125,7 @@ const checkPreview = async () => {
   if (page.status !== 200 || !page.contentType.includes("text/html")) {
     fail(
       "preview-status",
-      `${previewUrl} answered ${page.status} ${page.contentType}. Fix: land the publish slice HYST-18 on main, then run .github/workflows/publish-ratstack.yml from main and wait for it to finish; nothing is published at that address until it does.`
+      `${previewUrl} answered ${page.status} ${page.contentType}. Fix: the preview must answer 200 before it can be driven; on the runner that means the build step and the preview server that started it, and on the published host it means a finished publish run on main.`
     );
 
     return;
@@ -281,7 +284,15 @@ const checkBuild = async () => {
 await checkPlaywright();
 await checkLive();
 await checkPreview();
-await checkBuild();
+
+if (publishedPreview) {
+  await checkBuild();
+} else {
+  skip(
+    "preview-build",
+    `${previewUrl} is the build of the change under review served on this runner, so there is no publish run to compare it with; the job that started the preview server is the freshness check.`
+  );
+}
 
 if (skips.length > 0) {
   console.log(`doctor notes: ${skips.join(", ")} did not run`);
