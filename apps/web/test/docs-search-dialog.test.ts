@@ -2,7 +2,7 @@ import { it } from "@effect/vitest";
 import { expect, given, role, scene, selector } from "foldkit/scene";
 
 import { update } from "../src/client/reader/update.js";
-import { view } from "../src/features/reader.js";
+import { view } from "../src/features/reader-subviews-client.js";
 import { readerModelFixture } from "./reader-fixture.js";
 
 it("opens the docs search dialog on a page without the docs browser", () => {
