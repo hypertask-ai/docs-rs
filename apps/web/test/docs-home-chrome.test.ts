@@ -3,7 +3,7 @@ import { expect, it } from "@effect/vitest";
 import { Effect, FileSystem, Path } from "effect";
 
 const hiddenElements =
-  /<(noscript|script|style|template)\b[^>]*>[\s\S]*?<\/\1>/giu;
+  /<(?<tag>noscript|script|style|template)\b[^>]*>[\s\S]*?<\/\k<tag>>/giu;
 
 const tags = /<[^>]*>/gu;
 
