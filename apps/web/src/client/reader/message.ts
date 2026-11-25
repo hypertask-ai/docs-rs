@@ -1,4 +1,5 @@
-import { Schema } from "effect";
+import { DocsSearchOutput } from "@hypertask-docs/core/contracts";
+import { Option, Schema } from "effect";
 import { defineMessageUnion } from "foldkit/message";
 
 import { Message as CafeMessage } from "../cafe/message.js";
@@ -15,19 +16,45 @@ export const Message = defineMessageUnion({
   ClickedMobileTocToggle: {},
   ClickedOutsideMobileToc: {},
   CompletedDetectClipboard: { access: DetectedClipboardAccess },
+  CompletedDocsSearchNavigation: {},
   CompletedMoveFocus: {},
   CompletedWaitBeforeCopyReset: { id: Schema.String },
   FailedCopyPage: {},
   FailedCopyReaderText: { id: Schema.String },
+  FailedDocsSearch: { query: Schema.String },
   GotCafeMessage: { message: CafeMessage },
   GotDocsMessage: { message: DocsMessage },
   GotMotionMessage: { message: MotionDemoMessage },
   GotTubeMessage: { message: TubeMessage },
   MeasuredReadingAnchor: { id: Schema.OptionFromOptional(Schema.String) },
+  MovedDocsSearchSelection: { offset: Schema.Finite },
+  PressedDocsSearchShortcut: {},
   PressedEscapeInMobileNav: {},
   PressedEscapeInMobileToc: {},
+  SelectedDocsSearch: { index: Schema.Finite },
+  SubmittedDocsSearch: {},
   SucceededCopyPage: {},
   SucceededCopyReaderText: { id: Schema.String },
+  SucceededDocsSearch: { query: Schema.String, result: DocsSearchOutput },
+  UpdatedDocsSearchQuery: { value: Schema.String },
 });
 
 export type ReaderMessage = typeof Message.Type;
+
+export const docsSearchKeyMessage = (
+  key: string
+): Option.Option<ReaderMessage> => {
+  if (key === "ArrowDown") {
+    return Option.some(Message.MovedDocsSearchSelection({ offset: 1 }));
+  }
+
+  if (key === "ArrowUp") {
+    return Option.some(Message.MovedDocsSearchSelection({ offset: -1 }));
+  }
+
+  if (key === "Enter") {
+    return Option.some(Message.SubmittedDocsSearch());
+  }
+
+  return Option.none();
+};

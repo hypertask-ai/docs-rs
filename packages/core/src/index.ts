@@ -7,6 +7,9 @@ export { ConfigService } from "./config-service.js";
 export { FileInspector } from "./file-inspector.js";
 
 export {
+  DocsSearchMatch,
+  DocsSearchOutput,
+  DocsSearchSection,
   ReadOutput,
   ResourceNotFound,
   SearchMatch,
@@ -14,6 +17,7 @@ export {
   inspectFileContract,
   readContract,
   searchContract,
+  searchDocsContract,
 } from "./contracts.js";
 
 export { capabilities, inspectFile } from "./inspect-file.js";

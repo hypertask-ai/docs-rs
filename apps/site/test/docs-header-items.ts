@@ -46,3 +46,16 @@ export const docsHeaderImageItems = (
   DomUtils.getElementsByTagName("img", docsHeaderElement(html).children).map(
     (element) => ({ attributes: element.attribs })
   );
+
+export const docsHeaderButtonItems = (
+  html: string
+): readonly DocsHeaderAnchorItem[] =>
+  DomUtils.getElementsByTagName("button", docsHeaderElement(html).children).map(
+    (element) => ({
+      attributes: element.attribs,
+      parts: DomUtils.getChildren(element)
+        .map((child) => DomUtils.textContent(child).trim())
+        .filter((part) => part !== ""),
+      text: DomUtils.textContent(element).trim(),
+    })
+  );

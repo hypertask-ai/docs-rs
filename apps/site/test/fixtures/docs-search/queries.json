@@ -1,0 +1,370 @@
+{
+  "averagePageLength": 236.25611877441406,
+  "pageCount": 695,
+  "queries": [
+    {
+      "query": "iphone",
+      "results": [
+        {
+          "routePath": "/getting-started/apps/",
+          "score": 1.8236725330352783,
+          "title": "Mobile and desktop apps"
+        },
+        {
+          "routePath": "/features/images/",
+          "score": 0.3768284022808075,
+          "title": "Images and Attachments"
+        },
+        {
+          "routePath": "/getting-started/introduction/",
+          "score": 0.36526164412498474,
+          "title": "What is Hypertask?"
+        }
+      ],
+      "total": 3
+    },
+    {
+      "query": "length",
+      "results": [
+        {
+          "routePath": "/changelog/2026-10-03-claude-haiku-5-5-replaces-haiku-4-5-htpr-7010/",
+          "score": 0.4669714570045471,
+          "title": "Claude Haiku 5.5 replaces Haiku 4.5"
+        },
+        {
+          "routePath": "/features/appearance/",
+          "score": 0.3926751911640167,
+          "title": "Appearance & AI Models"
+        },
+        {
+          "routePath": "/getting-started/settings-profile/",
+          "score": 0.3685969114303589,
+          "title": "Profile & Settings"
+        },
+        {
+          "routePath": "/mcp/agent-webhooks/",
+          "score": 0.33200380206108093,
+          "title": "Agent webhooks"
+        }
+      ],
+      "total": 4
+    },
+    {
+      "query": "trello",
+      "results": [
+        {
+          "routePath": "/getting-started/switching/",
+          "score": 28.786407470703125,
+          "title": "Switching from Trello, Jira, or Asana"
+        },
+        {
+          "routePath": "/features/integrations/",
+          "score": 0.4983397126197815,
+          "title": "Integrations"
+        },
+        {
+          "routePath": "/changelog/",
+          "score": 0.05781404674053192,
+          "title": "Changelog"
+        }
+      ],
+      "total": 3
+    },
+    {
+      "query": "jira",
+      "results": [
+        {
+          "routePath": "/getting-started/switching/",
+          "score": 28.919845581054688,
+          "title": "Switching from Trello, Jira, or Asana"
+        },
+        {
+          "routePath": "/features/integrations/",
+          "score": 0.4983397126197815,
+          "title": "Integrations"
+        },
+        {
+          "routePath": "/api/tools-reference/",
+          "score": 0.03907474875450134,
+          "title": "MCP Tools Reference"
+        }
+      ],
+      "total": 3
+    },
+    {
+      "query": "asana",
+      "results": [
+        {
+          "routePath": "/getting-started/switching/",
+          "score": 30.616479873657227,
+          "title": "Switching from Trello, Jira, or Asana"
+        },
+        {
+          "routePath": "/features/integrations/",
+          "score": 0.5300212502479553,
+          "title": "Integrations"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "query": "talk",
+      "results": [
+        {
+          "routePath": "/getting-started/contact-support/",
+          "score": 0.5845756530761719,
+          "title": "Get help"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "query": "central",
+      "results": [
+        {
+          "routePath": "/changelog/2026-10-11-human-comments-notify-assigned-agents-htpr-7088/",
+          "score": 0.5062159895896912,
+          "title": "Human comments notify assigned agents"
+        },
+        {
+          "routePath": "/features/agents-dashboard/",
+          "score": 0.4762410521507263,
+          "title": "Agents Dashboard"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "query": "enhancement",
+      "results": [
+        {
+          "routePath": "/features/search-screen/",
+          "score": 2.0296926498413086,
+          "title": "Search Screen"
+        },
+        {
+          "routePath": "/features/keyboard-shortcuts/",
+          "score": 0.2750677168369293,
+          "title": "Keyboard Shortcuts"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "query": "licenses",
+      "results": [
+        {
+          "routePath": "/features/billing/",
+          "score": 2.1784303188323975,
+          "title": "Billing & Seat Management"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "query": "forecasts",
+      "results": [
+        {
+          "routePath": "/features/billing/",
+          "score": 2.531729221343994,
+          "title": "Billing & Seat Management"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "query": "shareable",
+      "results": [
+        {
+          "routePath": "/features/calendar/",
+          "score": 1.979202389717102,
+          "title": "Calendar"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "query": "heic",
+      "results": [
+        {
+          "routePath": "/features/images/",
+          "score": 3.0584909915924072,
+          "title": "Images and Attachments"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "query": "heif",
+      "results": [
+        {
+          "routePath": "/features/images/",
+          "score": 2.7853736877441406,
+          "title": "Images and Attachments"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "query": "thumbnails",
+      "results": [
+        {
+          "routePath": "/features/images/",
+          "score": 1.8487826585769653,
+          "title": "Images and Attachments"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "query": "galleries",
+      "results": [
+        {
+          "routePath": "/features/images/",
+          "score": 1.1148185729980469,
+          "title": "Images and Attachments"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "query": "lightboxes",
+      "results": [
+        {
+          "routePath": "/features/images/",
+          "score": 3.7130141258239746,
+          "title": "Images and Attachments"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "query": "exempt",
+      "results": [
+        {
+          "routePath": "/features/keyboard-shortcuts/",
+          "score": 0.002785669406875968,
+          "title": "Keyboard Shortcuts"
+        },
+        {
+          "routePath": "/features/inbox/",
+          "score": 0.0008552894578315318,
+          "title": "Inbox & Notifications"
+        },
+        {
+          "routePath": "/mcp/scheduling/",
+          "score": 0.00015418099064845592,
+          "title": "Scheduling Agents"
+        }
+      ],
+      "total": 3
+    },
+    {
+      "query": "snooze",
+      "results": [
+        {
+          "routePath": "/features/scheduling/",
+          "score": 1.9488320350646973,
+          "title": "Scheduling"
+        },
+        {
+          "routePath": "/features/tasks/",
+          "score": 1.3990172147750854,
+          "title": "Tasks"
+        },
+        {
+          "routePath": "/features/agents/",
+          "score": 0.34798869490623474,
+          "title": "AI Agents"
+        },
+        {
+          "routePath": "/features/board-settings/",
+          "score": 0.28799283504486084,
+          "title": "Board Settings"
+        },
+        {
+          "routePath": "/changelog/2026-08-21-mute-notifications-per-board-fda0ee/",
+          "score": 0.25248050689697266,
+          "title": "Mute notifications per board"
+        }
+      ],
+      "total": 5
+    },
+    {
+      "query": "expertise",
+      "results": [
+        {
+          "routePath": "/features/skills/",
+          "score": 0.46653103828430176,
+          "title": "Skills"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "query": "soft",
+      "results": [
+        {
+          "routePath": "/changelog/2026-10-14-mcp-tool-keep-alive-for-sse-connections-htpr-7220/",
+          "score": 0.5247533917427063,
+          "title": "MCP tool keep-alive for SSE connections"
+        },
+        {
+          "routePath": "/cli/commands/",
+          "score": 0.2962627410888672,
+          "title": "CLI Commands"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "query": "predefined",
+      "results": [
+        {
+          "routePath": "/features/superhuman-snippets/",
+          "score": 2.0772457122802734,
+          "title": "Superhuman-Style Snippets"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "query": "notion",
+      "results": [
+        {
+          "routePath": "/features/table-view/",
+          "score": 0.3905198872089386,
+          "title": "Table View"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "query": "plane",
+      "results": [
+        {
+          "routePath": "/mcp/agent-sdk/",
+          "score": 0.37847790122032166,
+          "title": "Agent SDK"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "query": "wakes",
+      "results": [
+        {
+          "routePath": "/mcp/agent-webhooks/",
+          "score": 0.3707137703895569,
+          "title": "Agent webhooks"
+        },
+        {
+          "routePath": "/mcp/workflows/",
+          "score": 0.35473987460136414,
+          "title": "Agent Workflows"
+        }
+      ],
+      "total": 2
+    }
+  ]
+}

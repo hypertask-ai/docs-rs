@@ -14,6 +14,9 @@ import {
   CopyPageMarkdown,
   CopyReaderText,
   MoveFocus,
+  OpenDocsSearchResult,
+  QueryDocsSearch,
+  ToggleDocsSearchDialog,
   WaitBeforeCopyReset,
 } from "./command.js";
 import { Message } from "./message.js";
@@ -22,6 +25,8 @@ import {
   ClipboardAccess,
   copyStatusOf,
   CopyStatus,
+  DocsSearchState,
+  docsSearchMatchesOf,
   findCopyPrompt,
   pageCopyId,
 } from "./model.js";
@@ -83,6 +88,17 @@ const foldTube = Update.foldChild({
     modifyFields(model, { tube: () => Option.some(tube) }),
 });
 
+const selectedResult = (model: ReaderModel) => {
+  const matches = docsSearchMatchesOf(model);
+
+  const selected = Math.max(
+    0,
+    Math.min(matches.length - 1, model.docsSearchSelected)
+  );
+
+  return matches[selected];
+};
+
 export const update = (
   model: ReaderModel,
   message: ReaderMessage
@@ -125,6 +141,7 @@ export const update = (
       CompletedDetectClipboard: ({ access }) => ({
         model: modifyFields(model, { clipboardAccess: () => access }),
       }),
+      CompletedDocsSearchNavigation: () => ({ model }),
       CompletedMoveFocus: () => ({ model }),
       CompletedWaitBeforeCopyReset: ({ id }) => ({
         model: CopyStatus.guards.Copied(copyStatusOf(model, id))
@@ -139,6 +156,14 @@ export const update = (
           ? withCopyStatus(model, id, CopyStatus.Failed())
           : model,
       }),
+      FailedDocsSearch: ({ query }) => ({
+        model:
+          query === model.docsSearchQuery.trim()
+            ? modifyFields(model, {
+                docsSearch: () => DocsSearchState.Failed({ query }),
+              })
+            : model,
+      }),
       GotCafeMessage: ({ message: cafeMessage }) =>
         foldCafe(model, cafeMessage),
       GotDocsMessage: ({ message: docsMessage }) =>
@@ -149,6 +174,22 @@ export const update = (
         foldTube(model, tubeMessage),
       MeasuredReadingAnchor: ({ id }) => ({
         model: modifyFields(model, { readingAnchorId: () => id }),
+      }),
+      MovedDocsSearchSelection: ({ offset }) => {
+        const total = docsSearchMatchesOf(model).length;
+
+        return total === 0
+          ? { model }
+          : {
+              model: modifyFields(model, {
+                docsSearchSelected: (selected) =>
+                  Math.max(0, Math.min(total - 1, selected + offset)),
+              }),
+            };
+      },
+      PressedDocsSearchShortcut: () => ({
+        commands: [ToggleDocsSearchDialog()],
+        model: modifyFields(model, { docsSearchSelected: () => 0 }),
       }),
       PressedEscapeInMobileNav: () =>
         model.mobileNav.open
@@ -164,6 +205,19 @@ export const update = (
               model: withMobileToc(model, false),
             }
           : { model },
+      SelectedDocsSearch: ({ index }) => ({
+        model: modifyFields(model, { docsSearchSelected: () => index }),
+      }),
+      SubmittedDocsSearch: () => {
+        const match = selectedResult(model);
+
+        return match === undefined
+          ? { model }
+          : {
+              commands: [OpenDocsSearchResult({ url: match.routePath })],
+              model,
+            };
+      },
       SucceededCopyPage: () => ({
         commands: [WaitBeforeCopyReset({ id: pageCopyId })],
         model: withCopyStatus(model, pageCopyId, CopyStatus.Copied()),
@@ -175,5 +229,30 @@ export const update = (
               model: withCopyStatus(model, id, CopyStatus.Copied()),
             }
           : { model },
+      SucceededDocsSearch: ({ query, result }) => ({
+        model:
+          query === model.docsSearchQuery.trim()
+            ? modifyFields(model, {
+                docsSearch: () => DocsSearchState.Loaded({ query, result }),
+                docsSearchSelected: (selected) =>
+                  Math.max(0, Math.min(result.matches.length - 1, selected)),
+              })
+            : model,
+      }),
+      UpdatedDocsSearchQuery: ({ value }) => {
+        const query = value.trim();
+
+        return {
+          commands: query === "" ? [] : [QueryDocsSearch({ query })],
+          model: modifyFields(model, {
+            docsSearch: () =>
+              query === ""
+                ? DocsSearchState.Idle()
+                : DocsSearchState.Loading({ query }),
+            docsSearchQuery: () => value,
+            docsSearchSelected: () => 0,
+          }),
+        };
+      },
     }
   );

@@ -646,6 +646,29 @@ body > .docs-layout {
   text-align: center;
 }
 
+.docs-search-label {
+  display: inline;
+}
+
+.docs-kbd {
+  display: flex;
+}
+
+.docs-search-close {
+  display: none;
+}
+
+.docs-search-field {
+  font:
+    400 16.8px "IBM Plex Sans",
+    sans-serif;
+}
+
+.docs-search-panel :focus-visible {
+  outline: 1px auto rgb(238, 238, 238);
+  outline-offset: 0;
+}
+
 .docs-group {
   margin: 0;
   padding: 0;
@@ -674,15 +697,9 @@ button.docs-action {
     sans-serif;
 }
 
-.docs-search-label,
-.docs-kbd {
-  display: inline;
-}
-
 .docs-search-icon {
   display: block;
   flex-shrink: 0;
-  margin-right: 8px;
 }
 
 @media (min-width: 50rem) {
@@ -1000,5 +1017,33 @@ button.docs-action {
   .docs-search-label,
   .docs-kbd {
     display: none;
+  }
+
+  .docs-search-panel {
+    border-radius: 0;
+    box-sizing: border-box;
+    height: 100%;
+    margin: 0;
+    max-height: 100%;
+    max-width: 100%;
+    padding: 0;
+    width: 100%;
+  }
+
+  .docs-search-panel > div {
+    padding: 1rem;
+  }
+
+  .docs-search-field {
+    width: calc(100% - 80px);
+  }
+
+  .docs-search-clear {
+    right: 80px;
+  }
+
+  .docs-search-close {
+    display: flex;
+    right: 16px;
   }
 }
