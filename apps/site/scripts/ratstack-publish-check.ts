@@ -35,6 +35,11 @@ const decodeOldSiteRecord = Schema.decodeUnknownEffect(
 
 const siteBasePath = () => normalizeSiteBasePath(process.env.SITE_BASE_PATH);
 
+export const builtHomePageFile = (basePath: string): string =>
+  [builtSiteDirectory, normalizeSiteBasePath(basePath).slice(1), "index.html"]
+    .filter((part) => part !== "")
+    .join("/");
+
 const titleOf = (html: string): string =>
   /<title>(?<title>[^<]*)<\/title>/u.exec(html)?.groups?.title ?? "";
 
@@ -365,6 +370,17 @@ const prefixedAddresses = (
   ),
 ];
 
+const builtHomePage = Effect.fn("ratstackPublishCheck.builtHomePage")(
+  function* builtHomePage(basePath: string) {
+    const fs = yield* FileSystem.FileSystem;
+    const path = yield* Path.Path;
+
+    return yield* fs.readFileString(
+      path.resolve(import.meta.dirname, "../../..", builtHomePageFile(basePath))
+    );
+  }
+);
+
 const verifyDeployedSite = Effect.fn("ratstackPublishCheck.verify")(
   function* verifyDeployedSite(file: string) {
     const basePath = siteBasePath();
@@ -377,7 +393,6 @@ const verifyDeployedSite = Effect.fn("ratstackPublishCheck.verify")(
     }
 
     const fs = yield* FileSystem.FileSystem;
-    const path = yield* Path.Path;
     const old = yield* get(`${docsOrigin}/`);
     const recorded = yield* decodeOldSiteRecord(yield* fs.readFileString(file));
     const oldTitle = titleOf(old.body);
@@ -395,15 +410,7 @@ const verifyDeployedSite = Effect.fn("ratstackPublishCheck.verify")(
     const home = `${docsOrigin}${basePath}/`;
     const homeResponse = yield* get(home);
 
-    const builtHome = yield* fs.readFileString(
-      path.resolve(
-        import.meta.dirname,
-        "../../..",
-        builtSiteDirectory,
-        basePath,
-        "index.html"
-      )
-    );
+    const builtHome = yield* builtHomePage(basePath);
 
     const expectedTitle = titleOf(builtHome);
 
@@ -463,18 +470,7 @@ const gateBuiltHome = Effect.fn("ratstackPublishCheck.gate")(
       });
     }
 
-    const fs = yield* FileSystem.FileSystem;
-    const path = yield* Path.Path;
-
-    const builtHome = yield* fs.readFileString(
-      path.resolve(
-        import.meta.dirname,
-        "../../..",
-        builtSiteDirectory,
-        basePath,
-        "index.html"
-      )
-    );
+    const builtHome = yield* builtHomePage(basePath);
 
     const old = yield* get(`${docsOrigin}/`);
 
