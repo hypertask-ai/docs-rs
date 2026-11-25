@@ -154,6 +154,84 @@ body > .docs-layout {
   min-height: 100vh;
 }
 
+.sr-only {
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.docs-skip-link {
+  clip: rect(0, 0, 0, 0);
+  inset-block-start: 12px;
+  inset-inline-start: 12px;
+  position: fixed;
+}
+
+.docs-skip-link:focus {
+  background: #f4d3c8;
+  clip: auto;
+  color: #0a0a0b;
+  display: block;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 30;
+}
+
+.sl-heading-wrapper {
+  position: relative;
+}
+
+.sl-anchor-link {
+  position: absolute;
+}
+
+.docs-theme-preferences {
+  display: none;
+}
+
+.docs-theme-label {
+  align-items: center;
+  color: #a1a1aa;
+  display: flex;
+  font-size: 14px;
+  gap: 4px;
+  position: relative;
+}
+
+.docs-theme-label:hover {
+  color: #f4f4f7;
+}
+
+.docs-theme-select {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 6px 20px 6px 24px;
+  width: 100px;
+}
+
+.docs-theme-icon {
+  inset-inline-start: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.docs-theme-caret {
+  inset-inline-end: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .docs-body {
   align-items: start;
   display: grid;
@@ -351,6 +429,18 @@ body > .docs-layout {
   color: inherit;
   font: inherit;
   padding: 0;
+}
+
+.docs-main .frame {
+  margin: 0 0 16px;
+}
+
+.docs-main .frame pre {
+  margin: 0;
+}
+
+.docs-main .frame .header {
+  display: none;
 }
 
 .docs-main .code-snippet {
@@ -941,6 +1031,13 @@ button.docs-action {
     visibility: hidden;
     width: 100%;
     z-index: 5;
+  }
+
+  .docs-theme-preferences {
+    border-top: 1px solid #222226;
+    display: block;
+    margin-top: 16px;
+    padding: 16px 12px 0;
   }
 
   html:has(.docs-layout[data-mobile-nav="open"]) {

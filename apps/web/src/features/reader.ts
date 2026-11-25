@@ -23,6 +23,7 @@ import {
   docsMenuButton,
   docsMobileToc,
   docsSidebar,
+  docsSkipLink,
   docsToc,
   TOP_ANCHOR_ID,
 } from "./docs-chrome.js";
@@ -399,6 +400,7 @@ const readerDocument = (
       ),
     ],
     [
+      docsSkipLink(h),
       docsHeader(model.page.path, h),
       docsMenuButton(
         model.mobileNav.open,

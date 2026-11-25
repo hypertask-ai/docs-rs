@@ -10,6 +10,7 @@ import { browserInit } from "./reader/browser-init.js";
 import { Message } from "./reader/message.js";
 import { Model, ReaderFlags } from "./reader/model.js";
 import { subscriptions } from "./reader/subscriptions.js";
+import { bindThemePicker } from "./reader/theme.js";
 import { update } from "./reader/update.js";
 
 import "../../../site/src/rat.css";
@@ -33,5 +34,7 @@ installOverlay();
 bindHelpChat();
 
 bindDocsContents();
+
+bindThemePicker();
 
 Runtime.hydrate(application);

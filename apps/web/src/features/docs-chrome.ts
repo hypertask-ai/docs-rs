@@ -228,6 +228,77 @@ export const docsHeader = <Message>(
     ]
   );
 
+export const docsSkipLink = <Message>(h: HtmlBuilder<Message>): Html =>
+  h.a(
+    [h.Href(`#${TOP_ANCHOR_ID}`), h.Class("docs-skip-link")],
+    ["Skip to content"]
+  );
+
+const themeIcon = <Message>(h: HtmlBuilder<Message>) =>
+  h.svg(
+    [
+      h.Class("docs-theme-icon"),
+      h.Width("16"),
+      h.Height("16"),
+      h.ViewBox("0 0 24 24"),
+      h.Fill("currentColor"),
+      h.AriaHidden(true),
+    ],
+    [
+      h.path([
+        h.D(
+          "M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"
+        ),
+      ]),
+    ]
+  );
+
+const themeCaret = <Message>(h: HtmlBuilder<Message>) =>
+  h.svg(
+    [
+      h.Class("docs-theme-caret"),
+      h.Width("16"),
+      h.Height("16"),
+      h.ViewBox("0 0 24 24"),
+      h.Fill("currentColor"),
+      h.AriaHidden(true),
+    ],
+    [
+      h.path([
+        h.D(
+          "M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"
+        ),
+      ]),
+    ]
+  );
+
+const themePicker = <Message>(h: HtmlBuilder<Message>): Html =>
+  h.div(
+    [h.Class("docs-theme-preferences")],
+    [
+      h.label(
+        [h.Class("docs-theme-label")],
+        [
+          h.span([h.Class("visually-hidden")], ["Select theme"]),
+          themeIcon(h),
+          h.select(
+            [
+              h.Id("docs-theme-select"),
+              h.Class("docs-theme-select"),
+              h.Attribute("autocomplete", "off"),
+            ],
+            [
+              h.option([h.Value("dark")], ["Dark"]),
+              h.option([h.Value("light")], ["Light"]),
+              h.option([h.Value("auto"), h.Selected(true)], ["Auto"]),
+            ]
+          ),
+          themeCaret(h),
+        ]
+      ),
+    ]
+  );
+
 export const docsSidebar = <Message>(
   path: string,
   h: HtmlBuilder<Message>
@@ -243,6 +314,7 @@ export const docsSidebar = <Message>(
         [h.Class(className(docsChrome.groupList))],
         docsSidebarGroups.map((group) => sidebarGroup(group, path, h))
       ),
+      themePicker(h),
     ]
   );
 
