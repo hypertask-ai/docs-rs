@@ -158,6 +158,32 @@ const lineEnding = /\r?\n|\r/gu;
 
 const languageName = /^[^ \t]+(?=[ \t]|$)/u;
 
+const terminalLanguages = new Set([
+  "bash",
+  "bat",
+  "batch",
+  "cmd",
+  "console",
+  "fish",
+  "nu",
+  "nushell",
+  "powershell",
+  "ps",
+  "ps1",
+  "psd1",
+  "psm1",
+  "sh",
+  "shell",
+  "shellscript",
+  "shellsession",
+  "zsh",
+]);
+
+const terminalFrameOpen =
+  '<figure class="frame is-terminal"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption>';
+
+const terminalFrameClose = "</figure>";
+
 const absoluteUrl = /^[A-Za-z][\d+\-.A-Za-z]*:/u;
 
 const windowsPath = /^[A-Za-z]:\\/u;
@@ -443,31 +469,52 @@ const blockTypes = new Set<string>([
 const isBlockNode = (node: Nodes): node is BlockNode =>
   blockTypes.has(node.type);
 
+const inTerminalFrame = (
+  language: string | undefined,
+  children: readonly HastChild[],
+  position?: Position
+): HastChild[] =>
+  language !== undefined && terminalLanguages.has(language.toLowerCase())
+    ? [
+        raw(terminalFrameOpen, position),
+        ...children,
+        raw(terminalFrameClose, position),
+      ]
+    : [...children];
+
 const convertCode = (
   node: Extract<Nodes, { type: "code" }>,
   converter: Converter
 ): HastChild[] => {
-  if (converter.highlight !== undefined) {
-    return [raw(converter.highlight(node.value, node.lang), node.position)];
-  }
-
   const lang = languageName.exec(node.lang ?? "")?.[0];
 
-  return [
-    element(
-      "pre",
-      [],
-      [
-        element(
-          "code",
-          lang === undefined ? [] : [["className", [`language-${lang}`]]],
-          [text(node.value === "" ? "" : `${node.value}\n`)],
-          node.position
-        ),
-      ],
+  if (converter.highlight !== undefined) {
+    return inTerminalFrame(
+      lang,
+      [raw(converter.highlight(node.value, node.lang), node.position)],
       node.position
-    ),
-  ];
+    );
+  }
+
+  return inTerminalFrame(
+    lang,
+    [
+      element(
+        "pre",
+        [],
+        [
+          element(
+            "code",
+            lang === undefined ? [] : [["className", [`language-${lang}`]]],
+            [text(node.value === "" ? "" : `${node.value}\n`)],
+            node.position
+          ),
+        ],
+        node.position
+      ),
+    ],
+    node.position
+  );
 };
 
 const convertBlock = (

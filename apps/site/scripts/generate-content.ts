@@ -374,6 +374,58 @@ const docsHeadingIds = (): ((tree: HastNode) => void) => (tree) => {
   visit(tree);
 };
 
+const anchoredHeadingLevels = new Set(["h2", "h3", "h4", "h5", "h6"]);
+
+const headingWithAnchor = (node: HastNode): HastNode => {
+  const id = node.properties?.id;
+
+  if (
+    node.tagName === undefined ||
+    !anchoredHeadingLevels.has(node.tagName) ||
+    !Predicate.isString(id)
+  ) {
+    return node;
+  }
+
+  const label = `Section titled “${nodeText(node)}”`;
+
+  return {
+    children: [
+      node,
+      {
+        children: [
+          {
+            children: [{ type: "text", value: label }],
+            properties: { className: ["sr-only"] },
+            tagName: "span",
+            type: "element",
+          },
+        ],
+        properties: { className: ["sl-anchor-link"], href: `#${id}` },
+        tagName: "a",
+        type: "element",
+      },
+    ],
+    properties: {
+      className: ["sl-heading-wrapper", `level-${node.tagName}`],
+    },
+    tagName: "div",
+    type: "element",
+  };
+};
+
+const anchorableHeadings = (node: HastNode): HastNode => {
+  if (node.children !== undefined) {
+    node.children = node.children.map(anchorableHeadings);
+  }
+
+  return headingWithAnchor(node);
+};
+
+const headingAnchorLinks = (): ((tree: HastNode) => void) => (tree) => {
+  tree.children = (tree.children ?? []).map(anchorableHeadings);
+};
+
 const withoutTemplateHome = <A extends { readonly routePath: `/${string}` }>(
   hasDocsHome: boolean,
   page: A
@@ -666,6 +718,7 @@ const compileMarkdownBody = Effect.fn("compileMarkdownBody")(
               ? [paragraphAnchors(htmlSource)]
               : []),
             docsPage ? docsHeadingIds : stableHeadingIds,
+            headingAnchorLinks,
             responsiveTables,
             linkCodeSpans(codeTargets),
             ...(docsPage ? [] : [linkStackEntities]),
