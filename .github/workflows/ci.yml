@@ -109,3 +109,29 @@ jobs:
           path: .turbo/runs/*.json
           include-hidden-files: true
           if-no-files-found: ignore
+
+  publish-audit:
+    name: publish audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SITE_BASE_PATH: /ratstack
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - name: Use Node.js 24.18.0
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
+        with:
+          node-version: 24.18.0
+      - name: Enable corepack pnpm
+        run: corepack enable && corepack prepare pnpm@11.3.0 --activate
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Fetch pinned source objects
+        run: pnpm sources:fetch
+      - name: Build the site the publish workflow builds
+        run: pnpm turbo run build --concurrency=2
+      - name: Audit the built site for addresses outside the base path
+        run: node apps/site/scripts/ratstack-publish-check.ts audit
