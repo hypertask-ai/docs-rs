@@ -7,6 +7,8 @@ import { Effect } from "effect";
 import {
   basePathEscapeFindings,
   builtHomePageFile,
+  cnameInDnsAnswer,
+  publishRouteBypassReason,
   RatstackPublishCheckError,
   requireBasePathAddresses,
 } from "../scripts/ratstack-publish-check.ts";
@@ -115,4 +117,38 @@ it("names a repeated address once per file", () => {
       },
     ])
   ).toStrictEqual(["ratstack/index.html points at /log"]);
+});
+
+it("reads the CNAME that keeps the publish hostname out of its zone", () => {
+  expect(
+    cnameInDnsAnswer(
+      '{"Status":0,"Question":[{"name":"docs.hypertask.ai","type":5}],"Answer":[{"name":"docs.hypertask.ai","type":5,"TTL":300,"data":"hypertask-docs.pages.dev."}]}'
+    )
+  ).toBe("hypertask-docs.pages.dev.");
+
+  expect(
+    cnameInDnsAnswer(
+      '{"Status":0,"Authority":[{"name":"hypertask.ai","type":6,"TTL":1800,"data":"magnolia.ns.cloudflare.com. dns.cloudflare.com. 2420474418 10000 2400 604800 1800"}]}'
+    )
+  ).toBeUndefined();
+});
+
+it("refuses to publish where the Worker route cannot reach the zone", () => {
+  const refused = publishRouteBypassReason(
+    { host: "docs.hypertask.ai", zoneName: "hypertask.ai" },
+    "hypertask-docs.pages.dev."
+  );
+
+  expect(refused).toContain("DNS-only CNAME to hypertask-docs.pages.dev.");
+  expect(refused).toContain("docs.hypertask.ai");
+  expect(refused).toContain("proxied");
+});
+
+it("publishes where the zone serves the hostname", () => {
+  expect(
+    publishRouteBypassReason(
+      { host: "docs.hypertask.ai", zoneName: "hypertask.ai" },
+      undefined
+    )
+  ).toBeUndefined();
 });
