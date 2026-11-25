@@ -1,4 +1,4 @@
-import { addSiteBasePath } from "./site-base-path.js";
+import { addSiteBasePath } from "./site-base-path.ts";
 
 export const docsHtmlHandling = "force-trailing-slash" as const;
 
