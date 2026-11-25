@@ -1,13 +1,33 @@
+// @effect-diagnostics nodeBuiltinImport:off -- These tests join the built home page to the checkout the way the publish step does.
+import path from "node:path";
+
 import { expect, it } from "@effect/vitest";
 import { Effect } from "effect";
 
 import {
   basePathEscapeFindings,
+  builtHomePageFile,
   RatstackPublishCheckError,
   requireBasePathAddresses,
 } from "../scripts/ratstack-publish-check.ts";
 
 const basePath = "/ratstack";
+
+const repositoryRoot = path.resolve(import.meta.dirname, "../../..");
+
+const builtClient = path.resolve(repositoryRoot, "apps/web/dist/client");
+
+it("reads the built home page from inside the built client folder", () => {
+  const file = path.resolve(repositoryRoot, builtHomePageFile(basePath));
+
+  expect(file).toBe(`${builtClient}/ratstack/index.html`);
+  expect(file.startsWith(`${builtClient}/`)).toBe(true);
+});
+
+it("keeps the built home page under the checkout root", () => {
+  expect(builtHomePageFile(basePath).startsWith("/")).toBe(false);
+  expect(builtHomePageFile("")).toBe("apps/web/dist/client/index.html");
+});
 
 it.effect(
   "names every built file and address that sits outside the base path",
