@@ -3,9 +3,7 @@ const themeStorageKey = "starlight-theme";
 const themeChoices = new Set(["dark", "light", "auto"]);
 
 const systemTheme = () =>
-  window.matchMedia("(prefers-color-scheme: light)").matches
-    ? "light"
-    : "dark";
+  window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
 
 const storedTheme = (): string => {
   const stored = window.localStorage.getItem(themeStorageKey);
@@ -19,16 +17,12 @@ const applyTheme = (choice: string): void => {
 };
 
 const rememberTheme = (choice: string): void => {
-  window.localStorage.setItem(
-    themeStorageKey,
-    choice === "auto" ? "" : choice
-  );
+  window.localStorage.setItem(themeStorageKey, choice === "auto" ? "" : choice);
 };
 
 export const bindThemePicker = (): void => {
-  const picker = document.querySelector<HTMLSelectElement>(
-    "#docs-theme-select"
-  );
+  const picker =
+    document.querySelector<HTMLSelectElement>("#docs-theme-select");
 
   if (picker === null) {
     return;

@@ -2,7 +2,8 @@ import { NodeServices } from "@effect/platform-node";
 import { expect, it } from "@effect/vitest";
 import { Effect, FileSystem, Path } from "effect";
 
-const hiddenElements = /<(?:noscript|script|style|template)\b[^>]*>[\s\S]*?<\/(?:noscript|script|style|template)>/gu;
+const hiddenElements =
+  /<(noscript|script|style|template)\b[^>]*>[\s\S]*?<\/\1>/giu;
 
 const tags = /<[^>]*>/gu;
 
@@ -46,9 +47,9 @@ it.layer(NodeServices.layer)((test) => {
 
         const words = wordsIn(html);
 
-        expect(
-          chromeWords.filter((word) => !words.has(word))
-        ).toStrictEqual([]);
+        expect(chromeWords.filter((word) => !words.has(word))).toStrictEqual(
+          []
+        );
       })
   );
 });
