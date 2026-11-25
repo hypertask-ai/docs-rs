@@ -146,9 +146,9 @@ it("refuses to publish where the Worker route cannot reach the zone", () => {
 
 it("publishes where the zone serves the hostname", () => {
   expect(
-    publishRouteBypassReason(
-      { host: "docs.hypertask.ai", zoneName: "hypertask.ai" },
-      undefined
-    )
+    publishRouteBypassReason({
+      host: "docs.hypertask.ai",
+      zoneName: "hypertask.ai",
+    })
   ).toBeUndefined();
 });

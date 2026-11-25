@@ -502,7 +502,7 @@ const publishRouteHost: PublishRouteHost = {
 
 export const publishRouteBypassReason = (
   target: PublishRouteHost,
-  cname: string | undefined
+  cname?: string
 ): string | undefined =>
   cname === undefined
     ? undefined
@@ -512,6 +512,7 @@ const requireRouteCanMatch = Effect.fn(
   "ratstackPublishCheck.requireRouteCanMatch"
 )(function* requireRouteCanMatch() {
   const answer = yield* get(dnsJsonAddress(publishRouteHost.host));
+
   const reason = publishRouteBypassReason(
     publishRouteHost,
     cnameInDnsAnswer(answer.body)
