@@ -523,7 +523,7 @@ export const postDeployChecks = Effect.fn("postDeployChecks")(
         "markdown-canonicals",
         Effect.gen(function* markdownCanonicals() {
           const matches = yield* Effect.forEach(
-            ["/AGENTS.md", "/README.md", "/VISION.md", "/log.md"],
+            ["/vendor/README.md", "/log.md"],
             (route) =>
               client
                 .get(`${url}${route}`)

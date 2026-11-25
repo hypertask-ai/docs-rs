@@ -259,7 +259,7 @@ it.effect.prop(
       ).toStrictEqual([
         !broken && sitemapListed && sitemapChildrenExcluded ? "pass" : "fail",
       ]);
-      expect(requests).toHaveLength(broken ? 32 : 31);
+      expect(requests).toHaveLength(broken ? 30 : 29);
       expect(results).toHaveLength(28);
     }).pipe(Effect.scoped),
   { arbitrary: { runs: 50 } }

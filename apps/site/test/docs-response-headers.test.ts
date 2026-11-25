@@ -88,10 +88,10 @@ const forwardedAnswers = new Map<string, ForwardedAnswer>([
 
 const workerAnswers = new Map<string, string>([
   ["/changelog.json", "/news.xml"],
-  ["/changelog.md", "/AGENTS.md"],
+  ["/changelog.md", "/vendor/README.md"],
   ["/changelog.xml", "/news.xml"],
-  ["/getting-started/introduction.md", "/AGENTS.md"],
-  ["/index.md", "/AGENTS.md"],
+  ["/getting-started/introduction.md", "/vendor/README.md"],
+  ["/index.md", "/vendor/README.md"],
   ["/llms-full.txt", "/llms-full.txt"],
   ["/llms.txt", "/llms.txt"],
   ["/nope-not-a-page", "/nope-not-a-page"],

@@ -8,26 +8,6 @@ export interface SourceSpec {
 export const lawSpecs: readonly SourceSpec[] = [
   {
     description:
-      "What you may change, which commands to run, and which changes need approval.",
-    routePath: "/AGENTS.md",
-    sourcePath: "AGENTS.md",
-    title: "Agent rules for the docs project (AGENTS.md)",
-  },
-  {
-    description: "What the docs must keep through the move, and what changes.",
-    routePath: "/VISION.md",
-    sourcePath: "VISION.md",
-    title: "Purpose and boundaries of the docs project (VISION.md)",
-  },
-  {
-    description:
-      "What is in the repo, how the reader and the Worker fit, and how to run it.",
-    routePath: "/README.md",
-    sourcePath: "README.md",
-    title: "Build and run the docs project (README.md)",
-  },
-  {
-    description:
       "How to pin an unpublished package and when to remove the local copy.",
     routePath: "/vendor/README.md",
     sourcePath: "vendor/README.md",

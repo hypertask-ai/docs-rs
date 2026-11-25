@@ -116,7 +116,7 @@ See [Analytics](/systems/analytics#switches) for the capture switch and its reso
 </figure>
 </HumanOnly>
 
-[Analytics](/systems/analytics) is a second running example: `packages/events` owns capture and its Basin resources. [README](/README.md) lists the steps needed to remove it. `packages/subscriber-delivery` is a provider adapter behind core's ports. One-line infrastructure removal remains unproven for that package.
+[Analytics](/systems/analytics) is a second running example: `packages/events` owns capture and its Basin resources. [README](https://github.com/hypertask-ai/docs-rs/blob/main/README.md) lists the steps needed to remove it. `packages/subscriber-delivery` is a provider adapter behind core's ports. One-line infrastructure removal remains unproven for that package.
 
 ## Where the pattern comes from
 

@@ -154,10 +154,7 @@ const seedPeople = Schema.decodeSync(
   )
 );
 
-export const allStarsRoutes = [
-  "/all-stars",
-  ...seedPeople.map((person) => `/all-stars/${person.id}`),
-];
+export const allStarsRoutes = ["/all-stars"];
 
 export const allStarsAvatarPaths = seedPeople.map(
   (person) => person.avatar.path

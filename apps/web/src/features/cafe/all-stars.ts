@@ -34,7 +34,7 @@ const cardView = (
       h.div(
         [],
         [
-          h.h3([], [h.a([h.Href(person.route)], [person.name])]),
+          h.h3([], [person.name]),
           h.p([], [person.summary.text]),
           ...(person.repos.length === 0
             ? []

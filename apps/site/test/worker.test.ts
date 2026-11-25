@@ -463,8 +463,6 @@ it.effect(
 
         const resourceHtml = generatedReaderPage(resource.routePath);
 
-        const agentsHtml = generatedReaderPage("/AGENTS.md");
-
         const logResponse = yield* Effect.promise(
           handler.bind(undefined, new Request("http://localhost/log.md"))
         );
@@ -538,7 +536,7 @@ it.effect(
         expect(skillHtml).toContain("Trace one action");
         expect(skillHtml).not.toContain("description:");
         expect(skillHtml).toContain(
-          '<a href="/AGENTS.md"><code>AGENTS.md</code></a>'
+          'href="https://github.com/hypertask-ai/docs-rs/blob/main/AGENTS.md"'
         );
         expect(skillHtml).toContain(
           '<a href="/skills/add-a-capability"><code>add-a-capability</code></a>'
@@ -572,19 +570,6 @@ it.effect(
         );
         expect(skillHtml).not.toMatch(
           /<code>[^<]*<a href="https:\/\/effect\.website"/u
-        );
-        expect(agentsHtml).toContain('id="linked-from"');
-        expect(agentsHtml).toContain(
-          '<a href="https://github.com/joelhooks/rat-stack/blob/main/AGENTS.md">Source on GitHub</a>'
-        );
-        expect(agentsHtml).toMatch(
-          /Last changed \d{4}-\d{2}-\d{2} in <a href="https:\/\/github\.com\/joelhooks\/rat-stack\/commit\/[0-9a-f]{40}">[0-9a-f]{7,}<\/a>/u
-        );
-        expect(agentsHtml).toContain(
-          '<a href="/skills/learn-rat-stack">learn-rat-stack</a>'
-        );
-        expect(agentsHtml).not.toContain(
-          '<a href="/AGENTS.md"><code>AGENTS.md</code></a>'
         );
         expect(logResponse.status).toBe(200);
         expect(logResponse.headers.get("content-type")).toContain(
@@ -631,7 +616,6 @@ it.effect(
           "/",
           "/skills",
           "/skills/learn-rat-stack",
-          "/AGENTS.md",
           "/log.md",
         ]) {
           const imagePath = `/og${route === "/" ? "/home" : route}.png`;
@@ -1316,12 +1300,7 @@ it.effect("serves agent indexes, cards, sitemap, and robots policy", () =>
       );
       expect(templateLlms).toContain("## Connect with MCP");
 
-      for (const route of [
-        "/AGENTS.md",
-        "/README.md",
-        "/VISION.md",
-        "/log.md",
-      ]) {
+      for (const route of ["/vendor/README.md", "/log.md"]) {
         const response = yield* Effect.promise(() =>
           handler(new Request(`http://localhost${route}`))
         );
@@ -2156,7 +2135,7 @@ it.effect(
 );
 
 it.effect(
-  "serves every all-stars profile as Markdown and in the feed from the people capabilities",
+  "serves the all-stars index as Markdown, the feed from the people capabilities, and every avatar",
   () =>
     withHandler((handler) =>
       Effect.gen(function* testAllStarsSurfaces() {
@@ -2194,13 +2173,6 @@ it.effect(
             )
           );
 
-          const markdown = yield* responseText(
-            handler,
-            new Request(`http://localhost${person.route}`, {
-              headers: { accept: "text/markdown" },
-            })
-          );
-
           const avatar = yield* Effect.promise(
             handler.bind(
               undefined,
@@ -2208,23 +2180,15 @@ it.effect(
             )
           );
 
-          expect(markdown).toContain(`# ${profile.name}`);
-          expect(markdown).toContain(`(${profile.avatar.path})`);
-          expect(markdown).toContain("To be removed from this page");
-
-          for (const fact of profile.bio) {
-            expect(markdown).toContain(fact.source);
-          }
-
           for (const row of profile.newsRows) {
-            expect(markdown).toContain(row.url);
             expect(feed).toContain(row.url);
           }
 
           expect(avatar.status).toBe(200);
           expect(avatar.headers.get("content-type")).toMatch(/^image\//u);
-          expect(index).toContain(`(${person.route})`);
-          expect(feed).toContain(`${person.route}"/>`);
+          expect(index).toContain(person.name);
+          expect(index).not.toContain(person.route);
+          expect(feed).not.toContain(person.route);
         }
       })
     )

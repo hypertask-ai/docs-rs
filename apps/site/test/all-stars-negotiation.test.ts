@@ -21,20 +21,12 @@ const website = {
 
 const cases = [
   {
-    contains: ["/all-stars/sam-goodwin", "alchemy-run/alchemy", "stars"],
+    contains: ["sam-goodwin", "alchemy-run/alchemy", "stars"],
     path: "/all-stars",
   },
   {
-    contains: ["/all-stars/devinjameson", "foldkit/foldkit", "stars"],
+    contains: ["devinjameson", "foldkit/foldkit", "stars"],
     path: "/all-stars.md",
-  },
-  {
-    contains: ["github.com/devinjameson", "foldkit/foldkit-domains", "stars"],
-    path: "/all-stars/devinjameson",
-  },
-  {
-    contains: ["github.com/sam-goodwin", "alchemy-run/alchemy"],
-    path: "/all-stars/sam-goodwin.md",
   },
 ] as const;
 

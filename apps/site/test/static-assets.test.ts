@@ -167,7 +167,7 @@ it.effect(
         for (const [path, expected, canonical] of [
           ["/index.md", "/index.md", "/"],
           ["/lore/cartridges.md", "/lore/cartridges.md", "/lore/cartridges"],
-          ["/AGENTS.md", "/AGENTS.md.md", "/AGENTS.md"],
+          ["/vendor/README.md", "/vendor/README.md.md", "/vendor/README.md"],
         ]) {
           const response = yield* Effect.promise(
             handler.bind(

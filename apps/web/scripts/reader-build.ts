@@ -34,6 +34,7 @@ import {
   addSiteBasePath,
   normalizeSiteBasePath,
 } from "../src/site-base-path.ts";
+import { copyPublicIcons } from "./public-icons.ts";
 import { copyReaderAssets } from "./reader-assets.ts";
 
 const encodeFlags = Effect.forEach((page: ReaderPageFlags) =>
@@ -209,6 +210,8 @@ export const finalizeReader = Effect.fn("reader.finalize")(
       siteBasePath
     );
 
+    yield* copyPublicIcons(root, clientDirectory, siteBasePath);
+
     yield* Effect.forEach((page: (typeof pages)[number]) =>
       Effect.gen(function* finalizePage() {
         const route = page.page.path;
@@ -279,19 +282,19 @@ export const finalizeReader = Effect.fn("reader.finalize")(
 
     yield* fs.writeFileString(
       `${clientDirectory}/_redirects`,
-      docsRedirectsFile(addresses)
+      docsRedirectsFile(addresses, siteBasePath)
     );
 
     const origin = pages[0]?.origin;
 
     if (origin !== undefined) {
       yield* fs.writeFileString(
-        `${clientDirectory}${docsSitemapIndexPath}`,
-        docsSitemapIndexXml(origin)
+        `${clientDirectory}${addSiteBasePath(siteBasePath, docsSitemapIndexPath)}`,
+        docsSitemapIndexXml(origin, siteBasePath)
       );
       yield* fs.writeFileString(
-        `${clientDirectory}${docsSitemapPath}`,
-        docsSitemapXml(origin, addresses)
+        `${clientDirectory}${addSiteBasePath(siteBasePath, docsSitemapPath)}`,
+        docsSitemapXml(origin, addresses, siteBasePath)
       );
     }
 
