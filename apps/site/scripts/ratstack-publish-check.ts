@@ -1,10 +1,14 @@
 import { NodeRuntime, NodeServices } from "@effect/platform-node";
-import { Console, Effect, FileSystem, Path, Schema } from "effect";
+import { Console, Effect, FileSystem, Option, Path, Schema } from "effect";
 import type { PlatformError } from "effect";
 import { FetchHttpClient, HttpClient } from "effect/http";
 import * as Layer from "effect/Layer";
 import { ElementType, parseDocument } from "htmlparser2";
 
+import {
+  docsPublishHost,
+  docsPublishZoneName,
+} from "../../web/src/docs-addresses.ts";
 import { normalizeSiteBasePath } from "../../web/src/site-base-path.ts";
 
 const docsOrigin = "https://docs.hypertask.ai";
@@ -459,8 +463,74 @@ const verifyDeployedSite = Effect.fn("ratstackPublishCheck.verify")(
   }
 );
 
+const dnsCnameRecordType = 5;
+
+const dnsJsonAddress = (host: string): string =>
+  `https://cloudflare-dns.com/dns-query?name=${host}&type=${dnsCnameRecordType}`;
+
+const DnsAnswerRecord = Schema.Struct({
+  data: Schema.String,
+  type: Schema.Finite,
+});
+
+const DnsAnswer = Schema.Struct({
+  Answer: Schema.optionalKey(Schema.Array(DnsAnswerRecord)),
+});
+
+const decodeDnsAnswer = Schema.decodeUnknownOption(
+  Schema.fromJsonString(DnsAnswer)
+);
+
+export const cnameInDnsAnswer = (body: string): string | undefined => {
+  const decoded = decodeDnsAnswer(body);
+
+  return Option.isSome(decoded)
+    ? decoded.value.Answer?.find((record) => record.type === dnsCnameRecordType)
+        ?.data
+    : undefined;
+};
+
+export interface PublishRouteHost {
+  readonly host: string;
+  readonly zoneName: string;
+}
+
+const publishRouteHost: PublishRouteHost = {
+  host: docsPublishHost,
+  zoneName: docsPublishZoneName,
+};
+
+export const publishRouteBypassReason = (
+  target: PublishRouteHost,
+  cname?: string
+): string | undefined =>
+  cname === undefined
+    ? undefined
+    : `${target.host} answers a DNS-only CNAME to ${cname}, so a request for ${target.host} never enters the ${target.zoneName} zone and the Worker route on it cannot match. The route deploys and the address still answers from the old Pages project. Fix: in the ${target.zoneName} zone, set the ${target.host} record to proxied, so Cloudflare processes the request and the route matches. No change in this repository makes that address answer before the record is proxied.`;
+
+const requireRouteCanMatch = Effect.fn(
+  "ratstackPublishCheck.requireRouteCanMatch"
+)(function* requireRouteCanMatch() {
+  const answer = yield* get(dnsJsonAddress(publishRouteHost.host));
+
+  const reason = publishRouteBypassReason(
+    publishRouteHost,
+    cnameInDnsAnswer(answer.body)
+  );
+
+  if (reason !== undefined) {
+    return yield* new RatstackPublishCheckError({ reason });
+  }
+
+  return yield* Console.log(
+    `${publishRouteHost.host} answers no DNS-only CNAME, so the ${publishRouteHost.zoneName} zone serves it and the Worker route on it can match`
+  );
+});
+
 const gateBuiltHome = Effect.fn("ratstackPublishCheck.gate")(
   function* gateBuiltHome() {
+    yield* requireRouteCanMatch();
+
     const basePath = siteBasePath();
 
     if (basePath === "") {
