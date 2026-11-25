@@ -1,10 +1,9 @@
 import { CafeDirectory, listPeople } from "@hypertask-docs/core/cafe-directory";
-import { profileForNewsRow } from "@hypertask-docs/core/cafe-people";
 import {
   selectCafeNews,
   sortCafeProjects,
 } from "@hypertask-docs/core/contracts";
-import { Effect, Option } from "effect";
+import { Effect } from "effect";
 
 import { Model } from "../../web/src/client/cafe/model.ts";
 import type { CafeModel } from "../../web/src/client/cafe/model.ts";
@@ -75,15 +74,6 @@ export const readerCafeFlags = Effect.fn("readerCafeFlags")(
         ".brain/data/cafe/news.json",
         Model.News({
           items,
-          profiles: items.flatMap((item) =>
-            Option.toArray(
-              Option.map(profileForNewsRow(people.people, item), (person) => ({
-                name: person.name,
-                route: person.route,
-                url: item.url,
-              }))
-            )
-          ),
           rankedAt: data.rankedAt,
         })
       ),

@@ -105,7 +105,7 @@ Then call `FileInspector.inspect` directly from the capability handler in `packa
 
 ## Cut devtools
 
-Follow **No devtools (keep the CLI and browser reader)** in [README](/README.md#keep-or-cut). That recipe covers CLI and browser compositions, auth's recorder integration, boundary fixtures, and production exclusion tests.
+Follow **No devtools (keep the CLI and browser reader)** in [README](https://github.com/hypertask-ai/docs-rs/blob/main/README.md#keep-or-cut). That recipe covers CLI and browser compositions, auth's recorder integration, boundary fixtures, and production exclusion tests.
 
 The browser's replacement overlay is `apps/web/src/client/no-devtools.ts`. `apps/web/test/dev-server.test.ts` checks the retained content backend. Keep ordinary HTTP, MCP and RPC tests when removing recorder-only cases.
 

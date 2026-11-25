@@ -16,7 +16,6 @@ import {
   cafeProjectsFile,
   decodeCafeData,
   listPeople,
-  readPerson,
 } from "@hypertask-docs/core";
 import { unlistedAuthors } from "@hypertask-docs/core/cafe-people";
 import { CafeData } from "@hypertask-docs/core/contracts";
@@ -68,7 +67,6 @@ import {
 } from "./backlink-lib.ts";
 import {
   allStarsIndexMarkdown,
-  allStarsProfileMarkdown,
   cafeDirectoryMarkdown,
   cafeNewsMarkdown,
 } from "./cafe-pages.ts";
@@ -1203,7 +1201,7 @@ const program = Effect.gen(function* generateContent() {
     unlistedAuthors(cafeData.people, cafeData.news),
     ({ author, rows }) =>
       Effect.logWarning(
-        `${cafePeopleFile}: ${author} has ${rows} /news rows and no all stars entry; add a profile with entry naming its basis (.brain/areas/all-stars.svx)`
+        `${cafePeopleFile}: ${author} has ${rows} /news rows and no all stars entry; add one whose entry names its basis (.brain/areas/all-stars.svx)`
       ),
     { discard: true }
   );
@@ -1213,35 +1211,25 @@ const program = Effect.gen(function* generateContent() {
     Effect.mapError((cause) => buildError("listPeople", cafePeopleFile, cause))
   );
 
-  const allStarsProfiles = yield* Effect.forEach(
-    (person: (typeof allStarsList.people)[number]) =>
-      readPerson.handler({ id: person.id }).pipe(
-        Effect.provide(cafeDirectory),
-        Effect.mapError((cause) =>
-          buildError("readPerson", cafePeopleFile, cause)
-        )
-      )
-  )(allStarsList.people);
-
   const avatarImages = yield* Effect.forEach(
-    (profile: (typeof allStarsProfiles)[number]) => {
-      const sourcePath = `apps/site/content${profile.avatar.path}`;
+    (person: (typeof allStarsList.people)[number]) => {
+      const sourcePath = `apps/site/content${person.avatar}`;
 
       return fileSystem.readFile(path.join(root, sourcePath)).pipe(
         Effect.mapError((cause) =>
           buildError(
-            `avatar for ${profile.id}; fetch ${profile.avatar.source} once and save it at`,
+            `avatar for ${person.id}; fetch it once and save it at`,
             sourcePath,
             cause
           )
         ),
         Effect.map((bytes) => ({
           base64: Buffer.from(bytes).toString("base64"),
-          path: profile.avatar.path,
+          path: person.avatar,
         }))
       );
     }
-  )(allStarsProfiles);
+  )(allStarsList.people);
 
   const allStarsIndexText = renderAgentPage(
     allStarsIndexMarkdown(allStarsList),
@@ -1249,23 +1237,7 @@ const program = Effect.gen(function* generateContent() {
     allStarsCopy.heading
   );
 
-  const allStarsPages = allStarsProfiles.map((profile) => {
-    const source = allStarsProfileMarkdown(profile);
-
-    return {
-      profile,
-      source,
-      text: renderAgentPage(source, profile.route, profile.name),
-    };
-  });
-
-  const llmsAllStarsLinks = [
-    `- [${allStarsCopy.heading}](${originToken}/all-stars): ${allStarsCopy.description} Also an [Atom feed](${originToken}/all-stars.xml) and the \`listPeople\`, \`readPerson\`, \`searchPeople\`, \`listChannels\` and \`peopleFor\` tools`,
-    ...allStarsList.people.map(
-      (person) =>
-        `  - [${person.name}](${originToken}${person.route}): ${person.summary.text}`
-    ),
-  ].join("\n");
+  const llmsAllStarsLinks = `- [${allStarsCopy.heading}](${originToken}/all-stars): ${allStarsCopy.description} Also an [Atom feed](${originToken}/all-stars.xml) and the \`listPeople\`, \`readPerson\`, \`searchPeople\`, \`listChannels\` and \`peopleFor\` tools`;
 
   const encodedCafeData = yield* Schema.encodeEffect(CafeData)(cafeData).pipe(
     Effect.mapError((cause) => buildError("cafe encode", cafeNewsFile, cause))
@@ -1277,7 +1249,7 @@ const program = Effect.gen(function* generateContent() {
   const withNewsCallout = (markdown: string, routePath: string) =>
     withNewsPointer(markdown, routePath, newsTitle);
 
-  const cafeNewsSource = cafeNewsMarkdown(cafeData, allStarsList);
+  const cafeNewsSource = cafeNewsMarkdown(cafeData);
 
   const cafeNewsText = renderAgentPage(
     cafeNewsSource,
@@ -2124,11 +2096,11 @@ Supports MCP protocol versions 2026-07-28, 2025-11-25, 2025-06-18, 2025-03-26, a
 - **Reliability.** Reduce mistakes so an agent can work longer without help.
 - **More useful features.** Build more of the jobs your product needs. Layers can carry cloud resources alongside application code. The compiler checks resource requirements; deployment checks prove that the result works.
 
-See the [vision](${originToken}/VISION.md) for the reasoning and sources.
+See the [vision](https://github.com/hypertask-ai/docs-rs/blob/main/VISION.md) for the reasoning and sources.
 
 ## Packages and their jobs
 
-rat-stack ships these packages and apps. The [removal checklists](${originToken}/README.md#keep-or-cut) give tested feature cuts and conditional Keep entries. Some packages share the hosted content build; they are not independent cartridges. Run the checks after each cut.
+rat-stack ships these packages and apps. The [removal checklists](https://github.com/hypertask-ai/docs-rs/blob/main/README.md#keep-or-cut) give tested feature cuts and conditional Keep entries. Some packages share the hosted content build; they are not independent cartridges. Run the checks after each cut.
 
 - **capability**: shared data definitions and command-line, web and agent interfaces. Keep the interfaces you use.
 - **core**: shared operations and service interfaces. Keep what your app uses.
@@ -2506,10 +2478,7 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
     "/directory",
     "/all-stars",
     "/all-stars.xml",
-    ...allStarsProfiles.flatMap((profile) => [
-      profile.route,
-      profile.avatar.path,
-    ]),
+    ...allStarsList.people.map((person) => person.avatar),
     tubeRoutePath,
     "/search",
     "/",
@@ -3170,7 +3139,6 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
       cafeNewsText,
       cafeDirectoryText,
       allStarsIndexText,
-      ...allStarsPages.map((page) => page.text),
       ...avatarImages.map((image) => image.base64),
       searchPageText,
       homeMarkdownTemplate,
@@ -3250,11 +3218,6 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
       routePath: tubeRoutePath,
       title: tubeCopy.heading,
     },
-    ...allStarsProfiles.map<OgPage>((profile) => ({
-      description: profile.bio[0].text,
-      routePath: `/all-stars/${profile.id}`,
-      title: profile.name,
-    })),
     {
       description: searchCopy.description,
       routePath: "/search",
@@ -3803,36 +3766,6 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
     contentVersion
   );
 
-  const allStarsSources = yield* Effect.forEach(
-    (page: (typeof allStarsPages)[number]) =>
-      compileMarkdownBody(
-        page.source,
-        `all-stars-${page.profile.id}.md`,
-        highlighter,
-        emptyTargets,
-        [],
-        page.profile.route
-      ).pipe(
-        Effect.flatMap((body) =>
-          makeDocument(
-            body.bodyHtml,
-            {
-              description: page.profile.bio[0].text,
-              path: page.profile.route,
-              title: pageTitle(page.profile.name),
-            },
-            cafePeopleFile,
-            contentVersion
-          )
-        ),
-        Effect.map((documentHtml) => ({
-          documentHtml,
-          routePath: page.profile.route,
-          text: page.text,
-        }))
-      )
-  )(allStarsPages);
-
   const searchPageBody = yield* compileMarkdownBody(
     searchPageText,
     "search.md",
@@ -3927,7 +3860,6 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
           "/news",
           "/directory",
           "/all-stars",
-          ...allStarsProfiles.map((profile) => profile.route),
           tubeRoutePath,
           ...workshop.pages.map((page) => page.routePath),
           "/search",
@@ -4022,7 +3954,6 @@ Follow [ports and adapters](/lore/hexagonal-architecture) for provider boundarie
         routePath: "/all-stars",
         text: allStarsIndexText,
       },
-      ...allStarsSources,
       {
         documentHtml: tubeDocument,
         routePath: tubeRoutePath,

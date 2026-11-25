@@ -8,12 +8,6 @@ import {
 import { Schema } from "effect";
 import { defineTaggedUnion } from "foldkit/schema";
 
-export const NewsProfileLink = Schema.Struct({
-  name: Schema.String,
-  route: Schema.String,
-  url: Schema.String,
-});
-
 export const Model = defineTaggedUnion({
   AllStars: {
     people: Schema.Array(CafePersonSummary),
@@ -24,7 +18,6 @@ export const Model = defineTaggedUnion({
   },
   News: {
     items: Schema.Array(CafeNewsItem),
-    profiles: Schema.Array(NewsProfileLink),
     rankedAt: IsoDate,
   },
 });

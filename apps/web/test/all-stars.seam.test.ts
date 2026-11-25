@@ -17,9 +17,9 @@ const htmlText = (value: string) =>
     .replaceAll(">", "&gt;");
 
 it.effect(
-  "every seed profile renders as prerendered HTML",
+  "the all stars index renders every seed person as a card and the build has no profile page",
   () =>
-    Effect.gen(function* renderProfiles() {
+    Effect.gen(function* renderAllStars() {
       const inputs = yield* prepareReaderSiteInputs;
       const flags = yield* readerBodyFlags("https://ratstack.sh");
 
@@ -33,28 +33,12 @@ it.effect(
       );
 
       for (const person of inputs.cafe.people) {
-        const page = flags.find(
-          (candidate) => candidate.page.path === `/all-stars/${person.id}`
-        );
-
-        expect(page, person.id).toBeDefined();
-
-        if (page === undefined) {
-          return;
-        }
-
-        const rendered = yield* renderToString(
-          { Flags: ReaderFlags, init, view },
-          { flags: page, isHydratable: false }
-        );
-
-        expect(page.heading).toBe(person.name);
-        expect(rendered.html).toContain(`src="${person.avatar.path}"`);
-        expect(rendered.html).toContain("To be removed from this page");
-
-        for (const fact of person.bio) {
-          expect(rendered.html).toContain(htmlText(fact.source));
-        }
+        expect(
+          flags.find(
+            (candidate) => candidate.page.path === `/all-stars/${person.id}`
+          ),
+          person.id
+        ).toBeUndefined();
       }
 
       const index = (yield* readerCafeFlags("https://ratstack.sh")).find(
@@ -77,8 +61,8 @@ it.effect(
 
       for (const person of inputs.cafe.people) {
         expect(cards.html).toContain(`src="${person.avatar.path}"`);
-        expect(cards.html).toContain(`href="/all-stars/${person.id}"`);
         expect(cards.html).toContain(htmlText(person.bio[0].text));
+        expect(cards.html).not.toContain(`href="/all-stars/${person.id}"`);
       }
     }).pipe(Effect.provide(NodeServices.layer)),
   { timeout: 30_000 }

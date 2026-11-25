@@ -153,6 +153,7 @@ docs.hypertask.ai moves to the docs Stack in HTPR-9201. Until that ticket lands,
 | Only a run of the default branch can read the Cloudflare secrets, and a run without them stops before it builds | `environment: ratstack-publish` on the publish job, the deployment branch rule of that environment, and its first step, which names the missing secret |
 | Every workflow file in `.github/workflows` is valid GitHub Actions, with no unknown key, unknown context or bad expression | the `Lint every workflow file with actionlint` step in the `checks` job of `.github/workflows/ci.yml`, which downloads actionlint 1.7.7 from its release page, checks the release checksum, and lints every workflow file |
 | Nothing is published at `/ratstack` until the home page it would serve carries the old docs home page's words | the `gate` step of `apps/site/scripts/ratstack-publish-check.ts`, which stops the publish before the deploy when the built home page is missing any distinct word on https://docs.hypertask.ai/, names up to twelve missing words, and runs the same comparison again in `verify` after the deploy |
+| The build serves only pages the live docs site serves. The Rat Stack starter-template pages `AGENTS.md`, `README.md`, `VISION.md` and `all-stars/<name>` are not built, and any content that pointed at them links the file on https://github.com/hypertask-ai/docs-rs instead | `apps/site/test/docs-template-pages.test.ts`, which reads the built route list from `apps/web/scripts/reader-build.ts` and fails on a starter-template route |
 
 ## Release the ratstack package
 

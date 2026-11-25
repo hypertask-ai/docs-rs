@@ -951,7 +951,7 @@ it.layer(contentServices)("generated content", (test) => {
 
       expect(fence?.documentHtml).toContain('id="linked-from"');
       expect(fence?.documentHtml).toContain(
-        '<a href="/VISION.md">Purpose and boundaries of the docs project (VISION.md)</a>'
+        '<a href="/skills/learn-rat-stack">'
       );
       expect(codeSnippetsDocumentHtml).toContain('href="/lore/');
     })
